@@ -84,16 +84,16 @@
     function formDisabler(selector, state) {
         const element = $(selector);
         const submitButton = element.find('button[type="submit"]');
-        element.find("input, button, textarea, select").prop('disabled', state);
+        // element.find("input, button, textarea, select").prop('disabled', state);
 
         if (state) {
-            element.find('a').hide();
+            // element.find('a').hide();
             if (!submitButton.data('original-content')) {
                 submitButton.data('original-content', submitButton.html());
             }
             submitButton.prop('disabled', true).html('<i class="fa-solid fa-spinner fa-spin-pulse"></i> Processing...');
         } else {
-            element.find('a').show();
+            // element.find('a').show();
             const originalContent = submitButton.data('original-content');
             if (originalContent) {
                 submitButton.prop('disabled', false).html(originalContent);

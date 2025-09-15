@@ -34,149 +34,148 @@
                     <button type="button" class="nav-link" id="checkEditVirtualTab" data-bs-toggle="pill" data-bs-target="#checkEditVirtualPill" type="button" role="tab" aria-controls="checkEditVirtualPill" aria-selected="false">Virtual</button>
                 </li>
             </ul>
-                <div class="tab-content" id="checkEditTemplateStyleTabContent">
-                    <div class="tab-pane fade show active" id="checkEditStandardPill" role="tabpanel" aria-labelledby="checkEditStandardTab">
-                        <form class="checkEditForm">
-                            <div class="row">
-                                <div class="col-lg-3 mb-3">
-                                    <label class="form-label fw-xnormal">Check No.</label>
-                                    <label class="text-muted float-end highlightTextDisable"><input class="form-check-input checkEditPrintLater" name="checkEditPrintLater" type="checkbox">&ensp;Print Later</label>
-                                    <input type="number" class="form-control checkEditNo" name="checkEditNo" value="0000" min="0" required>
-                                    <input type="hidden" class="form-control checkEditID" name="checkEditID">
-                                </div>
-                                <div class="col-lg-2 mb-3">
-                                    <label class="form-label fw-xnormal">Permit No.</label>
-                                    <input type="number" class="form-control checkEditPermitNo" name="checkEditPermitNo" value="0000" min="0" required>
-                                </div>
-                                <div class="col-lg-3 mb-3">
-                                    <label class="form-label fw-xnormal">Payee</label>
-                                    <a class="text-decoration-none float-end checkEditViewPayeeInfo" href="javascript:void(0);">View Info</a>
-                                    <select class="form-select checkEditPayee" name="checkEditPayee" required></select>
-                                    <input type="hidden" class="form-control checkEditPayeeType" name="checkEditPayeeType">
-                                </div>
-                                <div class="col-lg-4 mb-3">
-                                    <label class="form-label fw-xnormal">Bank Account</label>&ensp;<span class="text-muted checkEditBankAccountBalance">$0.00</span>
-                                    <label class="text-muted float-end highlightTextDisable"></label>
-                                    <select class="form-select checkEditBankAccount" name="checkEditBankAccount" required></select>
-                                </div>
+            <div class="tab-content" id="checkEditTemplateStyleTabContent">
+                <div class="tab-pane fade show active" id="checkEditStandardPill" role="tabpanel" aria-labelledby="checkEditStandardTab">
+                    <form class="checkEditForm">
+                        <div class="row">
+                            <div class="col-lg-3 mb-3">
+                                <label class="form-label fw-xnormal">Check No.</label>
+                                <label class="text-muted float-end highlightTextDisable"><input class="form-check-input checkEditPrintLater" name="checkEditPrintLater" type="checkbox">&ensp;Print Later</label>
+                                <input type="number" class="form-control checkEditNo" name="checkEditNo" value="0000" min="0" required>
+                                <input type="hidden" class="form-control checkEditID" name="checkEditID">
                             </div>
-                            <div class="row">
-                                <div class="col-lg-2 mb-3">
-                                    <label class="form-label fw-xnormal">Payment Date</label>
-                                    <input type="date" class="form-control checkEditPaymentDate" name="checkEditPaymentDate" value="<?php echo date('Y-m-d'); ?>" required>
-                                </div>
-                                <div class="col-lg-10 mb-3">
-                                    <label class="form-label fw-xnormal">Tags</label>
-                                    <a class="text-decoration-none float-end checkEditClearTags" href="javascript:void(0);">Clear Tags</a>
-                                    <select class="form-select checkEditTag" name="checkEditTag[]" required></select>
-                                </div>
+                            <div class="col-lg-2 mb-3">
+                                <label class="form-label fw-xnormal">Permit No.</label>
+                                <input type="number" class="form-control checkEditPermitNo" name="checkEditPermitNo" value="0000" min="0" required>
                             </div>
-                            <div class="row">
-                                <div class="col-lg-6 mb-3">
-                                    <label class="form-label fw-xnormal">Mailing Address</label>
-                                    <textarea class=" form-control checkEditMailingAddress" name="checkEditMailingAddress" placeholder="Payee's Mailing Address..." required></textarea>
-                                </div>
-                                <div class="col-lg-6 mb-3">
-                                    <label class="form-label fw-xnormal">Memo</label>
-                                    <textarea class=" form-control checkEditMemo" name="checkEditMemo" placeholder="Check's memo..."></textarea>
-                                </div>
+                            <div class="col-lg-3 mb-3">
+                                <label class="form-label fw-xnormal">Payee</label>
+                                <a class="text-decoration-none float-end checkEditViewPayeeInfo" href="javascript:void(0);">View Info</a>
+                                <select class="form-select checkEditPayee" name="checkEditPayee" required></select>
+                                <input type="hidden" class="form-control checkEditPayeeType" name="checkEditPayeeType">
                             </div>
-                            <div class="row mb-3">
-                                <div class="col-lg-12">
-                                    <div class="accordion">
-                                        <div class="accordion-item border-0">
-                                            <h2 class="accordion-header" id="checkEditCategoryDetails_panel">
-                                                <button type="button" class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#checkEditCategoryDetails_collapse" aria-expanded="true" aria-controls="checkEditCategoryDetails_collapse"> 
-                                                    <strong>CATEGORY DETAILS</strong>
-                                                </button>
-                                            </h2>
-                                            <div id="checkEditCategoryDetails_collapse" class="accordion-collapse collapse show" aria-labelledby="checkEditCategoryDetails_panel">
-                                                <div class="accordion-body p-0 pt-3 pb-3">
-                                                    <div class="row">
-                                                        <div class="col-lg-12">
-                                                            <table class="table table-bordered checkEditCategoryTable w-100">
-                                                                <thead style="background: #00000008;">
-                                                                    <tr>
-                                                                        <th class="width20">Category</th>
-                                                                        <th class="width20">Description</th>
-                                                                        <th class="width10">Amount</th>
-                                                                        <th class="width0">Billable</th>
-                                                                        <th class="width0">Tax</th>
-                                                                        <th class="width20">Customer</th>
-                                                                        <th class="width0"></th>
-                                                                    </tr>
-                                                                </thead>
-                                                                <tbody>
-                                                                    <tr>
-                                                                        <td><select class="form-select checkEditCategoryOptionsRow" name="checkEditCategoryOptionsRow[]" required></select></td> 
-                                                                        <td><input type="text" class="form-control checkEditCategoryDescriptionRow" name="checkEditCategoryDescriptionRow[]"></td> 
-                                                                        <td><input type="number" class="form-control checkEditCategoryAmountRow" name="checkEditCategoryAmountRow[]" min="0" step="any" required></td> 
-                                                                        <td class="text-center"><input type="checkbox" class="form-check-input checkEditCategoryBillableRow" name="checkEditCategoryBillableRow[]"></td> 
-                                                                        <td class="text-center"><input type="checkbox" class="form-check-input checkEditCategoryTaxRow" name="checkEditCategoryTaxRow[]"></td> 
-                                                                        <td><select class="form-select checkEditCategoryCustomerRow" name="checkEditCategoryCustomerRow[]" required></select></td> 
-                                                                        <td><button type="button" class="border-0 checkEditDeleteLine"><i class="fas fa-minus text-danger"></i></button></td>
-                                                                    </tr>
-                                                                </tbody>
-                                                            </table>
-                                                        </div>
+                            <div class="col-lg-4 mb-3">
+                                <label class="form-label fw-xnormal">Bank Account</label>&ensp;<span class="text-muted checkEditBankAccountBalance">$0.00</span>
+                                <label class="text-muted float-end highlightTextDisable"></label>
+                                <select class="form-select checkEditBankAccount" name="checkEditBankAccount" required></select>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-2 mb-3">
+                                <label class="form-label fw-xnormal">Payment Date</label>
+                                <input type="date" class="form-control checkEditPaymentDate" name="checkEditPaymentDate" value="<?php echo date('Y-m-d'); ?>" required>
+                            </div>
+                            <div class="col-lg-10 mb-3">
+                                <label class="form-label fw-xnormal">Tags</label>
+                                <a class="text-decoration-none float-end checkEditClearTags" href="javascript:void(0);">Clear Tags</a>
+                                <select class="form-select checkEditTag" name="checkEditTag[]" required></select>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-6 mb-3">
+                                <label class="form-label fw-xnormal">Mailing Address</label>
+                                <textarea class=" form-control checkEditMailingAddress" name="checkEditMailingAddress" placeholder="Payee's Mailing Address..." required></textarea>
+                            </div>
+                            <div class="col-lg-6 mb-3">
+                                <label class="form-label fw-xnormal">Memo</label>
+                                <textarea class=" form-control checkEditMemo" name="checkEditMemo" placeholder="Check's memo..."></textarea>
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-lg-12">
+                                <div class="accordion">
+                                    <div class="accordion-item border-0">
+                                        <h2 class="accordion-header" id="checkEditCategoryDetails_panel">
+                                            <button type="button" class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#checkEditCategoryDetails_collapse" aria-expanded="true" aria-controls="checkEditCategoryDetails_collapse">
+                                                <strong>CATEGORY DETAILS</strong>
+                                            </button>
+                                        </h2>
+                                        <div id="checkEditCategoryDetails_collapse" class="accordion-collapse collapse show" aria-labelledby="checkEditCategoryDetails_panel">
+                                            <div class="accordion-body p-0 pt-3 pb-3">
+                                                <div class="row">
+                                                    <div class="col-lg-12">
+                                                        <table class="table table-bordered checkEditCategoryTable w-100">
+                                                            <thead style="background: #00000008;">
+                                                                <tr>
+                                                                    <th class="width20">Category</th>
+                                                                    <th class="width20">Description</th>
+                                                                    <th class="width10">Amount</th>
+                                                                    <th class="width0">Billable</th>
+                                                                    <th class="width0">Tax</th>
+                                                                    <th class="width20">Customer</th>
+                                                                    <th class="width0"></th>
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                                <tr>
+                                                                    <td><select class="form-select checkEditCategoryOptionsRow" name="checkEditCategoryOptionsRow[]" required></select></td>
+                                                                    <td><input type="text" class="form-control checkEditCategoryDescriptionRow" name="checkEditCategoryDescriptionRow[]"></td>
+                                                                    <td><input type="number" class="form-control checkEditCategoryAmountRow" name="checkEditCategoryAmountRow[]" min="0" step="any" required></td>
+                                                                    <td class="text-center"><input type="checkbox" class="form-check-input checkEditCategoryBillableRow" name="checkEditCategoryBillableRow[]"></td>
+                                                                    <td class="text-center"><input type="checkbox" class="form-check-input checkEditCategoryTaxRow" name="checkEditCategoryTaxRow[]"></td>
+                                                                    <td><select class="form-select checkEditCategoryCustomerRow" name="checkEditCategoryCustomerRow[]" required></select></td>
+                                                                    <td><button type="button" class="border-0 checkEditDeleteLine"><i class="fas fa-minus text-danger"></i></button></td>
+                                                                </tr>
+                                                            </tbody>
+                                                        </table>
                                                     </div>
-                                                    <div class="row">
-                                                        <div class="col-lg-12">
-                                                            <div class="input-group">
-                                                                <button type="button" class="btn btn-primary checkEditCategoryLine" type="button">Add</button>
-                                                                <button type="button" class="btn btn-light checkEditClearCategoryLine" type="button">Clear</button>
-                                                            </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-lg-12">
+                                                        <div class="input-group">
+                                                            <button type="button" class="btn btn-primary checkEditCategoryLine" type="button">Add</button>
+                                                            <button type="button" class="btn btn-light checkEditClearCategoryLine" type="button">Clear</button>
                                                         </div>
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="accordion-item border-0">
-                                            <h2 class="accordion-header" id="checkEditItemDetails_panel">
-                                                <button type="button" class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#checkEditItemDetails_collapse" aria-expanded="true" aria-controls="checkEditItemDetails_collapse">
-                                                    <strong>ITEM DETAILS</strong>
-                                                </button>
-                                            </h2>
-                                            <div id="checkEditItemDetails_collapse" class="accordion-collapse collapse show" aria-labelledby="checkEditItemDetails_panel">
-                                                <div class="accordion-body p-0 pt-3 pb-3">
-                                                    <div class="row">
-                                                        <div class="col-lg-12">
-                                                            <table class="table table-bordered checkEditItemTable w-100">
-                                                                <thead style="background: #00000008;">
-                                                                    <tr>
-                                                                        <th class="width20">Product/Service</th>
-                                                                        <th class="width20">Description</th>
-                                                                        <th>Qty</th>
-                                                                        <th>Rate</th>
-                                                                        <th class="width10">Amount</th>
-                                                                        <th class="width0">Billable</th>
-                                                                        <th class="width0">Tax</th>
-                                                                        <th class="width20">Customer</th>
-                                                                        <th class="width0"></th>
-                                                                    </tr>
-                                                                </thead>
-                                                                <tbody>
-                                                                    <tr>
-                                                                        <td><select class="form-select checkEditItemOptionsRow" name="checkEditItemOptionsRow[]"></select></td> 
-                                                                        <td><input type="text" class="form-control checkEditItemDescriptionRow" name="checkEditItemDescriptionRow[]"></td>
-                                                                        <td><input type="number" class="form-control checkEditItemQtyRow" name="checkEditItemQtyRow[]" min="0"></td>
-                                                                        <td><input type="number" class="form-control checkEditItemRateRow" name="checkEditItemRateRow[]" min="0" step="any"></td>
-                                                                        <td><input type="number" class="form-control checkEditItemAmountRow" name="checkEditItemAmountRow[]" min="0" step="any"></td>
-                                                                        <td class="text-center"><input type="checkbox" class="form-check-input checkEditItemBillableRow" name="checkEditItemBillableRow[]"></td>
-                                                                        <td class="text-center"><input type="checkbox" class="form-check-input checkEditItemTaxRow" name="checkEditItemTaxRow[]"></td>
-                                                                        <td><select class="form-select checkEditItemCustomerRow" name="checkEditItemCustomerRow[]"></select></td>
-                                                                        <td><button type="button" class="border-0 checkEditDeleteLine"><i class="fas fa-minus text-danger"></i></button></td>
-                                                                    </tr>
-                                                                </tbody>
-                                                            </table>
-                                                        </div>
+                                    </div>
+                                    <div class="accordion-item border-0">
+                                        <h2 class="accordion-header" id="checkEditItemDetails_panel">
+                                            <button type="button" class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#checkEditItemDetails_collapse" aria-expanded="true" aria-controls="checkEditItemDetails_collapse">
+                                                <strong>ITEM DETAILS</strong>
+                                            </button>
+                                        </h2>
+                                        <div id="checkEditItemDetails_collapse" class="accordion-collapse collapse show" aria-labelledby="checkEditItemDetails_panel">
+                                            <div class="accordion-body p-0 pt-3 pb-3">
+                                                <div class="row">
+                                                    <div class="col-lg-12">
+                                                        <table class="table table-bordered checkEditItemTable w-100">
+                                                            <thead style="background: #00000008;">
+                                                                <tr>
+                                                                    <th class="width20">Product/Service</th>
+                                                                    <th class="width20">Description</th>
+                                                                    <th>Qty</th>
+                                                                    <th>Rate</th>
+                                                                    <th class="width10">Amount</th>
+                                                                    <th class="width0">Billable</th>
+                                                                    <th class="width0">Tax</th>
+                                                                    <th class="width20">Customer</th>
+                                                                    <th class="width0"></th>
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                                <tr>
+                                                                    <td><select class="form-select checkEditItemOptionsRow" name="checkEditItemOptionsRow[]"></select></td>
+                                                                    <td><input type="text" class="form-control checkEditItemDescriptionRow" name="checkEditItemDescriptionRow[]"></td>
+                                                                    <td><input type="number" class="form-control checkEditItemQtyRow" name="checkEditItemQtyRow[]" min="0"></td>
+                                                                    <td><input type="number" class="form-control checkEditItemRateRow" name="checkEditItemRateRow[]" min="0" step="any"></td>
+                                                                    <td><input type="number" class="form-control checkEditItemAmountRow" name="checkEditItemAmountRow[]" min="0" step="any"></td>
+                                                                    <td class="text-center"><input type="checkbox" class="form-check-input checkEditItemBillableRow" name="checkEditItemBillableRow[]"></td>
+                                                                    <td class="text-center"><input type="checkbox" class="form-check-input checkEditItemTaxRow" name="checkEditItemTaxRow[]"></td>
+                                                                    <td><select class="form-select checkEditItemCustomerRow" name="checkEditItemCustomerRow[]"></select></td>
+                                                                    <td><button type="button" class="border-0 checkEditDeleteLine"><i class="fas fa-minus text-danger"></i></button></td>
+                                                                </tr>
+                                                            </tbody>
+                                                        </table>
                                                     </div>
-                                                    <div class="row">
-                                                        <div class="col-lg-12">
-                                                            <div class="input-group">
-                                                                <button type="button" class="btn btn-primary checkEditItemLine" type="button">Add</button>
-                                                                <button type="button" class="btn btn-light checkEditClearItemLine" type="button">Clear</button>
-                                                            </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-lg-12">
+                                                        <div class="input-group">
+                                                            <button type="button" class="btn btn-primary checkEditItemLine" type="button">Add</button>
+                                                            <button type="button" class="btn btn-light checkEditClearItemLine" type="button">Clear</button>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -185,353 +184,95 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="row">
-                                <div class="col-lg-12">
-                                    <label class="form-label fw-xnormal">Attachments</label>
-                                    <input type="file" class="form-control checkEditAttachments" name="checkEditAttachments[]" multiple>
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-12">
+                                <label class="form-label fw-xnormal">Attachments</label>
+                                <input type="file" class="form-control checkEditAttachments" name="checkEditAttachments[]" multiple>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-12">
+                                <button type="submit" class="btn btn-primary fw-bold float-end checkEditSubmitButton"><i class="fas fa-file-import"></i>&ensp;Update</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="tab-pane fade" id="checkEditVirtualPill" role="tabpanel" aria-labelledby="checkEditVirtualTab">
+                    <form class="virtualCheckEditForm">
+                        <div class="virtualCheckEditContainer">
+                            <div class="virtualCheckEditSection">
+                                <div class="virtualCheckEditPayerInfoSection position-absolute d-none">
+                                    <strong class="virtualCheckEditPayerNameText">{PAYER_NAME}</strong><br>
+                                    <span class="virtualCheckEditPayerAddressText">{ADDRESS}</span>
+                                </div>
+                                <div class="virtualPrintLaterSection position-absolute">
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input" type="checkbox" id="virtualCheckEditPrintLater">
+                                        <label class="form-check-label text-muted" for="virtualCheckEditPrintLater">Print Later</label>
+                                    </div>
+                                </div>
+                                <div class="virtualCheckEditNumberSection position-absolute">
+                                    <div class="d-flex align-items-center">
+                                        <label for="virtualCheckEditNumberInput" class="me-2">Check No.</label>
+                                        <input type="number" id="virtualCheckEditNumberInput" class="form-control form-control-sm" required>
+                                    </div>
+                                </div>
+                                <div class="virtualCheckEditDateSection position-absolute">
+                                    <div class="d-flex align-items-center">
+                                        <label for="virtualCheckEditDateInput" class="me-2">Date</label>
+                                        <input type="date" id="virtualCheckEditDateInput" class="form-control" value="<?php echo date('Y-m-d'); ?>" required>
+                                    </div>
+                                </div>
+                                <div class="virtualCheckEditPayeeSection position-absolute">
+                                    <div class="d-flex align-items-center">
+                                        <strong for="virtualCheckEditPayeeSelect" class="me-2 text-nowrap">Pay to the Order of</strong>
+                                        <select id="virtualPayee" name="virtualPayee" class="form-select virtualCheckEditPayeeSelect" required>
+                                            <option value="" selected disabled>Select payee...</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="virtualCheckEditAmountSection position-absolute">
+                                    <div class="input-group">
+                                        <div class="input-group-text" id="virtualBtnGroupAddon"><strong>$</strong></div>
+                                        <input id="virtualCheckEditAmountInput" type="number" class="form-control" placeholder="0.00" step="any" required>
+                                    </div>
+                                </div>
+                                <div class="virtualCheckEditWrittenAmountSection position-absolute">
+                                    <div class="d-flex align-items-center">
+                                        <span id="virtualCheckEditWrittenText" class="me-2 text-nowrap">{WRITTEN_AMOUNT}</span>
+                                        <strong class="me-2 text-nowrap">Dollars</strong>
+                                    </div>
+                                </div>
+                                <div class="virtualCheckEditBankNameSection position-absolute">
+                                    <select id="virtualBankAccount" name="virtualBankAccount" class="form-select virtualCheckEditBankNameSelect" required>
+                                        <option value="" selected disabled>Select Bank...</option>
+                                    </select>
+                                </div>
+                                <div class="virtualCheckEditCategoryNameSection position-absolute">
+                                    <select name="virtualCategory[]" class="form-select virtualCheckEditCategorySelect" required>
+                                        <option value="" selected disabled>Select Category...</option>
+                                    </select>
+                                </div>
+                                <div class="virtualCheckEditMemoSection position-absolute">
+                                    <div class="d-flex align-items-center">
+                                        <strong for="virtualCheckEditMemoInput" class="me-2 text-nowrap">Memo</strong>
+                                        <input type="text" id="virtualCheckEditMemoInput" class="form-control text-muted" placeholder="Specify notes...">
+                                    </div>
                                 </div>
                             </div>
-                            <div class="row">
-                                <div class="col-lg-12">
-                                    <button type="submit" class="btn btn-primary fw-bold float-end checkEditSubmitButton"><i class="fas fa-file-import"></i>&ensp;Update</button>
+                        </div>
+                        <div class="row mt-4">
+                            <!-- <div class="col-lg-12 virtualCheckEditAttachmentSection"></div> -->
+                            <div class="col-lg-12">
+                                <div class="float-end">
+                                    <button type="submit" class="btn btn-primary fw-bold float-end checkEditSubmitButton"><i class="fas fa-file-import"></i>&ensp;Save</button>
                                 </div>
                             </div>
-                        </form>
-                    </div>
-                    <div class="tab-pane fade" id="checkEditVirtualPill" role="tabpanel" aria-labelledby="checkEditVirtualTab">
-                        
-
-
-
-
-                    <style>
-    .virtualCheckEditContainer {
-        background-color: #f9f9f9;
-        border: 2px solid #000;
-        border-radius: 10px;
-        font-family: Arial, sans-serif;
-        height: 360px;
-        margin: auto;
-        padding: 20px;
-        position: relative;
-        top: 5px;
-        width: 1299px;
-    }
-
-    .virtualCheckEditSection {
-        display: flex;
-        justify-content: space-between;
-        margin-bottom: 10px;
-    }
-
-    .virtualCheckEditNumberSection {
-        right: 0;
-    }
-
-    .virtualPrintLaterSection {
-        right: 70px;
-        top: 55px;
-    }
-
-    .virtualCheckEditDateSection {
-        right: 26px;
-        top: 100px;
-    }
-
-    .virtualCheckEditPayeeSection {
-        top: 150px;
-    }
-
-    .virtualCheckEditAmountSection {
-        right: 26px;
-        top: 150px;
-    }
-
-    .virtualCheckEditWrittenAmountSection {
-        top: 200px;
-    }
-
-    .virtualCheckEditBankNameSection {
-        top: 250px;
-    }
-
-    .virtualCheckEditCategoryNameSection {
-        left: 290px;
-        top: 250px;
-        width: 170px;
-    }
-
-    .virtualCheckEditExpenseAccountSection {
-        left: 560px;
-        top: 250px;
-        width: 240px;
-    }
-
-    .virtualCheckEditMemoSection {
-        bottom: 20px;
-    }
-
-    .virtualTopSection {
-        margin-top: -18px;
-        position: absolute;
-    }
-
-    #virtualCheckEditDateInput {
-        width: 180px;
-    }
-
-    #virtualCheckEditAmountInput {
-        width: 150px;
-    }
-
-    #virtualCheckEditMemoInput {
-        background: unset;
-        border: none;
-        border-bottom: 1px solid #ccc;
-        border-radius: 0;
-        width: 1010px;
-    }
-
-    #virtualCheckEditNumberInput {
-        width: 59%;
-    }
-
-    .virtualCheckEditPayeeSelect {
-        width: 925px;
-    }
-
-    .virtualCheckEditBankNameSelect,
-    .virtualCheckEditCategorySelect,
-    .virtualCheckEditExpenseAccountSelect {
-        width: 260px !important;
-    }
-
-    #virtualCheckEditWrittenText {
-        letter-spacing: 4px;
-    }
-</style>
-
-<form class="virtualCheckEditForm">
-    <div class="virtualCheckEditContainer">
-        <div class="virtualCheckEditSection">
-            <div class="virtualCheckEditPayerInfoSection position-absolute d-none">
-                <strong class="virtualCheckEditPayerNameText">{PAYER_NAME}</strong><br>
-                <span class="virtualCheckEditPayerAddressText">{ADDRESS}</span>
-            </div>
-            <div class="virtualPrintLaterSection position-absolute">
-                <div class="form-check form-check-inline">
-                    <input class="form-check-input" type="checkbox" id="virtualCheckEditPrintLater">
-                    <label class="form-check-label text-muted" for="virtualCheckEditPrintLater">Print Later</label>
+                        </div>
+                    </form>
                 </div>
             </div>
-            <div class="virtualCheckEditNumberSection position-absolute">
-                <div class="d-flex align-items-center">
-                    <label for="virtualCheckEditNumberInput" class="me-2">Check No.</label>
-                    <input type="number" id="virtualCheckEditNumberInput" class="form-control form-control-sm" required>
-                </div>
-            </div>
-            <div class="virtualCheckEditDateSection position-absolute">
-                <div class="d-flex align-items-center">
-                    <label for="virtualCheckEditDateInput" class="me-2">Date</label>
-                    <input type="date" id="virtualCheckEditDateInput" class="form-control" value="<?php echo date('Y-m-d'); ?>" required>
-                </div>
-            </div>
-            <div class="virtualCheckEditPayeeSection position-absolute">
-                <div class="d-flex align-items-center">
-                    <strong for="virtualCheckEditPayeeSelect" class="me-2 text-nowrap">Pay to the Order of</strong>
-                    <select id="virtualPayee" name="virtualPayee" class="form-select virtualCheckEditPayeeSelect" required>
-                        <option value="" selected disabled>Select payee...</option>
-                    </select>
-                </div>
-            </div>
-            <div class="virtualCheckEditAmountSection position-absolute">
-                <div class="input-group">
-                    <div class="input-group-text" id="virtualBtnGroupAddon"><strong>$</strong></div>
-                    <input id="virtualCheckEditAmountInput" type="number" class="form-control" placeholder="0.00" step="any" required>
-                </div>
-            </div>
-            <div class="virtualCheckEditWrittenAmountSection position-absolute">
-                <div class="d-flex align-items-center">
-                    <span id="virtualCheckEditWrittenText" class="me-2 text-nowrap">{WRITTEN_AMOUNT}</span>
-                    <strong class="me-2 text-nowrap">Dollars</strong>
-                </div>
-            </div>
-            <div class="virtualCheckEditBankNameSection position-absolute">
-                <select id="virtualBankAccount" name="virtualBankAccount" class="form-select virtualCheckEditBankNameSelect" required>
-                    <option value="" selected disabled>Select Bank...</option>
-                </select>
-            </div>
-            <div class="virtualCheckEditCategoryNameSection position-absolute">
-                <select name="virtualCategory[]" class="form-select virtualCheckEditCategorySelect" required>
-                    <option value="" selected disabled>Select Category...</option>
-                </select>
-            </div>
-            <div class="virtualCheckEditMemoSection position-absolute">
-                <div class="d-flex align-items-center">
-                    <strong for="virtualCheckEditMemoInput" class="me-2 text-nowrap">Memo</strong>
-                    <input type="text" id="virtualCheckEditMemoInput" class="form-control text-muted" placeholder="Specify notes...">
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="row mt-4">
-        <!-- <div class="col-lg-12 virtualCheckEditAttachmentSection"></div> -->
-        <div class="col-lg-12">
-            <div class="float-end">
-                <button type="submit" class="btn btn-primary fw-bold float-end checkEditSubmitButton"><i class="fas fa-file-import"></i>&ensp;Save</button>
-            </div>
-        </div>
-    </div>
-</form>
-
-<script>
-    $('#virtualCheckEditPrintLater').on('change', function() {
-        const value = $(this).prop('checked');
-        if (value) {
-            $('.checkEditPrintLater').prop('checked', true).change();
-            $('#virtualCheckEditNumberInput').val(null).prop('disabled', true);
-        } else {
-            $('.checkEditPrintLater').prop('checked', false).change();
-            $('#virtualCheckEditNumberInput').prop('disabled', false);
-            const checkEditNo = $('.checkEditNo').val();
-            $('#virtualCheckEditNumberInput').val(checkEditNo).change();
-        }
-    });
-
-    $('#virtualCheckEditNumberInput').on('input change', function() {
-        const value = $(this).val();
-        $('.checkEditNo').val(value).change();
-    });
-
-    $(document).on('change', '.virtualCheckEditPayeeSelect', function() {
-        const selectize = $(this)[0].selectize;
-        const id = selectize.getValue();
-        const data = selectize.options[id];
-        $(".checkEditPayee")[0].selectize.setValue(id);
-        $('.checkEditPayeeType').val(data.payee_type).change();
-    });
-
-    $(document).on('change', '.virtualCheckEditBankNameSelect', function() {
-        const selectize = $(this)[0].selectize;
-        const id = selectize.getValue();
-        const data = selectize.options[id];
-        $('.checkEditBankAccount')[0].selectize.setValue(data.value);
-    });
-
-    $(document).on('change', '#virtualCheckEditDateInput', function() {
-        const value = $(this).val();
-        $('.checkEditPaymentDate').val(value).change();
-    });
-
-    $('#virtualCheckEditMemoInput').on('input change', function() {
-        const value = $(this).val();
-        $('.checkEditMemo').val(value).change();
-    });
-
-    $(document).on('change', '.virtualCheckEditCategorySelect', function() {
-        const selectize = $(this)[0].selectize;
-        const id = selectize.getValue();
-        const data = selectize.options[id];
-        $('.checkEditCategoryOptionsRow').eq(0)[0].selectize.setValue(data.value);
-    });
-
-    $('#virtualCheckEditAmountInput').on('input change', function() {
-        const rawValue = $(this).val().trim();
-        const value = parseFloat(rawValue);
-
-        if (!isNaN(value)) {
-            window.totalAmountInVirtualCheck = value;
-            const writtenAmount = virtualNumberToWords(value);
-            $('#virtualCheckEditWrittenText').text(writtenAmount);
-            $('.checkEditCategoryAmountRow').eq(0).val(value).change();
-        } else {
-            window.totalAmountInVirtualCheck = 0;
-            $('#virtualCheckEditWrittenText').text("{WRITTEN_AMOUNT}");
-            $('.checkEditCategoryAmountRow').eq(0).val('').change();
-        }
-    });
-
-    $(document).on('click', '#checkEditVirtualTab', function() {
-        const checkEditPrintLater = $('.checkEditPrintLater').prop('checked');
-        const checkEditNo = $('.checkEditNo').val();
-        const checkEditNoMinimum = $('.checkEditNo').attr('min');
-        const checkEditPayee = $('.checkEditPayee').val();
-        const checkEditBankAccount = $('.checkEditBankAccount').val();
-        const checkEditPaymentDate = $('.checkEditPaymentDate').val();
-        const checkEditMemo = $('.checkEditMemo').val();
-        const checkEditCategoryOptionsRow = $('.checkEditCategoryOptionsRow').eq(0).val();
-        const checkEditCategoryAmountRow = $('.checkEditCategoryAmountRow').eq(0).val();
-
-        if (checkEditPrintLater) {
-            $('#virtualCheckEditPrintLater').prop('checked', true);
-            $('#virtualCheckEditNumberInput').val(null).attr('min', checkEditNoMinimum).prop('disabled', true);
-        } else {
-            $('#virtualCheckEditNumberInput').prop('disabled', false).attr('min', checkEditNo).val(checkEditNo);
-            $('#virtualCheckEditPrintLater').prop('checked', false);
-        }
-
-        $(".virtualCheckEditPayeeSelect")[0].selectize.setValue(checkEditPayee);
-        $(".virtualCheckEditBankNameSelect")[0].selectize.setValue(checkEditBankAccount);
-        $('#virtualCheckEditDateInput').val(checkEditPaymentDate);
-        $('#virtualCheckEditMemoInput').val(checkEditMemo);
-        $(".virtualCheckEditCategorySelect")[0].selectize.setValue(checkEditCategoryOptionsRow);
-        $('#virtualCheckEditAmountInput').val(checkEditCategoryAmountRow).change();
-    });
-
-    $(document).on('submit', '.virtualCheckEditForm', function(e) {
-        e.preventDefault();
-        const virtualCheckEditForm = $(this);
-        $('.checkEditForm').submit();
-    });
-
-    initSelectizeWithCache({
-        selector: '.virtualCheckEditPayeeSelect',
-        url: `${window.origin}/accounting/v2/check/getPayeeDetails/all`,
-        valueField: 'id',
-        labelField: 'payee_name',
-        searchField: 'payee_name',
-        optgroupField: 'payee_type',
-        placeholder: 'Select Customer...',
-        renderOptionAttr: 'payee_type',
-    });
-
-    initSelectizeWithCache({
-        selector: '.virtualCheckEditBankNameSelect',
-        url: `${window.origin}/accounting/v2/check/getAccountDetails/Bank`,
-        valueField: 'value',
-        labelField: 'text',
-        searchField: 'text',
-        optgroupField: 'optgroup',
-        placeholder: 'Select Bank Account...',
-        renderOptionAttr: 'balance',
-    });
-
-    initSelectizeWithCache({
-        selector: '.virtualCheckEditCategorySelect',
-        url: `${window.origin}/accounting/v2/check/getAccountDetails/all`,
-        valueField: 'value',
-        labelField: 'text',
-        searchField: 'text',
-        optgroupField: 'optgroup',
-        placeholder: 'Select Category...',
-        renderOptionAttr: 'balance',
-    });
-</script>
-
-
-
-
-
-
-
-
-
-
-
-
-                    
-                    </div>
-                </div>
         </div>
     </div>
 </div>
@@ -547,10 +288,15 @@
             </div>
         </div>
         <div class="row">
-            <div class="col-lg-12 mb-1">
-                <div class="input-group">
+            <div class="col-lg-10 mb-1">
+                <div class="input-group float-start">
                     <input class="form-control recentEditCheckTableSearch" type="text" placeholder="Search...">
-                    <select class="form-select checkEditCategorySearch"></select>
+                    <select class="form-select checkAddCategorySearch"></select>
+                </div>
+            </div>
+            <div class="col-lg-2 mb-1">
+                <div class="float-end">
+                    <button class="btn btn-light recentEditCheckPrint" type="button" disabled><i class="fas fa-print text-muted"></i>&ensp;Print</button>
                 </div>
             </div>
         </div>
@@ -559,6 +305,7 @@
                 <table class="table table-bordered table-hover recentEditCheckTable w-100">
                     <thead style="background: #00000008;">
                         <tr>
+                            <th class="width0"><input class="form-check-input recentEditCheckAll" type="checkbox"></th>
                             <th>No.</th>
                             <th class="width40">Payee</th>
                             <th>Total</th>
@@ -572,6 +319,8 @@
     </div>
 </div>
 <script>
+    var recentEditCheckTable;
+
     function getCheckEditCategoryRowHtml() {
         return `<tr>
             <td><select class="form-select checkEditCategoryOptionsRow" name="checkEditCategoryOptionsRow[]" required></select></td>
@@ -955,20 +704,21 @@
     });
 
     $(document).ready(function() {
-        var recentEditCheckTable;
-
         recentEditCheckTable = $('.recentEditCheckTable').DataTable({
             "processing": true,
             "serverSide": true,
             "ordering": false,
             "ajax": {
-                "url": `${window.origin}/accounting_controllers/v2/check/getRecentChecksServerside`,
+                "url": `${window.origin}/accounting_controllers/v2/check/getRecentChecksServerside/recentEditTable`,
                 "type": "POST",
             },
             "language": {
                 "infoFiltered": "",
                 // "processing": "<div class='custom-loader'><p>Processing, please wait...</p></div>",
             },
+        }).on('draw', function() {
+            $('.recentEditCheckAll').prop('checked', false);
+            $('#recentEditEntryCheckbox').attr('disabled', 'disabled');
         });
 
         $('.recentEditCheckTableSearch').keyup(function() {
@@ -1054,7 +804,7 @@
             processData: false,
             contentType: false,
             beforeSend: function () {
-                // formDisabler(checkEditForm, true);
+                formDisabler(checkEditForm, true);
             },
             success: function (response) {
                 if (response == 1 || (typeof response === 'object' && response.status === 'success')) {
@@ -1071,7 +821,6 @@
                             recentEditCheckTable.draw(false);
                         } catch (error) {}
                         $('.checkEditNotificationDot').show();
-                        $('.checkEditModal').modal('hide');
                     });
                 } else if (typeof response === 'object' && response.status === 'partial') {
                     Swal.fire({
@@ -1095,11 +844,249 @@
                     });
                 }
 
-                // formDisabler($('.virtualCheckEditForm'), false);
-                // formDisabler(checkEditForm, false);
+                formDisabler($('.virtualCheckEditForm'), false);
+                formDisabler(checkEditForm, false);
             },
             error: function (xhr, status, error) {
                 formDisabler($('.virtualCheckEditForm'), false);
+                Swal.fire({
+                    icon: "error",
+                    title: "Network Error!",
+                    html: "An unexpected error occurred. Please try again!",
+                    showConfirmButton: true,
+                    confirmButtonText: "Okay",
+                });
+            },
+        });
+    });
+
+    $('#virtualCheckEditPrintLater').on('change', function() {
+        const value = $(this).prop('checked');
+        if (value) {
+            $('.checkEditPrintLater').prop('checked', true).change();
+            $('#virtualCheckEditNumberInput').val(null).prop('disabled', true);
+        } else {
+            $('.checkEditPrintLater').prop('checked', false).change();
+            $('#virtualCheckEditNumberInput').prop('disabled', false);
+            const checkEditNo = $('.checkEditNo').val();
+            $('#virtualCheckEditNumberInput').val(checkEditNo).change();
+        }
+    });
+
+    $('#virtualCheckEditNumberInput').on('input change', function() {
+        const value = $(this).val();
+        $('.checkEditNo').val(value).change();
+    });
+
+    $(document).on('change', '.virtualCheckEditPayeeSelect', function() {
+        const selectize = $(this)[0].selectize;
+        const id = selectize.getValue();
+        const data = selectize.options[id];
+        $(".checkEditPayee")[0].selectize.setValue(id);
+        $('.checkEditPayeeType').val(data.payee_type).change();
+    });
+
+    $(document).on('change', '.virtualCheckEditBankNameSelect', function() {
+        const selectize = $(this)[0].selectize;
+        const id = selectize.getValue();
+        const data = selectize.options[id];
+        $('.checkEditBankAccount')[0].selectize.setValue(data.value);
+    });
+
+    $(document).on('change', '#virtualCheckEditDateInput', function() {
+        const value = $(this).val();
+        $('.checkEditPaymentDate').val(value).change();
+    });
+
+    $('#virtualCheckEditMemoInput').on('input change', function() {
+        const value = $(this).val();
+        $('.checkEditMemo').val(value).change();
+    });
+
+    $(document).on('change', '.virtualCheckEditCategorySelect', function() {
+        const selectize = $(this)[0].selectize;
+        const id = selectize.getValue();
+        const data = selectize.options[id];
+        $('.checkEditCategoryOptionsRow').eq(0)[0].selectize.setValue(data.value);
+    });
+
+    $('#virtualCheckEditAmountInput').on('input change', function() {
+        const rawValue = $(this).val().trim();
+        const value = parseFloat(rawValue);
+
+        if (!isNaN(value)) {
+            window.totalAmountInVirtualCheck = value;
+            const writtenAmount = virtualNumberToWords(value);
+            $('#virtualCheckEditWrittenText').text(writtenAmount);
+            $('.checkEditCategoryAmountRow').eq(0).val(value).change();
+        } else {
+            window.totalAmountInVirtualCheck = 0;
+            $('#virtualCheckEditWrittenText').text("{WRITTEN_AMOUNT}");
+            $('.checkEditCategoryAmountRow').eq(0).val('').change();
+        }
+    });
+
+    $(document).on('click', '#checkEditVirtualTab', function() {
+        const checkEditPrintLater = $('.checkEditPrintLater').prop('checked');
+        const checkEditNo = $('.checkEditNo').val();
+        const checkEditNoMinimum = $('.checkEditNo').attr('min');
+        const checkEditPayee = $('.checkEditPayee').val();
+        const checkEditBankAccount = $('.checkEditBankAccount').val();
+        const checkEditPaymentDate = $('.checkEditPaymentDate').val();
+        const checkEditMemo = $('.checkEditMemo').val();
+        const checkEditCategoryOptionsRow = $('.checkEditCategoryOptionsRow').eq(0).val();
+        const checkEditCategoryAmountRow = $('.checkEditCategoryAmountRow').eq(0).val();
+
+        if (checkEditPrintLater) {
+            $('#virtualCheckEditPrintLater').prop('checked', true);
+            $('#virtualCheckEditNumberInput').val(null).attr('min', checkEditNoMinimum).prop('disabled', true);
+        } else {
+            $('#virtualCheckEditNumberInput').prop('disabled', false).attr('min', checkEditNo).val(checkEditNo);
+            $('#virtualCheckEditPrintLater').prop('checked', false);
+        }
+
+        $(".virtualCheckEditPayeeSelect")[0].selectize.setValue(checkEditPayee);
+        $(".virtualCheckEditBankNameSelect")[0].selectize.setValue(checkEditBankAccount);
+        $('#virtualCheckEditDateInput').val(checkEditPaymentDate);
+        $('#virtualCheckEditMemoInput').val(checkEditMemo);
+        $(".virtualCheckEditCategorySelect")[0].selectize.setValue(checkEditCategoryOptionsRow);
+        $('#virtualCheckEditAmountInput').val(checkEditCategoryAmountRow).change();
+    });
+
+    $(document).on('submit', '.virtualCheckEditForm', function(e) {
+        e.preventDefault();
+        const virtualCheckEditForm = $(this);
+        $('.checkEditForm').submit();
+    });
+
+    initSelectizeWithCache({
+        selector: '.virtualCheckEditPayeeSelect',
+        url: `${window.origin}/accounting/v2/check/getPayeeDetails/all`,
+        valueField: 'id',
+        labelField: 'payee_name',
+        searchField: 'payee_name',
+        optgroupField: 'payee_type',
+        placeholder: 'Select Customer...',
+        renderOptionAttr: 'payee_type',
+    });
+
+    initSelectizeWithCache({
+        selector: '.virtualCheckEditBankNameSelect',
+        url: `${window.origin}/accounting/v2/check/getAccountDetails/Bank`,
+        valueField: 'value',
+        labelField: 'text',
+        searchField: 'text',
+        optgroupField: 'optgroup',
+        placeholder: 'Select Bank Account...',
+        renderOptionAttr: 'balance',
+    });
+
+    initSelectizeWithCache({
+        selector: '.virtualCheckEditCategorySelect',
+        url: `${window.origin}/accounting/v2/check/getAccountDetails/all`,
+        valueField: 'value',
+        labelField: 'text',
+        searchField: 'text',
+        optgroupField: 'optgroup',
+        placeholder: 'Select Category...',
+        renderOptionAttr: 'balance',
+    });
+
+    $(document).on('click', '.recentEditCheckAll', function() {
+        let isChecked = $(this).is(':checked');
+        $('.recentEditEntryCheckbox').prop('checked', isChecked).trigger('change');
+    });
+
+    $(document).on('change', '.recentEditEntryCheckbox', function() {
+        const total = $('.recentEditEntryCheckbox').length;
+        const checked = $('.recentEditEntryCheckbox:checked').length;
+
+        if (checked === 0) {
+            $('.recentEditCheckAll').prop('checked', false);
+        }
+
+        if (checked === total) {
+            $('.recentEditCheckAll').prop('checked', true);
+        }
+
+        if (checked > 0) {
+            $('.recentEditCheckPrint').removeAttr('disabled');
+        } else {
+            $('.recentEditCheckPrint').attr('disabled', 'disabled');
+        }
+    });
+
+    $(document).on('click', '.recentEditCheckPrint', function () {
+        let ids = getSelectedCheckIds("recent_check_edit_table");
+
+        const pdfSettings = {
+            margin: [0, 0, 0, 0],
+            html2canvas: { scale: 2 },
+            jsPDF: {
+                unit: 'in',
+                format: [8.5, 11],
+                orientation: 'portrait'
+            }
+        };
+
+        $.ajax({
+            url: `${window.origin}/accounting/v2/check/getCheckDetailsForPrint`,
+            type: 'POST',
+            data: { check_id: ids },
+            dataType: 'json',
+            beforeSend: function () {
+                Swal.fire({
+                    icon: "info",
+                    title: `Generating ${ids.length} Check to Print`,
+                    html: "Please wait while the process is running...",
+                    allowOutsideClick: false,
+                    allowEscapeKey: false,
+                    didOpen: () => Swal.showLoading(),
+                });
+            },
+            success: function (response) {
+                let standardHtml = '';
+                let voucherHtml = '';
+
+                for (let i = 0; i < response.length; i += 3) {
+                    standardHtml += `<div class="standardPageContainer">`;
+                    for (let j = 0; j < 3 && i + j < response.length; j++) {
+                        standardHtml += buildStandardCheckHtml(response[i + j], j);
+                    }
+                    standardHtml += `</div>`;
+                }
+
+                response.forEach((check) => {
+                    voucherHtml += buildVoucherCheckHtml(check);
+                });
+
+                const standardEl = document.createElement('div');
+                standardEl.innerHTML = standardHtml;
+
+                const voucherEl = document.createElement('div');
+                voucherEl.innerHTML = voucherHtml;
+
+                Promise.all([
+                    html2pdf().from(standardEl).set(pdfSettings).outputPdf('blob'),
+                    html2pdf().from(voucherEl).set(pdfSettings).outputPdf('blob')
+                ]).then(([standardBlob, voucherBlob]) => {
+                    const standardUrl = URL.createObjectURL(standardBlob);
+                    const voucherUrl = URL.createObjectURL(voucherBlob);
+
+                    $('.standardCheckPreview').attr('src', standardUrl);
+                    $('.voucherPrintPreview').attr('src', voucherUrl);
+
+                    $('.saveCheckPdf').data('standardBlob', standardBlob);
+                    $('.saveCheckPdf').data('voucherBlob', voucherBlob);
+                    $('.saveCheckPdf').data('standardFilename', 'check-standard.pdf');
+                    $('.saveCheckPdf').data('voucherFilename', 'check-voucher.pdf');
+
+                    $('.checkPrintModal').modal('show');
+                    Swal.close();
+                });
+
+            },
+            error: function () {
                 Swal.fire({
                     icon: "error",
                     title: "Network Error!",

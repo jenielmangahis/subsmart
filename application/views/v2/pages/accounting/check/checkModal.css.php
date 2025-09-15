@@ -109,4 +109,137 @@
     .checkEditModalContent {
         display: none;
     }
+
+    .virtualCheckAddContainer,
+    .virtualCheckEditContainer {
+        background-color: #f9f9f9;
+        border: 2px solid #000;
+        border-radius: 10px;
+        font-family: Arial, sans-serif;
+        height: 360px;
+        margin: auto;
+        padding: 20px;
+        position: relative;
+        top: 5px;
+        width: 1299px;
+    }
+
+    .virtualCheckAddSection,
+    .virtualCheckEditSection {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 10px;
+    }
+
+    .virtualCheckAddNumberSection,
+    .virtualCheckEditNumberSection {
+        right: 0;
+    }
+
+    .virtualPrintLaterSection {
+        right: 70px;
+        top: 55px;
+    }
+
+    .virtualCheckAddDateSection,
+    .virtualCheckEditDateSection {
+        right: 26px;
+        top: 100px;
+    }
+
+    .virtualCheckAddPayeeSection,
+    .virtualCheckEditPayeeSection {
+        top: 150px;
+    }
+
+    .virtualCheckAddAmountSection,
+    .virtualCheckEditAmountSection {
+        right: 26px;
+        top: 150px;
+    }
+
+    .virtualCheckAddWrittenAmountSection,
+    .virtualCheckEditWrittenAmountSection {
+        top: 200px;
+    }
+
+    .virtualCheckAddBankNameSection,
+    .virtualCheckEditBankNameSection {
+        top: 250px;
+    }
+
+    .virtualCheckAddCategoryNameSection,
+    .virtualCheckEditCategoryNameSection {
+        left: 290px;
+        top: 250px;
+        width: 170px;
+    }
+
+    .virtualCheckAddExpenseAccountSection,
+    .virtualCheckEditExpenseAccountSection {
+        left: 560px;
+        top: 250px;
+        width: 240px;
+    }
+
+    .virtualCheckAddMemoSection,
+    .virtualCheckEditMemoSection {
+        bottom: 20px;
+    }
+
+    .virtualTopSection {
+        margin-top: -18px;
+        position: absolute;
+    }
+
+    #virtualCheckAddDateInput,
+    #virtualCheckEditDateInput {
+        width: 180px;
+    }
+
+    #virtualCheckAddAmountInput,
+    #virtualCheckEditAmountInput {
+        width: 150px;
+    }
+
+    #virtualCheckAddMemoInput,
+    #virtualCheckEditMemoInput {
+        background: unset;
+        border: none;
+        border-bottom: 1px solid #ccc;
+        border-radius: 0;
+        width: 1010px;
+    }
+
+    #virtualCheckAddNumberInput,
+    #virtualCheckEditNumberInput {
+        width: 59%;
+    }
+
+    .virtualCheckAddPayeeSelect,
+    .virtualCheckEditPayeeSelect {
+        width: 925px;
+    }
+
+    .virtualCheckAddBankNameSelect,
+    .virtualCheckAddCategorySelect,
+    .virtualCheckAddExpenseAccountSelect,
+    .virtualCheckEditBankNameSelect,
+    .virtualCheckEditCategorySelect,
+    .virtualCheckEditExpenseAccountSelect {
+        width: 260px !important;
+    }
+
+    #virtualCheckAddWrittenText,
+    #virtualCheckEditWrittenText {
+        letter-spacing: 4px;
+    }
+
+    .recentAddCheckAll, 
+    .recentAddEntryCheckbox,
+    .recentEditCheckAll, 
+    .recentEditEntryCheckbox {
+        width: 16px;
+        height: 16px;
+    }
 </style>
