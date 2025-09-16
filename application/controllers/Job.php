@@ -88,8 +88,8 @@ class Job extends MY_Controller
         if(get('job_tag')) {
             $tag_id = get('job_tag');
             $jobs = $this->jobs_model->get_all_jobs_by_tag($tag_id, $userId, $leaderBoardType,$sort);
-        }elseif(get('job_status')){
-            $status = get('job_status');
+        }elseif(get('status')){
+            $status = get('status');
             $jobs = $this->jobs_model->get_all_jobs_by_status($status,$sort);
         }else {
             $jobs = $this->jobs_model->get_all_jobs($userId, $leaderBoardType, $conditions, $sort);
