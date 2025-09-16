@@ -357,7 +357,7 @@ foreach ($jobs as $job) {
                                         <?= $job->job_number; ?>
                                     </td>
                                     <td><?php echo date_format(date_create($job->start_date), "m/d/Y"); ?></td>
-                                    <td><?php echo $job->first_name . ' ' . $job->last_name; ?></td>
+                                    <td class="nsm-text-primary"><?php echo $job->first_name . ' ' . $job->last_name; ?></td>
                                     <td>
                                         <?php 
                                             if( $job->FName != '' || $job->LName != '' ){
@@ -402,7 +402,7 @@ foreach ($jobs as $job) {
                                         <?php endif; ?>
                                     </td>
                                     <td><span class="nsm-badge <?= $prio_badge ?>"><?php echo $job->priority; ?></span></td>
-                                    <td class=""><span class="nsm-badge <?= $status_badge ?>"><?php echo $job->status; ?></span></td>
+                                    <td class="nsm-text-primary"><span class="nsm-badge <?= $status_badge ?>"><?php echo $job->status; ?></span></td>
                                     <td style="text-align:right;">
                                         <?php 
                                             $total_job = $job->amount + $job->adjustment_value + $job->program_setup + $job->monthly_monitoring + $job->installation_cost + $job->tax_rate;
@@ -590,8 +590,8 @@ $(document).ready(function() {
     });
 
     $(document).on('change', '#select-all', function(){
-        $('.row-select:checkbox').prop('checked', this.checked);  
-        let total= $('input[name="jobs[]"]:checked').length;
+        $('tr:visible .row-select:checkbox').prop('checked', this.checked);  
+        let total= $('tr:visible input[name="jobs[]"]:checked').length;
         if( total > 0 ){
             $('#num-checked').text(`(${total})`);
         }else{
