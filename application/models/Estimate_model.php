@@ -1047,10 +1047,15 @@ class Estimate_model extends MY_Model
 
     public function get_company_archived_estimates($cid)
     {
-        $this->db->where('company_id', $cid);
-        $this->db->where('view_flag', 1);
-        $this->db->order_by('id', 'DESC');
-        $query = $this->db->get($this->table);
+        $this->db->select('estimates.*, CONCAT(acs_profile.first_name, " ", acs_profile.last_name) AS customer_name,CONCAT(ac_leads.firstname, " ", ac_leads.lastname) AS lead_name');
+        $this->db->from($this->table);
+        $this->db->join('acs_profile', 'estimates.customer_id = acs_profile.prof_id', 'left');
+        $this->db->join('ac_leads', 'estimates.lead_id = ac_leads.leads_id', 'left');
+        $this->db->where('estimates.company_id', $cid);
+        $this->db->where('estimates.view_flag', 1);
+        $this->db->order_by('estimates.id', 'DESC');
+
+        $query = $this->db->get();
         return $query->result();
     }
 
