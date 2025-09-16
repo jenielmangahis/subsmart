@@ -1405,6 +1405,8 @@ $(document).on('click','.btn-edit-header',function(){
             e.preventDefault();
 
             var url = "<?php echo base_url('workorder/save_update_tc'); ?>";
+            var newContent = CKEDITOR.instances['editor-update-termscon'].getData();
+
             _this.find("button[type=submit]").html("Saving");
             _this.find("button[type=submit]").prop("disabled", true);
 
@@ -1413,9 +1415,10 @@ $(document).on('click','.btn-edit-header',function(){
             url: url,
             data: {
                 id: $("#update_tc_id").val(),
-                content: CKEDITOR.instances['editor1'].getData()
+                content: newContent
             },
             success: function(result) {
+
                 Swal.fire({
                     //title: 'Save Successful!',
                     text: "Terms and Condition has been updated successfully.",
@@ -1425,7 +1428,7 @@ $(document).on('click','.btn-edit-header',function(){
                 });
 
                 $("#update_termscon_modal").modal('hide');
-                $("#terms_and_condition_text").html(CKEDITOR.instances['editor1'].getData());
+                $("#terms_and_condition_text").html(newContent);
                 _this.trigger("reset");
 
                 _this.find("button[type=submit]").html("Save");
@@ -1440,6 +1443,8 @@ $(document).on('click','.btn-edit-header',function(){
             e.preventDefault();
 
             var url = "<?php echo base_url('workorder/save_update_tu'); ?>";
+            var newContent = CKEDITOR.instances['editor-update-termsuse'].getData();
+
             _this.find("button[type=submit]").html("Saving");
             _this.find("button[type=submit]").prop("disabled", true);
 
@@ -1448,7 +1453,7 @@ $(document).on('click','.btn-edit-header',function(){
             url: url,
             data: {
                 id: $('#update_tu_id').val(),
-                content: CKEDITOR.instances['editor2'].getData()
+                content: newContent
             },
             success: function(result) {
                 Swal.fire({
@@ -1460,7 +1465,7 @@ $(document).on('click','.btn-edit-header',function(){
                 });
 
                 $("#update_termsuse_modal").modal('hide');
-                $("#terms_of_use_text").html(CKEDITOR.instances['editor2'].getData());
+                $("#terms_of_use_text").html(newContent);
                 _this.trigger("reset");
 
                 _this.find("button[type=submit]").html("Save");

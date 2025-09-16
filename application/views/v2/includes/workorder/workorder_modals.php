@@ -604,7 +604,7 @@
                 <div class="modal-body">
                     <div class="row g-3">
                         <div class="col-12">
-                            <textarea name="editor1" rows="5" id="editor1" class="nsm-field form-control ckeditor"><?php echo $terms_conditions->content; ?></textarea>
+                            <textarea name="editor1" rows="5" id="editor-update-termscon" class="nsm-field form-control ckeditor"><?php echo $terms_conditions->content; ?></textarea>
                             <input type="hidden" id="company_id_modal" value="<?php echo getLoggedCompanyID(); ?>">
                             <input type="hidden" id="update_tc_id" value="<?php echo $terms_conditions->id; ?>">
                         </div>
@@ -654,7 +654,7 @@
                 <div class="modal-body">
                     <div class="row g-3">
                         <div class="col-12">
-                            <textarea name="update_tu" rows="5" id="editor2" class="nsm-field form-control ckeditor"><?php echo $terms_uses->content; ?></textarea>
+                            <textarea name="update_tu" rows="5" id="editor-update-termsuse" class="nsm-field form-control ckeditor"><?php echo $terms_uses->content; ?></textarea>
                             <input type="hidden" id="company_id_modal" value="<?php echo getLoggedCompanyID(); ?>">
                             <input type="hidden" id="update_tu_id" value="<?php echo $terms_uses->id; ?>">
                         </div>

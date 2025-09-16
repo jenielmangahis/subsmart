@@ -2402,3 +2402,5 @@ $route['activity_logs/_archived_list'] = 'Activity_logs/ajax_archived_list';
 $route['activity_logs/_restore_selected_logs'] = 'Activity_logs/ajax_restore_selected_logs';
 $route['activity_logs/_permanently_delete_selected_logs'] = 'Activity_logs/ajax_permanently_delete_selected_logs';
 $route['activity_logs/_delete_all_archived_logs'] = 'Activity_logs/ajax_delete_all_archived_logs';
+$route['activity_logs/_restore_log'] = 'Activity_logs/ajax_restore_log';
+$route['activity_logs/_delete_archived_log'] = 'Activity_logs/ajax_delete_archived_log';

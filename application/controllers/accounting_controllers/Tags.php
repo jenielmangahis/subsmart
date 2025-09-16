@@ -325,7 +325,8 @@ class Tags extends MY_Controller {
 
     public function add_group_tag()
     {
-        $company_id  = getLoggedCompanyID();
+        $company_id  = logged('company_id');
+
         $new_data = array(
             'name' => $this->input->post('tags_group_name'),
             'company_id' => $company_id,
@@ -336,7 +337,7 @@ class Tags extends MY_Controller {
         $tags = $this->tags_model->addtagGroup($new_data);
 
         $return = [
-            'data' => $tags,
+            'id' => $tags,
             'success' => $tags !== null ? true : false,
             'message' => $tags !== null ? 'Success' : 'Error'
         ];
@@ -346,8 +347,8 @@ class Tags extends MY_Controller {
 
     public function add_tag()
     {
-        $company_id  = getLoggedCompanyID();
-        $group_id = $this->input->post('group_id');
+        $company_id  = logged('company_id');
+        $group_id    = $this->input->post('group_id');
 
         $new_data = array(
             'name' => $this->input->post('tag_name'),
@@ -357,9 +358,6 @@ class Tags extends MY_Controller {
             'created_at' => date("Y-m-d H:i:s"),
         );
         
-        // if (isset($group_id) && $group_id) $new_data['group_tag_id'] = $group_id;
-
-
         $tags = $this->tags_model->add($new_data);
 
         $return = [
@@ -369,6 +367,7 @@ class Tags extends MY_Controller {
         ];
 
         echo json_encode($return);
+        exit;
     }
 
     public function delete_tags()
