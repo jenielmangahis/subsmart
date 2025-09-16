@@ -1661,10 +1661,14 @@ class Invoice_model extends MY_Model
 
     public function get_company_archived_invoices($cid)
     {
-        $this->db->where('company_id', $cid);
-        $this->db->where('view_flag', 1);
-        $this->db->order_by('date_updated', 'DESC');
-        $query = $this->db->get('invoices');
+        $this->db->select('invoices.*, CONCAT(acs_profile.first_name, " ", acs_profile.last_name)AS customer_name');
+        $this->db->from($this->table);
+        $this->db->join('acs_profile', 'acs_profile.prof_id = invoices.customer_id', 'left');
+        $this->db->where('invoices.company_id', $cid);
+        $this->db->where('invoices.view_flag', 1);
+        $this->db->order_by('invoices.date_updated', 'DESC');
+        
+        $query = $this->db->get();
         return $query->result();
     }
 
