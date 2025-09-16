@@ -1330,10 +1330,14 @@ class Jobs_model extends MY_Model
 
     public function getAllIsArchiveByCompanyId($cid)
     {
-        $this->db->where('company_id', $cid);
-        $this->db->where('is_archived', 1);
-        $this->db->order_by('archived_date', 'DESC');
-        $query = $this->db->get($this->table);
+        $this->db->select('jobs.*,acs_profile.first_name,acs_profile.last_name');
+        $this->db->from($this->table);
+        $this->db->join('acs_profile', 'acs_profile.prof_id = jobs.customer_id', 'left');
+        $this->db->where("jobs.company_id", $cid);
+        $this->db->where('jobs.is_archived', 1);
+        $this->db->order_by('jobs.archived_date', 'DESC');
+
+        $query = $this->db->get();
         return $query->result();
     }
 

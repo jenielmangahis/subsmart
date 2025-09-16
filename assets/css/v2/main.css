@@ -2280,3 +2280,6 @@ span.select2-selection {
 #payroll-summary-table tfoot td {
     padding: 0.8rem 0.5rem !important;
 }
+.swal2-html-container{
+  padding:2px !important;
+}

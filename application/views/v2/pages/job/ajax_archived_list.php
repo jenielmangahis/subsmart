@@ -34,7 +34,10 @@
                         <input class="form-check-input jobs-archive-row-select table-select" name="jobs[]" type="checkbox" value="<?= $job->id; ?>">
                     </td>
                     <td class="show"><div class="table-row-icon"><i class="bx bx-receipt"></i></div></td>
-                    <td class="fw-bold nsm-text-primary show"><?= $job->job_number; ?></td>
+                    <td class="fw-bold nsm-text-primary show">                        
+                        <?= $job->job_number; ?><br />
+                        <small class="text-muted"><i class='bx bx-user-circle'></i> <?= trim($job->first_name) . ' ' . trim($job->last_name); ?></small>
+                    </td>
                     <td class="show" style="width:5%;">
                         <div class="dropdown table-management">
                             <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown"><i class='bx bx-fw bx-dots-vertical-rounded'></i></a>
