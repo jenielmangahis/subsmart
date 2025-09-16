@@ -29,12 +29,23 @@
     <tbody>
         <?php if ($estimates) { ?>
             <?php foreach($estimates as $estimate){ ?>
+                <?php 
+                    $customer_name = '---';
+                    if ($estimate->customer_id > 0 && $estimate->customer_name != '') {
+                        $customer_name = $estimate->customer_name;
+                    } elseif ($estimate->lead_id > 0 && $estimate->lead_name != '') {
+                        $customer_name = $estimate->lead_name;
+                    }    
+                ?>
                 <tr>
                     <td class="text-center show">
                         <input class="form-check-input estimates-archive-row-select table-select" name="estimates[]" type="checkbox" value="<?= $estimate->id; ?>">
                     </td>
                     <td class="show"><div class="table-row-icon"><i class="bx bx-receipt"></i></div></td>
-                    <td class="fw-bold nsm-text-primary show"><?= $estimate->estimate_number; ?></td>
+                    <td class="fw-bold nsm-text-primary show">
+                        <?= $estimate->estimate_number; ?><br />
+                        <small class="text-muted"><?= $customer_name; ?></small>
+                    </td>
                     <td class="show" style="width:5%;">
                         <div class="dropdown table-management">
                             <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown"><i class='bx bx-fw bx-dots-vertical-rounded'></i></a>

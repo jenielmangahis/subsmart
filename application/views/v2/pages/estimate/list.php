@@ -9,6 +9,9 @@
     text-align: center;
     border-radius: 7px;
 }
+.select-filter-card{
+    cursor: pointer;
+}
 @media only screen and (max-width: 600px) {
    
     .swal2-popup{
@@ -135,8 +138,8 @@
                     </div>
                 </div>
                 <div class="row g-3 mb-3">
-                    <div class="col-12 col-md-4">
-                        <div class="nsm-counter primary h-100 mb-2">
+                    <div class="col-12 col-md-3">
+                        <div class="nsm-counter success h-100 mb-2 select-filter-card" data-status="submitted">
                             <div class="row h-100">
                                 <div class="col-12 col-md-4 d-flex justify-content-center align-items-center">
                                     <i class='bx bx-calendar'></i>
@@ -148,11 +151,11 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-12 col-md-4">
-                        <div class="nsm-counter error h-100 mb-2">
+                    <div class="col-12 col-md-3">
+                        <div class="nsm-counter error h-100 mb-2 select-filter-card" data-status="lost">
                             <div class="row h-100">
                                 <div class="col-12 col-md-4 d-flex justify-content-center align-items-center">
-                                    <i class='bx bx-calendar-exclamation'></i>
+                                    <i class='bx bx-calendar-x'></i>
                                 </div>
                                 <div class="col-12 col-md-8 text-center text-md-start d-flex flex-column justify-content-center">
                                 <h2 id=""><?= $totalLostEstimates->total; ?></h2>
@@ -161,16 +164,25 @@
                             </div>
                         </div>
                     </div>
+                    <div class="col-12 col-md-3">
+                        <div class="nsm-counter default h-100 mb-2 select-filter-card" data-status="draft">
+                            <div class="row h-100">
+                                <div class="col-12 col-md-4 d-flex justify-content-center align-items-center">
+                                    <i class='bx bx-calendar-exclamation'></i>
+                                </div>
+                                <div class="col-12 col-md-8 text-center text-md-start d-flex flex-column justify-content-center">
+                                <h2 id=""><?= $totalDraftEstimates->total; ?></h2>
+                                    <span>Total Draft Estimates</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
                 <div class="row mt-5">
                     <div class="col-12 col-md-4">
-                        <form action="<?php echo base_url('estimate'); ?>" method="GET">
-                            <div class="nsm-field-group search">
-                                <input type="search" class="nsm-field nsm-search form-control mb-2" id="search_field"
-                                    name="search" placeholder="Search Estimates"
-                                    value="<?php echo (!empty($search)) ? $search : ''; ?>">
-                            </div>
-                        </form>
+                        <div class="nsm-field-group search">
+                            <input type="text" class="nsm-field nsm-search form-control mb-2" id="search_field" placeholder="Search Estimates" value="">
+                        </div>
                     </div>
                     <div class="col-12 col-md-8 grid-mb text-end">
                         <div class="dropdown d-inline-block">
@@ -340,10 +352,10 @@
                                 <td class="fw-bold nsm-text-primary show">
                                     <?php echo $estimate->estimate_number; ?>
                                 </td>                        
-                                <td><?= $customer_name; ?></td>
+                                <td class="nsm-text-primary"><?= $customer_name; ?></td>
                                 <td class="nsm-text-primary"><?php echo date('m/d/Y', strtotime($estimate->estimate_date)); ?></td>
                                 <!-- <td><?php echo $estimate->estimate_type; ?></td> -->
-                                <td><span class="nsm-badge <?php echo $badge; ?>"><?php echo $estimate->status; ?></span></td>
+                                <td class="nsm-text-primary"><span class="nsm-badge <?php echo $badge; ?>"><?php echo $estimate->status; ?></span></td>
                                 <td style="width:10%;text-align:right;">
                                     <?php
                                                     $total1 = ((float) $estimate->option1_total) + ((float) $estimate->option2_total);
@@ -499,10 +511,8 @@ $(document).ready(function() {
     });
 
     $("#search_field").on("input", debounce(function() {
-        let _form = $(this).closest("form");
-
-        _form.submit();
-    }, 1500));
+        tableSearch($(this));
+    }, 1000));
 
     $('#btn-new-standard-estimate').on('click', function(){
         <?php if( $profile_info ){ ?>
@@ -537,13 +547,18 @@ $(document).ready(function() {
     });
 
     $(document).on('change', '#select-all', function(){
-        $('.row-select:checkbox').prop('checked', this.checked);  
-        let total= $('input[name="estimates[]"]:checked').length;
+        $('tr:visible .row-select:checkbox').prop('checked', this.checked);  
+        let total= $('tr:visible input[name="estimates[]"]:checked').length;
         if( total > 0 ){
             $('#num-checked').text(`(${total})`);
         }else{
             $('#num-checked').text('');
         }
+    });
+
+    $(document).on('click', '.select-filter-card', function(){
+        let status = $(this).attr('data-status');
+        location.href = base_url + 'estimate/tab/' + status;
     });
 
     $(document).on('change', '.row-select', function(){
