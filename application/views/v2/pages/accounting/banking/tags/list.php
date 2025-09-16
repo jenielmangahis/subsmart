@@ -72,7 +72,7 @@
                     <thead>
                         <tr>
                             <td class="table-icon text-center">
-                                <input class="form-check-input select-all table-select" type="checkbox">
+                                <input class="form-check-input select-all table-select" type="checkbox" name="id_selector" value="0" id="select-all">
                             </td>
                             <td data-name="Tag and Tag Groups">TAGS AND TAG GROUPS</td>
                             <td data-name="Manage"></td>
@@ -85,7 +85,7 @@
                         <tr data-id="<?=$tag['id']?>" data-type="<?=$tag['type']?>" class="<?= $bg_group; ?>">
                             <td>
                                 <div class="table-row-icon table-checkbox">
-                                    <input class="form-check-input select-one table-select" type="checkbox" value="<?=$tag['type']?>_<?=$tag['id']?>">
+                                    <input class="form-check-input select-one row-select table-select" type="checkbox" name="tagsgrp[]" value="<?=$tag['type']?>_<?=$tag['id']?>">
                                 </div>
                             </td>
                             <td class="fw-bold nsm-text-primary nsm-link default" <?=$tag['type'] === 'group' ? 'data-bs-toggle="collapse" data-bs-target=".collapse-'.$index.'"' : ''?>>
@@ -131,7 +131,7 @@
                         <tr class="group-tag-id-<?= $groupTag['group_tag_id']; ?> collapse collapse-<?=$index?>" data-id="<?=$groupTag['id']?>" data-type="group-tag">
                             <td>
                                 <div class="table-row-icon table-checkbox">
-                                    <input class="form-check-input select-one table-select" type="checkbox" value="group-tag_<?=$groupTag['id']?>">
+                                    <input class="form-check-input select-one row-select table-select" type="checkbox" name="tagsgrp[]" value="group-tag_<?=$groupTag['id']?>">
                                 </div>
                             </td>
                             <td class="fw-bold nsm-text-primary nsm-link default"><div class="text-secondary" style="margin-left: 30px;">-<?=$groupTag['name']?></div></td>
