@@ -782,3 +782,13 @@ $(function() {
         autoclose: true
     });
 });
+
+$(document).on('change', '#select-all', function(){
+    $('tr:visible .row-select:checkbox').prop('checked', this.checked);  
+    let total= $('#transactions-table tr:visible input[name="transac_tag[]"]:checked').length;
+    if( total > 0 ){
+        $('#num-checked').text(`(${total})`);
+    }else{
+        $('#num-checked').text('');
+    }
+});
