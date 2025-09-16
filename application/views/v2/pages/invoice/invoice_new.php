@@ -134,7 +134,7 @@
                         </div>                         
                         <div class="dropdown d-inline-block">
                             <button type="button" class="dropdown-toggle nsm-button" data-bs-toggle="dropdown">
-                                <span>Filter by <?= $status ?></span> <i class='bx bx-fw bx-chevron-down'></i>
+                                <span>Filter : <?= $status ?></span> <i class='bx bx-fw bx-chevron-down'></i>
                             </button>
                             <ul class="dropdown-menu dropdown-menu-end select-filter">
                                 <li><a class="dropdown-item" data-id="filter_all" href="<?php echo base_url('invoice') ?>">All</a></li>
