@@ -9,6 +9,9 @@
     background-color: #6a4a86; 
     margin-top: -2px;
 }
+.select-filter-card{
+    cursor: pointer;
+}
 </style>
 <div class="nsm-fab-container">
     <div class="nsm-fab nsm-fab-icon nsm-bxshadow">
@@ -58,7 +61,7 @@
                 </div>
                 <div class="row g-3 mb-3">
                     <div class="col-12 col-md-4">
-                        <div class="nsm-counter primary h-100 mb-2">
+                        <div class="nsm-counter primary h-100 mb-2 select-filter-card" data-status='all'>
                             <div class="row h-100">
                                 <div class="col-12 col-md-4 d-flex justify-content-center align-items-center">
                                     <i class='bx bx-receipt'></i>
@@ -71,7 +74,7 @@
                         </div>
                     </div>
                     <div class="col-12 col-md-4">
-                        <div class="nsm-counter secondary h-100 mb-2">
+                        <div class="nsm-counter secondary h-100 mb-2 select-filter-card" data-status='unpaid'>
                             <div class="row h-100">
                                 <div class="col-12 col-md-4 d-flex justify-content-center align-items-center">
                                     <i class='bx bx-receipt'></i>
@@ -84,7 +87,7 @@
                         </div>
                     </div>
                     <div class="col-12 col-md-4">
-                        <div class="nsm-counter success h-100 mb-2">
+                        <div class="nsm-counter success h-100 mb-2 select-filter-card" data-status='paid'>
                             <div class="row h-100">
                                 <div class="col-12 col-md-4 d-flex justify-content-center align-items-center">
                                     <i class='bx bx-receipt'></i>
@@ -130,28 +133,6 @@
                             </ul>
                         </div>                         
                         <div class="dropdown d-inline-block">
-                            <?php
-                            switch ($tab) {
-                                case 2:
-                                    $status = "Due";
-                                    break;
-                                case 3:
-                                    $status = "Overdue";
-                                    break;
-                                case 4:
-                                    $status = "Partially Paid";
-                                    break;
-                                case 5:
-                                    $status = "Paid";
-                                    break;
-                                case 6:
-                                    $status = "Draft";
-                                    break;
-                                default:
-                                    $status = "All";
-                                    break;
-                            }
-                            ?>
                             <button type="button" class="dropdown-toggle nsm-button" data-bs-toggle="dropdown">
                                 <span>Filter by <?= $status ?></span> <i class='bx bx-fw bx-chevron-down'></i>
                             </button>
@@ -295,7 +276,7 @@
                                             ?>
                                             </label>
                                         </td>
-                                        <td>
+                                        <td class="nsm-text-primary">
                                             <span class="status-label nsm-badge <?= $badge ?>">
                                                 <?php 
                                                     if( $invoice->status == '' ){
@@ -482,9 +463,18 @@
 <script type="text/javascript">
     $(document).ready(function() {
 
+        $(document).on('click', '.select-filter-card', function(){
+            let status = $(this).attr('data-status');
+            if( status == 'all' ){
+                location.href = base_url + 'invoice';
+            }else{
+                location.href = base_url + 'invoice/tab/' + status;
+            }
+        });
+
         $(document).on('change', '#select-all', function(){
-            $('#tbl-invoices .row-select:checkbox').prop('checked', this.checked);  
-            let total= $('#tbl-invoices input[name="invoice[]"]:checked').length;
+            $('#tbl-invoices tr:visible .row-select:checkbox').prop('checked', this.checked);  
+            let total= $('#tbl-invoices tr:visible input[name="invoice[]"]:checked').length;
             if( total > 0 ){
                 $('#num-checked').text(`(${total})`);
             }else{
@@ -702,7 +692,13 @@
 
         $(".nsm-table").nsmPagination();
         $("#search_field").on("input", debounce(function() {
-            tableSearch($(this));        
+            let search = $(this).val();
+            if( search == '' ){
+                $(".nsm-table").nsmPagination();
+                $("#tbl-invoices").find("tbody .nsm-noresult").remove();
+            }else{
+                tableSearch($(this));        
+            }
         }, 1000));
 
         $(document).on('click', '.btn-edit-invoice-payment', function(){
