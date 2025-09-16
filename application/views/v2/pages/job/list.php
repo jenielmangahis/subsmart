@@ -81,6 +81,9 @@ table.dataTable.no-footer {
     height: var(--size);
     min-width: var(--size);
 }
+.select-filter-card{
+    cursor: pointer;
+}
 </style>
 
 <?php
@@ -161,7 +164,7 @@ foreach ($jobs as $job) {
                 </div>
                 <div class="row g-3 mb-3">
                     <div class="col-12 col-md-4">
-                        <div class="nsm-counter primary h-100 mb-2">
+                        <div class="nsm-counter primary h-100 mb-2 select-filter-card" data-status="scheduled">
                             <div class="row h-100">
                                 <div class="col-12 col-md-4 d-flex justify-content-center align-items-center">
                                     <i class='bx bx-calendar'></i>
@@ -174,7 +177,7 @@ foreach ($jobs as $job) {
                         </div>
                     </div>
                     <div class="col-12 col-md-4">
-                        <div class="nsm-counter secondary h-100 mb-2">
+                        <div class="nsm-counter secondary h-100 mb-2 select-filter-card" data-status="pending">
                             <div class="row h-100">
                                 <div class="col-12 col-md-4 d-flex justify-content-center align-items-center">
                                     <i class='bx bx-calendar-exclamation'></i>
@@ -187,7 +190,7 @@ foreach ($jobs as $job) {
                         </div>
                     </div>
                     <div class="col-12 col-md-4">
-                        <div class="nsm-counter success h-100 mb-2">
+                        <div class="nsm-counter success h-100 mb-2 select-filter-card" data-status="completed">
                             <div class="row h-100">
                                 <div class="col-12 col-md-4 d-flex justify-content-center align-items-center">
                                     <i class='bx bx-calendar-check'></i>
@@ -506,6 +509,17 @@ $("#search_field").on("input", debounce(function() {
     }
     
 }, 1000));
+
+$(document).on('click', '.select-filter-card', function(){
+    let status = $(this).attr('data-status');
+    if( status == 'scheduled' ){
+        location.href = base_url + 'job?status=Scheduled';
+    }else if( status == 'pending' ){
+        location.href = base_url + 'job?status=Pending';
+    }else if( status == 'completed' ){
+        location.href = base_url + 'job?status=Completed';
+    }
+});
 
 $(document).on('click', '.btn-delete-job', function(){
     var job_id = $(this).attr('data-id');
