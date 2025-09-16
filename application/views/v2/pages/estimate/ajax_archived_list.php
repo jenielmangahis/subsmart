@@ -32,9 +32,9 @@
                 <?php 
                     $customer_name = '---';
                     if ($estimate->customer_id > 0 && $estimate->customer_name != '') {
-                        $customer_name = $estimate->customer_name;
+                        $customer_name = trim($estimate->customer_name);
                     } elseif ($estimate->lead_id > 0 && $estimate->lead_name != '') {
-                        $customer_name = $estimate->lead_name;
+                        $customer_name = trim($estimate->lead_name);
                     }    
                 ?>
                 <tr>
@@ -44,7 +44,7 @@
                     <td class="show"><div class="table-row-icon"><i class="bx bx-receipt"></i></div></td>
                     <td class="fw-bold nsm-text-primary show">
                         <?= $estimate->estimate_number; ?><br />
-                        <small class="text-muted"><?= $customer_name; ?></small>
+                        <small class="text-muted"><i class='bx bx-user-circle'></i> <?= $customer_name; ?></small>
                     </td>
                     <td class="show" style="width:5%;">
                         <div class="dropdown table-management">
