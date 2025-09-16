@@ -216,7 +216,7 @@
                         <tr>
                             <td>
                                 <div class="table-row-icon table-checkbox">
-                                    <input class="form-check-input select-one table-select" type="checkbox" name="transac_tag[]" value="<?=str_replace(' ', '_', strtolower($transaction['type']))?>-<?=$transaction['id']?>">
+                                    <input class="form-check-input row-select select-one table-select" type="checkbox" name="transac_tag[]" value="<?=str_replace(' ', '_', strtolower($transaction['type']))?>-<?=$transaction['id']?>">
                                 </div>
                             </td>
                             <td class="row-hover" style="width:10%;" data-type="Bill"><?=$transaction['date']?></td>

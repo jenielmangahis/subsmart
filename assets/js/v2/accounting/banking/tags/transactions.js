@@ -792,3 +792,12 @@ $(document).on('change', '#select-all', function(){
         $('#num-checked').text('');
     }
 });
+
+$(document).on('change', '.row-select', function(){
+    let total= $('#transactions-table input[name="transac_tag[]"]:checked').length;
+    if( total > 0 ){
+        $('#num-checked').text(`(${total})`);
+    }else{
+        $('#num-checked').text('');
+    }
+});

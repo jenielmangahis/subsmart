@@ -270,7 +270,7 @@ $('#delete-tags-button').on('click', function() {
 
     var data = new FormData();
     var total_checked = 0;
-        
+
     $('#tags-table tr:visible input[name="tagsgrp[]"]:checked').each(function() {
         data.append('tags[]', $(this).val());
         total_checked = total_checked + 1;
@@ -527,6 +527,15 @@ $(document).on('submit', '#tags-table .edit-form', function(e) {
 $(document).on('change', '#select-all', function(){
     $('tr:visible .row-select:checkbox').prop('checked', this.checked);  
     let total= $('#tags-table tr:visible input[name="tagsgrp[]"]:checked').length;
+    if( total > 0 ){
+        $('#num-checked').text(`(${total})`);
+    }else{
+        $('#num-checked').text('');
+    }
+});
+
+$(document).on('change', '.row-select', function(){
+    let total= $('#tags-table input[name="tagsgrp[]"]:checked').length;
     if( total > 0 ){
         $('#num-checked').text(`(${total})`);
     }else{
