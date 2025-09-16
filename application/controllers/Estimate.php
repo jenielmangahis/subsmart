@@ -105,15 +105,17 @@ class Estimate extends MY_Controller
             }
         }
 
-        $totalSubmittedEstimates  = $this->estimate_model->countTotalEstimateByCompanyIdAndStatus($company_id, 'Submitted');
-        $totalLostEstimates       = $this->estimate_model->countTotalEstimateByCompanyIdAndStatus($company_id, 'Lost');
+        $totalSubmittedEstimates = $this->estimate_model->countTotalEstimateByCompanyIdAndStatus($company_id, 'Submitted');
+        $totalLostEstimates      = $this->estimate_model->countTotalEstimateByCompanyIdAndStatus($company_id, 'Lost');
+        $totalDraftEstimates     = $this->estimate_model->countTotalEstimateByCompanyIdAndStatus($company_id, 'Draft');
 
         $this->page_data['order_by'] = $order_by;
         $this->page_data['tab'] = $tab;
         $this->page_data['role'] = $role;
         $this->page_data['totalSubmittedEstimates'] = $totalSubmittedEstimates;
         $this->page_data['totalLostEstimates'] = $totalLostEstimates;
-        $this->page_data['estimateStatusFilters'] = $this->estimate_model->getStatusWithCount($company_id);
+        $this->page_data['totalDraftEstimates'] = $totalDraftEstimates;
+        //$this->page_data['estimateStatusFilters'] = $this->estimate_model->getStatusWithCount($company_id);
         $this->load->view('v2/pages/estimate/list', $this->page_data);
     }
 
