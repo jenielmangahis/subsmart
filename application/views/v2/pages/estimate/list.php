@@ -314,6 +314,13 @@
                                     if( $estimate->next_remind_date == date("Y-m-d") ){
                                         $row_class = 'with-reminder';
                                     }
+
+                                    $customer_name = '---';
+                                    if ($estimate->customer_id > 0 && $estimate->customer_name != '') {
+                                        $customer_name = $estimate->customer_name;
+                                    } elseif ($estimate->lead_id > 0 && $estimate->lead_name != '') {
+                                        $customer_name = $estimate->lead_name;
+                                    }
                             ?>
                             <tr class="<?= $row_class; ?>">
                                 <?php if(checkRoleCanAccessModule('estimates', 'write')){ ?>
@@ -333,13 +340,7 @@
                                 <td class="fw-bold nsm-text-primary show">
                                     <?php echo $estimate->estimate_number; ?>
                                 </td>                        
-                                <td>
-                                    <?php if ($estimate->customer_id > 0) { ?>
-                                        <?php echo $estimate->customer_name != '' ? $estimate->customer_name : '---'; ?>
-                                    <?php } elseif ($estimate->lead_id > 0) { ?>
-                                         <?php echo $estimate->lead_name != '' ? $estimate->lead_name : '---'; ?>
-                                    <?php } ?>
-                                </td>
+                                <td><?= $customer_name; ?></td>
                                 <td class="nsm-text-primary"><?php echo date('m/d/Y', strtotime($estimate->estimate_date)); ?></td>
                                 <!-- <td><?php echo $estimate->estimate_type; ?></td> -->
                                 <td><span class="nsm-badge <?php echo $badge; ?>"><?php echo $estimate->status; ?></span></td>
@@ -384,8 +385,9 @@
                                             <?php if(checkRoleCanAccessModule('estimates', 'write')){ ?>
                                             <li>
                                                 <a class="dropdown-item send-item" href="javascript:void(0);"
+                                                    est-customer="<?= $customer_name; ?>" 
                                                     acs-id="<?php echo $estimate->customer_id; ?>"
-                                                    est-id="<?php echo $estimate->id; ?>">Send to Customer</a>
+                                                    est-id="<?php echo $estimate->id; ?>" est-number="<?= $estimate->estimate_number; ?>">Send to Customer</a>
                                             </li>
                                             <?php } ?>
                                             <?php if(checkRoleCanAccessModule('estimates', 'write')){ ?>
@@ -611,6 +613,19 @@ $(document).ready(function() {
                             });
                         }
                     },
+                    beforeSend: function(){
+                        Swal.fire({
+                            icon: "info",
+                            title: "Processing",
+                            html: "Please wait while the process is running...",
+                            allowOutsideClick: false,
+                            allowEscapeKey: false,
+                            showConfirmButton: false,
+                            didOpen: () => {
+                                Swal.showLoading();
+                            },
+                        });
+                    }
                 });
             }
         });
@@ -622,7 +637,7 @@ $(document).ready(function() {
 
         Swal.fire({
             title: 'Clone Estimate',
-            html: `You are going create a new Estimate based on Estimate Number <b>${est_num}</b>. Afterwards you can edit the newly created Estimate.`,
+            html: `You are going create a new estimate based on estimate number <b>${est_num}</b>. Afterwards you can edit the newly created estimate.`,
             icon: 'question',
             confirmButtonText: 'Proceed',
             showCancelButton: true,
@@ -661,6 +676,19 @@ $(document).ready(function() {
                             });
                         }
                     },
+                    beforeSend: function(){
+                        Swal.fire({
+                            icon: "info",
+                            title: "Processing",
+                            html: "Please wait while the process is running...",
+                            allowOutsideClick: false,
+                            allowEscapeKey: false,
+                            showConfirmButton: false,
+                            didOpen: () => {
+                                Swal.showLoading();
+                            },
+                        });
+                    }
                 });
             }
         });
@@ -695,56 +723,82 @@ $(document).ready(function() {
     $(document).on("click", ".send-item", function() {
         let id = $(this).attr('acs-id');
         let est_id = $(this).attr('est-id');
+        let est_number = $(this).attr('est-number');
+        let customer_name = $(this).attr('est-customer');
 
-        Swal.fire({
-            title: 'Sending of Estimate ',
-            text: "Send this to customer?",
-            icon: 'question',
-            confirmButtonText: 'Proceed',
-            showCancelButton: true,
-            cancelButtonText: "Cancel"
-        }).then((result) => {
-            if (result.value) {
-                $.ajax({
-                    type: 'POST',
-                    url: "<?php echo base_url(); ?>estimate/sendEstimateToAcs",
-                    data: {
-                        id: id,
-                        est_id: est_id
-                    },
-                    success: function(result) {
-                        Swal.fire({
-                            title: 'Good job!',
-                            text: "Successfully sent to Customer!",
-                            icon: 'success',
-                            showCancelButton: false,
-                            confirmButtonText: 'Okay',
-                            showClass: {
-                            icon: '' ,                      // disable icon animation
-  },
-                        }).then((result) => {
-                            if (result.value) {
-                                location.reload();
-                            }
-                        });
-                    },
-                    error: function() {
-                        Swal.fire({
-                            title: 'Error',
-                            text: "Something went wrong, please try again later.",
-                            icon: 'error',
-                            showCancelButton: false,
-                            confirmButtonText: 'Okay'
-                        }).then((result) => {
-                            if (result.value) {
-                                location.reload();
-                            }
-                        });
-                    },
+        if( customer_name != '' && customer_name != '---' ){
+            Swal.fire({
+                title: 'Send Estimate',
+                html: `Send estimate number <b>${est_number}</b> to customer <b>${customer_name}</b>?`,
+                icon: 'question',
+                confirmButtonText: 'Proceed',
+                showCancelButton: true,
+                cancelButtonText: "Cancel"
+            }).then((result) => {
+                if (result.value) {
+                    $.ajax({
+                        type: 'POST',
+                        url: base_url + "estimate/sendEstimateToAcs",
+                        data: {
+                            id: id,
+                            est_id: est_id
+                        },
+                        success: function(result) {
+                            Swal.fire({
+                                title: 'Send Estimate',
+                                html: "Estimate was successfully sent to customer",
+                                icon: 'success',
+                                showCancelButton: false,
+                                confirmButtonText: 'Okay'
+                            }).then((result) => {
+                                //if (result.value) {
+                                    //location.reload();
+                                //}
+                            });
+                        },
+                        beforeSend: function(){
+                            Swal.fire({
+                                icon: "info",
+                                title: "Processing",
+                                html: "Please wait while the process is running...",
+                                allowOutsideClick: false,
+                                allowEscapeKey: false,
+                                showConfirmButton: false,
+                                didOpen: () => {
+                                    Swal.showLoading();
+                                },
+                            });
+                        },
+                        error: function() {
+                            Swal.fire({
+                                title: 'Error',
+                                text: "Something went wrong, please try again later.",
+                                icon: 'error',
+                                showCancelButton: false,
+                                confirmButtonText: 'Okay'
+                            }).then((result) => {
+                                if (result.value) {
+                                    location.reload();
+                                }
+                            });
+                        },
 
-                });
-            }
-        });
+                    });
+                }
+            });
+        }else{
+            Swal.fire({
+                title: 'Error',
+                text: "Cannot find customer data",
+                icon: 'error',
+                showCancelButton: false,
+                confirmButtonText: 'Okay'
+            }).then((result) => {
+                if (result.value) {
+                    location.reload();
+                }
+            });
+        }
     });
 
     $(document).on("click", ".delete-item", function() {
@@ -767,7 +821,7 @@ $(document).ready(function() {
                     },
                     success: function(result) {
                         Swal.fire({
-                            //title: 'Good job!',
+                            title: 'Delete Estimate',
                             text: "Data Deleted Successfully!",
                             icon: 'success',
                             showCancelButton: false,
@@ -778,6 +832,19 @@ $(document).ready(function() {
                             }
                         });
                     },
+                    beforeSend: function(){
+                        Swal.fire({
+                            icon: "info",
+                            title: "Processing",
+                            html: "Please wait while the process is running...",
+                            allowOutsideClick: false,
+                            allowEscapeKey: false,
+                            showConfirmButton: false,
+                            didOpen: () => {
+                                Swal.showLoading();
+                            },
+                        });
+                    }
                 });
             }
         });
@@ -827,6 +894,19 @@ $(document).ready(function() {
                                 });
                             }
                         },
+                        beforeSend: function(){
+                            Swal.fire({
+                                icon: "info",
+                                title: "Processing",
+                                html: "Please wait while the process is running...",
+                                allowOutsideClick: false,
+                                allowEscapeKey: false,
+                                showConfirmButton: false,
+                                didOpen: () => {
+                                    Swal.showLoading();
+                                },
+                            });
+                        }
                     });
 
                 }
@@ -899,6 +979,19 @@ $(document).ready(function() {
                                     text: result.msg,
                                 });
                             }
+                        },
+                        beforeSend: function(){
+                            Swal.fire({
+                                icon: "info",
+                                title: "Processing",
+                                html: "Please wait while the process is running...",
+                                allowOutsideClick: false,
+                                allowEscapeKey: false,
+                                showConfirmButton: false,
+                                didOpen: () => {
+                                    Swal.showLoading();
+                                },
+                            });
                         }
                     });
                 }
@@ -951,6 +1044,19 @@ $(document).ready(function() {
                                 });
                             }
                         },
+                        beforeSend: function(){
+                            Swal.fire({
+                                icon: "info",
+                                title: "Processing",
+                                html: "Please wait while the process is running...",
+                                allowOutsideClick: false,
+                                allowEscapeKey: false,
+                                showConfirmButton: false,
+                                didOpen: () => {
+                                    Swal.showLoading();
+                                },
+                            });
+                        }
                     });
 
                 }
@@ -1003,6 +1109,19 @@ $(document).ready(function() {
                                 });
                             }
                         },
+                        beforeSend: function(){
+                            Swal.fire({
+                                icon: "info",
+                                title: "Processing",
+                                html: "Please wait while the process is running...",
+                                allowOutsideClick: false,
+                                allowEscapeKey: false,
+                                showConfirmButton: false,
+                                didOpen: () => {
+                                    Swal.showLoading();
+                                },
+                            });
+                        }
                     });
 
                 }
@@ -1049,6 +1168,19 @@ $(document).ready(function() {
                                 });
                             }
                         },
+                        beforeSend: function(){
+                            Swal.fire({
+                                icon: "info",
+                                title: "Processing",
+                                html: "Please wait while the process is running...",
+                                allowOutsideClick: false,
+                                allowEscapeKey: false,
+                                showConfirmButton: false,
+                                didOpen: () => {
+                                    Swal.showLoading();
+                                },
+                            });
+                        }
                     });
 
                 }
@@ -1106,6 +1238,19 @@ $(document).ready(function() {
                             });
                         }
                     },
+                    beforeSend: function(){
+                        Swal.fire({
+                            icon: "info",
+                            title: "Processing",
+                            html: "Please wait while the process is running...",
+                            allowOutsideClick: false,
+                            allowEscapeKey: false,
+                            showConfirmButton: false,
+                            didOpen: () => {
+                                Swal.showLoading();
+                            },
+                        });
+                    }
                 });
             }
         });
