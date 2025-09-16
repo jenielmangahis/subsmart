@@ -2,8 +2,8 @@
 $(document).ready(function() {
 
     $(document).on('change', '#select-all', function(){
-        $('.row-select:checkbox').prop('checked', this.checked);  
-        let total= $('#tbl-users-list input[name="users[]"]:checked').length;
+        $('tr:visible .row-select:checkbox').prop('checked', this.checked);  
+        let total= $('#tbl-users-list tr:visible input[name="users[]"]:checked').length;
         if( total > 0 ){
             $('#num-checked').text(`(${total})`);
         }else{
