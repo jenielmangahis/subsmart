@@ -548,6 +548,19 @@
                                     });
                                 }
                             },
+                            beforeSend: function(){
+                                Swal.fire({
+                                    icon: "info",
+                                    title: "Processing",
+                                    html: "Please wait while the process is running...",
+                                    allowOutsideClick: false,
+                                    allowEscapeKey: false,
+                                    showConfirmButton: false,
+                                    didOpen: () => {
+                                        Swal.showLoading();
+                                    },
+                                });
+                            }
                         });
 
                     }
@@ -601,6 +614,19 @@
                                     });
                                 }
                             },
+                            beforeSend: function(){
+                                Swal.fire({
+                                    icon: "info",
+                                    title: "Processing",
+                                    html: "Please wait while the process is running...",
+                                    allowOutsideClick: false,
+                                    allowEscapeKey: false,
+                                    showConfirmButton: false,
+                                    didOpen: () => {
+                                        Swal.showLoading();
+                                    },
+                                });
+                            }
                         });
 
                     }
@@ -653,6 +679,19 @@
                                     });
                                 }
                             },
+                            beforeSend: function(){
+                                Swal.fire({
+                                    icon: "info",
+                                    title: "Processing",
+                                    html: "Please wait while the process is running...",
+                                    allowOutsideClick: false,
+                                    allowEscapeKey: false,
+                                    showConfirmButton: false,
+                                    didOpen: () => {
+                                        Swal.showLoading();
+                                    },
+                                });
+                            }
                         });
 
                     }
@@ -758,6 +797,19 @@
                                 });
                             }
                         },
+                        beforeSend: function(){
+                            Swal.fire({
+                                icon: "info",
+                                title: "Processing",
+                                html: "Please wait while the process is running...",
+                                allowOutsideClick: false,
+                                allowEscapeKey: false,
+                                showConfirmButton: false,
+                                didOpen: () => {
+                                    Swal.showLoading();
+                                },
+                            });
+                        }
                     });
                 }
             });
@@ -792,11 +844,24 @@
                                 showCancelButton: false,
                                 confirmButtonText: 'Okay'
                             }).then((result) => {
-                                if (result.value) {
+                                //if (result.value) {
                                     location.reload();
-                                }
+                                //}
                             });
                         },
+                        beforeSend: function(){
+                            Swal.fire({
+                                icon: "info",
+                                title: "Processing",
+                                html: "Please wait while the process is running...",
+                                allowOutsideClick: false,
+                                allowEscapeKey: false,
+                                showConfirmButton: false,
+                                didOpen: () => {
+                                    Swal.showLoading();
+                                },
+                            });
+                        }
                     });
                 }
             });
@@ -844,8 +909,21 @@
                                 });
                             }
                         },
+                        beforeSend: function(){
+                        Swal.fire({
+                                icon: "info",
+                                title: "Processing",
+                                html: "Please wait while the process is running...",
+                                allowOutsideClick: false,
+                                allowEscapeKey: false,
+                                showConfirmButton: false,
+                                didOpen: () => {
+                                    Swal.showLoading();
+                                },
+                            });
+                        },
                         complete : function(){
-                            $('#loading_modal').modal('hide');
+                            //$('#loading_modal').modal('hide');
                         },
                     });
                 }
@@ -857,6 +935,7 @@
             var invoice_number = $(this).attr('data-invoice-number');
 
             Swal.fire({
+                title: "Clone Invoice",
                 html: "You are going create a new invoice based on invoice number <b>"+ invoice_number +"</b>.<br/><br /><small style='font-size:13px;'>The new invoice will contain the same items (e.g. materials, labour).Cloned invoice will have status as <b>draft</b>. You will be able to edit and remove the invoice items as you need.</small><br /><br />Do you wish to proceed with selected action?",
                 icon: 'question',
                 confirmButtonText: 'Proceed',
@@ -878,6 +957,7 @@
                             if( result.is_success == 1 ){
                                 var edit_invoice_url = base_url + 'invoice/invoice_edit/' + result.invoice_id;                        
                                 Swal.fire({
+                                    title: "Clone Invoice",
                                     html: 'Invoice was Invoice was successfully cloned.',
                                     icon: 'success',
                                     showCancelButton: false,
@@ -899,6 +979,19 @@
                                     html: result.msg
                                 });
                             }
+                        },
+                        beforeSend: function(){
+                        Swal.fire({
+                                icon: "info",
+                                title: "Processing",
+                                html: "Please wait while the process is running...",
+                                allowOutsideClick: false,
+                                allowEscapeKey: false,
+                                showConfirmButton: false,
+                                didOpen: () => {
+                                    Swal.showLoading();
+                                },
+                            });
                         },
                         complete : function(){
                             
@@ -1111,7 +1204,7 @@
                                 $('#modal-archived-invoices').modal('hide');
                                 Swal.fire({
                                 icon: 'success',
-                                title: 'Success',
+                                title: 'Restore Invoice Data',
                                 text: 'Invoice data was successfully restored.',
                                 }).then((result) => {
                                     location.reload();
@@ -1123,6 +1216,19 @@
                                     text: result.msg,
                                 });
                             }
+                        },
+                        beforeSend: function(){
+                            Swal.fire({
+                                icon: "info",
+                                title: "Processing",
+                                html: "Please wait while the process is running...",
+                                allowOutsideClick: false,
+                                allowEscapeKey: false,
+                                showConfirmButton: false,
+                                didOpen: () => {
+                                    Swal.showLoading();
+                                },
+                            });
                         }
                     });
                 }
@@ -1216,6 +1322,19 @@
                                     text: result.msg,
                                 });
                             }
+                        },
+                        beforeSend: function(){
+                            Swal.fire({
+                                icon: "info",
+                                title: "Processing",
+                                html: "Please wait while the process is running...",
+                                allowOutsideClick: false,
+                                allowEscapeKey: false,
+                                showConfirmButton: false,
+                                didOpen: () => {
+                                    Swal.showLoading();
+                                },
+                            });
                         }
                     });
                 }
