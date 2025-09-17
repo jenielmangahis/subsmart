@@ -497,4 +497,24 @@ $(function(){
             },
         });
     });   
+
+    $(document).on('change', '#chk-all-row', function(){
+        $('tr:visible .row-select:checkbox').prop('checked', this.checked);  
+        let total= $('#worksite-table tr:visible input[name="row_selected[]"]:checked').length;
+        if( total > 0 ){
+            $('#num-checked').text(`(${total})`);
+        }else{
+            $('#num-checked').text('');
+        }
+    });
+
+    $(document).on('change', '.row-select', function(){
+        let total= $('#worksite-table input[name="row_selected[]"]:checked').length;
+        if( total > 0 ){
+            $('#num-checked').text(`(${total})`);
+        }else{
+            $('#num-checked').text('');
+        }
+    });    
+
 });

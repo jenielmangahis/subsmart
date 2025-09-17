@@ -23,9 +23,8 @@
                         <div class="dropdown d-inline-block">
                             <input type="hidden" class="nsm-field form-control" id="selected_ids">
                             <button type="button" class="dropdown-toggle nsm-button" data-bs-toggle="dropdown">
-                                <span>
-                                    With Selected
-                                </span> <i class='bx bx-fw bx-chevron-down'></i>
+                                <span id="num-checked"></span>
+                                <span>With Selected</span> <i class='bx bx-fw bx-chevron-down'></i>
                             </button>
                             <ul class="dropdown-menu dropdown-menu-end batch-actions">
                                 <li><a class="dropdown-item" href="javascript:void(0);" id="batch-delete">Delete</a></li>
@@ -140,7 +139,7 @@
                     <thead>
                         <tr>
                             <td class="table-icon text-center">
-                                <input class="form-check-input select-all table-select" type="checkbox">
+                                <input class="form-check-input select-all table-select" id="select-all" type="checkbox">
                             </td>
                             <td data-name="Pay date">PAY DATE</td>
                             <td data-name="Name">NAME</td>
@@ -158,7 +157,7 @@
                                 <tr>
                                     <td>
                                         <div class="table-row-icon table-checkbox">
-                                            <input class="form-check-input select-one table-select" type="checkbox" value="<?= $paycheck['id'] ?>">
+                                            <input class="form-check-input select-one row-select table-select" name="paycheckRow[]" type="checkbox" value="<?= $paycheck['id'] ?>">
                                         </div>
                                     </td>
                                     <td><?= isset($paycheck['pay_date']) ? $paycheck['pay_date'] : 'No pay date' ?></td>
