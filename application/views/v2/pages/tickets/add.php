@@ -1727,36 +1727,6 @@ $(document).ready(function(){
 <script src="https://cdnjs.cloudflare.com/ajax/libs/timepicker/1.3.5/jquery.timepicker.min.js"></script>
 <link href="https://cdnjs.cloudflare.com/ajax/libs/timepicker/1.3.5/jquery.timepicker.min.css" rel="stylesheet" />
 <script>
-// $('#scheduled_time').timepicker({
-//   timeFormat: 'h:mm a',
-//   interval: 30,
-//   minTime: '8',
-//   maxTime: '11:00 PM',
-//   startTime: '8:00 AM',
-//   dynamic: false, 
-//   dropdown: true,
-//   scrollbar: true
-// });
-
-// $('#scheduled_time')
-//   .timepicker('option', 'change', function(time) {
-//     var later = new Date(time.getTime() + (2 * 60 * 60 * 1000));
-//     $('#scheduled_time_to').timepicker('option', 'minTime', time);
-//     $('#scheduled_time_to').timepicker('setTime', later);
-//   });
-
-// $('#scheduled_time_to').timepicker({
-//   timeFormat: 'hh:mm a',
-//   interval: 30,
-//   maxTime: '11:00 PM',
-//   startTime: '08:00 AM',
-//   dynamic: false,
-//   dropdown: true,
-//   scrollbar: true
-// });
-
-</script>
-<script>
     
 $('#modal_items_list').DataTable({
     "autoWidth" : false,
@@ -2073,6 +2043,7 @@ $(document).on('click', '.saveCustomer', function() {
                 });
 
 });
+alert(4);
 </script>
 
 
