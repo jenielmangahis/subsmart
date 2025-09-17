@@ -524,6 +524,7 @@ class Tags extends MY_Controller {
         usort($transactions, function($a, $b) {
             return strtotime($a['date']) < strtotime($b['date']);
         });
+
         $this->page_data['transactions'] = $transactions;
         $this->page_data['page']->title = 'Transactions by tag';
         $this->page_data['groups'] = $groups;

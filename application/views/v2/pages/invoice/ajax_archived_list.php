@@ -31,6 +31,7 @@
         <tbody>
             <?php if ($invoices) { ?>
                 <?php foreach($invoices as $invoice){ ?>
+                    <?php $customer_name = trim($invoice->customer_name) != '' ? $invoice->customer_name : '---'; ?>
                     <tr>
                         <?php if(checkRoleCanAccessModule('invoices', 'write')){ ?>
                         <td class="text-center show">
@@ -38,7 +39,10 @@
                         </td>
                         <?php } ?>                     
                         <td class="show"><div class="table-row-icon"><i class="bx bx-receipt"></i></div></td>
-                        <td class="fw-bold nsm-text-primary show"><?= $invoice->invoice_number; ?></td>
+                        <td class="fw-bold nsm-text-primary show">
+                            <?= $invoice->invoice_number; ?><br />
+                            <small class="text-muted"><i class='bx bx-user-circle'></i> <?= trim($customer_name); ?></small>
+                        </td>
                         <td class="show" style="width:5%;">
                             <?php if(checkRoleCanAccessModule('invoices', 'write')){ ?>
                             <div class="dropdown table-management">

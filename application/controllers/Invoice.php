@@ -144,10 +144,11 @@ class Invoice extends MY_Controller
         $comp_id = logged('company_id');
         $sort_by = 'Newest First';
         if (!empty($tab)) {      
-            $this->page_data['tab'] = $tab;
+            $this->page_data['status'] = ucfirst($tab);
             $this->page_data['invoices'] = $this->invoice_model->filterBy(array('status' => $tab), $comp_id, $type);
         } else {
             // search
+            $this->page_data['status'] = 'All';
             if (!empty(get('search'))) {
                 $this->page_data['search'] = trim(get('search'));
                 $this->page_data['invoices'] = $this->invoice_model->filterBy(array('search' => trim(get('search'))), $comp_id, $type);

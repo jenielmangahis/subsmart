@@ -217,9 +217,9 @@
                         <div class="dropdown d-inline-block">
                             <button type="button" class="dropdown-toggle nsm-button" data-bs-toggle="dropdown">
                                 <?php if ($tab == '') { ?>
-                                <span>Filter by All</span> <i class='bx bx-fw bx-chevron-down'></i>
+                                <span>Filter : All</span> <i class='bx bx-fw bx-chevron-down'></i>
                                 <?php } else { ?>
-                                <span>Filter by <?php echo ucwords($tab); ?></span> <i class='bx bx-fw bx-chevron-down'></i>
+                                <span>Filter : <?php echo ucwords($tab); ?></span> <i class='bx bx-fw bx-chevron-down'></i>
                                 <?php } ?>
 
                             </button>
@@ -507,7 +507,7 @@ $(document).ready(function() {
     $(".select-filter .dropdown-item").on("click", function() {
         let _this = $(this);
 
-        _this.closest(".dropdown").find(".dropdown-toggle span").html("Filter by " + _this.html());
+        _this.closest(".dropdown").find(".dropdown-toggle span").html("Filter : " + _this.html());
     });
 
     $("#search_field").on("input", debounce(function() {

@@ -29,7 +29,7 @@
                     <div class="col-12 col-md-8 grid-mb text-end">
                         <div class="nsm-page-buttons page-button-container">
                             <button type="button" class="dropdown-toggle nsm-button" data-bs-toggle="dropdown">
-                                <span>Update tags</span> <i class='bx bx-fw bx-chevron-down'></i>
+                                <span id="num-checked"></span> <span>Update tags</span> <i class='bx bx-fw bx-chevron-down'></i>
                             </button>
                             <ul class="dropdown-menu dropdown-menu-end">
                                 <li>
@@ -197,7 +197,7 @@
                     <thead>
                         <tr>
                             <td class="table-icon text-center">
-                                <input class="form-check-input select-all table-select" type="checkbox">
+                                <input class="form-check-input select-all table-select" type="checkbox" name="id_selector" value="0" id="select-all">
                             </td>
                             <td data-name="Date">DATE</td>
                             <td data-name="From/To">CUSTOMER</td>
@@ -216,7 +216,7 @@
                         <tr>
                             <td>
                                 <div class="table-row-icon table-checkbox">
-                                    <input class="form-check-input select-one table-select" type="checkbox" value="<?=str_replace(' ', '_', strtolower($transaction['type']))?>-<?=$transaction['id']?>">
+                                    <input class="form-check-input row-select select-one table-select" type="checkbox" name="transac_tag[]" value="<?=str_replace(' ', '_', strtolower($transaction['type']))?>-<?=$transaction['id']?>">
                                 </div>
                             </td>
                             <td class="row-hover" style="width:10%;" data-type="Bill"><?=$transaction['date']?></td>

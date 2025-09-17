@@ -3754,7 +3754,7 @@ class Workorder extends MY_Controller
     }
 
     public function NewworkOrder()
-    {
+    {        
         if(!checkRoleCanAccessModule('work-orders', 'write')){
 			show403Error();
 			return false;
