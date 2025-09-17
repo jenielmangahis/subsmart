@@ -660,7 +660,7 @@ class Tickets_model extends MY_Model
         return $query;
     }
 
-    public function getAllByCompanyId($cid, $filters = [])
+    public function getAllByCompanyId($cid, $filters = [], $sort = [])
     {
         $this->db->select('tickets.*, acs_profile.first_name, acs_profile.last_name');        
         $this->db->from($this->table);   
@@ -674,8 +674,12 @@ class Tickets_model extends MY_Model
             }
             //$this->db->group_end();
         }
-        
-        $this->db->order_by('id', 'DESC');
+
+        if( $sort ){
+            $this->db->order_by($sort['field'], $sort['order']);
+        }else{
+            $this->db->order_by('id', "DESC");
+        }
 
         $query = $this->db->get();
         return $query->result();
