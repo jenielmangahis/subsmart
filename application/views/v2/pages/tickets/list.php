@@ -32,7 +32,7 @@
     </div>
     <?php if(checkRoleCanAccessModule('service-tickets', 'write')){ ?>
     <ul class="nsm-fab-options">        
-        <li onclick="location.href='<?= base_url('customer/addTicket'); ?>'">
+        <li onclick="location.href='<?= base_url('ticket/add'); ?>'">
             <div class="nsm-fab-icon">
                 <i class="bx bx-note"></i>
             </div>
@@ -185,7 +185,7 @@
                             <?php foreach($tickets as $ticket){ ?>
                             <tr>
                                 <td style="text-align:center;"><input class="form-check-input row-select table-select" name="tickets[]" type="checkbox" name="id_selector" value="<?= $ticket->id; ?>"></td>
-                                <td><div class="table-row-icon"><i class='bx bx-briefcase'></i></div></td>
+                                <td><div class="table-row-icon"><i class='bx bx-note'></i></div></td>
                                 <td class="show fw-bold nsm-text-primary"><?php echo $ticket->ticket_no; ?></td>
                                 <td style="width:15%;">
                                     <?php if( $ticket->assigned_tech ){ ?>
@@ -238,7 +238,7 @@
                                             <li><a class="dropdown-item row-view-ticket" href="javascript:void(0);" data-id="<?= $ticket->id; ?>" data-ticket-number="<?= $ticket->ticket_no; ?>">View</a></li>
                                             <li><a class="dropdown-item row-download-pdf" tabindex="-1" href="javascript:void(0);" data-id="<?= $ticket->id; ?>">Download PDF</a></li>
                                             <?php if(checkRoleCanAccessModule('service-tickets', 'write')){ ?>
-                                            <li><a class="dropdown-item" tabindex="-1" href="<?php echo base_url('tickets/editDetails/' . $ticket->id) ?>">Edit</a></li>
+                                            <li><a class="dropdown-item" tabindex="-1" href="<?php echo base_url('ticket/edit/' . $ticket->id) ?>">Edit</a></li>
                                             <?php } ?>
                                             <?php if(checkRoleCanAccessModule('service-tickets', 'delete')){ ?>
                                             <li><a class="dropdown-item delete-ticket" href="javascript:void(0);" data-tk-number="<?= $ticket->ticket_no; ?>" data-tk-id="<?php echo $ticket->id; ?>">Delete</a></li>
