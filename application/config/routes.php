@@ -2158,10 +2158,12 @@ $route['timesheet/_update_settings'] = 'Timesheet/ajax_update_settings';
 $route['accounting/employees/_update_employment_details'] = 'accounting_controllers/Employees/ajax_update_employment_details';
 
 //Tickets
+$route['customer/tickets'] = 'Tickets/list';
 $route['ticket/_create_service_type'] = 'Tickets/ajax_create_servicetype';
 $route['tickets/_delete_selected_tickets'] = 'Tickets/ajax_delete_selected_tickets';
 $route['tickets/_update_status_selected_tickets'] = 'Tickets/ajax_update_status_selected_tickets';
 $route['ticket/add'] = 'Tickets/addTicket';
+$route['ticket/edit/(:any)?'] = 'Tickets/editDetails/$1';
 $route['ticket/_archived_list'] = 'Tickets/ajax_archived_list';
 $route['ticket/_restore_archived'] = 'Tickets/ajax_restore_archived';
 $route['ticket/_update_ticket_status'] = 'Tickets/ajax_update_ticket_status';
