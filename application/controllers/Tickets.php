@@ -53,6 +53,44 @@ class Tickets extends MY_Controller
         ));
     }
 
+    public function list()
+    {
+        $this->load->model('Users_model');
+        $this->hasAccessModule(39);
+
+        if(!checkRoleCanAccessModule('service-tickets', 'read')){
+            show403Error();
+            return false;
+        }
+
+        $cid = logged('company_id');
+        $filters[]   = ['field' => 'tickets.is_archived', 'value' => 0];
+        $tickets     = $this->tickets_model->getAllByCompanyId($cid, $filters);
+        foreach($tickets as $t){
+            $tech = unserialize($t->technicians);
+            $assigned_tech = [];
+            if( $tech ){
+                foreach($tech as $eid){
+                    $user = $this->Users_model->getUserByID($eid);
+                    if( $user ){
+                        $assigned_tech[] = ['id' => $user->id, 'first_name' => $user->FName, 'last_name' => $user->LName, 'image' => $user->profile_img];
+                    }
+                }
+            }      
+            $t->assigned_tech = $assigned_tech;
+        }
+
+        $openTickets = $this->tickets_model->getCompanyOpenServiceTickets($cid,[],$filters);
+        $ticketTotalAmount = $this->tickets_model->getCompanyTotalAmountServiceTickets($cid,[],$filters);
+
+        $this->page_data['tickets'] = $tickets;
+        $this->page_data['openTickets'] = $openTickets;
+        $this->page_data['ticketTotalAmount'] = $ticketTotalAmount;        
+        $this->page_data['page']->title = 'Service Tickets';
+        $this->page_data['page']->parent = 'Sales';
+        $this->load->view('v2/pages/tickets/list', $this->page_data);
+    }
+
     
     public function savenewTicket()
     {   
@@ -1220,7 +1258,7 @@ class Tickets extends MY_Controller
         $this->page_data['disabled_industry_specific_fields'] = $disabled_industry_specific_fields;
         $this->page_data['industrySpecificFields'] = $industrySpecificFields;
         // $this->page_data['file_selection'] = $this->load->view('modals/file_vault_selection', array(), TRUE);
-        $this->load->view('tickets/edit_ticket', $this->page_data);
+        $this->load->view('v2/pages/tickets/edit_ticket', $this->page_data);
     }
 
     public function addTicket()
@@ -1333,7 +1371,7 @@ class Tickets extends MY_Controller
         $this->page_data['time_interval'] = 2;
         $this->page_data['disabled_industry_specific_fields'] = $disabled_industry_specific_fields;
         $this->page_data['industrySpecificFields'] = $industrySpecificFields;
-        $this->load->view('tickets/add', $this->page_data);
+        $this->load->view('v2/pages/tickets/add', $this->page_data);
     }
 
     
