@@ -117,8 +117,11 @@
                 <div class="row mt-5">
                     <div class="col-12 col-md-4">
                         <div class="nsm-field-group search">
-                            <input type="text" class="nsm-field nsm-search form-control mb-2" id="custom-ticket-searchbar" name="search" placeholder="Search Service Ticket..." value="">
+                            <input type="text" class="nsm-field nsm-search form-control mb-2" id="search_field" name="search" placeholder="Search Service Ticket" value="">
                         </div>
+                        <!-- <div class="nsm-field-group search">
+                            <input type="text" class="nsm-field nsm-search form-control mb-2" id="custom-ticket-searchbar" name="search" placeholder="Search Service Ticket..." value="">
+                        </div> -->
                     </div>
                     <div class="col-12 col-md-8 grid-mb text-end">                        
                         <div class="dropdown d-inline-block">
@@ -199,7 +202,7 @@
                                 <td style="text-align:center;"><input class="form-check-input row-select table-select" name="tickets[]" type="checkbox" name="id_selector" value="<?= $ticket->id; ?>"></td>
                                 <td><div class="table-row-icon"><i class='bx bx-note'></i></div></td>
                                 <td class="show fw-bold nsm-text-primary"><?php echo $ticket->ticket_no; ?></td>
-                                <td style="width:15%;">
+                                <td class="nsm-text-primary" style="width:15%;">
                                     <?php if( $ticket->assigned_tech ){ ?>
                                         <div class="techs">   
                                         <?php foreach($ticket->assigned_tech as $user){ ?>
@@ -216,7 +219,7 @@
                                         </div>
                                     <?php } ?>
                                 </td>
-                                <td style="width:20%;"><?php echo $ticket->first_name.' '.$ticket->last_name; ?></td>                                
+                                <td class="nsm-text-primary" style="width:20%;"><?php echo $ticket->first_name.' '.$ticket->last_name; ?></td>                                
                                 <td>
                                     <?php 
                                         $date = '---';
@@ -239,7 +242,7 @@
                                         echo $ticket_time;
                                     ?>
                                 </td>                            
-                                <td><?php echo $ticket->ticket_status; ?></td>
+                                <td class="nsm-text-primary"><?php echo $ticket->ticket_status; ?></td>
                                 <td style="width:15%; !important;text-align:right;">$<?php echo number_format($ticket->grandtotal,2); ?></td>
                                 <td>
                                     <div class="dropdown table-management">
@@ -345,12 +348,24 @@
 
 <script type="text/javascript">
     $(document).ready(function() {
-        var ticketListTable = $("#ticket-list-table").DataTable({
+        /*var ticketListTable = $("#ticket-list-table").DataTable({
             "ordering": false,
             language: {
                 processing: '<span>Fetching data...</span>'
             }     
-        });
+        });*/
+
+        $("#ticket-list-table").nsmPagination();
+        $("#search_field").on("input", debounce(function() {
+            let search = $(this).val();
+            if( search == '' ){
+                $("#ticket-list-table").nsmPagination();
+                $("#ticket-list-table").find("tbody .nsm-noresult").remove();
+            }else{
+                tableSearch($(this));  
+            }
+            
+        }, 1000));
 
         $("#custom-ticket-searchbar").keyup(function() {
             ticketListTable.search($(this).val()).draw()
@@ -366,8 +381,8 @@
         });
 
         $(document).on('change', '#select-all', function(){
-            $('.row-select:checkbox').prop('checked', this.checked);  
-            let total= $('#ticket-list-table input[name="tickets[]"]:checked').length;
+            $('tr:visible .row-select:checkbox').prop('checked', this.checked);  
+            let total= $('#ticket-list-table tr:visible input[name="tickets[]"]:checked').length;
             if( total > 0 ){
                 $('#num-checked').text(`(${total})`);
             }else{
