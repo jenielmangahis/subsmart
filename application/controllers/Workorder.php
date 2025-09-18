@@ -56,7 +56,7 @@ class Workorder extends MY_Controller
         
         $role = logged('role');
         
-		$this->page_data['page']->title = 'Workorder';
+		$this->page_data['page']->title = 'Work Orders';
 		$this->page_data['page']->parent = 'Sales';
         
         $company_id = logged('company_id');        
@@ -171,12 +171,14 @@ class Workorder extends MY_Controller
             }
         }
 
+        $totalWorkorders = $this->workorder_model->getFilterworkorderList($company_id, []); 
         $scheduledWorkorders = $this->workorder_model->getAllByCompanyIdAndStatus($company_id, 'Scheduled');
         $newWorkorders       = $this->workorder_model->getAllByCompanyIdAndStatus($company_id, 'New');
         
         $this->page_data['workorders'] = $workorder;
         $this->page_data['scheduledWorkorders'] = $scheduledWorkorders;
         $this->page_data['newWorkorders'] = $newWorkorders;
+        $this->page_data['totalWorkorders'] = $totalWorkorders;
 
         $company_id = logged('company_id');
         $this->page_data['company_work_order_used'] = $this->workorder_model->getcompany_work_order_used($company_id);
@@ -807,6 +809,8 @@ class Workorder extends MY_Controller
         $this->page_data['users_lists'] = $this->users_model->getAllUsersByCompanyID($company_id);
         $this->page_data['fieldsName'] = $this->workorder_model->getCustomByID();
         $this->page_data['items_data'] = $this->workorder_model->getworkorderItems($id);
+        $this->page_data['page']->title = 'New Workorder';
+		$this->page_data['page']->parent = 'Sales';
         $this->load->view('v2/pages/workorder/edit', $this->page_data);
     }
 
@@ -3762,6 +3766,7 @@ class Workorder extends MY_Controller
 
         $this->load->model('AcsProfile_model');
         $this->load->library('session');
+        $this->load->helper('functions');
 
 		add_footer_js([
 			'https://cdnjs.cloudflare.com/ajax/libs/signature_pad/1.5.3/signature_pad.min.js',
@@ -3840,6 +3845,7 @@ class Workorder extends MY_Controller
         $this->page_data['next_num'] = $next_num;
         $this->page_data['fieldsName'] = $this->workorder_model->getCustomByID();
         $this->page_data['headers'] = $this->workorder_model->getheaderByID();
+        $this->page_data['itemsLocation'] = $this->items_model->getLocationStorage();
         $this->page_data['checklists'] = $checklists;
         $this->page_data['job_types'] = $this->workorder_model->getjob_types();
         $this->page_data['job_tags'] = $this->workorder_model->getjob_tagsById();
@@ -5353,63 +5359,79 @@ class Workorder extends MY_Controller
     {
         $this->load->model('WorkorderSettings_model');
 
+        $is_success = 0;
+        $msg = 'Cannot find data';
+        $wid = 0;
+
         $company_id     = getLoggedCompanyID();
         $user_id        = logged('id');
         $wo_num         = $this->input->post('wo_num');
 
         $datas      = $this->workorder_model->getDataByWO($wo_num);        
-        $clone_id   = $this->workorder_model->cloneData($datas);
-        $clonedData = $this->workorder_model->getDataByWO($clone_id);
+        if( $datas && $datas->company_id == $company_id ){
+            $clone_id   = $this->workorder_model->cloneData($datas);
+            $clonedData = $this->workorder_model->getDataByWO($clone_id);
+            $wid = $clonedData->id;
 
-        //Generate Workorder Number
-        $setting = $this->WorkorderSettings_model->getByCompanyId($company_id);
-        if( $setting ){
-            $next_num = $setting->work_order_num_next;
-            $prefix   = $setting->work_order_num_prefix;
-        }else{
-            $lastInsert = $this->workorder_model->getLastInsertByCompanyId($company_id);
-            if( $lastInsert ){
-                $next_num = $lastInsert->id + 1;
+            //Generate Workorder Number
+            $setting = $this->WorkorderSettings_model->getByCompanyId($company_id);
+            if( $setting ){
+                $next_num = $setting->work_order_num_next;
+                $prefix   = $setting->work_order_num_prefix;
             }else{
-                $next_num = 1;
+                $lastInsert = $this->workorder_model->getLastInsertByCompanyId($company_id);
+                if( $lastInsert ){
+                    $next_num = $lastInsert->id + 1;
+                }else{
+                    $next_num = 1;
+                }
+                $prefix = 'WO-';            
             }
-            $prefix = 'WO-';            
-        }
 
-        $wo_id = str_pad($next_num, 7, "0", STR_PAD_LEFT);
-        $work_order_number  = $prefix . $wo_id;
-        $this->workorder_model->update($clonedData->id, ['work_order_number' => $work_order_number]);
+            $wo_id = str_pad($next_num, 7, "0", STR_PAD_LEFT);
+            $work_order_number  = $prefix . $wo_id;
+            $this->workorder_model->update($clonedData->id, ['work_order_number' => $work_order_number]);
 
-        customerAuditLog($user_id, $datas->customer_id, $wo_num, 'Workorder', 'Cloned workorder #'.$datas->work_order_number);
+            customerAuditLog($user_id, $datas->customer_id, $wo_num, 'Workorder', 'Cloned workorder #'.$datas->work_order_number);
 
-        //Update workorder setting
-        if( $setting ){
-            $workorder_setting = ['work_order_num_next' => $next_num + 1];
-            $this->WorkorderSettings_model->update($setting->id, $workorder_setting);
-        }
+            //Update workorder setting
+            if( $setting ){
+                $workorder_setting = ['work_order_num_next' => $next_num + 1];
+                $this->WorkorderSettings_model->update($setting->id, $workorder_setting);
+            }
 
-        //Get Workorder items
-        $workorderItems = $this->workorder_model->getworkorderItems($datas->id);
-        foreach( $workorderItems as $i ){
-            $data_items = [
-                'work_order_id' => $clonedData->id,
-                'items_id' => $i->items_id,
-                'package_id' => $i->package_id,
-                'qty' => $i->qty,
-                'cost' => $i->cost,
-                'tax' => $i->tax,
-                'discount' => $i->discount,
-                'total' => $i->total
-            ];
-            
-            $this->workorder_model->add_work_order_details($data_items);
-        }
+            //Get Workorder items
+            $workorderItems = $this->workorder_model->getworkorderItems($datas->id);
+            foreach( $workorderItems as $i ){
+                $data_items = [
+                    'work_order_id' => $clonedData->id,
+                    'items_id' => $i->items_id,
+                    'package_id' => $i->package_id,
+                    'qty' => $i->qty,
+                    'cost' => $i->cost,
+                    'tax' => $i->tax,
+                    'discount' => $i->discount,
+                    'total' => $i->total
+                ];
+                
+                $this->workorder_model->add_work_order_details($data_items);
+            }
 
-        //Activity Logs
-        $this->load->model('Activity_model');
-        $user_id = logged('id');
-        $activity_name = 'Created Workorder Number : ' . $work_order_number . ' - Cloned from Workorder Number : ' . $clonedData->work_order_number; 
-        $this->Activity_model->add($activity_name,$user_id);
+            //Activity Logs
+            $activity_name = 'Work Order : Created work order number ' . $work_order_number . ' - cloned from work order number : ' . $clonedData->work_order_number; 
+            createActivityLog($activity_name);
+
+            $is_success = 1;
+            $msg = '';
+        }            
+
+        $return = [
+            'is_success' => $is_success,
+            'msg' => $msg,
+            'wid' => $wid
+        ];
+
+        echo json_encode($return);
     }
 
     public function ajax_update_workorder(){
