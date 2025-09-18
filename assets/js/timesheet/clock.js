@@ -1091,7 +1091,7 @@ $(document).ready(function() {
     }
     //Auto clockout popup
     autoClockOut_checker();
-    var autoclockout_checker_loop = setInterval(autoClockOut_checker, 5000);
+    var autoclockout_checker_loop = setInterval(autoClockOut_checker, 20000);
     var auto_popup_executed = false;
 
     function autoClockOut_checker() {
