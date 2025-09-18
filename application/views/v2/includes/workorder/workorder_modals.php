@@ -559,7 +559,7 @@
 </div>
 
 <div class="modal fade nsm-modal fade" id="select_checklist_modal" tabindex="-1" aria-labelledby="select_checklist_modal_label" aria-hidden="true">
-    <div class="modal-dialog modal-md">
+    <div class="modal-dialog modal-md modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
                 <span class="modal-title content-title">Select Checklist</span>
@@ -567,12 +567,15 @@
             </div>
             <div class="modal-body">
                 <?php if( isset($checklists) ){ ?>
+                <div class="pull-right mb-2">
+                    <button type="button" class="nsm-button small primary" id="btn_add_checklist">Add Selected</button>
+                </div>
                 <table class="table">
                     <?php foreach($checklists as $key => $chklist){ ?>
                         <tr>
                             <td class="row-chk-header" style="width:1%;">
                                 <div class="form-check">
-                                    <input class="form-check-input wo-select-checklist" data-name="<?= $chklist['header']['name']; ?>" data-id="<?= $chklist['header']['id']; ?>" type="checkbox" value="" id="flexCheckDefault">
+                                    <input class="form-check-input wo-select-checklist" id="chk<?= $key; ?>" data-name="<?= $chklist['header']['name']; ?>" data-id="<?= $chklist['header']['id']; ?>" type="checkbox" value="" id="flexCheckDefault">
                                     <label class="form-check-label" for="chk<?= $key; ?>">
                                     <?= $chklist['header']['name']; ?>
                                     </label>
@@ -586,41 +589,38 @@
                 </table>                
                 <?php } ?>
             </div>
-            <div class="modal-footer">                
-                <button type="button" class="nsm-button primary" id="btn_add_checklist">Add Selected</button>
-            </div>
         </div>
     </div>
 </div>
 
 <div class="modal fade nsm-modal fade" id="update_termscon_modal" tabindex="-1" aria-labelledby="update_termscon_modal_label" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
-        <form id="form_update_termscon">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <span class="modal-title content-title">Update Terms and Conditions</span>
-                    <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
-                </div>
-                <div class="modal-body">
-                    <div class="row g-3">
-                        <div class="col-12">
-                            <textarea name="editor1" rows="5" id="editor-update-termscon" class="nsm-field form-control ckeditor"><?php echo $terms_conditions->content; ?></textarea>
-                            <input type="hidden" id="company_id_modal" value="<?php echo getLoggedCompanyID(); ?>">
-                            <input type="hidden" id="update_tc_id" value="<?php echo $terms_conditions->id; ?>">
-                        </div>
+    <div class="modal-dialog modal-lg modal-dialog-centered">        
+        <div class="modal-content">
+            <div class="modal-header">
+                <span class="modal-title content-title">Update Terms and Conditions</span>
+                <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
+            </div>
+            <div class="modal-body">
+                <form id="form_update_termscon">
+                <div class="row g-3">
+                    <div class="col-12">
+                        <textarea name="editor1" rows="5" id="editor-update-termscon" class="nsm-field form-control ckeditor"><?php echo $terms_conditions->content; ?></textarea>
+                        <input type="hidden" id="company_id_modal" value="<?php echo getLoggedCompanyID(); ?>">
+                        <input type="hidden" id="update_tc_id" value="<?php echo $terms_conditions->id; ?>">
                     </div>
                 </div>
-                <div class="modal-footer">
-                    <button type="button" class="nsm-button" data-bs-dismiss="modal">Cancel</button>
-                    <button type="submit" class="nsm-button primary">Save</button>
-                </div>
+                </form>
             </div>
-        </form>
+            <div class="modal-footer">
+                <button type="button" class="nsm-button" data-bs-dismiss="modal">Cancel</button>
+                <button type="submit" class="nsm-button primary" form="form_update_termscon">Save</button>
+            </div>
+        </div>        
     </div>
 </div>
 
 <div class="modal fade nsm-modal fade" id="edit_update_termscon_modal" tabindex="-1" aria-labelledby="edit_update_termscon_modal_label" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
                 <span class="modal-title content-title">Update Terms and Conditions</span>
@@ -644,28 +644,28 @@
 </div>
 
 <div class="modal fade nsm-modal fade" id="update_termsuse_modal" tabindex="-1" aria-labelledby="update_termsuse_modal_label" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
-        <form id="form_update_termsuse">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <span class="modal-title content-title">Update Terms of Use</span>
-                    <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
-                </div>
-                <div class="modal-body">
-                    <div class="row g-3">
-                        <div class="col-12">
-                            <textarea name="update_tu" rows="5" id="editor-update-termsuse" class="nsm-field form-control ckeditor"><?php echo $terms_uses->content; ?></textarea>
-                            <input type="hidden" id="company_id_modal" value="<?php echo getLoggedCompanyID(); ?>">
-                            <input type="hidden" id="update_tu_id" value="<?php echo $terms_uses->id; ?>">
-                        </div>
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <span class="modal-title content-title">Update Terms of Use</span>
+                <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
+            </div>
+            <div class="modal-body">
+                <form id="form_update_termsuse">
+                <div class="row g-3">
+                    <div class="col-12">
+                        <textarea name="update_tu" rows="5" id="editor-update-termsuse" class="nsm-field form-control ckeditor"><?php echo $terms_uses->content; ?></textarea>
+                        <input type="hidden" id="company_id_modal" value="<?php echo getLoggedCompanyID(); ?>">
+                        <input type="hidden" id="update_tu_id" value="<?php echo $terms_uses->id; ?>">
                     </div>
                 </div>
-                <div class="modal-footer">
-                    <button type="button" class="nsm-button" data-bs-dismiss="modal">Cancel</button>
-                    <button type="submit" class="nsm-button primary">Save</button>
-                </div>
+                </form>
             </div>
-        </form>
+            <div class="modal-footer">
+                <button type="button" class="nsm-button" data-bs-dismiss="modal">Cancel</button>
+                <button type="submit" class="nsm-button primary" form="form_update_termsuse">Save</button>
+            </div>
+        </div>
     </div>
 </div>
 
