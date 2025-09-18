@@ -64,8 +64,42 @@ class Tickets extends MY_Controller
         }
 
         $cid = logged('company_id');
+
+        $sort_by = 'Newest First';
+        if( get('order') ){
+            $sort_by = get('order');    
+            switch (get('order')) {
+                case 'added-desc':
+                    $sort_by = 'Newest First';
+                    $sort    = ['field' => 'id', 'order' => 'DESC'];
+                    break;
+                case 'added-asc':
+                    $sort_by = 'Oldest First';
+                    $sort    = ['field' => 'id', 'order' => 'ASC'];
+                    break;                
+                case 'amount-asc':
+                    $sort_by = 'Amount: Lowest';
+                    $sort    = ['field' => 'grandtotal', 'order' => 'ASC'];
+                    break;
+                case 'amount-desc':
+                    $sort_by = 'Amount: Highest';
+                    $sort    = ['field' => 'grandtotal', 'order' => 'DESC'];
+                    break;
+                default:
+                    $sort_by = 'Newest First';
+                    $sort    = ['field' => 'id', 'order' => 'DESC'];
+                    break;
+            }
+        }        
+
+        $filter  = 'All';
+        if( get('status') ){
+            $filter = get('status');
+            $filters[]   = ['field' => 'tickets.ticket_status', 'value' => $filter];
+        }
+
         $filters[]   = ['field' => 'tickets.is_archived', 'value' => 0];
-        $tickets     = $this->tickets_model->getAllByCompanyId($cid, $filters);
+        $tickets     = $this->tickets_model->getAllByCompanyId($cid, $filters, $sort);
         foreach($tickets as $t){
             $tech = unserialize($t->technicians);
             $assigned_tech = [];
@@ -80,12 +114,17 @@ class Tickets extends MY_Controller
             $t->assigned_tech = $assigned_tech;
         }
 
-        $openTickets = $this->tickets_model->getCompanyOpenServiceTickets($cid,[],$filters);
-        $ticketTotalAmount = $this->tickets_model->getCompanyTotalAmountServiceTickets($cid,[],$filters);
+        $summaryFilters[]   = ['field' => 'tickets.is_archived', 'value' => 0];
+        $totalTickets = $this->tickets_model->getAllByCompanyId($cid, $summaryFilters, $sort);  
+        $openTickets  = $this->tickets_model->getCompanyOpenServiceTickets($cid,[],$summaryFilters);
+        $ticketTotalAmount = $this->tickets_model->getCompanyTotalAmountServiceTickets($cid,[],$summaryFilters);
 
         $this->page_data['tickets'] = $tickets;
         $this->page_data['openTickets'] = $openTickets;
+        $this->page_data['totalTickets'] = $totalTickets;
         $this->page_data['ticketTotalAmount'] = $ticketTotalAmount;        
+        $this->page_data['filter'] = $filter;
+        $this->page_data['sort_by'] = $sort_by;
         $this->page_data['page']->title = 'Service Tickets';
         $this->page_data['page']->parent = 'Sales';
         $this->load->view('v2/pages/tickets/list', $this->page_data);
@@ -3333,7 +3372,20 @@ class Tickets extends MY_Controller
         
         if( count($post['tickets']) > 0 ){
             $filter[] = ['field' => 'company_id', 'value' => $cid];
-            $data     = ['ticket_status' => $post['change_status'], 'updated_at' => date("Y-m-d H:i:s")];
+            $data['ticket_status'] = $post['change_status'];
+            $data['updated_at']    = date("Y-m-d H:i:s");
+
+            if( $post['change_status'] == 'Arrived' ){
+                $data['omw_date'] = $post['omw_date'];
+                $data['omw_time'] = $post['omw_time'];
+            }elseif( $post['change_status'] == 'Started' ){
+                $data['started_date'] = $post['started_date'];
+                $data['started_time'] = $post['started_time'];
+            }elseif( $post['change_status'] == 'Finished' ){
+                $data['finished_date'] = $post['finished_date'];
+                $data['finished_time'] = $post['finished_time'];
+            }
+
             $total_updated = $this->tickets_model->bulkUpdate($post['tickets'], $data, $filter);
 
             //Activity Logs
