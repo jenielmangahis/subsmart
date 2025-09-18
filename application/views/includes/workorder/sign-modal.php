@@ -1,5 +1,5 @@
 <div class="modal fade wo-signatureModal nsm-modal" tabindex="-1" role="dialog" id="company-representative-approval-signature">
-  <div class="modal-dialog modal-lg mobileHeight" role="document">
+  <div class="modal-dialog modal-lg mobileHeight modal-dialog-centered" role="document">
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title">Company Representative Approval</h5>
@@ -30,7 +30,7 @@
 </div>
 
 <div class="modal fade wo-signatureModal nsm-modal" tabindex="-1" role="dialog" id="primary-account-holder-signature">
-  <div class="modal-dialog modal-lg" role="document">
+  <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title">Company Representative Approval</h5>
@@ -61,7 +61,7 @@
 </div>
 
 <div class="modal fade wo-signatureModal nsm-modal" tabindex="-1" role="dialog" id="secondary-account-holder-signature">
-  <div class="modal-dialog modal-lg" role="document">
+  <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title">Company Representative Approval</h5>
@@ -205,14 +205,6 @@
 
       initSignatureModal($modal, config);
     })
-
-
-
-
-
-
-
-
 
     function initSignatureModal($modal, config = {}) {
         const $canvasWrapper = $modal.querySelector(".canvas-wrapper");
