@@ -53,6 +53,7 @@
 
                         <div class="dropdown d-inline-block">
                             <button type="button" class="dropdown-toggle nsm-button" data-bs-toggle="dropdown">
+                                <span class="num-checked" id="num-checked"></span>
                                 With Selected  <i class='bx bx-fw bx-chevron-down'></i>
                             </button>
                             <ul class="dropdown-menu dropdown-menu-end select-filter">                            
@@ -85,7 +86,7 @@
                             <?php if(count($worksites) > 0) : ?>
                             <?php foreach($worksites as $worksite) : ?>
                                 <tr data-id="<?=$worksite->id?>" data-name="<?=$worksite->name?>">
-                                    <td><input type="checkbox" name="row_selected[]" class="form-check-input chk-row" value="<?= $worksite->id; ?>" /></td>
+                                    <td><input type="checkbox" name="row_selected[]" class="form-check-input chk-row row-select" value="<?= $worksite->id; ?>" /></td>
                                     <td class=""><strong><?= $worksite->name ?></strong></td>
                                     <td><?php echo $worksite->street . ", " . $worksite->city . ", " . $worksite->state . ", " . $worksite->zip_code; ?></td>
                                     <td>
