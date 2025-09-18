@@ -825,7 +825,7 @@ $(".select_item").click(function () {
     '</span></div><input type="hidden" name="itemid[]" id="itemid" class="itemid" value=\'' +
     idd +
     '\'><input type="hidden" name="packageID[]" value="0"></td>\n' +
-    '<td><div class="dropdown-wrapper"><select name="item_type[]" class="form-control"><option value="product">Product</option><option value="material">Material</option><option value="service">Service</option><option value="fee">Fee</option></select></div></td>\n' +
+    '<td><div class="dropdown-wrapper"><select name="item_type[]" class="form-control form-select"><option value="product">Product</option><option value="material">Material</option><option value="service">Service</option><option value="fee">Fee</option></select></div></td>\n' +
     '<td><input data-itemid=\'' +
     idd +
     "' id='quantity_" +
