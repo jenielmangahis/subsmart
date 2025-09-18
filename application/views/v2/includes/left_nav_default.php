@@ -175,7 +175,7 @@ echo 'active';
         <li class="<?php if ($page->title == 'Service Tickets') {
             echo 'selected';
         } ?>">
-            <a href="<?php echo base_url('customer/ticketslist'); ?>">
+            <a href="<?php echo base_url('customer/tickets'); ?>">
                 <i class='bx bx-fw bx-note'></i> Tickets
             </a>
         </li>  

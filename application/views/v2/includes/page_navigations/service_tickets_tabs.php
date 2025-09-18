@@ -1,7 +1,7 @@
 <div class="nsm-page-nav">
     <ul>
         <li class="active">
-            <a class="nsm-page-link" href="<?= base_url('customer/ticketslist') ?>">
+            <a class="nsm-page-link" href="<?= base_url('customer/tickets') ?>">
                 <i class='bx bx-fw bx-note'></i>
                 <span>Service Tickets</span>
             </a>

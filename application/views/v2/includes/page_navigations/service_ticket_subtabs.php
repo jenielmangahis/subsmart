@@ -1,6 +1,6 @@
 <div class="nsm-page-subnav">
     <ul>
-        <li class="<?php if($page->title == 'Tickets' || $page->title == 'Service Tickets'): echo 'active'; endif; ?>" onclick="location.href='<?= base_url('customer/ticketslist') ?>'">
+        <li class="<?php if($page->title == 'Tickets' || $page->title == 'Service Tickets'): echo 'active'; endif; ?>" onclick="location.href='<?= base_url('customer/tickets') ?>'">
             <a class="nsm-page-link" href="javascript:void(0);">
                 <span>List</span>
             </a>
