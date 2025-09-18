@@ -368,3 +368,22 @@ $('#apply-filter-coa-button').on('click', function() {
 $(".reset-button").click(function(){
     window.location.href = base_url + "accounting/chart-of-accounts";
 });
+
+$(document).on('change', '#select-all', function(){
+    $('tr:visible .row-select:checkbox').prop('checked', this.checked);  
+    let total= $('#accounts-table tr:visible input[name="chart_accounts[]"]:checked').length;
+    if( total > 0 ){
+        $('#num-checked').text(`(${total})`);
+    }else{
+        $('#num-checked').text('');
+    }
+});
+
+$(document).on('change', '.row-select', function(){
+    let total= $('#accounts-table input[name="chart_accounts[]"]:checked').length;
+    if( total > 0 ){
+        $('#num-checked').text(`(${total})`);
+    }else{
+        $('#num-checked').text('');
+    }
+});

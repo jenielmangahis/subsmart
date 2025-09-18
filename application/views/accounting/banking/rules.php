@@ -37,16 +37,15 @@
                         <div class="dropdown d-inline-block">
                             <input type="hidden" class="nsm-field form-control" id="selected_ids">
                             <button type="button" class="dropdown-toggle nsm-button" data-bs-toggle="dropdown">
-                                <span>
-                                    With Selected
-                                </span> <i class='bx bx-fw bx-chevron-down'></i>
+                                <span id="num-checked"></span> <span> With Selected </span> <i class='bx bx-fw bx-chevron-down'></i>
                             </button>
                             <ul class="dropdown-menu dropdown-menu-end batch-actions rules-batch-actions">
                                 <li><a class="dropdown-item dropdown-item-delete-rule disabled" href="javascript:void(0);" id="multiDeleteRules">Delete</a></li>
                             </ul>
                         </div>
                         <?php if(checkRoleCanAccessModule('accounting-rules', 'write')){ ?>
-                            <div class="nsm-page-buttons page-button-container">
+
+                            <!-- <div class="nsm-page-buttons page-button-container">
                                 <button type="button" class="nsm-button" id="importRulesLink">
                                     <i class='bx bx-fw bx-import'></i> Import
                                 </button>                                
@@ -56,7 +55,18 @@
                                 <button type="button" class="nsm-button primary" id="newRuleButton" data-bs-toggle="modal" data-bs-target="#createRules">
                                     <i class='bx bx-fw bx-plus' ></i> Add New
                                 </button>
-                            </div>
+                            </div>-->
+
+                            <div class="btn-group nsm-main-buttons" style="margin-bottom: 5px;">
+                                <button type="button" class="btn btn-nsm"  id="newRuleButton" data-bs-toggle="modal" data-bs-target="#createRules"><strong><i class='bx bx-plus' style="position:relative;top:1px;"></i> Rules</strong></button>
+                                <button type="button" class="btn btn-nsm dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false">
+                                    <span class=""><i class='bx bx-chevron-down' ></i></span>
+                                </button>
+                                <ul class="dropdown-menu">                                                                    
+                                    <li><a class="dropdown-item" href="javascript:void(0);" id="exportButton">Export</a></li>      
+                                    <li><a class="dropdown-item" href="javascript:void(0);" id="importRulesLink">Import</a></li>                                                        
+                                </ul>
+                            </div>                            
                         <?php } ?>
                     </div>
                 </div>
@@ -82,7 +92,7 @@
                                     <tr>
                                         <td>
                                             <div class="table-row-icon table-checkbox">
-                                                <input type="checkbox" name="rule_ids[]" value="<?php echo $rule->id; ?>" id="check-input-rules" class="form-check-input select-one table-select check-input-rules" />
+                                                <input type="checkbox" name="rule_ids[]" value="<?php echo $rule->id; ?>" id="check-input-rules" class="form-check-input select-one table-select row-select check-input-rules" />
                                             </div>
                                         </td>
                                         <td><?= $rule->rules_name ?></td>
@@ -96,23 +106,23 @@
                                         </td>
                                         <td>
                                             <?php if ($rule->auto == 1) { ?>
-                                                <span class="nsm-badge success custom-badge">Yes</span>
+                                                <span class="badge bg-success">Yes</span>
                                             <?php } else { ?>
-                                                <span class="nsm-badge danger custom-badge">No</span>
+                                                <span class="badge bg-danger">No</span>
                                             <?php } ?>
                                         </td>
                                         <td>
                                             <?php if ($rule->priority == 1) { ?>
-                                                <span class="nsm-badge success custom-badge">Yes</span>
+                                                <span class="badge bg-success">Yes</span>
                                             <?php } else { ?>
-                                                <span class="nsm-badge danger custom-badge">No</span>
+                                                <span class="badge bg-danger">No</span>
                                             <?php } ?>
                                         </td>
                                         <td>
                                             <?php if ($rule->is_active == 1) { ?>
-                                                <span class="nsm-badge success custom-badge">Active</span>
+                                                <span class="badge bg-success">Active</span>
                                             <?php } else { ?>
-                                                <span class="nsm-badge custom-badge">Inactive</span>
+                                                <span class="badge bg-warning">Inactive</span>
                                             <?php } ?>
                                         </td>
                                         <td>
@@ -129,7 +139,6 @@
                                                         <a class="dropdown-item dropdown-item-copy-rule copyRule" href="javascript:void(0);" data-rule-name="<?php echo $rule->rules_name; ?>" data-id="<?php echo $rule->id ?>" id="copyRule">Copy</a>
                                                     </li>                                                    
                                                     <li>
-
                                                         <a class="dropdown-item dropdown-item-disable-rule disableRule" href="javascript:void(0);" data-rule-name="<?php echo $rule->rules_name; ?>" data-id="<?php echo $rule->id ?>" id="disableRule">Disable</a>
                                                     </li>
                                                     <?php } ?>
@@ -220,5 +229,25 @@
             }
         });
     });
+
+    $(document).on('change', '#select-all-rules', function(){
+        $('tr:visible .row-select:checkbox').prop('checked', this.checked);  
+        let total= $('#rulesTable tr:visible input[name="rule_ids[]"]:checked').length;
+        if( total > 0 ){
+            $('#num-checked').text(`(${total})`);
+        }else{
+            $('#num-checked').text('');
+        }
+    });
+
+    $(document).on('change', '.row-select', function(){
+        let total= $('#rulesTable input[name="rule_ids[]"]:checked').length;
+        if( total > 0 ){
+            $('#num-checked').text(`(${total})`);
+        }else{
+            $('#num-checked').text('');
+        }
+    });
+
 </script>
 <?php include viewPath('v2/includes/footer'); ?>

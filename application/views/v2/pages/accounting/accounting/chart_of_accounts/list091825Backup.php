@@ -262,15 +262,30 @@
                     </div>
                     <div class="col-12 col-md-8 grid-mb text-end">
 
-                        <div class="dropdown d-inline-block">
-                            <button type="button" class="dropdown-toggle nsm-button" data-bs-toggle="dropdown">
-                                <span id="num-checked"></span> With Selected  <i class='bx bx-fw bx-chevron-down'></i>
-                            </button>
-                            <ul class="dropdown-menu dropdown-menu-end">
-                                <li><a class="dropdown-item disabled" href="javascript:void(0);" id="make-inactive">Make inactive</a></li>                              
-                            </ul>
-                        </div>          
+                            <div class="dropdown d-inline-block">
+                                <button type="button" class="dropdown-toggle nsm-button" data-bs-toggle="dropdown">
+                                    <span id="num-checked"></span> With Selected  <i class='bx bx-fw bx-chevron-down'></i>
+                                </button>
+                                <ul class="dropdown-menu dropdown-menu-end">
+                                    <li><a class="dropdown-item disabled" href="javascript:void(0);" id="make-inactive">Make inactive</a></li>                              
+                                </ul>
+                            </div>                        
+           
+                            <div class="btn-group nsm-main-buttons" style="margin-bottom: 5px;">
+                                <button type="button" class="btn btn-nsm" id="add-account-button"><i class='bx bx-plus' style="position:relative;top:1px;"></i> Chart of Accounts</button>
+                                <button type="button" class="btn btn-nsm dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false">
+                                    <span class=""><i class='bx bx-chevron-down' ></i></span>
+                                </button>
+                                <ul class="dropdown-menu">                                                                    
+                                    <li><a class="dropdown-item" href="javascript:void(0);" data-bs-toggle="modal" data-bs-target="#tag-group-modal">Tag group</a></li>
+                                    <li><a class="dropdown-item" href="javascript:void(0);" data-bs-toggle="modal" data-bs-target="#tag-modal">Tag</a></li>                                                                
+                                </ul>
+                            </div>            
+                            
+                            
+                            
 
+                        
                         <button type="button" class="dropdown-toggle nsm-button" data-bs-toggle="dropdown">
                             <span>Filter <i class='bx bx-fw bx-chevron-down'></i>
                         </button>           
@@ -331,63 +346,73 @@
                                     </button>
                                 </div>
                             </div>
-                        </ul>                             
+                        </ul> 
 
-                        <button type="button" class="nsm-button" data-bs-toggle="dropdown">
-                            <i class="bx bx-fw bx-cog"></i>
-                        </button>
-                        <ul class="dropdown-menu dropdown-menu-end table-settings p-3">
-                            <p class="m-0">Columns</p>
-                            <div class="form-check">
-                                <input type="checkbox" checked="checked" name="col_chk" id="chk_type" class="form-check-input">
-                                <label for="chk_type" class="form-check-label">Type</label>
-                            </div>
-                            <div class="form-check">
-                                <input type="checkbox" checked="checked" name="col_chk" id="chk_detail_type" class="form-check-input">
-                                <label for="chk_detail_type" class="form-check-label">Detail Type</label>
-                            </div>
-                            <div class="form-check">
-                                <input type="checkbox" checked="checked" name="col_chk" id="chk_nsmartrac_balance" class="form-check-input">
-                                <label for="chk_nsmartrac_balance" class="form-check-label">nSmarTrac Balance</label>
-                            </div>
-                            <div class="form-check">
-                                <input type="checkbox" checked="checked" name="col_chk" id="chk_bank_balance" class="form-check-input">
-                                <label for="chk_bank_balance" class="form-check-label">Bank Balance</label>
-                            </div>
-                            <p class="m-0">Other</p>
-                            <div class="form-check">
-                                <input type="checkbox" <?=$status === 'all' ? 'checked' : ''?> id="inc_inactive" value="1" class="form-check-input">
-                                <label for="inc_inactive" class="form-check-label">Include Inactive</label>
-                            </div>
-                            <p class="m-0">Rows</p>
-                            <div class="dropdown d-inline-block">
-                                <button type="button" class="dropdown-toggle nsm-button" data-bs-toggle="dropdown">
-                                    <span>
-                                        10
-                                    </span> <i class='bx bx-fw bx-chevron-down'></i>
-                                </button>
-                                <ul class="dropdown-menu dropdown-menu-end" id="table-rows">
-                                    <li><a class="dropdown-item active" href="javascript:void(0);">10</a></li>
-                                    <li><a class="dropdown-item" href="javascript:void(0);">50</a></li>
-                                    <li><a class="dropdown-item" href="javascript:void(0);">75</a></li>
-                                    <li><a class="dropdown-item" href="javascript:void(0);">100</a></li>
-                                    <li><a class="dropdown-item" href="javascript:void(0);">150</a></li>
-                                    <li><a class="dropdown-item" href="javascript:void(0);">300</a></li>
-                                </ul>
-                            </div>
-                        </ul>
-                        
-                        <div class="btn-group nsm-main-buttons" style="margin-bottom: 5px;">
-                            <button type="button" class="btn btn-nsm" id="add-account-button"><i class='bx bx-plus' style="position:relative;top:1px;"></i> Chart of Accounts</button>
-                            <button type="button" class="btn btn-nsm dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false">
-                                <span class=""><i class='bx bx-chevron-down' ></i></span>
+                        <!-- <div class="dropdown d-inline-block">
+                            <button type="button" class="dropdown-toggle nsm-button" data-bs-toggle="dropdown">
+                                <span>
+                                    Batch Actions
+                                </span> <i class='bx bx-fw bx-chevron-down'></i>
                             </button>
-                            <ul class="dropdown-menu">                                                                    
-                                <li><a class="dropdown-item" href="javascript:void(0);" data-bs-toggle="modal" data-bs-target="#import-accounts-modal">Import</a></li>      
-                                <li><a class="dropdown-item" href="javascript:void(0);" data-bs-toggle="modal" data-bs-target="#print_accounts_modal">Print</a></li>                                                        
+                            <ul class="dropdown-menu dropdown-menu-end batch-actions">
+                                <li><a class="dropdown-item disabled" href="javascript:void(0);" id="make-inactive">Make inactive</a></li>
                             </ul>
-                        </div>            
+                        </div> -->
 
+                        <div class="nsm-page-buttons page-button-container">
+                            <button type="button" class="nsm-button" data-bs-toggle="modal" data-bs-target="#import-accounts-modal">
+                                <i class='bx bx-fw bx-import'></i> Import
+                            </button>
+                            <button type="button" class="nsm-button" id="add-account-button">
+                                <i class='bx bx-fw bx-list-plus'></i> New
+                            </button>
+                            <button type="button" class="nsm-button primary" data-bs-toggle="modal" data-bs-target="#print_accounts_modal">
+                                <i class='bx bx-fw bx-printer'></i>
+                            </button>
+                            <button type="button" class="nsm-button primary" data-bs-toggle="dropdown">
+                                <i class="bx bx-fw bx-cog"></i>
+                            </button>
+                            <ul class="dropdown-menu dropdown-menu-end table-settings p-3">
+                                <p class="m-0">Columns</p>
+                                <div class="form-check">
+                                    <input type="checkbox" checked="checked" name="col_chk" id="chk_type" class="form-check-input">
+                                    <label for="chk_type" class="form-check-label">Type</label>
+                                </div>
+                                <div class="form-check">
+                                    <input type="checkbox" checked="checked" name="col_chk" id="chk_detail_type" class="form-check-input">
+                                    <label for="chk_detail_type" class="form-check-label">Detail Type</label>
+                                </div>
+                                <div class="form-check">
+                                    <input type="checkbox" checked="checked" name="col_chk" id="chk_nsmartrac_balance" class="form-check-input">
+                                    <label for="chk_nsmartrac_balance" class="form-check-label">nSmarTrac Balance</label>
+                                </div>
+                                <div class="form-check">
+                                    <input type="checkbox" checked="checked" name="col_chk" id="chk_bank_balance" class="form-check-input">
+                                    <label for="chk_bank_balance" class="form-check-label">Bank Balance</label>
+                                </div>
+                                <p class="m-0">Other</p>
+                                <div class="form-check">
+                                    <input type="checkbox" <?=$status === 'all' ? 'checked' : ''?> id="inc_inactive" value="1" class="form-check-input">
+                                    <label for="inc_inactive" class="form-check-label">Include Inactive</label>
+                                </div>
+                                <p class="m-0">Rows</p>
+                                <div class="dropdown d-inline-block">
+                                    <button type="button" class="dropdown-toggle nsm-button" data-bs-toggle="dropdown">
+                                        <span>
+                                            10
+                                        </span> <i class='bx bx-fw bx-chevron-down'></i>
+                                    </button>
+                                    <ul class="dropdown-menu dropdown-menu-end" id="table-rows">
+                                        <li><a class="dropdown-item active" href="javascript:void(0);">10</a></li>
+                                        <li><a class="dropdown-item" href="javascript:void(0);">50</a></li>
+                                        <li><a class="dropdown-item" href="javascript:void(0);">75</a></li>
+                                        <li><a class="dropdown-item" href="javascript:void(0);">100</a></li>
+                                        <li><a class="dropdown-item" href="javascript:void(0);">150</a></li>
+                                        <li><a class="dropdown-item" href="javascript:void(0);">300</a></li>
+                                    </ul>
+                                </div>
+                            </ul>
+                        </div>
                     </div>
                 </div>
                 <table class="nsm-table" id="accounts-table">
@@ -411,7 +436,7 @@
                         <tr data-status="<?=$account['status']?>">
                             <td>
                                 <div class="table-row-icon table-checkbox">
-                                    <input class="form-check-input select-one row-select table-select" name="chart_accounts[]" type="checkbox" value="<?=$account['id']?>">
+                                    <input class="form-check-input select-one table-select" type="checkbox" value="<?=$account['id']?>">
                                 </div>
                             </td>
                             <td class="fw-bold nsm-text-primary nsm-link default" <?php if($account['status'] === "1" && !in_array($account['type'], ['Income', 'Cost of Goods Sold', 'Expenses', 'Other Income', 'Other Expense'])) : ?>onclick="location.href='<?php echo base_url('accounting/chart-of-accounts/view-register/'.$account['id']) ?>'" <?php endif; ?>><?=$account['name']?></td>
@@ -419,13 +444,7 @@
                             <td><?=$account['detail_type']?></td>
                             <td><?=$account['nsmartrac_balance']?></td>
                             <td><?=$account['bank_balance']?></td>
-                            <?php 
-                                $bg_color = "";
-                                if($account['status'] == 1) {
-                                    $bg_color = "bg-success";
-                                } else { $bg_color = "bg-danger"; }
-                            ?>
-                            <td><span class='badge <?php echo $bg_color; ?>'><?=$account['status'] == 1 ? 'Active' : 'Inactive'; ?></span></td>
+                            <td><?=$account['status'] == 1 ? 'Active' : 'Inactive'; ?></td>
                             <td>
                                 <div class="dropdown table-management">
                                     <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown">
