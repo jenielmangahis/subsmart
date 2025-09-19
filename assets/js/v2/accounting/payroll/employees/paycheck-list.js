@@ -695,4 +695,23 @@ $(document).ready(function () {
     }
 });
 
+$(document).on('change', '#select-all', function(){
+    $('tr:visible .row-select:checkbox').prop('checked', this.checked);  
+    let total= $('#paycheck-table tr:visible input[name="paycheckRow[]"]:checked').length;
+    if( total > 0 ){
+        $('#num-checked').text(`(${total})`);
+    }else{
+        $('#num-checked').text('');
+    }
+});
+
+$(document).on('change', '.row-select', function(){
+    let total= $('#paycheck-table input[name="paycheckRow[]"]:checked').length;
+    if( total > 0 ){
+        $('#num-checked').text(`(${total})`);
+    }else{
+        $('#num-checked').text('');
+    }
+});
+
 

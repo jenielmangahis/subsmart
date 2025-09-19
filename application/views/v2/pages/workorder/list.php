@@ -96,6 +96,19 @@ function workordermodule__formatWorkOrderNumber($number) {
                                     <i class='bx bx-calendar'></i>
                                 </div>
                                 <div class="col-12 col-md-8 text-center text-md-start d-flex flex-column justify-content-center">
+                                    <h2 id=""><?= count($totalWorkorders); ?></h2>
+                                    <span>Total Work Orders</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 col-md-3">
+                        <div class="nsm-counter success h-100 mb-2">
+                            <div class="row h-100">
+                                <div class="col-12 col-md-4 d-flex justify-content-center align-items-center">
+                                    <i class='bx bx-calendar'></i>
+                                </div>
+                                <div class="col-12 col-md-8 text-center text-md-start d-flex flex-column justify-content-center">
                                     <h2 id=""><?= count($scheduledWorkorders); ?></h2>
                                     <span>Total Scheduled Work Orders</span>
                                 </div>
@@ -148,7 +161,7 @@ function workordermodule__formatWorkOrderNumber($number) {
                         <div class="dropdown d-inline-block">
                             <button type="button" class="dropdown-toggle nsm-button" data-bs-toggle="dropdown">
                                 <span>
-                                Filter by <?= ucwords($tab_status); ?>
+                                Filter : <?= ucwords($tab_status); ?>
                                 </span> <i class='bx bx-fw bx-chevron-down'></i>
                             </button>
                             <ul class="dropdown-menu dropdown-menu-end select-filter">
@@ -186,6 +199,7 @@ function workordermodule__formatWorkOrderNumber($number) {
                                     <span class=""><i class='bx bx-chevron-down' ></i></span>
                                 </button>
                                 <ul class="dropdown-menu">                                                                    
+                                    <li><a class="dropdown-item" href="<?= base_url('invoices'); ?>">Invoices</a></li>  
                                     <li><a class="dropdown-item" id="btn-archived" href="javascript:void(0);">Archived</a></li>  
                                     <li><a class="dropdown-item" id="btn-export-list" href="javascript:void(0);">Settings</a></li>                     
                                 </ul>
@@ -276,12 +290,14 @@ function workordermodule__formatWorkOrderNumber($number) {
                                     </td>
                                     <td class="fw-bold nsm-text-primary show" style="width:10%;"><?= $workorder->work_order_number; ?></td>                                    
                                     <td class="nsm-text-primary">
-                                        <?php 
+                                        <?php                                             
                                             if(empty($workorder->first_name)){
-                                                echo $workorder->contact_name;
+                                                $customer = trim($workorder->contact_name);
                                             }else{
-                                                echo $workorder->first_name . ' ' . $workorder->last_name;
+                                                $customer = trim($workorder->first_name) . ' ' . trim($workorder->last_name);
                                             }
+
+                                            echo $customer;
                                         ?>
                                     </td>
                                     <td>
@@ -332,10 +348,7 @@ function workordermodule__formatWorkOrderNumber($number) {
                                                     <?php } ?>
                                                 </li>                                                
                                                 <li>
-                                                    <a class="dropdown-item clone-item" href="javascript:void(0);" data-id="<?php echo $workorder->id ?>" data-wo_num="<?php echo $workorder->work_order_number ?>" data-bs-toggle="modal" data-bs-target="#clone_workorder_modal">Clone Work Order</a>
-                                                </li>
-                                                <li>
-                                                    <a class="dropdown-item" href="<?php echo base_url('invoice') ?>">Create Invoice</a>
+                                                    <a class="dropdown-item clone-item" href="javascript:void(0);" data-id="<?php echo $workorder->id ?>" data-wo_num="<?php echo $workorder->work_order_number ?>">Clone Work Order</a>
                                                 </li>
                                                 <?php } ?>
                                                 <?php if(checkRoleCanAccessModule('work-orders', 'delete')){ ?>
@@ -345,7 +358,7 @@ function workordermodule__formatWorkOrderNumber($number) {
                                                 <?php } ?>
                                                 <?php if(checkRoleCanAccessModule('work-orders', 'write')){ ?>
                                                 <li>
-                                                    <a class="dropdown-item" href="<?php echo base_url('job/work_order_job/' . $workorder->id) ?>">Convert To Jobs</a>
+                                                    <a class="dropdown-item" href="<?php echo base_url('job/work_order_job/' . $workorder->id) ?>">Convert to Jobs</a>
                                                 </li>
                                                 <?php } ?>
                                             </ul>
@@ -391,8 +404,8 @@ function workordermodule__formatWorkOrderNumber($number) {
         }, 1000));
 
         $(document).on('change', '#select-all', function(){
-            $('.row-select:checkbox').prop('checked', this.checked);  
-            let total= $('input[name="workorders[]"]:checked').length;
+            $('tr:visible .row-select:checkbox').prop('checked', this.checked);  
+            let total= $('tr:visible input[name="workorders[]"]:checked').length;
             if( total > 0 ){
                 $('#num-checked').text(`(${total})`);
             }else{
@@ -434,7 +447,7 @@ function workordermodule__formatWorkOrderNumber($number) {
                 });
             }else{
                 Swal.fire({
-                    title: 'Delete Workorders',
+                    title: 'Delete Work Orders',
                     html: `Are you sure you want to delete selected rows?<br /><br /><small>Deleted data can be restored via archived list.</small>`,
                     icon: 'question',
                     confirmButtonText: 'Proceed',
@@ -468,11 +481,85 @@ function workordermodule__formatWorkOrderNumber($number) {
                                     });
                                 }
                             },
+                            beforeSend: function(){
+                                Swal.fire({
+                                    icon: "info",
+                                    title: "Processing",
+                                    html: "Please wait while the process is running...",
+                                    allowOutsideClick: false,
+                                    allowEscapeKey: false,
+                                    didOpen: () => {
+                                        Swal.showLoading();
+                                    },
+                                });
+                            }
                         });
 
                     }
                 });
             }        
+        });
+
+        $(document).on("click", ".clone-item", function() {
+            let wid   = $(this).attr("data-id");
+            let workorder_number  = $(this).attr("data-wo_num");        
+
+            Swal.fire({
+                title: 'Clone Work Order',
+                html: `You are going create a new work order based on work order number <b>${workorder_number}</b>. Afterwards you can edit the newly created work order.`,
+                icon: 'question',
+                confirmButtonText: 'Proceed',
+                showCancelButton: true,
+                cancelButtonText: "Cancel"
+            }).then((result) => {
+                if (result.value) {
+                    $.ajax({
+                        type: 'POST',
+                        url: base_url + "workorder/duplicate_workorder",
+                        data: {
+                            wo_num: wid
+                        },
+                        dataType: "JSON",
+                        success: function(result) {
+                            if (result.is_success) {
+                                var wid = result.wid;
+                                Swal.fire({
+                                    title: 'Clone Work Order',
+                                    html: "Data successfully created!",
+                                    icon: 'success',
+                                    showCancelButton: false,
+                                    confirmButtonText: 'Okay'
+                                }).then((result) => {
+                                    //if (result.value) {
+                                        location.href = base_url + 'workorder/edit/' + wid;
+                                    //}
+                                });
+                            } else {
+                                Swal.fire({
+                                    title: 'Error',
+                                    text: result.msg,
+                                    icon: 'error',
+                                    showCancelButton: false,
+                                    confirmButtonText: 'Okay'
+                                });
+                            }
+                        },
+                        beforeSend: function(){
+                            Swal.fire({
+                                icon: "info",
+                                title: "Processing",
+                                html: "Please wait while the process is running...",
+                                allowOutsideClick: false,
+                                allowEscapeKey: false,
+                                showConfirmButton: false,
+                                didOpen: () => {
+                                    Swal.showLoading();
+                                },
+                            });
+                        }
+                    });
+                }
+            });
         });
 
         $(document).on('click', '#with-selected-change-status', function(){
@@ -544,6 +631,18 @@ function workordermodule__formatWorkOrderNumber($number) {
                                         text: result.msg,
                                     });
                                 }
+                            },
+                            beforeSend: function(){
+                                Swal.fire({
+                                    icon: "info",
+                                    title: "Processing",
+                                    html: "Please wait while the process is running...",
+                                    allowOutsideClick: false,
+                                    allowEscapeKey: false,
+                                    didOpen: () => {
+                                        Swal.showLoading();
+                                    },
+                                });
                             }
                         });
                     }
@@ -551,13 +650,13 @@ function workordermodule__formatWorkOrderNumber($number) {
             }        
         });
 
-        $(document).on("click", ".clone-item", function() {
+        /*$(document).on("click", ".clone-item", function() {
             let num = $(this).attr('data-wo_num');
             let id = $(this).attr('data-id');
 
             $('.work_order_no').text(num);
             $('#wo_id').val(id);
-        });
+        });*/
 
         $("#clone_workorder").on("click", function(){
             let wo_num = $('#wo_id').val();
@@ -570,7 +669,7 @@ function workordermodule__formatWorkOrderNumber($number) {
                 },
                 success: function(result) {
                     Swal.fire({
-                        title: 'Good job!',
+                        title: 'Clone Workorder',
                         text: "Data Cloned Successfully!",
                         icon: 'success',
                         showCancelButton: false,
@@ -581,6 +680,18 @@ function workordermodule__formatWorkOrderNumber($number) {
                         //}
                     });
                 },
+                beforeSend: function(){
+                    Swal.fire({
+                        icon: "info",
+                        title: "Processing",
+                        html: "Please wait while the process is running...",
+                        allowOutsideClick: false,
+                        allowEscapeKey: false,
+                        didOpen: () => {
+                            Swal.showLoading();
+                        },
+                    });
+                }
             });
         });
 
@@ -603,7 +714,7 @@ function workordermodule__formatWorkOrderNumber($number) {
             var workorder_number = $(this).attr('data-worknumber');
 
             Swal.fire({
-                title: 'Restore Workorder Data',
+                title: 'Restore Workorder',
                 html: `Proceed with restoring workoder data <b>${workorder_number}</b>?`,
                 icon: 'question',
                 showCancelButton: true,
@@ -633,6 +744,18 @@ function workordermodule__formatWorkOrderNumber($number) {
                                     text: result.msg,
                                 });
                             }
+                        },
+                        beforeSend: function(){
+                            Swal.fire({
+                                icon: "info",
+                                title: "Processing",
+                                html: "Please wait while the process is running...",
+                                allowOutsideClick: false,
+                                allowEscapeKey: false,
+                                didOpen: () => {
+                                    Swal.showLoading();
+                                },
+                            });
                         }
                     });
                 }
@@ -684,6 +807,18 @@ function workordermodule__formatWorkOrderNumber($number) {
                                     });
                                 }
                             },
+                            beforeSend: function(){
+                                Swal.fire({
+                                    icon: "info",
+                                    title: "Processing",
+                                    html: "Please wait while the process is running...",
+                                    allowOutsideClick: false,
+                                    allowEscapeKey: false,
+                                    didOpen: () => {
+                                        Swal.showLoading();
+                                    },
+                                });
+                            }
                         });
 
                     }
@@ -736,6 +871,18 @@ function workordermodule__formatWorkOrderNumber($number) {
                                     });
                                 }
                             },
+                            beforeSend: function(){
+                                Swal.fire({
+                                    icon: "info",
+                                    title: "Processing",
+                                    html: "Please wait while the process is running...",
+                                    allowOutsideClick: false,
+                                    allowEscapeKey: false,
+                                    didOpen: () => {
+                                        Swal.showLoading();
+                                    },
+                                });
+                            }
                         });
 
                     }
@@ -782,6 +929,18 @@ function workordermodule__formatWorkOrderNumber($number) {
                                     });
                                 }
                             },
+                            beforeSend: function(){
+                                Swal.fire({
+                                    icon: "info",
+                                    title: "Processing",
+                                    html: "Please wait while the process is running...",
+                                    allowOutsideClick: false,
+                                    allowEscapeKey: false,
+                                    didOpen: () => {
+                                        Swal.showLoading();
+                                    },
+                                });
+                            }
                         });
 
                     }
@@ -822,9 +981,9 @@ function workordermodule__formatWorkOrderNumber($number) {
                                     showCancelButton: false,
                                     confirmButtonText: 'Okay'
                                 }).then((result) => {
-                                    if (result.value) {
+                                    //if (result.value) {
                                         location.reload();
-                                    }
+                                    //}
                                 });
                             }else{
                                 Swal.fire({
@@ -835,6 +994,18 @@ function workordermodule__formatWorkOrderNumber($number) {
                             }
                             
                         },
+                        beforeSend: function(){
+                            Swal.fire({
+                                icon: "info",
+                                title: "Processing",
+                                html: "Please wait while the process is running...",
+                                allowOutsideClick: false,
+                                allowEscapeKey: false,
+                                didOpen: () => {
+                                    Swal.showLoading();
+                                },
+                            });
+                        }
                     });
                 }
             });
@@ -884,6 +1055,18 @@ function workordermodule__formatWorkOrderNumber($number) {
                                 });
                             }
                         },
+                        beforeSend: function(){
+                            Swal.fire({
+                                icon: "info",
+                                title: "Processing",
+                                html: "Please wait while the process is running...",
+                                allowOutsideClick: false,
+                                allowEscapeKey: false,
+                                didOpen: () => {
+                                    Swal.showLoading();
+                                },
+                            });
+                        }
                     });
                 }
             });
