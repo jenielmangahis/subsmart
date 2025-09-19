@@ -268,10 +268,10 @@ class Check extends MY_Controller
                 <div class='dropdown'>
                     <button class='btn dropdown-toggle text-muted' type='button' id='checkMenuButton' data-bs-toggle='dropdown' aria-expanded='false'><i class='fas fa-ellipsis-v'></i></button>
                     <ul class='dropdown-menu' aria-labelledby='checkMenuButton'>
-                        <li><a class='dropdown-item editCheck' href='javascript:void(0);' data-check_id='$getDatas->id'>Edit</a></li>
-                        <li><a class='dropdown-item copyCheck href='javascript:void(0);' data-check_id='$getDatas->id'>Copy</a></li>
-                        <li><a class='dropdown-item voidCheck' href='javascript:void(0);' data-check_id='$getDatas->id'>Void</a></li>
-                        <li><a class='dropdown-item deleteCheck' href='javascript:void(0);' data-check_id='$getDatas->id'>Delete</a></li>
+                        <li><a class='dropdown-item editCheck' href='javascript:void(0);' data-check_id='$getDatas->id' data-check_no='$check_no' data-payee_name='$payee_name' data-total_amount='$total_amount'>Edit</a></li>
+                        <li><a class='dropdown-item copyCheck href='javascript:void(0);' data-check_id='$getDatas->id' data-check_no='$check_no' data-payee_name='$payee_name' data-total_amount='$total_amount'>Copy</a></li>
+                        <li><a class='dropdown-item voidCheck' href='javascript:void(0);' data-check_id='$getDatas->id' data-check_no='$check_no' data-payee_name='$payee_name' data-total_amount='$total_amount'>Void</a></li>
+                        <li><a class='dropdown-item deleteCheck' href='javascript:void(0);' data-check_id='$getDatas->id' data-check_no='$check_no' data-payee_name='$payee_name' data-total_amount='$total_amount'>Delete</a></li>
                     </ul>
                 </div>
             ";

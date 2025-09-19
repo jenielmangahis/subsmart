@@ -181,24 +181,53 @@
     }
 
     function virtualNumberToWords(amount) {
-        const numbersToWords = (num) => {
-            const ones = ["", "One", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine"];
-            const tens = ["", "", "Twenty", "Thirty", "Forty", "Fifty", "Sixty", "Seventy", "Eighty", "Ninety"];
-            const teens = ["Ten", "Eleven", "Twelve", "Thirteen", "Fourteen", "Fifteen", "Sixteen", "Seventeen", "Eighteen", "Nineteen"];
+        const units = ["", "Thousand", "Million", "Billion", "Trillion", "Quadrillion", "Quintillion", "Sextillion", "Septillion", "Octillion", "Nonillion", "Decillion"];
+        const ones = ["", "One", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine"];
+        const teens = ["Ten", "Eleven", "Twelve", "Thirteen", "Fourteen", "Fifteen", "Sixteen", "Seventeen", "Eighteen", "Nineteen"];
+        const tens = ["", "", "Twenty", "Thirty", "Forty", "Fifty", "Sixty", "Seventy", "Eighty", "Ninety"];
 
-            if (num < 10) return ones[num];
-            if (num < 20) return teens[num - 10];
-            if (num < 100) return tens[Math.floor(num / 10)] + (num % 10 !== 0 ? " " + ones[num % 10] : "");
-            if (num < 1000) return ones[Math.floor(num / 100)] + " Hundred" + (num % 100 !== 0 ? " " + numbersToWords(num % 100) : "");
-            if (num < 1000000) return numbersToWords(Math.floor(num / 1000)) + " Thousand" + (num % 1000 !== 0 ? " " + numbersToWords(num % 1000) : "");
-            if (num < 1000000000) return numbersToWords(Math.floor(num / 1000000)) + " Million" + (num % 1000000 !== 0 ? " " + numbersToWords(num % 1000000) : "");
-            if (num < 1000000000000) return numbersToWords(Math.floor(num / 1000000000)) + " Billion" + (num % 1000000000 !== 0 ? " " + numbersToWords(num % 1000000000) : "");
-            return "Amount Too Large";
+        const convertHundreds = (num) => {
+            let result = "";
+            if (num >= 100) {
+                result += ones[Math.floor(num / 100)] + " Hundred";
+                num %= 100;
+                if (num > 0) result += " ";
+            }
+            if (num >= 20) {
+                result += tens[Math.floor(num / 10)];
+                if (num % 10 > 0) result += " " + ones[num % 10];
+            } else if (num >= 10) {
+                result += teens[num - 10];
+            } else if (num > 0) {
+                result += ones[num];
+            }
+            return result;
+        };
+
+        const splitIntoGroups = (num) => {
+            const groups = [];
+            while (num > 0) {
+                groups.push(num % 1000);
+                num = Math.floor(num / 1000);
+            }
+            return groups;
+        };
+
+        const convertToWords = (num) => {
+            if (num === 0) return "Zero";
+            const groups = splitIntoGroups(num);
+            const words = [];
+            for (let i = 0; i < groups.length; i++) {
+                if (groups[i] !== 0) {
+                    words.unshift(convertHundreds(groups[i]) + (units[i] ? " " + units[i] : ""));
+                }
+            }
+            return words.join(" ");
         };
 
         const dollars = Math.floor(amount);
         const cents = Math.round((amount - dollars) * 100);
-        const dollarText = dollars > 0 ? numbersToWords(dollars) : "Zero";
+        const dollarText = convertToWords(dollars);
 
         return `${dollarText} and ${String(cents).padStart(2, '0')}/100`;
     }
@@ -342,10 +371,13 @@
 
     $(document).on('click', '.voidCheck', function() {
         let check_id = $(this).attr('data-check_id');
+        let check_no = $(this).attr('data-check_no');
+        let payee_name = $(this).attr('data-payee_name');
+        let total_amount = $(this).attr('data-total_amount');
         Swal.fire({
             icon: "warning",
             title: "Void Check",
-            html: "Are you sure you want to void this check?",
+            html: `Are you sure you want to void this check?<br><strong class='text-muted'>${payee_name} - ${check_no} (${total_amount})</strong>`,
             showCancelButton: true,
             confirmButtonText: "Proceed",
         }).then((result) => {
@@ -386,10 +418,14 @@
 
     $(document).on('click', '.deleteCheck', function() {
         let check_id = $(this).attr('data-check_id');
+        let check_no = $(this).attr('data-check_no');
+        let payee_name = $(this).attr('data-payee_name');
+        let total_amount = $(this).attr('data-total_amount');
+
         Swal.fire({
             icon: "warning",
             title: "Delete Check",
-            html: "Are you sure you want to delete this check?",
+            html: `Are you sure you want to delete this check?<br><strong class='text-muted'>${payee_name} - ${check_no} (${total_amount})</strong>`,
             showCancelButton: true,
             confirmButtonText: "Proceed",
         }).then((result) => {
