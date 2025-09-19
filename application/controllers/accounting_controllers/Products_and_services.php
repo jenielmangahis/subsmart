@@ -287,6 +287,7 @@ class Products_and_services extends MY_Controller
                             'purch_desc' => !is_null($accountingDetails) ? $accountingDetails->purchase_description : '',
                             'sales_price' => $item->price,
                             'cost' => $item->cost,
+                            'retail' => $item->retail,
                             'taxable' => $accountingDetails->tax_rate_id,
                             'qty_on_hand' => $qty,
                             'qty_po' => !is_null($accountingDetails) ? $accountingDetails->qty_po : '',
@@ -320,6 +321,7 @@ class Products_and_services extends MY_Controller
                         'purch_desc' => !is_null($accountingDetails) ? $accountingDetails->purchase_description : '',
                         'sales_price' => $item->price,
                         'cost' => $item->cost,
+                        'retail' => $item->retail,
                         'taxable' => $accountingDetails->tax_rate_id,
                         'qty_on_hand' => $qty,
                         'qty_po' => !is_null($accountingDetails) ? $accountingDetails->qty_po : '',
@@ -1735,5 +1737,34 @@ class Products_and_services extends MY_Controller
             $data_arr = array("success" => FALSE, "message" => 'Something goes wrong.');
         }
         die(json_encode($data_arr));
+    }
+
+    public function ajax_archive_selected_items()
+    {
+        $is_success = 0;
+        $msg    = 'Please select data';
+
+        $company_id  = logged('company_id');
+        $post = $this->input->post();
+
+        if( $post['items'] ){
+            $filter[] = ['field' => 'company_id', 'value' => $company_id];
+            $data     = ['is_archived' => 1, 'modified' => date("Y-m-d H:i:s")];
+            $total_updated = $this->items_model->bulkUpdate($post['items'], $data, $filter);
+
+			//Activity Logs
+			$activity_name = 'Accounting Inventory : Archived ' . $total_updated . ' item(s)'; 
+			createActivityLog($activity_name);
+
+            $is_success = 1;
+            $msg    = '';
+        }
+
+        $return = [
+            'is_success' => $is_success,
+            'msg' => $msg
+        ];
+
+        echo json_encode($return);
     }
 }
