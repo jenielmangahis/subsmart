@@ -1,12 +1,109 @@
-$('.dropdown-menu.table-settings').on('click', function(e) {
+$('.dropdown-menu.table-settings, .dropdown-menu.table-filter').on('click', function (e) {
     e.stopPropagation();
 });
 
-$("#categories-table").nsmPagination({
+$("#items-table").nsmPagination({
     itemsPerPage: parseInt($('#table-rows li a.active').html().trim())
 });
 
-$('.dropdown-menu#table-rows a.dropdown-item').on('click', function() {
+$('#items-table thead .select-all').on('change', function () {
+    $('#items-table tbody tr:visible .select-one').prop('checked', $(this).prop('checked')).trigger('change');
+    let total= $('#items-table tbody tr:visible .table-select:checked').length;
+    if( total > 0 ){
+        $('#num-checked').text(`(${total})`);
+    }else{
+        $('#num-checked').text('');
+    }
+});
+
+$(document).on('change', '.table-select', function(){
+    let total= $('#items-table tbody tr:visible .table-select:checked').length;
+    if( total > 0 ){
+        $('#num-checked').text(`(${total})`);
+    }else{
+        $('#num-checked').text('');
+    }
+});
+
+$('#btn-archived').on('click', function(){
+    $('#modal-archived-items').modal('show');
+    $.ajax({
+        type: "POST",
+        url: base_url + "inventory/_archived_list",  
+        success: function(html) {    
+            $('#inventory-items-archived-list-container').html(html);                          
+        },
+        beforeSend: function() {
+            $('#inventory-items-archived-list-container').html('<span class="bx bx-loader bx-spin"></span>');
+        }
+    });
+}); 
+
+$(document).on('click', '#with-selected-delete', function(){
+    let total= $('#items-table input[name="items[]"]:checked').length;
+    if( total <= 0 ){
+        Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: 'Please select rows',
+        });
+    }else{
+        Swal.fire({
+            title: 'Delete Items',
+            html: `Are you sure you want to delete selected rows?<br /><br /><small>Deleted data can be restored via archived list.</small>`,
+            icon: 'question',
+            confirmButtonText: 'Proceed',
+            showCancelButton: true,
+            cancelButtonText: "Cancel"
+        }).then((result) => {
+            if (result.value) {
+                $.ajax({
+                    method: 'POST',
+                    url: base_url + 'accounting/products-and-services/_archive_selected_items',
+                    dataType: 'json',
+                    data: $('#frm-with-selected').serialize(),
+                    success: function(result) {                        
+                        if( result.is_success == 1 ) {
+                            Swal.fire({
+                                title: 'Delete Items',
+                                text: "Data deleted successfully!",
+                                icon: 'success',
+                                showCancelButton: false,
+                                confirmButtonText: 'Okay'
+                            }).then((result) => {
+                                //if (result.value) {
+                                    location.reload();
+                                //}
+                            });
+                        } else {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Error',
+                                text: result.msg,
+                            });
+                        }
+                    },
+                    beforeSend: function(){
+                        Swal.fire({
+                            icon: "info",
+                            title: "Processing",
+                            html: "Please wait while the process is running...",
+                            allowOutsideClick: false,
+                            allowEscapeKey: false,
+                            showConfirmButton: false,
+                            didOpen: () => {
+                                Swal.showLoading();
+                            },
+                        });
+                    }
+                });
+
+            }
+        });
+    }        
+});
+
+$('.dropdown-menu#table-rows a.dropdown-item').on('click', function () {
     var count = $(this).html();
     $('.dropdown-menu#table-rows a.dropdown-item.active').removeClass('active');
     $(this).addClass('active');
@@ -14,54 +111,105 @@ $('.dropdown-menu#table-rows a.dropdown-item').on('click', function() {
     $(this).parent().parent().prev().find('span').html(count);
     $('.dropdown-menu#table-rows').prev().dropdown('toggle');
 
-    $("#categories-table").nsmPagination({
+    $("#items-table").nsmPagination({
         itemsPerPage: parseInt(count)
     });
 });
 
-$('#categories-table .edit-category').on('click', function(e) {
-    e.preventDefault();
+$('#filter-status, #filter-type, #filter-stock-status').select2({
+    minimumResultsForSearch: -1
+});
 
-    var row = $(this).closest('tr');
+$('#filter-category').select2({
+    allowClear: true
+});
 
-    $.get(`product-categories/get/${row.data().id}`, function(result) {
-        var category = JSON.parse(result);
+$('#category-id').select2({
+    placeholder: "Assign category",
+    ajax: {
+        url: '/accounting/get-dropdown-choices',
+        dataType: 'json',
+        data: function (params) {
+            var query = {
+                search: params.term,
+                type: 'public',
+                field: 'category',
+                field_id: 'assign-category'
+            }
 
-        $('#addNewCategory form [name="name"]').val(category.name);
-
-        if(category.hasOwnProperty('parent')) {
-            $('#addNewCategory form #sub-category').prop('checked', true).trigger('change');
-
-            $('#addNewCategory form #parent_account').append(`<option value="${category.parent.item_categories_id}" selected>${category.parent.name}</option>`)
-        } else {
-            $('#addNewCategory form #sub-category').prop('checked', false).trigger('change');
+            // Query parameters will be ?search=[term]&type=public&field=[type]
+            return query;
         }
+    },
+    templateResult: formatResult,
+    templateSelection: optionSelect,
+    dropdownParent: $('#assign_category_modal')
+});
 
-        $('#addNewCategory form').attr('action', base_url + `accounting/product-categories/update/${category.item_categories_id}`);
-        $('#addNewCategory form').attr('id', `update-category-form`);
-        $('#addNewCategory .modal-footer').prepend('<button type="button" id="remove-category" class="nsm-button">Remove</button>');
+$("#search_field").on("input", debounce(function () {
+    let _form = $(this).closest("form");
 
-        $(`#addNewCategory`).attr('data-bs-backdrop', 'static');
+    _form.submit();
+}, 1500));
 
-        $('#addNewCategory').modal('show');
+$('.dropdown-menu.table-settings input[name="col_chk"]').on('change', function () {
+    var chk = $(this);
+    var dataName = $(this).next().text();
+
+    var index = $(`#items-table thead td[data-name="${dataName}"]`).index();
+    $(`#items-table tr`).each(function () {
+        if (chk.prop('checked')) {
+            $($(this).find('td')[index]).show();
+        } else {
+            $($(this).find('td')[index]).hide();
+        }
+    });
+
+    $(`#print_items_modal table tr`).each(function () {
+        if (chk.prop('checked')) {
+            $($(this).find('td')[index - 1]).show();
+        } else {
+            $($(this).find('td')[index - 1]).hide();
+        }
+    });
+
+    $(`#print_preview_items_modal #items_table_print tr`).each(function () {
+        if (chk.prop('checked')) {
+            $($(this).find('td')[index - 1]).show();
+        } else {
+            $($(this).find('td')[index - 1]).hide();
+        }
     });
 });
 
-$('#sub-category').on('change', function(){
-    if($(this).prop('checked')) {
-        if($(this).parent().parent().find('#parent_account').length === 0) {
-            $('#addNewCategory .modal-body').append(`
-            <div class="mb-2">
-                <select class="form-control nsm-field" name="parent_id" id="parent_account"></select>
-            </div>`);
+$("#btn_print_items").on("click", function () {
+    $("#items_table_print").printThis();
+});
 
-            $('#parent_account').select2({
-                ajax: {
-                    url: base_url + 'accounting/product-categories/get',
-                    dataType: 'json'
-                },
-                dropdownParent: $('#addNewCategory')
-            });
+$('#apply-button').on('click', function () {
+    var filterStatus = $('#filter-status').val();
+    var filterType = $('#filter-type').val();
+    var filterCategory = $('#filter-category').val();
+    var filterStockStat = $('#filter-stock-status').val();
+    var groupByCat = $('#group-by-category');
+    var search = $('#search_field').val();
+
+    var url = `${base_url}accounting/products-and-services?`;
+
+    url += search !== '' ? `search=${search}&` : '';
+    url += filterStatus !== 'active' ? `status=${filterStatus}&` : '';
+    url += filterType !== 'all' ? `type=${filterType}&` : '';
+    if (filterCategory && filterCategory.length > 0) {
+        var categoryNames = filterCategory.map(function (categoryId) {
+            var categoryName = $('#filter-category option[value="' + categoryId + '"]').text().trim();
+            return encodeURIComponent(categoryName);
+        });
+
+        //url += `category=${categoryNames.join(',')}&`;
+
+        if ($('#filter-category option').length !== $('#filter-category option:selected').length && $('#filter-category option:selected').length > 0) {
+            var categoryFilter = filterCategory.join(',');
+            url += `category=${encodeURIComponent(categoryFilter)}&`;
         }
     }
     url += filterStockStat !== 'all' ? `stock-status=${filterStockStat}&` : '';
@@ -106,21 +254,6 @@ $('#reset-button').on('click', function () {
 
 $('#items-table thead .select-all').on('change', function () {
     $('#items-table tbody tr:visible .select-one').prop('checked', $(this).prop('checked')).trigger('change');
-    let total= $('#items-table tbody tr:visible .table-select:checked').length;
-    if( total > 0 ){
-        $('#num-checked').text(`(${total})`);
-    }else{
-        $('#num-checked').text('');
-    }
-});
-
-$(document).on('change', '.table-select', function(){
-    let total= $('#items-table tbody tr:visible .table-select:checked').length;
-    if( total > 0 ){
-        $('#num-checked').text(`(${total})`);
-    }else{
-        $('#num-checked').text('');
-    }
 });
 
 // $(document).on('change', '#items-table tbody tr:visible .select-one', function () {
@@ -185,7 +318,7 @@ $(document).on('change', '.table-select', function(){
 //     }
 // });
 
-$(document).on('change', '#items-table tbody tr:visible .select-one', function () {
+$(document).on('change', '#items-table tbody tr:visible .select-one', function () {    
     var checked = $('#items-table tbody tr:visible input.select-one:checked');
     var totalrows = $('#items-table tbody tr:visible input.select-one').length;
 
@@ -194,27 +327,122 @@ $(document).on('change', '#items-table tbody tr:visible .select-one', function (
     if (checked.length < 1) {
         $('.batch-actions li a.dropdown-item').addClass('disabled');
     } else {
-        $(this).parent().next().remove();
+        var inactiveChecked = $('#items-table tbody tr:visible[data-status="0"] input.select-one:checked').length;
+        var activeChecked = $('#items-table tbody tr:visible[data-status="1"] input.select-one:checked');
+
+        //$('.batch-actions li a#make-active').toggleClass('disabled', inactiveChecked < 1);
+        //$('.batch-actions li a#make-inactive').toggleClass('disabled', activeChecked.length < 1);
+
+        var allNonInv = true;
+        var allService = true;
+        var allInv = true;
+        var allNameProvided = true;
+
+        activeChecked.each(function () {
+            var row = $(this).closest('tr');
+            var type = row.find('td:nth-child(4)').html().trim();
+            var name = row.find('td:nth-child(2)').html().trim();
+
+            if (type !== 'Non-inventory') {
+                allNonInv = false;
+            }
+
+            if (type !== 'Service') {
+                allService = false;
+            }
+
+            if (type !== 'Product') {
+                allInv = false;
+            }
+
+            if (!name || name === 'No name provided') {
+                allNameProvided = false;
+            }
+        });
+
+        $('.batch-actions li a#make-service').toggleClass('disabled', !allNonInv);
+        $('.batch-actions li a#make-non-inventory').toggleClass('disabled', !allService);
+        $('.batch-actions li a#adjust-quantity').toggleClass('disabled', !allInv);
+        $('.batch-actions li a#reorder').toggleClass('disabled', !allInv || !allNameProvided);
+        $('.batch-actions li a#with-selected-delete').toggleClass('disabled', false);
     }
 });
 
-$('#new-category-button').on('click', function(e) {
+$('#assign-category').on('click', function (e) {
     e.preventDefault();
 
-    $(`#addNewCategory`).attr('data-bs-backdrop', 'static');
-
-    $('#addNewCategory').modal('show');
+    $('#assign_category_modal').modal('show');
 });
 
-$('#categories-table .remove-category').on('click', function(e) {
+$(document).on('submit', '#assign-category-form', function (e) {
     e.preventDefault();
-    var row = $(this).closest('tr');    
 
-    /*$.ajax({
-        url: base_url + `accounting/product-categories/delete/${row.data().id}`,
-        type: 'DELETE',
-        success: function(result) {
+    var data = new FormData();
+
+    $('#items-table tbody tr:visible input.select-one:checked').each(function () {
+        var row = $(this).closest('tr');
+
+        data.append('items[]', $(this).val());
+    });
+
+    $.ajax({
+        url: `/accounting/products-and-services/assign-category/${$('#category-id').val()}`,
+        data: data,
+        type: 'post',
+        processData: false,
+        contentType: false,
+        success: function (result) {
             location.reload();
+        }
+    });
+});
+
+$('#reorder').on('click', function (e) {
+    e.preventDefault();
+
+    var data = new FormData();
+    $('#items-table tbody tr:visible .select-one:checked').each(function () {
+        data.append('items[]', $(this).val());
+    });
+
+    $.ajax({
+        url: `${base_url}accounting/products-and-services/reorder-items`,
+        data: data,
+        type: 'post',
+        processData: false,
+        contentType: false,
+        success: function (res) {
+            if ($('div#modal-container').length > 0) {
+                $('div#modal-container').html(res);
+            } else {
+                $('body').append(`
+                    <div id="modal-container"> 
+                        ${res}
+                    </div>
+                `);
+            }
+
+            initModalFields('purchaseOrderModal');
+
+            $(`#purchaseOrderModal`).modal('show');
+        }
+    })
+});
+
+$('#adjust-quantity').on('click', function (e) {
+    e.preventDefault();
+
+
+    $.get(`${base_url}accounting/get-other-modals/inventory_qty_modal`, function (res) {
+
+        if ($('div#modal-container').length > 0) {
+            $('div#modal-container').html(res);
+        } else {
+            $('body').append(`
+				<div id="modal-container"> 
+					${res}
+				</div>
+			`);
         }
 
         initModalFields('inventoryModal');
@@ -310,6 +538,15 @@ $('#make-non-inventory, #make-service, #make-inactive, #make-active').on('click'
         cancelButtonText: "Cancel"
     }).then((result) => {
         if (result.value) {
+            var data = new FormData();
+            var items = [];
+
+            checkedItems.each(function () {
+                items.push($(this).val());
+            });
+
+            data.append('items', JSON.stringify(items));
+            
             $.ajax({
                 url: `products-and-services/batch-action/${action}`,
                 data: data,
@@ -351,53 +588,146 @@ $('#make-non-inventory, #make-service, #make-inactive, #make-active').on('click'
     
 });
 
-$("#btn-delete-product-categories").on("click", function() {
+// $('.export-items').on('click', function () {
+//     if ($('#export-form').length < 1) {
+//         $('body').append('<form action="/accounting/products-and-services/export-table" method="post" id="export-form"></form>');
+//     }
 
-    Swal.fire({
-        title: 'Delete All',
-        text: "This will delete all selected product categories. Proceed with action?",
-        icon: 'question',
-        confirmButtonText: 'Proceed',
-        showCancelButton: true,
-        cancelButtonText: "Cancel"
-    }).then((result) => {
-        if (result.value) {
-            $.ajax({
-                type: 'POST',
-                url: base_url + `accounting/product-categories/_delete_selected_product_categories`,
-                dataType: 'json',
-                data: $('#frm-prod-categories').serialize(),
-                success: function(result) {
-                    if (result.is_success == 1) {
-                        Swal.fire({
-                            title: 'Delete Successful!',
-                            text: "Product categories is successfully deleted!",
-                            icon: 'success',
-                            showCancelButton: false,
-                            confirmButtonText: 'Okay'
-                        }).then((result) => {
-                            location.reload();
-                        });
-                    } else {
-                        Swal.fire({
-                            title: 'An Error Occured',
-                            text: result.msg,
-                            icon: 'error',
-                            showCancelButton: false,
-                            confirmButtonText: 'Okay'
-                        }).then((result) => {
-                            if (result.value) {
-                                //location.reload();
-                            }
-                        });
-                    }
-                },
-            });
+//     var fields = $('.dropdown-menu.table-settings input[name="col_chk"]:checked');
+//     fields.each(function () {
+//         $('#export-form').append(`<input type="hidden" name="fields[]" value="${$(this).attr('id').replace('_chk', '')}">`);
+//     });
+
+//     // Add default values for empty rows
+//     $('#export-form').append(`<input type="hidden" name="default_name" value="Default Name">`);
+//     $('#export-form').append(`<input type="hidden" name="default_quantity" value="0">`);
+
+//     $('#export-form').append(`<input type="hidden" name="search" value="${$('#search_field').val()}">`);
+//     $('#export-form').append(`<input type="hidden" name="status" value="${$('#filter-status').val()}">`);
+//     $('#export-form').append(`<input type="hidden" name="type" value="${$('#filter-type').val()}">`);
+//     $('#export-form').append(`<input type="hidden" name="stock_status" value="${$('#filter-stock-status').val()}">`);
+
+//     $.each($('#filter-category').val(), function (key, value) {
+//         $('#export-form').append(`<input type="hidden" name="category[]" value="${value}">`);
+//     });
+
+//     $('#export-form').append(`<input type="hidden" name="column" value="name">`);
+//     $('#export-form').append(`<input type="hidden" name="order" value="asc">`);
+
+//     $('#export-form').submit();
+// });
+
+$('.export-items').on('click', function () {
+    if ($('#export-form').length < 1) {
+        $('body').append('<form action="/accounting/products-and-services/export-table" method="post" id="export-form"></form>');
+    }
+
+    var fields = [];
+
+    $('.dropdown-menu.table-settings input[name="col_chk"]:checked').each(function () {
+        fields.push($(this).attr('id').replace('_chk', ''));
+    });
+
+    var csv = fields.join(',') + '\n';
+    csv += 'Default Name,0\n';
+    csv += $('#search_field').val() + ',' + $('#filter-status').val() + ',' + $('#filter-type').val() + ',' + $('#filter-stock-status').val() + '\n';
+    $.each($('#filter-category').val(), function (key, value) {
+        csv += value + ',';
+    });
+    csv += '\n';
+    csv += 'name,asc\n';
+
+    $('#export-form').html('<input type="hidden" name="csv_data" value="' + csv.replace(/"/g, '&quot;') + '">');
+    $('#export-form').submit();
+});
+
+$('#export-form').on('submit', function (e) {
+    e.preventDefault();
+    this.submit();
+    $(this).remove();
+});
+
+$('.nsm-counter').on('click', function () {
+    if ($(this).hasClass('selected')) {
+        $('#filter-stock-status').val('all').trigger('change');
+    } else {
+        $('#filter-stock-status').val($(this).attr('id')).trigger('change');
+    }
+
+    $('#apply-button').trigger('click');
+});
+
+$('#add-item-button').on('click', function (e) {
+    e.preventDefault();
+
+    $.get(`${base_url}accounting/get-dropdown-modal/item_modal?field=product`, function (result) {
+        if ($('#modal-container').length > 0) {
+            $('div#modal-container').html(`<div class="full-screen-modal">${result}</div>`);
+        } else {
+            $('body').append(`
+                <div id="modal-container"> 
+                    <div class="full-screen-modal">
+                        ${result}
+                    </div>
+                </div>
+            `);
         }
+
+        $(`#modal-container #item-modal`).attr('data-bs-backdrop', 'static');
+        $(`#modal-container #item-modal`).attr('data-bs-keyboard', 'true');
+
+        $(`#modal-container #item-modal`).modal('show');
     });
 });
 
-$('#items-table .make-inactive').on('click', function (e) {
+$('#group-by-category').on('change', function () {
+    var currUrl = window.location.href;
+
+    if ($(this).prop('checked')) {
+        if (currUrl.slice(-1) === '#') {
+            currUrl = currUrl.slice(0, -1);
+        }
+
+        var urlSplit = currUrl.split('/');
+        var queries = urlSplit[urlSplit.length - 1].split('?');
+
+        if (queries.length > 1) {
+            queries = queries[queries.length - 1];
+
+            if (queries.slice(-1) === '#') {
+                queries = queries.slice(0, -1);
+            }
+
+            if (queries.slice(-1) === '&') {
+                queries = queries.slice(0, -1);
+            }
+
+            queries += '&group-by-category=1';
+
+            var url = `${base_url}accounting/products-and-services?${queries}`;
+        } else {
+            var url = `${base_url}accounting/products-and-services?group-by-category=1`;
+        }
+    } else {
+        var url = currUrl.replace('group-by-category=1', '');
+
+        if (url.slice(-1) === '#') {
+            url = url.slice(0, -1);
+        }
+
+        if (url.slice(-1) === '&') {
+            url = url.slice(0, -1);
+        }
+
+        if (url.slice(-1) === '?') {
+            url = url.slice(0, -1);
+        }
+    }
+
+    location.href = url;
+});
+
+$('#items-table .make-active').on('click', function (e) {
     e.preventDefault();
 
     var row = $(this).closest('tr');
@@ -405,7 +735,37 @@ $('#items-table .make-inactive').on('click', function (e) {
     var type = row.find('td:nth-child(4)').html().trim();
 
     Swal.fire({
-        title: 'Change to Inactive',
+        title: 'Are you sure?',
+        html: `You want to make <b>${name}</b> active?`,
+        icon: 'question',
+        showCloseButton: false,
+        confirmButtonColor: '#6a4a86',
+        confirmButtonText: 'Yes',
+        showCancelButton: true,
+        cancelButtonText: 'No',
+        cancelButtonColor: '#d33'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            $.ajax({
+                url: `${base_url}/accounting/products-and-services/active/${type.toLowerCase()}/${row.find('.select-one').val()}`,
+                type: 'GET',
+                success: function (result) {
+                    location.reload();
+                }
+            });
+        }
+    });
+});
+
+/*$('#items-table .make-inactive').on('click', function (e) {
+    e.preventDefault();
+
+    var row = $(this).closest('tr');
+    var name = row.find('td:nth-child(2)').html().trim();
+    var type = row.find('td:nth-child(4)').html().trim();
+
+    Swal.fire({
+        title: 'Are you sure?',
         html: `You want to make <b>${name}</b> inactive?`,
         icon: 'question',
         showCloseButton: false,
@@ -420,17 +780,811 @@ $('#items-table .make-inactive').on('click', function (e) {
                 url: `${base_url}/accounting/products-and-services/inactive/${type.toLowerCase()}/${row.find('.select-one').val()}`,
                 type: 'DELETE',
                 success: function (result) {
-                    Swal.fire({
-                        title: 'Change to Inactive',
-                        html: "Data was successfully updated!",
+                    location.reload();
+                }
+            });
+        }
+    });
+});*/
+
+$('#items-table .duplicate').on('click', function (e) {
+    e.preventDefault();
+
+    var row = $(this).closest('tr');
+    var type = row.find('td:nth-child(4)').html().trim();
+    type = type.toLowerCase();
+
+    $.get('/accounting/item-form/' + type, function (result) {
+        if ($('#modal-container').length > 0) {
+            $('div#modal-container').html(`<div class="full-screen-modal">
+				<div class="modal-right-side">
+                    <div class="modal right fade nsm-modal" tabindex="-1" id="item-modal" role="dialog">
+						<div class="modal-dialog" role="document" style="width: 25%">
+							<div class="modal-content">
+								${result}
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>`);
+        } else {
+            $('body').append(`
+                <div id="modal-container"> 
+                    <div class="full-screen-modal">
+						<div class="modal-right-side">
+                            <div class="modal right fade nsm-modal" tabindex="-1" id="item-modal" role="dialog">
+								<div class="modal-dialog" role="document" style="width: 25%">
+									<div class="modal-content">
+                        				${result}
+									</div>
+								</div>
+							</div>
+						</div>
+                    </div>
+                </div>
+            `);
+        }
+
+        $(`#item-modal a#select-item-type`).attr('onclick', `changeType('')`);
+
+        $('#modal-container #item-modal .date').datepicker({
+            format: 'mm/dd/yyyy',
+            orientation: 'bottom',
+            autoclose: true
+        });
+
+        $('#item-modal select').each(function () {
+            var dropdownType = $(this).attr('name').replaceAll('[]', '').replaceAll('_', '-');
+
+            if (dropdownFields.includes(dropdownType)) {
+                $(this).select2({
+                    ajax: {
+                        url: `${base_url}/accounting/get-dropdown-choices`,
+                        dataType: 'json',
+                        data: function (params) {
+                            var query = {
+                                search: params.term,
+                                type: 'public',
+                                field: dropdownType,
+                                modal: 'item-modal'
+                            }
+
+                            // Query parameters will be ?search=[term]&type=public&field=[type]
+                            return query;
+                        }
+                    },
+                    templateResult: formatResult,
+                    templateSelection: optionSelect,
+                    dropdownParent: $('#item-modal')
+                });
+            } else {
+                $(this).select2({
+                    minimumResultsForSearch: -1,
+                    dropdownParent: $('#item-modal')
+                });
+            }
+        });
+
+        occupyFields(row.data().id, type, 'duplicate');
+
+        $(`#item-modal form`).attr('id', 'duplicate-item-form');
+
+        $(`#modal-container #item-modal`).attr('data-bs-backdrop', 'static');
+        $(`#modal-container #item-modal`).attr('data-bs-keyboard', 'false');
+
+        $(`#modal-container #item-modal`).modal('show');
+    });
+});
+
+$('#items-table .edit-item').on('click', function (e) {
+    e.preventDefault();
+
+    var row = $(this).closest('tr');
+    var type = $(this).attr('data-type');
+    var qtyonhand = $(this).attr('data-qtyhand');
+    type = type.toLowerCase();
+
+    $.get(base_url + 'accounting/item-form/' + type, function (result) {
+        if ($('#modal-container').length > 0) {
+            $('div#modal-container').html(`<div class="full-screen-modal">
+				<div class="modal-right-side">
+                    <div class="modal right fade nsm-modal" tabindex="-1" id="item-modal" role="dialog">
+						<div class="modal-dialog" role="document" style="width: 25%">
+							<div class="modal-content">
+								${result}
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>`);
+        } else {
+            $('body').append(`
+                <div id="modal-container"> 
+                    <div class="full-screen-modal">
+						<div class="modal-right-side">
+                            <div class="modal right fade nsm-modal" tabindex="-1" id="item-modal" role="dialog">
+								<div class="modal-dialog" role="document" style="width: 25%">
+									<div class="modal-content">
+                        				${result}
+									</div>
+								</div>
+							</div>
+						</div>
+                    </div>
+                </div>
+            `);
+        }
+
+        $('#modal-container #item-modal .date').datepicker({
+            format: 'mm/dd/yyyy',
+            orientation: 'bottom',
+            autoclose: true
+        });
+
+        $('#item-modal select').each(function () {
+            var dropdownType = $(this).attr('name').replaceAll('[]', '').replaceAll('_', '-');
+
+            if (dropdownFields.includes(dropdownType)) {
+                $(this).select2({
+                    ajax: {
+                        url: '/accounting/get-dropdown-choices',
+                        dataType: 'json',
+                        data: function (params) {
+                            var query = {
+                                search: params.term,
+                                type: 'public',
+                                field: dropdownType,
+                                modal: 'item-modal'
+                            }
+
+                            // Query parameters will be ?search=[term]&type=public&field=[type]
+                            return query;
+                        }
+                    },
+                    templateResult: formatResult,
+                    templateSelection: optionSelect,
+                    dropdownParent: $('#item-modal')
+                });
+            } else {
+                $(this).select2({
+                    minimumResultsForSearch: -1,
+                    dropdownParent: $('#item-modal')
+                });
+            }
+        });
+
+        if (type === 'product' || type === 'bundle') {
+            $('#item-modal a#select-item-type').remove();
+        } else {
+            $(`#item-modal a#select-item-type`).attr('onclick', `changeType('${type}')`);
+        }
+
+        occupyFields(row.data().id, type);
+
+        $('#item-modal label[for="asOfDate"]').parent().parent().remove();
+
+        var qtyPo = parseInt($('#qty_po').text().trim() || '0');
+        // var qtyPo = row.find('td:nth-child(14)').html().trim() !== '' ? row.find('td:nth-child(14)').html().trim() : 0;
+
+        $(`<div class="row mb-2">
+			<div class="col-6">
+				<label for="">Quantity on hand</label>				
+			</div>
+			<div class="col-6">
+				<input type="text" value="${qtyonhand}" class="form-control text-end" disabled readonly />
+			</div>
+		</div>`).insertAfter('#item-modal #storage-locations');        
+        $('#item-modal #storage-locations').remove();
+
+        $('#item-modal form').attr('id', `update-${type}-form`);
+        $(`#item-modal form`).attr('action', `${base_url}/accounting/products-and-services/update/${type}/${row.find('.select-one').val()}`);
+
+        $(`#modal-container #item-modal`).attr('data-bs-backdrop', 'static');
+        $(`#modal-container #item-modal`).attr('data-bs-keyboard', 'false');
+
+        $(`#modal-container #item-modal`).modal('show');
+    });
+});
+
+function occupyFields(id, type, action = 'edit') {
+    $.get(`${base_url}accounting/products-and-services/get-item-details/${type}/${id}`, function (result) {
+        var item = JSON.parse(result);
+
+        var name = action === 'duplicate' ? item.name + ' - copy' : item.name;
+        $(`#item-modal #name`).val(name);
+        $(`#item-modal #sku`).val(item.sku);
+        $(`#item-modal #upc`).val(item.upc);
+
+        if (item.category !== null && item.category !== "") {
+            $(`#item-modal #category`).append(`<option value="${item.category_id}" selected>${item.category}</option>`);
+        }
+
+        $(`#item-modal #rebate-item`).prop('checked', item.rebate === '1');
+        $(`#item-modal #asOfDate`).val(item.as_of_date);
+        $(`#item-modal #reorderPoint`).val(item.reorder_point);
+
+        if (item.inventory_account !== null && item.inventory_account !== "") {
+            $(`#item-modal #inv_asset_account`).append(`<option value="${item.inventory_account_id}" selected>${item.inventory_account}</option>`);
+        }
+
+        $(`#item-modal #description`).val(item.sales_desc);
+        $(`#item-modal #price`).val(item.sales_price);
+
+        if (item.income_account !== null && item.income_account !== "") {
+            $(`#item-modal #income_account`).append(`<option value="${item.income_account_id}" selected>${item.income_account}</option>`);
+        }
+
+        if (item.sales_tax_cat !== null && item.sales_tax_cat !== "") {
+            $(`#item-modal #sales_tax_category`).append(`<option value="${item.sales_tax_cat_id}" selected>${item.sales_tax_cat}</option>`);
+        }
+
+        if (item.expense_account_id !== "") {
+            $(`#item-modal #purchasing`).prop('checked', true).trigger('change');
+        }
+
+        $(`#item-modal #purchaseDescription`).val(item.purch_desc);
+        $(`#item-modal #cost`).val(item.cost);
+
+        if (item.expense_account !== null && item.expense_account !== "") {
+            $(`#item-modal #item_expense_account`).append(`<option value="${item.expense_account_id}" selected>${item.expense_account}</option>`);
+        }
+
+        if (item.icon !== null && item.icon !== "" && action === 'edit') {
+            $(`#item-modal img.image-prev`).attr('src', `${item.icon}`);
+            $(`#item-modal img.image-prev`).parent().addClass('d-flex justify-content-center');
+            $(`#item-modal img.image-prev`).parent().removeClass('d-none');
+            $(`#item-modal img.image-prev`).parent().prev().addClass('d-none');
+        }
+
+        if (item.display_on_print === "1" || item.display_on_print === 1) {
+            $('#item-modal #displayBundle').prop('checked', true);
+        }
+
+        if (item.vendor !== null && item.vendor !== "") {
+            $(`#item-modal #vendor`).append(`<option value="${item.vendor_id}" selected>${item.vendor}</option>`);
+        }
+
+        for (i in item.locations) {
+            if ($($(`#item-modal #storage-locations tbody tr`)[i]).length < 1) {
+                $(`#item-modal #storage-locations tbody`).append(`
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td><button type="button" class="nsm-button delete-location"><i class='bx bx-fw bx-trash'></i></button></td>
+                </tr>
+                `);
+            }
+            $($(`#item-modal #storage-locations tbody tr`)[i]).children('td:first-child').html(`<input type="text" name="location_name[]" class="form-control nsm-field" value="${item.locations[i].name}">`);
+            $($(`#item-modal #storage-locations tbody tr`)[i]).children('td:nth-child(2)').html(`<input type="number" name="quantity[]" class="text-end form-control nsm-field" value="${item.locations[i].qty}">`);
+        }
+
+        for (i in item.bundle_items) {
+            if ($($('#item-modal #bundle-items-table tbody tr')[i]).length > 0) {
+                $($('#item-modal #bundle-items-table tbody tr')[i]).attr('data-item', `${item.bundle_items[i].item_id}`);
+                $($('#item-modal #bundle-items-table tbody tr')[i]).attr('data-name', `${item.bundle_items[i].name}`);
+                $($('#item-modal #bundle-items-table tbody tr')[i]).attr('data-quantity', `${item.bundle_items[i].quantity}`);
+                $($('#item-modal #bundle-items-table tbody tr')[i]).children('td:first-child').html(`
+                <span>${item.bundle_items[i].name}</span>
+                <input type="hidden" value="${item.bundle_items[i].item_id}" name="item_id[]">
+                `);
+                $($('#item-modal #bundle-items-table tbody tr')[i]).children('td:nth-child(2)').html(`
+                <span>${item.bundle_items[i].quantity}</span>
+                <input type="number" name="quantity[]" class="text-end form-control nsm-field d-none" value="${item.bundle_items[i].quantity}">
+                `);
+            } else {
+                $('#item-modal #bundle-items-table tbody').append(`
+                <tr data-item="${item.bundle_items[i].item_id}" data-name="${item.bundle_items[i].name}" data-quantity="${item.bundle_items[i].quantity}">
+                    <td>
+                        <span>${item.bundle_items[i].name}</span>
+                        <input type="hidden" value="${item.bundle_items[i].item_id}" name="item_id[]">
+                    </td>
+                    <td>
+                        <span>${item.bundle_items[i].quantity}</span>
+                        <input type="number" name="quantity[]" class="text-end form-control nsm-field d-none" value="${item.bundle_items[i].quantity}">
+                    </td>
+                    <td><button type="button" class="nsm-button delete-item"><i class='bx bx-fw bx-trash'></i></button></td>
+                </tr>
+                `);
+            }
+        }
+    });
+}
+
+function bindSeeItemLocations() {
+    $('#items-table .see-item-locations').off('click').on('click', function (e) {
+        e.preventDefault();
+
+        var itemId = $(this).closest('tr').find('.select-one').val();
+
+        $.get(`${base_url}accounting/products-and-services/get-item-locations/${itemId}`, function (result) {
+            var locations = JSON.parse(result);
+
+            $('#item-locations-modal #item-locations-table tbody').empty();
+
+            if (locations.length > 0) {
+                for (var i = 0; i < locations.length; i++) {
+                    var location = locations[i];
+
+                    $('#item-locations-modal #item-locations-table tbody').append(`
+                        <tr>
+                            <td class="d-none"><input type="hidden" class="nsm-field form-control" value="${itemId}"></td>
+                            <td><input type="text" class="nsm-field form-control" value="${location.name}" readonly></td>
+                            <td><input type="number" class="nsm-field form-control location-qty" value="${location.qty}"></td>
+                        </tr>
+                    `);
+                }
+            } else {
+                $('#item-locations-modal #item-locations-table tbody').append(`
+                    <tr>
+                        <td colspan="3">
+                            <div class="nsm-empty">
+                                <span>No results found.</span>
+                            </div>
+                        </td>
+                    </tr>
+                `);
+            }
+
+            $('#item-locations-modal').modal('show');
+        });
+    });
+}
+
+$(document).ready(function() {
+    bindSeeItemLocations();
+});
+
+$('.update-quantity').on('click', function (e) {
+    e.preventDefault();
+
+    var itemId = $('#item-locations-modal #item-locations-table tbody tr:first-child').find('td input[type="hidden"]').val();
+
+    var updatedQuantities = [];
+    $('#item-locations-modal #item-locations-table tbody tr').each(function () {
+        var locationName = $(this).find('td input[type="text"]').val();
+        var quantity = $(this).find('td input[type="number"]').val();
+        console.log('Location:', locationName, 'Quantity:', quantity);
+
+        updatedQuantities.push({
+            itemId: itemId,
+            locationName: locationName,
+            quantity: quantity
+        });
+    });
+
+    $.ajax({
+        url: `${base_url}accounting_controllers/products_and_services/update_item_locations/${itemId}`,
+        method: 'POST',
+        data: { quantities: updatedQuantities },
+        success: function (response) {
+            Swal.fire({
+                icon: 'success',
+                title: 'Update Stock',
+                text: 'Stock updated successfully!'
+            }).then(function () {
+                $('#items-table').load(location.href + ' #items-table', function() {
+                    //bindSeeItemLocations();
+                    location.reload();
+                });
+            });
+        },
+        beforeSend: function(){
+            Swal.fire({
+                icon: "info",
+                title: "Processing",
+                html: "Please wait while the process is running...",
+                allowOutsideClick: false,
+                allowEscapeKey: false,
+                showConfirmButton: false,
+                didOpen: () => {
+                    Swal.showLoading();
+                },
+            });
+        },
+        error: function (xhr, status, error) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'Error updating quantities: ' + error
+            });
+        }
+    });
+});
+
+$('#item-locations-modal').on('hidden.bs.modal', function () {
+    $(this).find('#item-locations-table').find('tbody').html(`<tr>
+        <td colspan="3">
+            <div class="nsm-empty">
+                <span>No results found.</span>
+            </div>
+        </td>
+    </tr>`);
+});
+
+// Search
+const $overlay = document.getElementById('overlay');
+$("#import-items-modal #file-upload").change(function () {
+    const formData = new FormData();
+    const fileInput = document.getElementById('file-upload');
+    formData.append('file', fileInput.files[0]);
+
+    if ($overlay) $overlay.style.display = "flex";
+    fetch(base_url + 'accounting/products-and-services/get-import-data', {
+        method: 'POST',
+        body: formData
+    }).then(response => response.json()).then(response => {
+        var { data, headers, success, message } = response;
+        if ($overlay) $overlay.style.display = "none";
+        if (!success) {
+            sweetAlert('Sorry!', 'error', message);
+        } else {
+            $.each(headers, function (i, o) {
+                $('#import-items-modal .headersSelector').append(
+                    '<option value="' + i + '">' + o + '</option>'
+                );
+                $('#import-items-modal #tableHeader').append(
+                    '<th><strong>' + o + '</strong></th>'
+                );
+            });
+            csvHeaders = headers;
+            itemsData = data; // save customer array data
+            // process mapping preview
+            $.each(data, function (i, o) {
+                var toAppend = '';
+                $.each(o, function (index, data) {
+                    toAppend += '<td>' + data + '</td>';
+                });
+                $('#import-items-modal #imported_items').append(
+                    '<tr>' + toAppend + '</tr>'
+                );
+            });
+
+            $('#import-items-modal #nextBtn1').prop("disabled", false);
+        }
+    }).catch((error) => {
+        console.log('Error:', error);
+    });
+});
+
+$(document).on('click', "#import-items-modal .step", function () {
+    $(this).addClass("active").prevAll().addClass("active");
+    $(this).nextAll().removeClass("active");
+});
+
+$(document).on('click', "#import-items-modal .step01", function () {
+    $("#import-items-modal #line-progress").css("width", "8%");
+    $("#import-items-modal .step1").addClass("active").siblings().removeClass("active");
+
+    $('#import-items-modal .modal-footer').html(`
+        <button type="button" class="nsm-button primary step02">Next</button>
+    `);
+});
+
+$(document).on('click', "#import-items-modal .step02", function () {
+    $("#import-items-modal #line-progress").css("width", "50%");
+    $("#import-items-modal .step2").addClass("active").siblings().removeClass("active");
+
+    $('#import-items-modal .modal-footer').html(`
+        <button type="button" class="nsm-button step01">Back</button>
+        <button type="button" class="nsm-button primary step03">Next</button>
+    `);
+});
+
+$(document).on('click', "#import-items-modal .step03", function () {
+    $("#import-items-modal #line-progress").css("width", "100%");
+    $("#import-items-modal .step3").addClass("active").siblings().removeClass("active");
+
+    $('#import-items-modal .modal-footer').html(`
+        <button type="button" class="nsm-button step02">Back</button>
+        <button type="button" class="nsm-button primary" id="importItem">Import</button>
+    `);
+});
+
+
+$(document).on('click', "#import-items-modal #importItem", function (e) {
+    var selectedHeader = [];
+    $('#import-items-modal select[name="headers[]"]').each(function () {
+        selectedHeader.push(this.value);
+    });
+
+    const formData = new FormData();
+    formData.append('items', JSON.stringify(itemsData));
+    formData.append('mapHeaders', JSON.stringify(selectedHeader));
+    formData.append('csvHeaders', JSON.stringify(csvHeaders));
+
+    if ($overlay) $overlay.style.display = "flex";
+    fetch(base_url + 'accounting/products-and-services/import-items-data', {
+        method: 'POST',
+        body: formData,
+    }).then(response => response.json()).then(response => {
+        if ($overlay) $overlay.style.display = "none";
+        var { customer, csv, mapping, fields, dataValue, office, billing, profile, message, success } = response;
+        if (success) {
+            sweetAlert('Awesome!', 'success', message, 1);
+        } else {
+            sweetAlert('Sorry!', 'error', message);
+        }
+        console.log(response);
+    }).catch((error) => {
+        console.log('Error:', error);
+    });
+});
+
+function sweetAlert(title, icon, information, is_reload) {
+    Swal.fire({
+        title: title,
+        text: information,
+        icon: icon,
+        showCancelButton: false,
+        confirmButtonColor: '#6a4a86',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Ok'
+    }).then((result) => {
+        if (is_reload === 1) {
+            if (result.value) {
+                window.location.reload();
+            }
+        }
+    });
+}
+
+// For testing
+function test() {
+    var selectedHeader = [];
+    $('#import-items-modal select[name="headers[]"]').each(function () {
+        selectedHeader.push(this.value);
+    });
+
+    $('#tableHeader').empty();
+    selectedHeader.forEach(function (headerValue) {
+        if (headerValue !== "") {
+            var headerName = $('#headersSelector' + selectedHeader.indexOf(headerValue)).find('option[value="' + headerValue + '"]').text();
+            $('#tableHeader').append('<th>' + headerName + '</th>');
+        }
+    });
+
+    var ar = selectedHeader.length;
+    for (var x = 0; x < ar; x++) {
+        if (selectedHeader[x] != "") {
+            $('#headersSelector' + x).val(selectedHeader[x]);
+            for (var i = 0; i < ar; i++) {
+                if (i != x) {
+                    $("#headersSelector" + i + " option[value='" + selectedHeader[x] + "']").remove();
+                }
+            }
+        }
+    }
+}
+
+// function test() {
+//     var selectedHeader = [];
+//     var head = [];
+//     $('#import-items-modal select[name="headers[]"]').each(function () {
+//         selectedHeader.push(this.value);
+//     });
+//     var ar = selectedHeader.length;
+//     for (var x = 0; x < ar; x++) {
+//         head.push(x);
+//     }
+
+//     var arHead = head.length;
+
+//     for (var x = 0; x < ar; x++) {
+//         if (selectedHeader[x] != "") {
+//             document.getElementById('headersSelector' + x).value = selectedHeader[x];
+//             var text = "headersSelector" + x + "";
+//             for (var i = 0; i < arHead; i++) {
+//                 var text1 = "headersSelector" + i + "";
+//                 if (text != text1) {
+//                     $("#headersSelector" + i + " option[value='" + selectedHeader[x] + "'").remove();
+//                 }
+//             }
+//         }
+//     }
+// }
+
+function changeType(type) {
+    var form = $('#item-modal form');
+    itemFormData = new FormData(document.getElementById(form.attr('id')));
+    itemFormData.set('type', type);
+    if (form.attr('id').includes('update')) {
+        var action = form.attr('action');
+        var itemId = action.split('/');
+        itemId = itemId[itemId.length - 1];
+        itemFormData.set('id', itemId);
+    }
+
+    $.get(`${base_url}accounting/get-dropdown-modal/item_modal?field=${type}`, function (result) {
+        $('#modal-container .full-screen-modal').append(result);
+
+        itemTypeSelection = $('#modal-container .full-screen-modal .modal-right-side:last-child() .modal').find('.modal-content').html();
+        $('#modal-container .full-screen-modal .modal-right-side:last-child()').remove();
+
+        $('#modal-container #item-modal .modal-content').html(itemTypeSelection);
+    });
+}
+
+//For Achived Modal List - Start
+$(document).on('change', '#select-all-archived', function(){
+    $('.row-select-archived:checkbox').prop('checked', this.checked);  
+    let total= $('input[name="archived_items[]"]:checked').length;
+    if( total > 0 ){
+        $('#num-checked-arhived').text(`(${total})`);
+    }else{
+        $('#num-checked-arhived').text('');
+    }
+});
+
+$(document).on('change', '.row-select-archived', function(){
+    let total= $('input[name="archived_items[]"]:checked').length;
+    if( total > 0 ){
+        $('#num-checked-arhived').text(`(${total})`);
+    }else{
+        $('#num-checked-arhived').text('');
+    }
+});
+
+$(document).on('click', '#with-selected-restore', function(){
+    let total= $('input[name="archived_items[]"]:checked').length;
+    if( total <= 0 ){
+        Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: 'Please select rows',
+        });
+    }else{
+        Swal.fire({
+            title: 'Restore Items',
+            html: `Are you sure you want to restore the selected rows?`,
+            icon: 'question',
+            confirmButtonText: 'Proceed',
+            showCancelButton: true,
+            cancelButtonText: "Cancel"
+        }).then((result) => {
+            if (result.value) {
+                $.ajax({
+                    method: 'POST',
+                    url: base_url + 'inventory/_restore_selected_items',
+                    dataType: 'json',
+                    data: $('#frm-with-selected-archived').serialize(),
+                    success: function(result) {                        
+                        if( result.is_success == 1 ) {
+                            Swal.fire({
+                                title: 'Restore Items',
+                                text: "Data restore successfully!",
+                                icon: 'success',
+                                showCancelButton: false,
+                                confirmButtonText: 'Okay'
+                            }).then((result) => {
+                                //if (result.value) {
+                                    location.reload();
+                                //}
+                            });
+                        } else {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Error',
+                                text: result.msg,
+                            });
+                        }
+                    },
+                    beforeSend: function(){
+                        Swal.fire({
+                            icon: "info",
+                            title: "Processing",
+                            html: "Please wait while the process is running...",
+                            allowOutsideClick: false,
+                            allowEscapeKey: false,
+                            showConfirmButton: false,
+                            didOpen: () => {
+                                Swal.showLoading();
+                            },
+                        });
+                    }
+                });
+
+            }
+        });
+    }        
+}); 
+
+$(document).on('click', '#with-selected-permanent-delete', function(){
+    let total= $('input[name="archived_items[]"]:checked').length;
+    if( total <= 0 ){
+        Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: 'Please select rows',
+        });
+    }else{
+        Swal.fire({
+            title: 'Delete Items',
+            html: `Are you sure you want to <b>permanently delete</b> selected rows? <br/><br/>Note : This cannot be undone.`,
+            icon: 'question',
+            confirmButtonText: 'Proceed',
+            showCancelButton: true,
+            cancelButtonText: "Cancel"
+        }).then((result) => {
+            if (result.value) {
+                $.ajax({
+                    method: 'POST',
+                    url: base_url + 'inventory/_delete_permanent_selected_items',
+                    dataType: 'json',
+                    data: $('#frm-with-selected-archived').serialize(),
+                    success: function(result) {                        
+                        if( result.is_success == 1 ) {
+                            Swal.fire({
+                                title: 'Permanently Delete Items',
+                                text: "Data permanently delete successfully!",
+                                icon: 'success',
+                                showCancelButton: false,
+                                confirmButtonText: 'Okay'
+                            }).then((result) => {
+                                location.reload();
+                            });
+                        } else {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Error',
+                                text: result.msg,
+                            });
+                        }
+                    },
+                    beforeSend: function(){
+                        Swal.fire({
+                            icon: "info",
+                            title: "Processing",
+                            html: "Please wait while the process is running...",
+                            allowOutsideClick: false,
+                            allowEscapeKey: false,
+                            showConfirmButton: false,
+                            didOpen: () => {
+                                Swal.showLoading();
+                            },
+                        });
+                    }
+                });
+
+            }
+        });
+    }        
+}); 
+
+$(document).on('click', '.btn-permanent-delete-item', function(){
+    var item_id = $(this).attr('data-id');
+    var item_title = $(this).attr('data-title');
+
+    Swal.fire({
+        title: 'Delete Item',
+        html: `Are you sure you want to <b>permanently delete</b> item <b>#${item_title}</b>? <br /><br />Note : This cannot be undone.`,
+        icon: 'question',
+        showCancelButton: true,
+        confirmButtonText: 'Yes',
+        cancelButtonText: 'No',
+    }).then((result) => {
+        if (result.isConfirmed) {                    
+            $.ajax({
+                type: "POST",
+                url: base_url + "inventory/_permanent_delete",
+                data: {item_id:item_id},
+                dataType:'json',
+                success: function(result) {                            
+                    if( result.is_success == 1 ) {
+                        $('#modal-archived-items').modal('hide');
+                        Swal.fire({
                         icon: 'success',
-                        showCancelButton: false,
-                        confirmButtonText: 'Okay'
-                    }).then((result) => {
-                        //if (result.value) {
+                        title: 'Success',
+                        text: 'Item data was successfully deleted permanently.',
+                        }).then((result) => {
                             location.reload();
-                        //}
-                    });                    
+                        });
+                    } else {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error',
+                            text: result.msg,
+                        });
+                    }
                 },
                 beforeSend: function(){
                     Swal.fire({
@@ -450,46 +1604,120 @@ $('#items-table .make-inactive').on('click', function (e) {
     });
 });
 
-$('#items-table .duplicate').on('click', function (e) {
-    e.preventDefault();
+$(document).on('click', '.btn-restore-item', function(){
+    var item_id = $(this).attr('data-id');
+    var item_title = $(this).attr('data-title');
 
-$(document).on('click', '#update-category-form #remove-category', function() {
-    var split = $('#update-category-form').attr('action').split('/');
-    var id = split[split.length - 1];
-
-    $.ajax({
-        url: base_url + `accounting/product-categories/delete/${id}`,
-        type: 'DELETE',
-        success: function(result) {
-            location.reload();
+    Swal.fire({
+        title: 'Restore Items Data',
+        html: `Proceed with restoring item <b>${item_title}</b>?`,
+        icon: 'question',
+        showCancelButton: true,
+        confirmButtonText: 'Yes',
+        cancelButtonText: 'No',
+    }).then((result) => {
+        if (result.isConfirmed) {                    
+            $.ajax({
+                type: "POST",
+                url: base_url + "inventory/_restore_archived",
+                data: {item_id:item_id},
+                dataType:'json',
+                success: function(result) {                            
+                    if( result.is_success == 1 ) {
+                        $('#modal-archived-items').modal('hide');
+                        Swal.fire({
+                        icon: 'success',
+                        title: 'Success',
+                        text: 'Item data was successfully restored.',
+                        }).then((result) => {
+                            location.reload();
+                        });
+                    } else {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error',
+                            text: result.msg,
+                        });
+                    }
+                },
+                beforeSend: function(){
+                    Swal.fire({
+                        icon: "info",
+                        title: "Processing",
+                        html: "Please wait while the process is running...",
+                        allowOutsideClick: false,
+                        allowEscapeKey: false,
+                        showConfirmButton: false,
+                        didOpen: () => {
+                            Swal.showLoading();
+                        },
+                    });
+                }
+            });
         }
     });
-});
+});        
 
+$(document).on('click', '#btn-empty-item-archives', function(){       
+    let total_records = $('#archived-items input[name="archived_items[]"]').length;                         
+    if( total_records > 0 ){
+        Swal.fire({
+            title: 'Empty Archived',
+            html: `Are you sure you want to <b>permanently delete</b> <b>${total_records}</b> archived items? <br/><br/>Note : This cannot be undone.`,
+            icon: 'question',
+            confirmButtonText: 'Proceed',
+            showCancelButton: true,
+            cancelButtonText: "Cancel"
+        }).then((result) => {
+            if (result.value) {
+                $.ajax({
+                    method: 'POST',
+                    url: base_url + 'inventory/_delete_all_archived_items',
+                    dataType: 'json',
+                    data: $('#frm-with-selected-archived').serialize(),
+                    success: function(result) {                        
+                        if( result.is_success == 1 ) {
+                            $('#modal-archived-items').modal('hide');
+                            Swal.fire({
+                                title: 'Empty Archived',
+                                text: "Data deleted successfully!",
+                                icon: 'success',
+                                showCancelButton: false,
+                                confirmButtonText: 'Okay'
+                            }).then((result) => {
+                                //location.reload();
+                            });
+                        } else {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Error',
+                                text: result.msg,
+                            });
+                        }
+                    },
+                    beforeSend: function(){
+                        Swal.fire({
+                            icon: "info",
+                            title: "Processing",
+                            html: "Please wait while the process is running...",
+                            allowOutsideClick: false,
+                            allowEscapeKey: false,
+                            showConfirmButton: false,
+                            didOpen: () => {
+                                Swal.showLoading();
+                            },
+                        });
+                    }
+                });
 
-$(".check-input-all-product-category").click(function() {
-    if (this.checked) {
-        $('.check-input-product-category').each(function() {
-            this.checked = true;
+            }
         });
-        $(".dropdown-item-delete").removeClass("disabled");
-    } else {
-        $('.check-input-product-category').each(function() {
-            this.checked = false;
+    }else{
+        Swal.fire({                
+            icon: 'error',
+            title: 'Error',              
+            html: 'Archived is empty',
         });
-        $('.dropdown-item-delete').addClass('disabled');
-    }
-});
-
-$(".check-input-product-category").click(function() {
-    var count_list_check = $('.check-input-product-category').filter(':checked').length;
-    if (count_list_check > 0) {
-        $(".dropdown-item-delete").removeClass("disabled");
-    } else {
-        $('.dropdown-item-delete').addClass('disabled');
-    }
-    $('.check-input-all-product-category').each(function() {
-        this.checked = false;
-    });    
-      
-})
+    }        
+});    
+//For Achived Modal List - End 
