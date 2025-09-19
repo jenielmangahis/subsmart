@@ -93,7 +93,7 @@
                                 <span id="num-checked-items" class="num-checked-items"></span> With Selected <i class='bx bx-fw bx-chevron-down'></i>
                             </button>
                             <ul class="dropdown-menu dropdown-menu-end batch-actions">
-                                <li><a class="dropdown-item btn-with-selected disabled" href="javascript:void(0);" id="delete_selected">Delete Selected</a></li>
+                                <li><a class="dropdown-item btn-with-selected disabled" href="javascript:void(0);" id="delete_selected">Delete</a></li>
                             </ul>
                         </div>
 
