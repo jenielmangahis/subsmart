@@ -664,6 +664,7 @@ $route['accounting/products-and-services/get-item-details/(:any)/(:any)'] = 'acc
 $route['accounting/products-and-services/get-item-locations/(:any)'] = 'accounting_controllers/products_and_services/get_item_locations/$1';
 $route['accounting/products-and-services/get-import-data']['post'] = 'accounting_controllers/products_and_services/get_import_data';
 $route['accounting/products-and-services/import-items-data']['post'] = 'accounting_controllers/products_and_services/import_items_data';
+$route['accounting/products-and-services/_archive_selected_items']['post'] = 'accounting_controllers/products_and_services/ajax_archive_selected_items';
 
 // Accounting product categories
 $route['accounting/product-categories'] = 'accounting_controllers/product_categories/index';
