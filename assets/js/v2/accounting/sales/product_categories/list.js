@@ -3,10 +3,11 @@ $('.dropdown-menu.table-settings').on('click', function(e) {
 });
 
 $("#categories-table").nsmPagination({
-    itemsPerPage: parseInt($('#table-rows li a.active').html().trim())
+    //itemsPerPage: parseInt($('#table-rows li a.active').html().trim())
+    itemsPerPage: 10
 });
 
-$('.dropdown-menu#table-rows a.dropdown-item').on('click', function() {
+/*$('.dropdown-menu#table-rows a.dropdown-item').on('click', function() {
     var count = $(this).html();
     $('.dropdown-menu#table-rows a.dropdown-item.active').removeClass('active');
     $(this).addClass('active');
@@ -17,7 +18,7 @@ $('.dropdown-menu#table-rows a.dropdown-item').on('click', function() {
     $("#categories-table").nsmPagination({
         itemsPerPage: parseInt(count)
     });
-});
+});*/
 
 $('#categories-table .edit-category').on('click', function(e) {
     e.preventDefault();
@@ -27,9 +28,10 @@ $('#categories-table .edit-category').on('click', function(e) {
     $.get(`product-categories/get/${row.data().id}`, function(result) {
         var category = JSON.parse(result);
 
+        $('.product-category-modal-title').html('Edit Category');
         $('#addNewCategory form [name="name"]').val(category.name);
 
-        if(category.hasOwnProperty('parent')) {
+        if(category.hasOwnProperty('parent') && category.parent !== null) {
             $('#addNewCategory form #sub-category').prop('checked', true).trigger('change');
 
             $('#addNewCategory form #parent_account').append(`<option value="${category.parent.item_categories_id}" selected>${category.parent.name}</option>`)
@@ -71,14 +73,18 @@ $('#sub-category').on('change', function(){
 $('#new-category-button').on('click', function(e) {
     e.preventDefault();
 
-    $(`#addNewCategory`).attr('data-bs-backdrop', 'static');
+    $('.product-category-modal-title').html('Add New Category');
+    $('#addNewCategory form [name="name"]').val('');
+    $('#addNewCategory form #sub-category').prop('checked', false).trigger('change');
 
+    $(`#addNewCategory`).attr('data-bs-backdrop', 'static');
     $('#addNewCategory').modal('show');
 });
 
 $('#categories-table .remove-category').on('click', function(e) {
     e.preventDefault();
-    var row = $(this).closest('tr');    
+    var row = $(this).closest('tr');   
+    var category_name = $(this).attr('data-name'); 
 
     /*$.ajax({
         url: base_url + `accounting/product-categories/delete/${row.data().id}`,
@@ -90,7 +96,7 @@ $('#categories-table .remove-category').on('click', function(e) {
 
     Swal.fire({
         title: 'Delete Product Category',
-        text: "Are you sure you want to delete this category?",
+        html: `Are you sure you want to delete category <b>${category_name}</b>?`,
         icon: 'question',
         confirmButtonText: 'Proceed',
         showCancelButton: true,
@@ -104,7 +110,7 @@ $('#categories-table .remove-category').on('click', function(e) {
                 success: function(result) {
                     if (result.is_success == 1) {
                         Swal.fire({
-                            title: 'Delete Successful!',
+                            title: 'Delete Product Category',
                             text: result.msg,
                             icon: 'success',
                             showCancelButton: false,
@@ -124,6 +130,19 @@ $('#categories-table .remove-category').on('click', function(e) {
                         });
                     }
                 },
+                beforeSend: function(){
+                    Swal.fire({
+                        icon: "info",
+                        title: "Processing",
+                        html: "Please wait while the process is running...",
+                        allowOutsideClick: false,
+                        allowEscapeKey: false,
+                        showConfirmButton: false,
+                        didOpen: () => {
+                            Swal.showLoading();
+                        },
+                    });
+                }
             });
         }
     });
@@ -191,28 +210,24 @@ $(document).on('click', '#update-category-form #remove-category', function() {
 
 
 $(".check-input-all-product-category").click(function() {
-    if (this.checked) {
-        $('.check-input-product-category').each(function() {
-            this.checked = true;
-        });
+    $('tr:visible .check-input-product-category').prop('checked', this.checked);  
+    let total= $('#categories-table tr:visible input[name="catid[]"]:checked').length;
+    if( total > 0 ){
+        $('#num-checked').text(`(${total})`);
         $(".dropdown-item-delete").removeClass("disabled");
-    } else {
-        $('.check-input-product-category').each(function() {
-            this.checked = false;
-        });
+    }else{
+        $('#num-checked').text('');
         $('.dropdown-item-delete').addClass('disabled');
     }
 });
 
 $(".check-input-product-category").click(function() {
-    var count_list_check = $('.check-input-product-category').filter(':checked').length;
-    if (count_list_check > 0) {
+    let total= $('#categories-table input[name="catid[]"]:checked').length;
+    if( total > 0 ){
         $(".dropdown-item-delete").removeClass("disabled");
-    } else {
+        $('#num-checked').text(`(${total})`);
+    }else{
         $('.dropdown-item-delete').addClass('disabled');
+        $('#num-checked').text('');
     }
-    $('.check-input-all-product-category').each(function() {
-        this.checked = false;
-    });    
-      
 })
