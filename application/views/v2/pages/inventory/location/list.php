@@ -56,9 +56,8 @@
                             
                             <div class="dropdown d-inline-block">
                                 <button type="button" class="dropdown-toggle nsm-button" data-bs-toggle="dropdown">
-                                    <span>
-                                        Batch Actions
-                                    </span> <i class='bx bx-fw bx-chevron-down'></i>
+                                    <span id="num-checked"></span>
+                                    <span>With Selected</span> <i class='bx bx-fw bx-chevron-down'></i>
                                 </button>
                                 <ul class="dropdown-menu dropdown-menu-end batch-actions">
                                     <li><a class="dropdown-item disabled" href="javascript:void(0);" id="delete_selected">Delete Selected</a></li>
@@ -144,7 +143,6 @@
 <script src="<?php echo base_url("assets/js/v2/printThis.js") ?>"></script>
 <script type="text/javascript">
 $(document).ready(function() {
-
     var INV_LOCATION_TBL = $("#INV_LOCATION_TBL").DataTable({
         "ordering": false,
         language: {
@@ -164,7 +162,6 @@ $(document).ready(function() {
     });
     INV_LOCATION_TBL_SETTINGS = INV_LOCATION_TBL.settings();
 
-
     let selectedIds = [];
 
     $("#inventory_list").nsmPagination();
@@ -183,6 +180,7 @@ $(document).ready(function() {
             $(".nsm-table").find(".select-one").prop("checked", false);
             $(".batch-actions").find("a.dropdown-item").addClass("disabled");
         }
+      
     });
 
     $(".btn-share-url").on("click", function() {
@@ -224,6 +222,13 @@ $(document).ready(function() {
         }
 
         toggleBatchDelete($(".table-select:checked").length > 0);
+
+        const checkedCount = $('#INV_LOCATION_TBL tbody tr:visible .table-select:checked').length;
+        if(checkedCount > 0) {
+            $('#num-checked').text(`(${checkedCount})`);        
+        } else {
+            $('#num-checked').text(``);  
+        }        
     });
 
     $(document).on("change", ".select-all", function() {
@@ -245,6 +250,13 @@ $(document).ready(function() {
         }
 
         toggleBatchDelete(_this.prop("checked"));
+
+        const checkedCount = $('#INV_LOCATION_TBL tbody tr:visible .table-select:checked').length;
+        if(checkedCount > 0) {
+            $('#num-checked').text(`(${checkedCount})`);        
+        } else {
+            $('#num-checked').text(``);  
+        }         
     });
 
     $("#delete_selected").on("click", function() {

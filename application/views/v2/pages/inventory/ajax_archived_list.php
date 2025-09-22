@@ -2,7 +2,6 @@
     <div class="col-12 col-md-12 grid-mb text-end">
     <?php if(checkRoleCanAccessModule('inventory', 'write')){ ?>
         <div class="dropdown d-inline-block">
-            <button type="button" class="nsm-button primary" id="btn-empty-item-archives">Empty Archived</button>
             <button type="button" class="dropdown-toggle nsm-button" data-bs-toggle="dropdown">
                 <span id="num-checked-arhived"></span> With Selected  <i class='bx bx-fw bx-chevron-down'></i>
             </button>
@@ -10,6 +9,7 @@
                 <li><a class="dropdown-item btn-with-selected" id="with-selected-restore" href="javascript:void(0);" data-action="delete">Restore</a></li> 
                 <li><a class="dropdown-item btn-with-selected" id="with-selected-permanent-delete" href="javascript:void(0);" data-action="delete">Permanent Delete</a></li>                              
             </ul>
+            <button type="button" class="nsm-button primary" id="btn-empty-item-archives">Empty Archived</button>
         </div>   
     <?php } ?>          
     </div>
