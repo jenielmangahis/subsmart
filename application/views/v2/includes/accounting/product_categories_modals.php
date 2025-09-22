@@ -3,7 +3,7 @@
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <span class="modal-title content-title" id="myModalLabel2" >Category information</span>
+                    <span class="modal-title content-title product-category-modal-title" id="myModalLabel2">Category information</span>
                     <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
                 </div>
                 <form action="<?=url('accounting/product-categories/create')?>" class="h-100" method="post" id="create-category-form">
