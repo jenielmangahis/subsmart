@@ -42,8 +42,8 @@
                 <div class="row">
                     <div class="col-12 col-md-4 grid-mb">
                         <div class="nsm-field-group search">
-                            <!-- <input type="text" class="nsm-field nsm-search form-control mb-2" id="search_field" placeholder="Search Item"> -->
-                            <input type="text" class="nsm-field nsm-search form-control mb-2" id="search_field_custom" placeholder="Search Item">
+                            <input type="text" class="nsm-field nsm-search form-control mb-2" id="search_field" placeholder="Search Item">
+                            <!-- <input type="text" class="nsm-field nsm-search form-control mb-2" id="search_field_custom" placeholder="Search Item"> -->
                         </div>
                     </div>
                     <div class="col-12 col-md-8 grid-mb text-end">
@@ -78,7 +78,7 @@
                     <table id="INV_LOCATION_TBL" class="nsm-table">
                         <thead>
                             <tr>
-                                <td class="table-icon show">
+                                <td class="table-icon show" style="text-align: center;">
                                     <input class="form-check-input select-all table-select" type="checkbox">
                                 </td>
                                 <td class="table-icon show"></td>
@@ -89,7 +89,6 @@
                         </thead>
                         <tbody>
                         <?php foreach ($location as $locations) :?>
-
                             <tr>
                                 <td class="show">
                                     <div class="table-row-icon table-checkbox">
@@ -143,7 +142,8 @@
 <script src="<?php echo base_url("assets/js/v2/printThis.js") ?>"></script>
 <script type="text/javascript">
 $(document).ready(function() {
-    var INV_LOCATION_TBL = $("#INV_LOCATION_TBL").DataTable({
+
+    /*var INV_LOCATION_TBL = $("#INV_LOCATION_TBL").DataTable({
         "ordering": false,
         language: {
             processing: '<span>Fetching data...</span>'
@@ -160,12 +160,12 @@ $(document).ready(function() {
     $("#search_field_custom").keyup(function() {
         INV_LOCATION_TBL.search($(this).val()).draw()
     });
-    INV_LOCATION_TBL_SETTINGS = INV_LOCATION_TBL.settings();
+    INV_LOCATION_TBL_SETTINGS = INV_LOCATION_TBL.settings();*/
+    
 
     let selectedIds = [];
 
-    $("#inventory_list").nsmPagination();
-
+    $("#INV_LOCATION_TBL").nsmPagination();
     $("#search_field").on("input", debounce(function() {
         tableSearch($(this));
     }, 1000));

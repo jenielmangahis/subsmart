@@ -81,8 +81,8 @@
                 <div class="row">
                     <div class="col-12 col-md-4 grid-mb">
                         <div class="nsm-field-group search">
-                            <!-- <input type="text" class="nsm-field nsm-search form-control mb-2" id="search_field" placeholder="Search Item"> -->
-                            <input type="text" class="nsm-field nsm-search form-control mb-2" id="search_field_custom" placeholder="Search Item">
+                            <input type="text" class="nsm-field nsm-search form-control mb-2" id="search_field" placeholder="Search Item">
+                            <!-- <input type="text" class="nsm-field nsm-search form-control mb-2" id="search_field_custom" placeholder="Search Item"> -->
                         </div>
                     </div>
                     <div class="col-12 col-md-8 grid-mb text-end">
@@ -890,7 +890,6 @@
         //     ITEM_LOCATION_TABLE.search('').draw();
         // });
 
-
         /*var INVENTORY_TABLE = $("#INVENTORY_TABLE").DataTable({
             "ordering": false,
             language: {
@@ -898,13 +897,13 @@
             },
         });*/
 
+        /*$("#search_field_custom").keyup(function() {
+            INVENTORY_TABLE.search($(this).val()).draw();
+        });*/
+
         $("#INVENTORY_TABLE").nsmPagination({
             itemsPerPage: 10,
-        });        
-
-        $("#search_field_custom").keyup(function() {
-            INVENTORY_TABLE.search($(this).val()).draw();
-        });
+        });                
 
         let selectedIds = [];
 
@@ -1067,7 +1066,7 @@
 
             Swal.fire({
                 title: 'Delete Inventory Item',
-                html: `Are you sure you want to delete item <b>${name}</b>?`,
+                html: `Are you sure you want to delete item <b>${name}</b>?<br /><br /><small>Deleted data can be restored via archived list.</small><br />`,
                 icon: 'question',
                 confirmButtonText: 'Proceed',
                 showCancelButton: true,
@@ -1080,31 +1079,32 @@
                         data: {
                             id: id
                         },
-                        // success: function(data) {
-                        //     if (data === "1") {
-                        //         Swal.fire({
-                        //             title: 'Delete Success',
-                        //             text: "Data has been deleted successfully!",
-                        //             icon: 'success',
-                        //             showCancelButton: false,
-                        //             confirmButtonText: 'Okay'
-                        //         }).then((result) => {
-                        //             if (result.value) {
-                        //                 location.reload();
-                        //             }
-                        //         });
-                        //     } else {
-                        //         Swal.fire({
-                        //             title: 'Delete Failed',
-                        //             text: "Please try again later.",
-                        //             icon: 'error',
-                        //             showCancelButton: false,
-                        //             confirmButtonText: 'Okay'
-                        //         });
-                        //     }
-                        // }
+                        success: function(data) {
+                            if (data === "1") {
+                                Swal.fire({
+                                    title: 'Delete Success',
+                                    text: "Data has been deleted successfully!",
+                                    icon: 'success',
+                                    showCancelButton: false,
+                                    confirmButtonText: 'Okay'
+                                }).then((result) => {
+                                    //if (result.value) {
+                                        location.reload();
+                                    //}
+                                });
+                            } else {
+                                Swal.fire({
+                                    title: 'Delete Failed',
+                                    text: "Please try again later.",
+                                    icon: 'error',
+                                    showCancelButton: false,
+                                    confirmButtonText: 'Okay'
+                                });
+                            }
+                        }
                     });
-                    Swal.fire({
+
+                    /*Swal.fire({
                         title: 'Delete Success',
                         text: "Data has been deleted successfully!",
                         icon: 'success',
@@ -1114,10 +1114,12 @@
                         if (result.isConfirmed) {
                             location.reload();
                         }
-                    });
+                    });*/
+
                 }
             });
         });
+
         $(document).on("click", ".delete-location-item", function() {
             let id = $(this).attr('data-id');
 
