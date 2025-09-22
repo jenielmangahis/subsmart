@@ -34,7 +34,8 @@
                 <div class="row">
                     <div class="col-12 col-md-4 grid-mb">
                         <div class="nsm-field-group search">                            
-                            <input type="text" class="nsm-field nsm-search form-control mb-2" id="search_field_custom" placeholder="Search Item">
+                            <!-- <input type="text" class="nsm-field nsm-search form-control mb-2" id="search_field_custom" placeholder="Search Item"> -->
+                            <input type="text" class="nsm-field nsm-search form-control mb-2" id="search_field" placeholder="Search Item">
                         </div>
                     </div>
                     <?php if(checkRoleCanAccessModule('settings', 'write')){ ?>
@@ -124,11 +125,14 @@
 
     $(document).ready(function() {
 
-        /* $("#CUSTOM_FIELD_TBL").nsmPagination({
-            itemsPerPage: 20
-        }); */        
+        $(".nsm-table").nsmPagination({
+            itemsPerPage: 10
+        });    
+        $("#search_field").on("input", debounce(function() {
+            tableSearch($(this));
+        }, 1000));         
 
-        var CUSTOM_FIELD_TBL = $("#CUSTOM_FIELD_TBL").DataTable({
+        /*var CUSTOM_FIELD_TBL = $("#CUSTOM_FIELD_TBL").DataTable({
             "ordering": false,
             language: {
                 processing: '<span>Fetching data...</span>'
@@ -145,7 +149,7 @@
             CUSTOM_FIELD_TBL.search($(this).val()).draw()
         });        
 
-        CUSTOM_FIELD_TBL_SETTINGS = CUSTOM_FIELD_TBL.settings();        
+        CUSTOM_FIELD_TBL_SETTINGS = CUSTOM_FIELD_TBL.settings();*/     
 
     });
 
