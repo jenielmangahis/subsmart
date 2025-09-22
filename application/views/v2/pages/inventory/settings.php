@@ -42,9 +42,8 @@
                         <div class="dropdown d-inline-block">
                             <input type="hidden" class="nsm-field form-control" id="selected_ids">
                             <button type="button" class="dropdown-toggle nsm-button" data-bs-toggle="dropdown">
-                                <span>
-                                    Batch Actions
-                                </span> <i class='bx bx-fw bx-chevron-down'></i>
+                                <span id="num-checked"></span> 
+                                <span>With Selected</span> <i class='bx bx-fw bx-chevron-down'></i>
                             </button>
                             <ul class="dropdown-menu dropdown-menu-end batch-actions">
                                 <li><a class="dropdown-item disabled" href="javascript:void(0);" id="delete_selected">Delete Selected</a></li>
@@ -303,6 +302,13 @@
             }
 
             toggleBatchDelete(_this.prop("checked"));
+
+            const checkedCount = $('#CUSTOM_FIELD_TBL tbody tr:visible .table-select:checked').length;
+            if(checkedCount > 0) {
+                $('#num-checked').text(`(${checkedCount})`);        
+            } else {
+                $('#num-checked').text(``);  
+            }            
         });          
 
         $(document).on("click", ".table-select", function() {        
@@ -325,6 +331,13 @@
             }
 
             toggleBatchDelete($(".table-select:checked").length > 0);
+
+            const checkedCount = $('#CUSTOM_FIELD_TBL tbody tr:visible .table-select:checked').length;
+            if(checkedCount > 0) {
+                $('#num-checked').text(`(${checkedCount})`);        
+            } else {
+                $('#num-checked').text(``);  
+            }               
         });       
         
         $("#delete_selected").on("click", function() {

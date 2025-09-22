@@ -303,8 +303,8 @@
 </div>
 <!-- MODAL SECTION -->
 
-  <!-- Modal -->
-  <div class="modal fade" id="history_list" tabindex="-1" aria-hidden="true">
+<!-- Modal -->
+<div class="modal fade" id="history_list" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-lg">
         <div class="modal-content" style="width: 110%;">
             <div class="modal-header">
@@ -891,12 +891,16 @@
         // });
 
 
-        var INVENTORY_TABLE = $("#INVENTORY_TABLE").DataTable({
+        /*var INVENTORY_TABLE = $("#INVENTORY_TABLE").DataTable({
             "ordering": false,
             language: {
                 processing: '<span>Fetching data...</span>'
             },
-        });
+        });*/
+
+        $("#INVENTORY_TABLE").nsmPagination({
+            itemsPerPage: 10,
+        });        
 
         $("#search_field_custom").keyup(function() {
             INVENTORY_TABLE.search($(this).val()).draw();
@@ -910,8 +914,7 @@
             tableSearch($(this));
         }, 1000));
 
-        $("#select-all").on("change", function() {
-
+        $("#INVENTORY_TABLE thead #select-all").on("change", function() {
             let isChecked = $(this).is(":checked");
 
             if (isChecked) {
@@ -922,13 +925,12 @@
                 $(".batch-actions").find("a.dropdown-item").addClass("disabled");
             }
 
-            const checkedBoxes = document.querySelectorAll('#INVENTORY_TABLE input[type="checkbox"]:checked');
-            if(checkedBoxes.length > 0) {
-                $('#num-checked-items').text(`(${checkedBoxes.length})`);        
+            const checkedBoxes = $('#INVENTORY_TABLE tbody tr:visible .table-select:checked').length;
+            if(checkedBoxes > 0) {
+                $('#num-checked-items').text(`(${checkedBoxes})`);        
             } else {
                 $('#num-checked-items').text(``);  
             }
-                
         });
 
         $(".row-select").on("change", function() {

@@ -571,7 +571,7 @@
                                         <td><?= $item['qty_po'] ?: '0' ?></td>
                                         <td><?= $item['reorder_point'] ?: '0' ?></td>
                                         <td style="text-align:right;">$<?= number_format($item['sales_price'],2) ?: '0.00' ?></td>                                        
-                                        <td style="text-align:right;">$<?= number_format($item['retail'],2) ?: '0.00' ?></td>
+                                        <td style="text-align:right;">$<?= is_int($item['retail']) ? number_format($item['retail'],2) ?: '0.00' : '0.00'; ?></td>
                                         <td>
                                             <div class="dropdown float-end">
                                                 <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown">
