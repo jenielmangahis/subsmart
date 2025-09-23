@@ -915,7 +915,6 @@
 
         $("#INVENTORY_TABLE thead #select-all").on("change", function() {
             let isChecked = $(this).is(":checked");
-
             if (isChecked) {
                 $(".nsm-table").find(".select-one").prop("checked", true);
                 $(".batch-actions").find("a.dropdown-item").removeClass("disabled");

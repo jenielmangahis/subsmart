@@ -85,7 +85,7 @@
                                         </td>
                                         <?php } ?>
                                         <td class="show"><div class="table-row-icon"><i class='bx bx-cube'></i></div></td>
-                                        <td class="show"><?= $field->name ?></td>                                
+                                        <td class="nsm-text-primary show"><?= $field->name ?></td>                                
                                         <td class="text-end">
                                             <div class="dropdown table-management">
                                                 <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown">

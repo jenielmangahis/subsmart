@@ -1408,6 +1408,54 @@ class Inventory extends MY_Controller
         exit;            
     }
 
+    public function ajax_create_location() {
+        $is_success = 0;
+        $msg        = 'Cannot save data';
+
+        postAllowed();
+
+        $post          = $this->input->post();
+        $company_id    = logged('company_id');
+        $location_name = $this->input->post('name');
+        $default       = $this->input->post('DEFAULT_LOCATION');
+
+        if($location_name != null) {
+
+            $isStorageLocationExists = $this->items_model->getLocationByNameAndCompanyId($location_name, $company_id);
+            if( !$isStorageLocationExists ){
+
+                if ($DEFAULT == "true") {
+                    $this->items_model->clearDefaultLocation();
+                    $location_data = array(
+                        'company_id'=> $company_id,
+                        'location_name' => $location_name,
+                        'default' => $default,
+                    );
+                } else {
+                    $location_data = array(
+                        'company_id'=> $company_id,
+                        'location_name' => $location_name,
+                        'default' => "",
+                    );
+                }
+
+                $result = $this->general->add_($location_data, 'storage_loc'); 
+                
+                $is_success = 1;
+                $msg = '';     
+
+            } else {
+                $is_success = 0;
+                $msg = 'Storage location <b>' . $location_name . '</b> already exists.';  
+            }
+
+        }
+
+        $return = ['is_success' => $is_success, 'msg' => $msg];
+        echo json_encode($return);
+        exit;     
+    }
+
     public function addNewItemLocation() {
         $executeOnce = 0;
         postAllowed();
