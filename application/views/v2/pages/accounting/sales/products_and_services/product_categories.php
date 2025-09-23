@@ -12,14 +12,20 @@
         <div class="nsm-page">
             <div class="nsm-page-content">
                 <div class="row">
+                    <div class="col-12">
+                        <div class="nsm-callout primary">
+                            <button><i class='bx bx-x'></i></button>
+                            Manage product categories.
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
                     <!-- <div class="col-12 col-md-4"></div> -->
 
                     <div class="col-12 col-md-4 grid-mb">
-                        <form action="<?php echo base_url('accounting/product-categories') ?>" method="get">
                             <div class="nsm-field-group search">
                                 <input type="text" class="nsm-field nsm-search form-control mb-2" id="search_field" name="search" placeholder="Find product categories" value="<?php echo (!empty($search)) ? $search : '' ?>">
                             </div>
-                        </form>
                     </div>                     
 
                     <div class="col-12 col-md-8 grid-mb text-end">
@@ -28,39 +34,22 @@
                             <div class="dropdown d-inline-block">
                                 <input type="hidden" class="nsm-field form-control" id="selected_ids">
                                 <button type="button" class="dropdown-toggle nsm-button" data-bs-toggle="dropdown">
-                                    <span>
-                                        Batch Actions
-                                    </span> <i class='bx bx-fw bx-chevron-down'></i>
+                                    <span id="num-checked"></span> With Selected <i class='bx bx-fw bx-chevron-down'></i>
                                 </button>
                                 <ul class="dropdown-menu dropdown-menu-end batch-actions">
-                                    <li><a class="dropdown-item dropdown-item-delete disabled" href="javascript:void(0);" id="btn-delete-product-categories"><i class='bx bx-fw bx-trash'></i> Delete</a></li>
+                                    <li><a class="dropdown-item dropdown-item-delete disabled" href="javascript:void(0);" id="btn-delete-product-categories">Delete</a></li>
                                 </ul>
                             </div>
 
-                            <button type="button" class="nsm-button" id="new-category-button">
-                                <i class='bx bx-fw bx-list-plus'></i> New category
-                            </button>
-                            <button type="button" class="nsm-button primary" data-bs-toggle="dropdown">
-                                <i class="bx bx-fw bx-cog"></i>
-                            </button>
-                            <ul class="dropdown-menu dropdown-menu-end table-settings p-3">
-                                <p class="m-0">Rows</p>
-                                <div class="dropdown d-inline-block">
-                                    <button type="button" class="dropdown-toggle nsm-button" data-bs-toggle="dropdown">
-                                        <span>
-                                            10
-                                        </span> <i class='bx bx-fw bx-chevron-down'></i>
-                                    </button>
-                                    <ul class="dropdown-menu dropdown-menu-end" id="table-rows">
-                                        <li><a class="dropdown-item active" href="javascript:void(0);">10</a></li>
-                                        <li><a class="dropdown-item" href="javascript:void(0);">50</a></li>
-                                        <li><a class="dropdown-item" href="javascript:void(0);">75</a></li>
-                                        <li><a class="dropdown-item" href="javascript:void(0);">100</a></li>
-                                        <li><a class="dropdown-item" href="javascript:void(0);">150</a></li>
-                                        <li><a class="dropdown-item" href="javascript:void(0);">300</a></li>
-                                    </ul>
-                                </div>
-                            </ul>
+                            <div class="btn-group nsm-main-buttons">
+                                <button type="button" class="btn btn-nsm" id="new-category-button"><i class='bx bx-plus' style="position:relative;top:1px;"></i> Category</button>
+                                <button type="button" class="btn btn-nsm dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false">
+                                    <span class=""><i class='bx bx-chevron-down' ></i></span>
+                                </button>
+                                <ul class="dropdown-menu">                                         
+                                    <li><a class="dropdown-item export-items" href="javascript:void(0);">Export</a></li>  
+                                </ul>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -81,7 +70,7 @@
                             <tr data-id="<?=$category->item_categories_id?>">
                                 <td>
                                     <div class="table-row-icon table-checkbox">
-                                        <input class="form-check-input select-one table-select check-input-product-category" id="check-input-product-category" name="catid[]" type="checkbox" value="<?=$category->item_categories_id?>">
+                                        <input class="form-check-input select-one table-select check-input-product-category" name="catid[]" type="checkbox" value="<?=$category->item_categories_id?>">
                                     </div>
                                 </td>                        
                                 <td class="fw-bold nsm-text-primary nsm-link default" style="cursor: context-menu !important;"><?=$category->name?></td>
@@ -92,10 +81,10 @@
                                         </a>
                                         <ul class="dropdown-menu dropdown-menu-end">
                                             <li>
-                                                <a class="dropdown-item edit-category" href="#">Edit</a>
+                                                <a class="dropdown-item edit-category" href="javascript:void(0);">Edit</a>
                                             </li>
                                             <li>
-                                                <a class="dropdown-item remove-category" href="#">Delete</a>
+                                                <a class="dropdown-item remove-category" data-name="<?=$category->name?>" href="javascript:void(0);">Delete</a>
                                             </li>
                                         </ul>
                                     </div>
@@ -123,7 +112,7 @@
                                                     <a class="dropdown-item edit-category" href="#">Edit</a>
                                                 </li>
                                                 <li>
-                                                    <a class="dropdown-item remove-category" href="#">Remove</a>
+                                                    <a class="dropdown-item remove-category" data-name="<?=$childCategory->name?>" href="#">Remove</a>
                                                 </li>
                                             </ul>
                                         </div>
@@ -150,9 +139,13 @@
 <script>
 $(document).ready(function() {
     $("#search_field").on("input", debounce(function() {
+        tableSearch($(this));
+    }, 1000));
+
+    /*$("#search_field").on("input", debounce(function() {
         let _form = $(this).closest("form");
         _form.submit();
-    }, 1000));  
+    }, 1000));*/
 });    
 </script>
 <?php include viewPath('v2/includes/footer'); ?>

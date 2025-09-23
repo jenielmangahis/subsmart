@@ -390,24 +390,15 @@
                                 <li><a class="dropdown-item disabled" href="javascript:void(0);" id="reorder">Reorder</a></li>
                                 <li><a class="dropdown-item disabled" href="javascript:void(0);" id="make-non-inventory">Change to Non-Inventory</a></li>
                                 <li><a class="dropdown-item disabled" href="javascript:void(0);" id="make-service">Change to Services</a></li>
+                                <li><a class="dropdown-item disabled" href="javascript:void(0);" id="with-selected-delete">Delete</a></li>
                             </ul>
                         </div>
                         <div class="dropdown d-inline-block">
                             <button type="button" class="dropdown-toggle nsm-button" data-bs-toggle="dropdown">
                                 <span>Filter <i class='bx bx-fw bx-chevron-down'></i>
                             </button>
-                            <ul class="dropdown-menu dropdown-menu-end p-3 table-filter" style="width: max-content">
-                                <div class="row">
-                                    <div class="col">
-                                        <label for="filter-status">Status</label>
-                                        <select class="nsm-field form-select" name="filter_status" id="filter-status" data-applied="<?= empty($status) ? 'active' : $status ?>">
-                                            <option value="active" <?= empty($status) || $status === 'active' ? 'selected' : '' ?>>Active</option>
-                                            <option value="inactive" <?= $status === 'inactive' ? 'selected' : '' ?>>Inactive</option>
-                                            <option value="all" <?= $status === 'all' ? 'selected' : '' ?>>All</option>
-                                        </select>
-                                    </div>
-                                </div>
-                                <div class="row">
+                            <ul class="dropdown-menu dropdown-menu-end p-3 table-filter" style="width: max-content">                                
+                                <div class="row mb-2">
                                     <div class="col">
                                         <label for="filter-type">Type</label>
                                         <select class="nsm-field form-select" name="filter_type" id="filter-type" data-applied="<?= empty($type) ? 'all' : $type ?>">
@@ -419,7 +410,7 @@
                                         </select>
                                     </div>
                                 </div>
-                                <div class="row">
+                                <div class="row mb-2">
                                     <div class="col">
                                         <label for="filter-category" class="w-100">Category</label>
                                         <select name="filter_category[]" id="filter-category" class="nsm-field form-select" multiple="multiple">
@@ -431,7 +422,7 @@
                                         </select>
                                     </div>
                                 </div>
-                                <div class="row">
+                                <div class="row mb-2">
                                     <div class="col">
                                         <label for="filter-stock-status">Stock status</label>
                                         <select class="nsm-field form-select" name="filter_stock_status" id="filter-stock-status" data-applied="<?= empty($stock_status) ? 'all' : $stock_status ?>">
@@ -545,89 +536,64 @@
                                 <input class="form-check-input select-all table-select" type="checkbox">
                             </td>
                             <td data-name="Name">NAME</td>
-                            <td data-name="SKU">SKU</td>
                             <td data-name="Type">TYPE</td>
-                            <td data-name="Sales Price">SALES PRICE</td>
-                            <td data-name="Category">Category</td>
-                            <td data-name="Cost">COST</td>
-                            <td data-name="Taxable">TAXABLE</td>
+                            <td data-name="Category">CATEGORY</td>                            
                             <td data-name="Qty on hand">QTY ON HAND</td>
                             <td data-name="Qty on PO">QTY ON PO</td>
                             <td data-name="Reorder point">REORDER POINT</td>
-                            <td data-name="Locations">Locations</td>
+                            <td style="text-align:right;" data-name="Sales Price">SALES PRICE</td>                            
+                            <td style="text-align:right;" data-name="Retail">RETAIL PRICE</td>
                             <td data-name="Manage"></td>
                         </tr>
                     </thead>
                     <tbody>
                         <?php if (count($items) > 0) : ?>
                             <?php foreach ($items as $item) : ?>
+                                <?php $item_name = str_replace('(deleted)', '', $item['name']); ?>
                                 <?php if ($item['is_category']) : ?>
                                     <tr>
                                         <td></td>
-                                        <td class="fw-bold nsm-text-primary default" colspan="15"><?= $item['name'] ?></td>
+                                        <td class="fw-bold nsm-text-primary default" colspan="11"><?= $item_name ?></td>
                                     </tr>
                                 <?php else : ?>
                                     <tr data-status="<?= $item['status'] ?>" data-id="<?= $item['id'] ?>" data-category="<?= $item['category'] ?>">
                                         <td>
 
                                             <div class="table-row-icon table-checkbox">
-                                                <input class="form-check-input select-one table-select" type="checkbox" value="<?= $item['id'] ?>">
+                                                <input class="form-check-input select-one table-select" type="checkbox" name="items[]" value="<?= $item['id'] ?>">
                                             </div>
 
                                         </td>
-                                        <td class="nsm-text-primary nsm-link default"><?= $item['name'] ?: 'No name provided' ?></td>
-                                        <td><?= $item['sku'] ?: 'No SKU available' ?></td>
+                                        <td class="nsm-text-primary nsm-link default"><?= $item_name ?: 'No name provided' ?></td>
                                         <td><?= $item['type'] ?: 'No type provided' ?></td>
-                                        <td><?= $item['sales_price'] ?: 'No sales price' ?></td>
-                                        <td><?= $item['category'] ?: 'No category available' ?></td>
-                                        <td><?= $item['cost'] ?: '0' ?></td>
-                                        <td>
-                                            <?php if ($item['tax_rate_id'] !== "0" && $item['tax_rate_id'] !== null && $item['tax_rate_id'] !== "") : ?>
-                                                <div class="table-row-icon table-checkbox">
-                                                    <input class="form-check-input select-one table-select" type="checkbox" disabled checked>
-                                                </div>
-                                            <?php else : ?>
-                                                No tax available
-                                            <?php endif; ?>
-                                        </td>
-
+                                        <td><?= $item['category'] ?: 'No category available' ?></td>                                        
                                         <td><?= $item['qty_on_hand'] ?: '0' ?></td>
                                         <td><?= $item['qty_po'] ?: '0' ?></td>
                                         <td><?= $item['reorder_point'] ?: '0' ?></td>
-                                        <td>
-                                            <?php if ($item['type'] === 'Product') : ?>
-                                                <button class="nsm-button btn-sm see-item-locations">See Locations</button>
-                                            <?php endif; ?>
-                                        </td>
+                                        <td style="text-align:right;">$<?= number_format($item['sales_price'],2) ?: '0.00' ?></td>                                        
+                                        <td style="text-align:right;">$<?= is_int($item['retail']) ? number_format($item['retail'],2) ?: '0.00' : '0.00'; ?></td>
                                         <td>
                                             <div class="dropdown float-end">
                                                 <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown">
                                                     <i class='bx bx-fw bx-dots-vertical-rounded'></i>
                                                 </a>
                                                 <ul class="dropdown-menu dropdown-menu-end">
-                                                    <?php if ($item['status'] !== "0") : ?>
-                                                        <li>
-                                                            <a class="dropdown-item edit-item" href="#">Edit</a>
-                                                        </li>
-                                                        <li>
-                                                            <a class="dropdown-item make-inactive" href="javascript:void(0);">Make inactive</a>
-                                                        </li>
-                                                        <?php if ($item['type'] !== 'Bundle') : ?>
-                                                            <li>
-                                                                <a class="dropdown-item" href="#">Run report</a>
-                                                            </li>
-                                                        <?php endif; ?>
-                                                        <li>
-                                                            <a class="dropdown-item duplicate" href="#">Duplicate</a>
-                                                        </li>
-                                                    <?php else : ?>
-                                                        <li>
-                                                            <a class="dropdown-item make-active" href="#">Make active</a>
-                                                        </li>
+                                                    <li>
+                                                        <a class="dropdown-item edit-item" data-type="<?= $item['type']; ?>" data-qtyhand="<?= $item['qty_on_hand']; ?>" href="#">Edit</a>
+                                                    </li>
+                                                    <?php if ($item['type'] === 'Product') : ?>
+                                                    <li>
+                                                        <a class="dropdown-item see-item-locations" href="#">Locations</a>
+                                                    </li>
+                                                    <?php endif; ?>
+                                                    <?php if ($item['type'] !== 'Bundle') : ?>
                                                         <li>
                                                             <a class="dropdown-item" href="#">Run report</a>
                                                         </li>
                                                     <?php endif; ?>
+                                                    <li>
+                                                        <a class="dropdown-item duplicate" href="#">Duplicate</a>
+                                                    </li>
                                                 </ul>
                                             </div>
                                         </td>

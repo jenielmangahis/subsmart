@@ -34,7 +34,8 @@
                 <div class="row">
                     <div class="col-12 col-md-4 grid-mb">
                         <div class="nsm-field-group search">                            
-                            <input type="text" class="nsm-field nsm-search form-control mb-2" id="search_field_custom" placeholder="Search Item">
+                            <!-- <input type="text" class="nsm-field nsm-search form-control mb-2" id="search_field_custom" placeholder="Search Item"> -->
+                            <input type="text" class="nsm-field nsm-search form-control mb-2" id="search_field" placeholder="Search Item">
                         </div>
                     </div>
                     <?php if(checkRoleCanAccessModule('settings', 'write')){ ?>
@@ -42,9 +43,8 @@
                         <div class="dropdown d-inline-block">
                             <input type="hidden" class="nsm-field form-control" id="selected_ids">
                             <button type="button" class="dropdown-toggle nsm-button" data-bs-toggle="dropdown">
-                                <span>
-                                    Batch Actions
-                                </span> <i class='bx bx-fw bx-chevron-down'></i>
+                                <span id="num-checked"></span> 
+                                <span>With Selected</span> <i class='bx bx-fw bx-chevron-down'></i>
                             </button>
                             <ul class="dropdown-menu dropdown-menu-end batch-actions">
                                 <li><a class="dropdown-item disabled" href="javascript:void(0);" id="delete_selected">Delete Selected</a></li>
@@ -125,11 +125,14 @@
 
     $(document).ready(function() {
 
-        /* $("#CUSTOM_FIELD_TBL").nsmPagination({
-            itemsPerPage: 20
-        }); */        
+        $(".nsm-table").nsmPagination({
+            itemsPerPage: 10
+        });    
+        $("#search_field").on("input", debounce(function() {
+            tableSearch($(this));
+        }, 1000));         
 
-        var CUSTOM_FIELD_TBL = $("#CUSTOM_FIELD_TBL").DataTable({
+        /*var CUSTOM_FIELD_TBL = $("#CUSTOM_FIELD_TBL").DataTable({
             "ordering": false,
             language: {
                 processing: '<span>Fetching data...</span>'
@@ -146,7 +149,7 @@
             CUSTOM_FIELD_TBL.search($(this).val()).draw()
         });        
 
-        CUSTOM_FIELD_TBL_SETTINGS = CUSTOM_FIELD_TBL.settings();        
+        CUSTOM_FIELD_TBL_SETTINGS = CUSTOM_FIELD_TBL.settings();*/     
 
     });
 
@@ -303,6 +306,13 @@
             }
 
             toggleBatchDelete(_this.prop("checked"));
+
+            const checkedCount = $('#CUSTOM_FIELD_TBL tbody tr:visible .table-select:checked').length;
+            if(checkedCount > 0) {
+                $('#num-checked').text(`(${checkedCount})`);        
+            } else {
+                $('#num-checked').text(``);  
+            }            
         });          
 
         $(document).on("click", ".table-select", function() {        
@@ -325,6 +335,13 @@
             }
 
             toggleBatchDelete($(".table-select:checked").length > 0);
+
+            const checkedCount = $('#CUSTOM_FIELD_TBL tbody tr:visible .table-select:checked').length;
+            if(checkedCount > 0) {
+                $('#num-checked').text(`(${checkedCount})`);        
+            } else {
+                $('#num-checked').text(``);  
+            }               
         });       
         
         $("#delete_selected").on("click", function() {

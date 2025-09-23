@@ -408,7 +408,7 @@ class Estimate extends MY_Controller
     }
 
     public function add()
-    {        
+    {   
         if(!checkRoleCanAccessModule('estimates', 'write')){
             show403Error();
             return false;

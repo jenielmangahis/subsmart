@@ -42,8 +42,8 @@
                 <div class="row">
                     <div class="col-12 col-md-4 grid-mb">
                         <div class="nsm-field-group search">
-                            <!-- <input type="text" class="nsm-field nsm-search form-control mb-2" id="search_field" placeholder="Search Item"> -->
-                            <input type="text" class="nsm-field nsm-search form-control mb-2" id="search_field_custom" placeholder="Search Item">
+                            <input type="text" class="nsm-field nsm-search form-control mb-2" id="search_field" placeholder="Search Item">
+                            <!-- <input type="text" class="nsm-field nsm-search form-control mb-2" id="search_field_custom" placeholder="Search Item"> -->
                         </div>
                     </div>
                     <div class="col-12 col-md-8 grid-mb text-end">
@@ -56,9 +56,8 @@
                             
                             <div class="dropdown d-inline-block">
                                 <button type="button" class="dropdown-toggle nsm-button" data-bs-toggle="dropdown">
-                                    <span>
-                                        Batch Actions
-                                    </span> <i class='bx bx-fw bx-chevron-down'></i>
+                                    <span id="num-checked"></span>
+                                    <span>With Selected</span> <i class='bx bx-fw bx-chevron-down'></i>
                                 </button>
                                 <ul class="dropdown-menu dropdown-menu-end batch-actions">
                                     <li><a class="dropdown-item disabled" href="javascript:void(0);" id="delete_selected">Delete Selected</a></li>
@@ -79,7 +78,7 @@
                     <table id="INV_LOCATION_TBL" class="nsm-table">
                         <thead>
                             <tr>
-                                <td class="table-icon show">
+                                <td class="table-icon show" style="text-align: center;">
                                     <input class="form-check-input select-all table-select" type="checkbox">
                                 </td>
                                 <td class="table-icon show"></td>
@@ -90,7 +89,6 @@
                         </thead>
                         <tbody>
                         <?php foreach ($location as $locations) :?>
-
                             <tr>
                                 <td class="show">
                                     <div class="table-row-icon table-checkbox">
@@ -145,7 +143,7 @@
 <script type="text/javascript">
 $(document).ready(function() {
 
-    var INV_LOCATION_TBL = $("#INV_LOCATION_TBL").DataTable({
+    /*var INV_LOCATION_TBL = $("#INV_LOCATION_TBL").DataTable({
         "ordering": false,
         language: {
             processing: '<span>Fetching data...</span>'
@@ -162,13 +160,12 @@ $(document).ready(function() {
     $("#search_field_custom").keyup(function() {
         INV_LOCATION_TBL.search($(this).val()).draw()
     });
-    INV_LOCATION_TBL_SETTINGS = INV_LOCATION_TBL.settings();
-
+    INV_LOCATION_TBL_SETTINGS = INV_LOCATION_TBL.settings();*/
+    
 
     let selectedIds = [];
 
-    $("#inventory_list").nsmPagination();
-
+    $("#INV_LOCATION_TBL").nsmPagination();
     $("#search_field").on("input", debounce(function() {
         tableSearch($(this));
     }, 1000));
@@ -183,6 +180,7 @@ $(document).ready(function() {
             $(".nsm-table").find(".select-one").prop("checked", false);
             $(".batch-actions").find("a.dropdown-item").addClass("disabled");
         }
+      
     });
 
     $(".btn-share-url").on("click", function() {
@@ -224,6 +222,13 @@ $(document).ready(function() {
         }
 
         toggleBatchDelete($(".table-select:checked").length > 0);
+
+        const checkedCount = $('#INV_LOCATION_TBL tbody tr:visible .table-select:checked').length;
+        if(checkedCount > 0) {
+            $('#num-checked').text(`(${checkedCount})`);        
+        } else {
+            $('#num-checked').text(``);  
+        }        
     });
 
     $(document).on("change", ".select-all", function() {
@@ -245,6 +250,13 @@ $(document).ready(function() {
         }
 
         toggleBatchDelete(_this.prop("checked"));
+
+        const checkedCount = $('#INV_LOCATION_TBL tbody tr:visible .table-select:checked').length;
+        if(checkedCount > 0) {
+            $('#num-checked').text(`(${checkedCount})`);        
+        } else {
+            $('#num-checked').text(``);  
+        }         
     });
 
     $("#delete_selected").on("click", function() {
