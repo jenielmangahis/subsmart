@@ -758,6 +758,7 @@ class Workorder extends MY_Controller
     public function edit($id)
     {
         $this->load->model('AcsProfile_model');
+        $this->load->helper('functions');
 
         if(!checkRoleCanAccessModule('work-orders', 'write')){
             show403Error();
@@ -787,7 +788,7 @@ class Workorder extends MY_Controller
                 }  
             
             }
-        }
+        }        
 
         $customer = $this->AcsProfile_model->getByProfId($workOrder->customer_id);
         $this->page_data['users'] = $this->users_model->getAllUsersByCompany($parent_id->parent_id, $user_id);
@@ -809,7 +810,7 @@ class Workorder extends MY_Controller
         $this->page_data['users_lists'] = $this->users_model->getAllUsersByCompanyID($company_id);
         $this->page_data['fieldsName'] = $this->workorder_model->getCustomByID();
         $this->page_data['items_data'] = $this->workorder_model->getworkorderItems($id);
-        $this->page_data['page']->title = 'New Workorder';
+        $this->page_data['page']->title = 'Edit Work Order';
 		$this->page_data['page']->parent = 'Sales';
         $this->load->view('v2/pages/workorder/edit', $this->page_data);
     }
@@ -3773,9 +3774,6 @@ class Workorder extends MY_Controller
 			'assets/js/jquery.signaturepad.js'
         ]);
 
-        $this->page_data['page']->title = 'New Workorder';
-		$this->page_data['page']->parent = 'Sales';
-        
         $query_autoincrment = $this->db->query("SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE table_name = 'customer_groups'");
         $result_autoincrement = $query_autoincrment->result_array();
 
@@ -3857,7 +3855,8 @@ class Workorder extends MY_Controller
         $this->page_data['companyDet'] = $this->workorder_model->companyDet($company_id);
         $this->page_data['itemPackages'] = $this->workorder_model->getPackageDetailsByCompany($company_id);
         $this->page_data['getSettings'] = $this->workorder_model->getSettings($company_id);
-        $this->page_data['page_title'] = "Work Order";
+        $this->page_data['page']->title = 'New Work Order';
+		$this->page_data['page']->parent = 'Sales';
         // $this->load->view('workorder/addNewworkOrder', $this->page_data);
         $this->load->view('v2/pages/workorder/addNewworkOrder', $this->page_data);
     }
