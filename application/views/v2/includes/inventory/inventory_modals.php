@@ -137,3 +137,68 @@
         
     </div>
 </div>
+
+<div class="modal fade nsm-modal fade" id="inventory-location-modal" tabindex="-1" aria-labelledby="inventory_location_modal_label" aria-hidden="true">
+    <div class="modal-dialog modal-md modal-dialog-centered">
+        <div class="modal-content">
+            <?php echo form_open_multipart(null, ['id' => 'form-add-inventory-location', 'class' => 'form-validate form-add-inventory-location', 'autocomplete' => 'off']); ?>        
+
+            <div class="modal-header">
+                <span class="modal-title content-title" id="print_preview_inventory_modal_label">Add New Location</span>
+                <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
+            </div>
+            <div class="modal-body">
+                <div class="col-lg-12 mb-2">
+                    <input type="text" class="form-control" maxlength="25" placeholder="Maximum 25 characters only" name="name" id="title" required>
+                </div>
+                <div class="col-lg-12 mb-2">
+                    <input class="form-check-input" type="checkbox" value="" id="DEFAULT_LOCATION">
+                    <label class="form-check-label" for="DEFAULT_LOCATION">
+                        Set to Default Location
+                    </label>
+                    <input type="hidden" name="DEFAULT_LOCATION" value="false" readonly>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="nsm-button" data-bs-dismiss="modal">Cancel</button>
+                <button type="submit" class="nsm-button primary">Save</button>
+            </div>                 
+            <?php echo form_close(); ?>
+
+        </div>
+    </div>
+</div>
+
+<div class="modal fade nsm-modal fade" id="inventory-edit-location-modal" tabindex="-1" aria-labelledby="inventory_edit_location_modal_label" aria-hidden="true">
+    <div class="modal-dialog modal-md modal-dialog-centered">
+        <div class="modal-content">
+            <?php echo form_open_multipart(null, ['id' => 'form-edit-inventory-location', 'class' => 'form-validate form-edit-inventory-location', 'autocomplete' => 'off']); ?>        
+            <input type="hidden" name="lid" value="" id="lid" />
+            <input type="hidden" name="default_name" value="" id="default-name" />   
+            <div class="modal-header">
+                <span class="modal-title content-title" id="print_preview_inventory_modal_label">Update Location</span>
+                <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
+            </div>
+            <div class="modal-body">
+                <div class="col-lg-12 mb-2">
+                    <input type="text" class="form-control" maxlength="25" placeholder="Maximum 25 characters only" name="name" id="location-name" required>
+                </div>
+                <div class="col-lg-12 mb-2">
+                    <input class="form-check-input" type="checkbox" name="default_location" value="1" id="default-location">
+                    <label class="form-check-label" for="default_location">
+                        Set to Default Location
+                    </label>
+                    <!-- <input type="hidden" name="DEFAULT_LOCATION" value="false" readonly>-->
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="nsm-button" data-bs-dismiss="modal">Cancel</button>
+                <button type="submit" class="nsm-button primary">Update</button>
+            </div>                 
+            <?php echo form_close(); ?>
+
+        </div>
+    </div>
+</div>
