@@ -1789,6 +1789,7 @@ $route['inventory/_update_inventory_fee'] = 'inventory/ajax_update_inventory_fee
 
 $route['inventory/_delete_selected_vendor'] = 'inventory/ajax_delete_selected_vendor';
 $route['inventory/_create_location'] = 'inventory/ajax_create_location';
+$route['inventory/_update_location'] = 'inventory/ajax_update_location';
 
 // Inventory Fees
 $route['inventory/fees/edit/(:num)'] = 'inventory/edit_fee/$1';

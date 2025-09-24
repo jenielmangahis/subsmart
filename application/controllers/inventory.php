@@ -1539,6 +1539,59 @@ class Inventory extends MY_Controller
         exit;  
     }
 
+    public function ajax_update_location() {
+        $is_success = 0;
+        $msg        = 'Cannot save data';
+
+        postAllowed();
+
+        $post          = $this->input->post();
+        $location_name = $this->input->post('name');
+        $default_location_name = $this->input->post('default_name');
+        $is_default       = $this->input->post('default_location');
+        $id            = $this->input->post('lid');
+        $company_id    = logged('company_id');
+
+        if($location_name != null) {
+
+            if( $post['name'] == $post['default_name'] ) {
+                $isStorageLocationExists = false;
+            } else {
+                $isStorageLocationExists = $this->items_model->getLocationByNameAndCompanyId($location_name, $company_id);
+            }
+            
+            if( !$isStorageLocationExists ){
+
+                if (isset($is_default) && $is_default == 1) {
+                    $this->items_model->clearDefaultLocation();
+                    $location_data = array(
+                        'location_name' => $location_name,
+                        'default' => 'true',
+                    );
+                } else {
+                    $location_data = array(
+                        'location_name' => $location_name,
+                        'default' => "",
+                    );
+                }
+
+                $this->general->update_with_key_field($location_data, $id, 'storage_loc', 'loc_id');        
+                
+                $is_success = 1;
+                $msg = 'Storage location has been upated successfully.';
+                
+            } else {
+                $is_success = 0;
+                $msg = 'Storage location <b>' . $location_name . '</b> already exists.';  
+            }
+
+        }        
+
+        $return = ['is_success' => $is_success, 'msg' => $msg];
+        echo json_encode($return);
+        exit;            
+    } 
+
     public function getItemLocations() {
         postAllowed();
         $result = $this->items_model->getLocationByItemId($this->input->post('item_id'));

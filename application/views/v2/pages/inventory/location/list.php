@@ -123,7 +123,8 @@
                                         </a>
                                         <ul class="dropdown-menu dropdown-menu-end">
                                             <li>
-                                                <a class="dropdown-item edit-item" href="<?php echo base_url('inventory/editInventoryLocation/' . $locations->loc_id); ?>" data-id="<?php echo $locations->loc_id  ?>">Edit</a>
+                                                <!-- <a class="dropdown-item edit-item" href="<?php echo base_url('inventory/editInventoryLocation/' . $locations->loc_id); ?>" data-id="<?php echo $locations->loc_id  ?>">Edit</a> -->
+                                                <a class="dropdown-item update-item-<?=$locations->loc_id?>" onClick="javascript:loadCustomFieldData(<?=$locations->loc_id?>);" href="javascript:void(0);" data-bs-toggle="modal" data-bs-target="#inventory-edit-location-modal" data-id="<?= $locations->loc_id; ?>" data-isdefault="<?= $locations->default; ?>" data-name="<?= $locations->location_name; ?>">Edit</a>
                                             </li>
                                             <li>
                                                 <a class="dropdown-item delete-item" href="javascript:void(0);" data-location-name="<?php echo $locations->location_name; ?>" data-id="<?php echo $locations->loc_id?>">Delete</a>
@@ -381,6 +382,63 @@ $('#form-add-inventory-location').on('submit', function(e){
     });
 });    
 
+$('.form-edit-inventory-location').on('submit', function(e){      
+    e.preventDefault();   
+    let _this = $(this);
+    
+    var url = base_url + "inventory/_update_location";
+    _this.find("button[type=submit]").html("Saving");
+    _this.find("button[type=submit]").prop("disabled", true);
+
+    $.ajax({
+        type: 'POST',
+        url: url,
+        data: _this.serialize(),
+        dataType:'json',
+        success: function(result) {
+            if (result.is_success === 1) {
+                $("#inventory-edit-location-modal").modal('hide');
+                _this.trigger("reset");
+                
+                Swal.fire({
+                    title: 'Save Successful!',
+                    html: result.msg,
+                    icon: 'success',
+                    showCancelButton: false,
+                    confirmButtonText: 'Okay'
+                }).then((result) => {
+                    location.reload();
+                });
+            } else {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    html: result.msg
+                });
+            }
+            
+            _this.find("button[type=submit]").html("Save");
+            _this.find("button[type=submit]").prop("disabled", false);
+        },
+    });
+}); 
+
+function loadCustomFieldData(location_id) {
+    let id    = $(".update-item-"+location_id).attr('data-id');
+    let name  = $(".update-item-"+location_id).attr('data-name');
+    let dname = $(".update-item-"+location_id).attr('data-name');
+    let is_default = $(".update-item-"+location_id).attr('data-isdefault'); 
+
+    $('#lid').val(id);
+    $('#default-name').val(name);
+    $('#location-name').val(dname); 
+
+    if(is_default == 'true') {    
+        $('#default-location').prop('checked', true);
+    } else {
+        $('#default-location').prop('checked', false);
+    }
+}
 
 function toggleBatchDelete(enable = True) {
     enable ? $("#delete_selected").removeClass("disabled") : $("#delete_selected").addClass("disabled");

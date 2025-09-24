@@ -965,9 +965,9 @@
         });
 
         $(document).on("change", ".table-select", function() {
+            $('tr:visible .row-select:checkbox').prop('checked', this.checked);  
             let _this = $(this);
             let id = _this.attr("data-id");
-
             if (!_this.prop("checked") && $(".select-all").prop("checked")) {
                 $(".select-all").prop("checked", false);
             }
@@ -982,7 +982,6 @@
                 selectedIds.push(id);
                 $("#selected_ids").val(selectedIds);
             }
-
             let total_selected = $(".table-select:checked").length;
             
             toggleBatchDelete($(".table-select:checked").length > 0);
