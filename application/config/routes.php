@@ -671,6 +671,7 @@ $route['accounting/product-categories'] = 'accounting_controllers/product_catego
 $route['accounting/product-categories/load']['post'] = 'accounting_controllers/product_categories/load_product_categories';
 $route['accounting/product-categories/get'] = 'accounting_controllers/product_categories/get_categories';
 $route['accounting/product-categories/create']['post'] = 'accounting_controllers/product_categories/create';
+$route['accounting/product-categories/_create'] = 'accounting_controllers/product_categories/ajax_create';
 $route['accounting/product-categories/get/(:any)'] = 'accounting_controllers/product_categories/get_category_details/$1';
 $route['accounting/product-categories/update/(:any)']['post'] = 'accounting_controllers/product_categories/update/$1';
 $route['accounting/product-categories/delete/(:any)']['DELETE'] = 'accounting_controllers/product_categories/delete/$1';
