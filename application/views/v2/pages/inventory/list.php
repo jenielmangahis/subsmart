@@ -158,7 +158,7 @@
                             <tr>
                                 <td style="width:1%;" class="show">
                                     <div class="table-row-icon table-checkbox">
-                                        <input class="form-check-input select-one row-select table-select" type="checkbox" data-id="<?php echo $item[3]; ?>" name="items[<?= $item[3]; ?>]" value="<?php echo $item[3]; ?>">
+                                        <input class="form-check-input select-one row-select table-select" type="checkbox" data-id="<?php echo $item[3]; ?>" name="items[]" value="<?php echo $item[3]; ?>">
                                     </div>
                                 </td>
                                 <td style="width:1%;" class="show">
@@ -913,31 +913,13 @@
             tableSearch($(this));
         }, 1000));
 
-        $("#INVENTORY_TABLE thead #select-all").on("change", function() {
-            let isChecked = $(this).is(":checked");
-            if (isChecked) {
-                $(".nsm-table").find(".select-one").prop("checked", true);
-                $(".batch-actions").find("a.dropdown-item").removeClass("disabled");
-            } else {
-                $(".nsm-table").find(".select-one").prop("checked", false);
-                $(".batch-actions").find("a.dropdown-item").addClass("disabled");
-            }
-
-            const checkedBoxes = $('#INVENTORY_TABLE tbody tr:visible .table-select:checked').length;
-            if(checkedBoxes > 0) {
-                $('#num-checked-items').text(`(${checkedBoxes})`);        
-            } else {
-                $('#num-checked-items').text(``);  
-            }
-        });
-
         $(".row-select").on("change", function() {
             const checkedBoxes = document.querySelectorAll('#INVENTORY_TABLE input[type="checkbox"]:checked');
             if(checkedBoxes.length > 0) {
                 $('#num-checked-items').text(`(${checkedBoxes.length})`);   
             } else {
                 $('#num-checked-items').text(``);  
-            }
+            }  
         });
 
         $(".btn-share-url").on("click", function() {
@@ -964,8 +946,8 @@
             window.location.href = "<?php echo base_url('inventory/export_list') ?>";
         });
 
-        $(document).on("change", ".table-select", function() {
-            $('tr:visible .row-select:checkbox').prop('checked', this.checked);  
+        /*$(document).on("change", ".table-select", function() {
+            //$('tr:visible .row-select:checkbox').prop('checked', this.checked);              
             let _this = $(this);
             let id = _this.attr("data-id");
             if (!_this.prop("checked") && $(".select-all").prop("checked")) {
@@ -985,9 +967,9 @@
             let total_selected = $(".table-select:checked").length;
             
             toggleBatchDelete($(".table-select:checked").length > 0);
-        });
+        });*/
 
-        $(document).on("change", ".select-all", function() {
+        /*$(document).on("change", ".select-all", function() {
             let _this = $(this);
 
             if (_this.prop("checked")) {
@@ -1006,7 +988,67 @@
             }
 
             toggleBatchDelete(_this.prop("checked"));
-        });
+        });*/
+
+        /*$("#INVENTORY_TABLE thead #select-all").on("change", function() {
+            let isChecked = $(this).is(":checked");
+            if (isChecked) {
+                $(".nsm-table").find(".select-one").prop("checked", true);
+                $(".batch-actions").find("a.dropdown-item").removeClass("disabled");
+            } else {
+                $(".nsm-table").find(".select-one").prop("checked", false);
+                $(".batch-actions").find("a.dropdown-item").addClass("disabled");
+            }
+
+            const checkedBoxes = $('#INVENTORY_TABLE tbody tr:visible .table-select:checked').length;
+            if(checkedBoxes > 0) {
+                $('#num-checked-items').text(`(${checkedBoxes})`);        
+            } else {
+                $('#num-checked-items').text(``);  
+            }
+        });*/      
+
+        $(document).on('change', '#select-all', function(){
+            $('tr:visible .row-select:checkbox').prop('checked', this.checked);  
+            let total= $('.inventory-table tr:visible input[name="items[]"]:checked').length;
+            if( total > 0 ){
+                $('#num-checked-items').text(`(${total})`);
+                $(".batch-actions").find("a.dropdown-item").removeClass("disabled");
+            }else{
+                $('#num-checked-items').text('');
+                $(".batch-actions").find("a.dropdown-item").addClass("disabled");
+            }           
+        });    
+        
+        $(document).on('change', '.row-select', function(){
+
+            let _this = $(this);
+            let id = _this.attr("data-id");
+
+            if (!_this.prop("checked") && $(".select-all").prop("checked")) {
+                $(".select-all").prop("checked", false);
+            }                   
+
+            let total = $('.inventory-table input[name="items[]"]:checked').length;
+            if( total > 0 ){
+                $('#num-checked-items').text(`(${total})`);
+                $(".batch-actions").find("a.dropdown-item").removeClass("disabled");
+            }else{
+                $('#num-checked-items').text('');
+                $(".batch-actions").find("a.dropdown-item").addClass("disabled");
+            }     
+            
+            if (!_this.prop("checked")) {
+                selectedIds = $.grep(selectedIds, function(value) {
+                    return value != id
+                });
+
+                $("#selected_ids").val(selectedIds);
+            } else {
+                selectedIds.push(id);
+                $("#selected_ids").val(selectedIds);
+            }
+        });         
 
         $("#delete_selected").on("click", function() {
             const checkedBoxes = document.querySelectorAll('#INVENTORY_TABLE input[type="checkbox"]:checked');
