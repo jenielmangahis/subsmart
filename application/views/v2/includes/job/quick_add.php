@@ -53,27 +53,27 @@
 </div>
 
 <div class="modal fade nsm-modal fade" id="quick_add_lead_source" tabindex="-1" aria-labelledby="quick_add_lead_source_modal_label" aria-hidden="true">
-    <div class="modal-dialog">
-        <form id="frm-quick-add-lead-source">
+    <div class="modal-dialog modal-dialog-centered">        
         <div class="modal-content">
             <div class="modal-header">
-                <span class="modal-title content-title" id="quick_add_lead_source_modal_label">Quick Add : Lead Source</span>
+                <span class="modal-title content-title" id="quick_add_lead_source_modal_label">Add Lead Source</span>
                 <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
             </div>
             <div class="modal-body">
+                <form id="frm-quick-add-lead-source">
                 <div class="row">
-                <div class="form-group">
-                    <label class="">Lead Source Name</label> <span class="form-required">*</span>
-                    <input type="text" name="lead_source_name" value="" class="form-control" required="" autocomplete="off" />
+                    <div class="form-group">
+                        <label class="">Name</label> <span class="form-required">*</span>
+                        <input type="text" name="lead_source_name" value="" class="form-control" required="" autocomplete="off" />
+                    </div>
                 </div>
-                </div>
+                </form>
             </div>
             <div class="modal-footer">
                 <button type="button" class="nsm-button" data-bs-dismiss="modal">Close</button>
-                <button type="submit" class="nsm-button primary">Save</button>
+                <button type="submit" class="nsm-button primary" form="frm-quick-add-lead-source">Save</button>
             </div>
         </div>
-        </form>
     </div>
 </div>
 

@@ -177,6 +177,13 @@
     padding: 10px;
     width: 100%;
 }
+.row-total-amount {
+    text-align: right;
+}
+.row-btn-actions {
+    text-align: center;
+    padding: 13px !important;
+}
 </style>
 
 <div class="row page-content g-0">
@@ -293,7 +300,7 @@
                                                 </div>
                                                 <?php 
                                                 foreach ($custom_fields as $field) { ?>
-                                                    <div class="col-12 col-md-6">
+                                                    <div class="col-12 col-md-3">
                                                         <div class="row g-3">
                                                             <div class="col-6">
                                                                 <label class="content-subtitle fw-bold d-block mb-2"><?php echo $field->name; ?></label>
@@ -314,13 +321,13 @@
                                                     <thead style="background-color:#E9E8EA;">
                                                     <tr>
                                                         <th>Name</th>
-                                                        <th>Group</th>                                                        
-                                                        <th width="150px">Quantity</th>                                                        
+                                                        <th>Group</th>
+                                                        <th width="150px">Quantity</th>
                                                         <th width="150px" style="text-align: right;">Price</th>
                                                         <th class="hidden_mobile_view" width="150px" style="text-align: right;">Discount</th>
                                                         <th class="hidden_mobile_view" width="150px" style="text-align: right;">Tax (Change in %)</th>
-                                                        <th class="hidden_mobile_view" style="text-align: center;">Total</th>
-                                                        <th class=""></th>
+                                                        <th class="hidden_mobile_view" style="text-align: right;">Total</th>
+                                                        <th class="" style="width:5%;"></th>
                                                     </tr>
                                                     </thead>
                                                     <tbody id="jobs_items_table_body">                                                                          
@@ -361,10 +368,10 @@
                                                                     data-counter="0" id="tax1_<?php echo $item_row; ?>" min="0" value="<?php echo number_format($data->tax,2); ?>">
                                                                     <!-- <span id="span_tax_0">0.0</span> -->
                                                                     </td>
-                                                            <td width="10%" class="hidden_mobile_view" style="text-align: center;"><input type="hidden" class="form-control " name="total[]"
+                                                            <td width="10%" class="hidden_mobile_view" style="text-align: right;"><input type="hidden" class="form-control " name="total[]"
                                                                     data-counter="0" id="sub_total_text<?= $item_row; ?>" min="0" value="<?php $a = $data->qty * $data->costing; $b = $a + $data->tax; echo $b; ?>">
                                                                     $<span id="span_total_<?php echo $item_row; ?>"><?php $a = $data->qty * $data->costing; $b = $a + $data->tax; echo number_format($b,2,".",""); ?></span></td>
-                                                            <td>
+                                                            <td class="row-btn-actions">
                                                                 <a href="#" class="remove nsm-button danger" id=""><i class="bx bx-fw bx-trash"></i></a>
                                                             </td>
                                                         </tr>
@@ -440,7 +447,7 @@
                         </div>
                     </div>
                     <div class="col-12">
-                        <div class="nsm-card">
+                        <div class="nsm-card primary">
                             <div class="nsm-card-header">
                                 <div class="nsm-card-title">
                                     <span class="d-block">Checklist</span>
@@ -466,7 +473,7 @@
                         </div>
                     </div>
                     <div class="col-12">
-                        <div class="nsm-card">
+                        <div class="nsm-card primary">
                             <div class="row g-3">
                                 <div class="col-12">
                                     <div class="nsm-card-header">
@@ -482,7 +489,7 @@
                                                         <label class="content-subtitle fw-bold d-block mb-2" style="padding-bottom:11px;">Job Name</label>
                                                         <input type="text" name="job_name" class="nsm-field form-control" value="<?php echo $workorder->job_name; ?>" required />
                                                     </div>
-                                                    <div class="col-12 col-md-2">
+                                                    <div class="col-12 col-md-3">
                                                         <div class="d-flex justify-content-between">
                                                             <label class="content-subtitle fw-bold d-block mb-2" style="padding-bottom:11px;">Job Type</label>
                                                             <a class="nsm-button btn-small btn-quick-add-job-type" href="javascript:void(0);">
@@ -495,7 +502,7 @@
                                                             <?php } ?>
                                                         </select>
                                                     </div>  
-                                                    <div class="col-12 col-md-2">
+                                                    <div class="col-12 col-md-3">
                                                         <div class="d-flex justify-content-between">
                                                             <label class="content-subtitle fw-bold d-block mb-2" style="padding-bottom:11px;">Job Tag</label>
                                                             <a class="nsm-button btn-small btn-quick-add-job-tag" href="javascript:void(0);">
@@ -530,11 +537,11 @@
                                                         <label class="content-subtitle fw-bold d-block mb-2" style="padding-bottom:11px;">Job Location</label>
                                                         <input type="text" name="job_location" id="job_location" value="<?php echo $workorder->job_location; ?>" class="nsm-field form-control" required />
                                                     </div>  
-                                                    <div class="col-12 col-md-2">
+                                                    <div class="col-12 col-md-3">
                                                         <label class="content-subtitle fw-bold d-block mb-2" style="padding-bottom:11px;">Schedule Date Given</label>
                                                         <input type="text" name="schedule_date_given" value="<?php echo date("m/d/Y", strtotime($workorder->date_issued)); ?>" class="nsm-field form-control" id="datepicker_dateissued" required />
                                                     </div>
-                                                    <div class="col-12 col-md-2">
+                                                    <div class="col-12 col-md-3">
                                                         <label class="content-subtitle fw-bold d-block mb-2" style="padding-bottom:11px;">Priority</label>
                                                         <select name="priority" class="nsm-field form-select" id="wo-priority">
                                                             <option value="Standard" <?php echo $workorder->priority == 'Standard' ? 'selected="selected"' : ''; ?>>Standard</option>
@@ -547,7 +554,7 @@
                                                         <div class="d-flex justify-content-between">
                                                             <label class="content-subtitle fw-bold d-block mb-2" style="padding-bottom:11px;">Lead Source</label>
                                                             <a class="nsm-button btn-small btn-quick-add-lead-source" href="javascript:void(0);">
-                                                                <span class="bx bx-plus"></span> Create Lead Source
+                                                                <span class="fa fa-plus"></span></span> Add New Lead Source
                                                             </a>
                                                         </div>                                                          
                                                         <select name="lead_source" class="nsm-field form-select" id="lead_source">
@@ -573,13 +580,20 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-12 mt-4">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12">
+                        <div class="nsm-card primary">
+                            <div class="row g-3">
+                                <div class="col-12">
                                     <div class="nsm-card-header">
                                         <div class="nsm-card-title">
                                             <span class="d-block">Payment Detail</span>
                                         </div>
                                     </div>
                                     <div class="nsm-card-content">
+                                    
                                         <div class="row g-3">
                                             <div class="col-12 col-md-4">
                                                 <label class="content-subtitle fw-bold d-block mb-2">Payment Method</label>
@@ -816,7 +830,7 @@
                         </div>
                     </div>
                     <div class="col-12">
-                        <div class="nsm-card">
+                        <div class="nsm-card primary">
                             <div class="row g-3">
                                 <div class="col-12">
                                     <div class="nsm-card-header">
@@ -883,7 +897,7 @@
                         </div>
                     </div>
                     <div class="col-12">
-                        <div class="nsm-card">
+                        <div class="nsm-card primary">
                             <div class="nsm-card-header">
                                 <div class="nsm-card-title d-block">
                                     <span class="d-block">Signature</span>
@@ -974,7 +988,7 @@
                     </div>
                     <div class="col-12 text-end">
                         <button type="button" class="nsm-button" onclick="location.href='<?php echo url('workorder') ?>'">Cancel</button>
-                        <button type="submit" class="nsm-button primary">Submit</button>
+                        <button type="submit" class="nsm-button primary">Save</button>
                     </div>
                 </div>
                 <?php echo form_close(); ?>
