@@ -588,6 +588,11 @@ class Inventory extends MY_Controller
         $UPDATE_ITEM_DATA = $this->items_model->update($ITEM_DATA, array(
             "id" => $input['item_id']
         ));
+
+        //Activity Logs
+        $activity_name = 'Inventory : Update Item '. $input['title']; 
+        createActivityLog($activity_name);
+
        // echo $UPDATE_ITEM_DATA;
     }
 
@@ -716,7 +721,12 @@ class Inventory extends MY_Controller
         $post = $this->input->post();
         $id   = $post['id'];
         $item = $this->items_model->deleteLocation($id, TRUE);
+
+        //Activity Logs
+        $activity_name = 'Inventory Location : Deleted location ' . $item->location_name;
+        createActivityLog($activity_name);           
     }
+
     public function deleteItemLocation(){
         $is_success = 0;
         $msg = '';
@@ -732,10 +742,9 @@ class Inventory extends MY_Controller
             $item = $this->items_model->deleteLocation($id);
 
             $is_success = 1;
-            $msg = '';
+            $msg = '';         
         }
         
-
         $json_data = [
             'is_success' => $is_success,
             'msg' => $msg,
@@ -1238,6 +1247,10 @@ class Inventory extends MY_Controller
         if( $deleted > 0 ){
             $is_success = 1;
             $msg = '';
+
+			//Activity Logs
+			$activity_name = 'Inventory Location : Deleted multiple location successfull';
+			createActivityLog($activity_name);            
         }
 
         $json_data = [
@@ -1444,6 +1457,10 @@ class Inventory extends MY_Controller
                 $is_success = 1;
                 $msg = '';     
 
+                //Activity Logs
+                $activity_name = 'Inventory Location : Created location ' . $location_name; 
+                createActivityLog($activity_name);
+		                      
             } else {
                 $is_success = 0;
                 $msg = 'Storage location <b>' . $location_name . '</b> already exists.';  
@@ -1579,6 +1596,10 @@ class Inventory extends MY_Controller
                 
                 $is_success = 1;
                 $msg = 'Storage location has been upated successfully.';
+
+                //Activity Logs
+                $activity_name = 'Inventory Location : Update location ' . $location_name; 
+                createActivityLog($activity_name);                
                 
             } else {
                 $is_success = 0;
@@ -2070,7 +2091,11 @@ class Inventory extends MY_Controller
                 $customFieldId = $this->items_model->add_custom_field($data);
                 
                 $is_success = 1;
-                $msg = '';                
+                $msg = '';         
+                
+                //Activity Logs
+                $activity_name = 'Inventory Settings : Created settings ' . $post['custom_field_name'];
+                createActivityLog($activity_name);                
 
             } else {
 
@@ -2109,6 +2134,10 @@ class Inventory extends MY_Controller
                     
                     $is_success = 1;
                     $msg = '';
+
+                    //Activity Logs
+                    $activity_name = 'Inventory Settings : Update setting ' . $post['custom_field_name'];
+                    createActivityLog($activity_name);                          
                 }else{
                     $msg = 'Cannot find data';
                 }                    
@@ -2141,6 +2170,10 @@ class Inventory extends MY_Controller
                 
                 $is_success = 1;
                 $msg = '';
+
+                //Activity Logs
+                $activity_name = 'Inventory Settings : Deleted ' . $customField->name;
+                createActivityLog($activity_name);     
             }else{
                 $msg = 'Cannot find data';
             }
@@ -2173,6 +2206,10 @@ class Inventory extends MY_Controller
             if($count_del) {
                 $is_success = 1;
                 $msg = '';
+
+                //Activity Logs
+                $activity_name = 'Inventory Settings : Deleted multiple custom field';
+                createActivityLog($activity_name); 
             } 
         } 
 

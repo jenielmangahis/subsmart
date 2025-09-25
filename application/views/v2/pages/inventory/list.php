@@ -944,69 +944,7 @@
 
         $(".export-items").click(function() {
             window.location.href = "<?php echo base_url('inventory/export_list') ?>";
-        });
-
-        /*$(document).on("change", ".table-select", function() {
-            //$('tr:visible .row-select:checkbox').prop('checked', this.checked);              
-            let _this = $(this);
-            let id = _this.attr("data-id");
-            if (!_this.prop("checked") && $(".select-all").prop("checked")) {
-                $(".select-all").prop("checked", false);
-            }
-
-            if (!_this.prop("checked")) {
-                selectedIds = $.grep(selectedIds, function(value) {
-                    return value != id
-                });
-
-                $("#selected_ids").val(selectedIds);
-            } else {
-                selectedIds.push(id);
-                $("#selected_ids").val(selectedIds);
-            }
-            let total_selected = $(".table-select:checked").length;
-            
-            toggleBatchDelete($(".table-select:checked").length > 0);
-        });*/
-
-        /*$(document).on("change", ".select-all", function() {
-            let _this = $(this);
-
-            if (_this.prop("checked")) {
-                $(".table-select").prop("checked", true);
-                selectedIds = [];
-
-                $(".table-select").each(function() {
-                    if ($(this).prop("checked"))
-                        selectedIds.push($(this).attr("data-id"));
-                })
-                $("#selected_ids").val(selectedIds);
-            } else {
-                $(".table-select").prop("checked", false);
-                $("#selected_ids").val('');
-                $("#delete_selected").addClass("disabled");
-            }
-
-            toggleBatchDelete(_this.prop("checked"));
-        });*/
-
-        /*$("#INVENTORY_TABLE thead #select-all").on("change", function() {
-            let isChecked = $(this).is(":checked");
-            if (isChecked) {
-                $(".nsm-table").find(".select-one").prop("checked", true);
-                $(".batch-actions").find("a.dropdown-item").removeClass("disabled");
-            } else {
-                $(".nsm-table").find(".select-one").prop("checked", false);
-                $(".batch-actions").find("a.dropdown-item").addClass("disabled");
-            }
-
-            const checkedBoxes = $('#INVENTORY_TABLE tbody tr:visible .table-select:checked').length;
-            if(checkedBoxes > 0) {
-                $('#num-checked-items').text(`(${checkedBoxes})`);        
-            } else {
-                $('#num-checked-items').text(``);  
-            }
-        });*/      
+        });    
 
         $(document).on('change', '#select-all', function(){
             $('tr:visible .row-select:checkbox').prop('checked', this.checked);  
@@ -1021,7 +959,6 @@
         });    
         
         $(document).on('change', '.row-select', function(){
-
             let _this = $(this);
             let id = _this.attr("data-id");
 
