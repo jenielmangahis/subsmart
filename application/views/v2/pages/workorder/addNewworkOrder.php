@@ -478,14 +478,9 @@
                                                         <label class="content-subtitle fw-bold d-block mb-2" style="padding-bottom:11px;">Status</label>
                                                         <select name="status" class="nsm-field form-select">
                                                             <option value="New">New</option>
-                                                            <option value="Draft">Draft</option>
-                                                            <option value="Scheduled">Scheduled</option>
-                                                            <option value="Started">Started</option>
-                                                            <option value="Paused">Paused</option>
-                                                            <option value="Completed">Completed</option>
-                                                            <option value="Invoiced">Invoiced</option>
-                                                            <option value="Withdrawn">Withdrawn</option>
-                                                            <option value="Closed">Closed</option>
+                                                            <option value="Submitted">Submitted</option>
+                                                            <option value="Converted">Converted</option>
+                                                            <option value="Finished">Finished</option>
                                                         </select>
                                                     </div>                                                    
                                                 </div>
