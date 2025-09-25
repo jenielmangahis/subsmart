@@ -513,7 +513,7 @@
                                                         <div class="d-flex justify-content-between">
                                                             <label class="content-subtitle fw-bold d-block mb-2" style="padding-bottom:11px;">Lead Source</label>
                                                             <a class="nsm-button btn-small btn-quick-add-lead-source" href="javascript:void(0);">
-                                                                <span class="bx bx-plus"></span> Create Lead Source
+                                                                <span class="fa fa-plus"></span> Add New Lead Source
                                                             </a>
                                                         </div>
                                                         <select name="lead_source" class="nsm-field form-select" id="lead_source">
