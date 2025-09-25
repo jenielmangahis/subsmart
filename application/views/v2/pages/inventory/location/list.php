@@ -64,9 +64,13 @@
                                 </ul>
                             </div>                            
                             
-                            <button type="button" class="nsm-button primary" onclick="location.href='<?php echo base_url('inventory/addInventoryLocation') ?>'">
+                            <!-- <button type="button" class="nsm-button primary" onclick="location.href='<?php //echo base_url('inventory/addInventoryLocation') ?>'">
                                 <i class='bx bx-plus' style="position:relative;top:1px;"></i> Location
-                            </button>
+                            </button> -->
+
+                            <button type="button" class="nsm-button primary" data-bs-toggle="modal" data-bs-target="#inventory-location-modal">
+                                <i class='bx bx-plus' style="position:relative;top:1px;"></i> Location
+                            </button>                            
                             <!-- <button type="button" class="nsm-button btn-share-url">
                                 <i class='bx bx-fw bx-share-alt'></i>
                             </button> -->
@@ -100,7 +104,7 @@
                                         <i class='bx bx-cube'></i>
                                     </div>
                                 </td>
-                                <td class="show"><b><?php echo $locations->location_name ?></b></td>
+                                <td class="nsm-text-primary show"><b><?php echo $locations->location_name ?></b></td>
                                 <td>
                                     <?php if( $locations->default == "true" ){ ?>
                                         <span class="nsm-badge nsm-badge-primary" style="display:block;text-align:center;">
@@ -119,7 +123,8 @@
                                         </a>
                                         <ul class="dropdown-menu dropdown-menu-end">
                                             <li>
-                                                <a class="dropdown-item edit-item" href="<?php echo base_url('inventory/editInventoryLocation/' . $locations->loc_id); ?>" data-id="<?php echo $locations->loc_id  ?>">Edit</a>
+                                                <!-- <a class="dropdown-item edit-item" href="<?php echo base_url('inventory/editInventoryLocation/' . $locations->loc_id); ?>" data-id="<?php echo $locations->loc_id  ?>">Edit</a> -->
+                                                <a class="dropdown-item update-item-<?=$locations->loc_id?>" onClick="javascript:loadCustomFieldData(<?=$locations->loc_id?>);" href="javascript:void(0);" data-bs-toggle="modal" data-bs-target="#inventory-edit-location-modal" data-id="<?= $locations->loc_id; ?>" data-isdefault="<?= $locations->default; ?>" data-name="<?= $locations->location_name; ?>">Edit</a>
                                             </li>
                                             <li>
                                                 <a class="dropdown-item delete-item" href="javascript:void(0);" data-location-name="<?php echo $locations->location_name; ?>" data-id="<?php echo $locations->loc_id?>">Delete</a>
@@ -335,6 +340,105 @@ $(document).ready(function() {
         });
     });
 });
+
+$('#form-add-inventory-location').on('submit', function(e){     
+    e.preventDefault();       
+    let _this = $(this);
+    
+    var url = base_url + "inventory/_create_location";
+    _this.find("button[type=submit]").html("Saving");
+    _this.find("button[type=submit]").prop("disabled", true);
+
+    $.ajax({
+        type: 'POST',
+        url: url,
+        data: _this.serialize(),
+        dataType:'json',
+        success: function(result) {
+            if (result.is_success === 1) {
+                $("#inventory-location-modal").modal('hide');
+                _this.trigger("reset");
+                
+                Swal.fire({
+                    title: 'Save Successful!',
+                    text: "Inventory location has been created successfully.",
+                    icon: 'success',
+                    showCancelButton: false,
+                    confirmButtonText: 'Okay'
+                }).then((result) => {
+                    location.reload();
+                });
+            } else {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    html: result.msg
+                });
+            }
+            
+            _this.find("button[type=submit]").html("Save");
+            _this.find("button[type=submit]").prop("disabled", false);
+        },
+    });
+});    
+
+$('.form-edit-inventory-location').on('submit', function(e){      
+    e.preventDefault();   
+    let _this = $(this);
+    
+    var url = base_url + "inventory/_update_location";
+    _this.find("button[type=submit]").html("Saving");
+    _this.find("button[type=submit]").prop("disabled", true);
+
+    $.ajax({
+        type: 'POST',
+        url: url,
+        data: _this.serialize(),
+        dataType:'json',
+        success: function(result) {
+            if (result.is_success === 1) {
+                $("#inventory-edit-location-modal").modal('hide');
+                _this.trigger("reset");
+                
+                Swal.fire({
+                    title: 'Save Successful!',
+                    html: result.msg,
+                    icon: 'success',
+                    showCancelButton: false,
+                    confirmButtonText: 'Okay'
+                }).then((result) => {
+                    location.reload();
+                });
+            } else {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    html: result.msg
+                });
+            }
+            
+            _this.find("button[type=submit]").html("Save");
+            _this.find("button[type=submit]").prop("disabled", false);
+        },
+    });
+}); 
+
+function loadCustomFieldData(location_id) {
+    let id    = $(".update-item-"+location_id).attr('data-id');
+    let name  = $(".update-item-"+location_id).attr('data-name');
+    let dname = $(".update-item-"+location_id).attr('data-name');
+    let is_default = $(".update-item-"+location_id).attr('data-isdefault'); 
+
+    $('#lid').val(id);
+    $('#default-name').val(name);
+    $('#location-name').val(dname); 
+
+    if(is_default == 'true') {    
+        $('#default-location').prop('checked', true);
+    } else {
+        $('#default-location').prop('checked', false);
+    }
+}
 
 function toggleBatchDelete(enable = True) {
     enable ? $("#delete_selected").removeClass("disabled") : $("#delete_selected").addClass("disabled");

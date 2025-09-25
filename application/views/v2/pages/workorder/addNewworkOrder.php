@@ -205,7 +205,7 @@
                     <div class="col-12">
                         <div class="nsm-callout primary">
                             <button><i class='bx bx-x'></i></button>
-                            Create your workorder.
+                            Create your work order.
                         </div>
                     </div>
                 </div>
@@ -220,23 +220,17 @@
                                 <div class="col-12">
                                     <div class="nsm-card-header">
                                         <div class="nsm-card-title">
-                                            <span class="d-block">Header</span>                                            
-                                        </div>
-                                        <div class="nsm-card-controls align-items-start">                                            
-                                            <button type="button" id="" data-bs-toggle="modal" data-bs-target="#update_header_modal" class="nsm-button primary small text-end" style="float: right;"><strong>Update Header</strong></button>                                            
+                                            <span class="d-block">Work Order Details</span>                                            
                                         </div>
                                         <?php
                                             $dt = new DateTime();
                                             $timestamp = time();
                                             $selected_date = date('m-d-Y');
                                         ?>
-                                        <input type="hidden" class="nsm-field form-control" id="headerID" name="header" value="<?php echo $headers->content; ?>">
                                         <input type="hidden" class="nsm-field form-control" id="company_name" value="<?php echo $clients->business_name; ?>">
                                         <input type="hidden" class="nsm-field form-control" id="current_date" value="<?= $selected_date ?>">
-                                        <input type="hidden" class="nsm-field form-control" id="content_input" name="header2" value="<?php echo $headers->content; ?>">
                                     </div>
                                     <div class="nsm-card-content">
-                                        <label class="nsm-subtitle mb-4" id="header_text"><?php echo $headers->content; ?></label>
                                         <div class="row g-3">
                                             <div class="col-sm-12 col-md-5">
                                                 <div class="row">
@@ -281,7 +275,7 @@
                                                         <input type="text" name="business_name" id="business_name" class="nsm-field form-control" value="" />
                                                     </div>                                   
                                                     <div class="col-12 col-md-12 mb-3">
-                                                        <label class="content-subtitle fw-bold d-block mb-2">Address</label>
+                                                        <label class="content-subtitle fw-bold d-block mb-2" style="display:inline-block !important;">Address</label>
                                                         <a class="nsm-button btn-small btn-use-different-address" id="btn-use-different-address" data-id="0" href="javascript:void(0);" style="float: right; display:none;">Use Other Address</a>
                                                         <input type="text" name="cross_street" id="cross_street" class="nsm-field form-control" />
                                                     </div>
@@ -322,31 +316,16 @@
                                                 <h6 class="card_header custom-workorder-header">Custom Fields</h6>
                                             </div>
                                             <?php 
-                                            // print_r($fieldsName);
                                             foreach ($fieldsName as $field) { ?>
-                                                <div class="col-12 col-md-6">
-                                                    <div class="row g-3">
-                                                        <div class="col-6">
-                                                            <label class="content-subtitle fw-bold d-block mb-2"><?php echo $field->name; ?></label>
-                                                        </div>
-                                                        <!-- <div class="col-6 text-end">
-                                                            <a href="javascript:void(0);" class="content-subtitle d-block mb-2 nsm-link btn-edit-field" data-id="<?php echo $field->id; ?>" data-name="<?php echo $field->name; ?>">Edit</a>
-                                                        </div> -->
-                                                    </div>
+                                                <div class="col-12 col-md-3">
+                                                    <label class="content-subtitle fw-bold d-block mb-2"><?php echo $field->name; ?></label>
                                                     <input type="text" name="custom_value[]" id="custom1_value" class="nsm-field form-control" />
                                                     <input type="hidden" class="custom_<?php echo $field->id; ?>" value="<?php echo $field->name; ?>" name="custom_field[]">
                                                 </div>
                                             <?php } ?>
                                             <div class="col-12 col-md-12 d-flex align-items-center">
-                                                <!-- <label class="content-title">Item Summary</label> -->
                                                 <h6 class="card_header custom-workorder-header">Item Summary</h6>
                                             </div>
-                                            <!-- <div class="col-12 col-md-6 text-end">
-                                                <label class="content-subtitle fw-bold me-2">Show as:</label>
-                                                <select class="nsm-field form-select w-auto d-inline-block">
-                                                    <option>Quantity</option>
-                                                </select>
-                                            </div> -->
                                             <div class="col-12">
                                                 <input type="hidden" name="count" id="count" value="0">                                                
                                                 <table class="table table-hover">
@@ -433,7 +412,7 @@
                         </div>
                     </div>
                     <div class="col-12">
-                        <div class="nsm-card">
+                        <div class="nsm-card primary">
                             <div class="nsm-card-header">
                                 <div class="nsm-card-title">
                                     <span class="d-block">Checklist</span>
@@ -453,7 +432,7 @@
                         </div>
                     </div>
                     <div class="col-12">
-                        <div class="nsm-card">
+                        <div class="nsm-card primary">
                             <div class="row g-3">
                                 <div class="col-12">
                                     <div class="nsm-card-header">
@@ -469,7 +448,7 @@
                                                         <label class="content-subtitle fw-bold d-block mb-2" style="padding-bottom:11px;">Job Name</label>
                                                         <input type="text" name="job_name" class="nsm-field form-control" required />
                                                     </div>
-                                                    <div class="col-12 col-md-2">
+                                                    <div class="col-12 col-md-3">
                                                         <div class="d-flex justify-content-between">
                                                             <label class="content-subtitle fw-bold d-block mb-2" style="padding-bottom:11px;">Job Type</label>
                                                             <a class="nsm-button btn-small btn-quick-add-job-type" href="javascript:void(0);">
@@ -482,7 +461,7 @@
                                                             <?php } ?>
                                                         </select>
                                                     </div>  
-                                                    <div class="col-12 col-md-2">
+                                                    <div class="col-12 col-md-3">
                                                         <div class="d-flex justify-content-between">
                                                             <label class="content-subtitle fw-bold d-block mb-2" style="padding-bottom:11px;">Job Tag</label>
                                                             <a class="nsm-button btn-small btn-quick-add-job-tag" href="javascript:void(0);">
@@ -517,11 +496,11 @@
                                                         <label class="content-subtitle fw-bold d-block mb-2" style="padding-bottom:11px;">Job Location</label>
                                                         <input type="text" name="job_location" id="job_location" class="nsm-field form-control" required />
                                                     </div>  
-                                                    <div class="col-12 col-md-2">
+                                                    <div class="col-12 col-md-3">
                                                         <label class="content-subtitle fw-bold d-block mb-2" style="padding-bottom:11px;">Schedule Date Given</label>
-                                                        <input type="date" name="schedule_date_given" class="nsm-field form-control datepicker" required />
-                                                    </div>
-                                                    <div class="col-12 col-md-2">
+                                                        <input type="date" name="schedule_date_given" class="nsm-field form-control" value="<?= date("Y-m-d"); ?>" required />
+                                                    </div> 
+                                                    <div class="col-12 col-md-3">
                                                         <label class="content-subtitle fw-bold d-block mb-2" style="padding-bottom:11px;">Priority</label>
                                                         <select name="priority" class="nsm-field form-select" id="wo-priority">
                                                             <option value="Standard">Standard</option>
@@ -560,7 +539,13 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-12 mt-4">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12">
+                        <div class="nsm-card primary">
+                            <div class="row g-3">
+                                <div class="col-12">
                                     <div class="nsm-card-header">
                                         <div class="nsm-card-title">
                                             <span class="d-block">Payment Detail</span>
@@ -804,20 +789,42 @@
                                             </div>
                                         </div>
                                     </div>
-                                </div>
+                                </div>        
                             </div>
                         </div>
                     </div>
                     <div class="col-12">
-                        <div class="nsm-card">
+                        <div class="nsm-card primary">
                             <div class="row g-3">
+                                <div class="col-12">
+                                    <div class="nsm-card-header">
+                                        <div class="nsm-card-title d-block">
+                                            <span class="d-block">Header</span>
+                                        </div>
+                                        <div class="nsm-card-controls">
+                                            <button type="button" id="" data-bs-toggle="modal" data-bs-target="#update_header_modal" class="nsm-button primary small text-end"><strong>Edit</strong></button>  
+                                        </div>
+                                    </div>
+                                    <div class="nsm-card-content">
+                                        <input type="hidden" class="nsm-field form-control" id="headerID" name="header" value="<?php echo $headers->content; ?>">
+                                        <input type="hidden" class="nsm-field form-control" id="content_input" name="header2" value="<?php echo $headers->content; ?>">
+                                        <div class="row g-3">
+                                            <div class="col-12" id="header_text">
+                                                <?php echo $headers->content; ?>
+                                            </div>                                            
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-12">
+                                    <hr>
+                                </div>
                                 <div class="col-12">
                                     <div class="nsm-card-header">
                                         <div class="nsm-card-title d-block">
                                             <span class="d-block">Terms and Conditions</span>
                                         </div>
                                         <div class="nsm-card-controls">
-                                            <button type="button" id="" data-bs-toggle="modal" data-bs-target="#update_termscon_modal" class="nsm-button primary small text-end"><strong>Update Terms and Condition</strong></button>  
+                                            <button type="button" id="" data-bs-toggle="modal" data-bs-target="#update_termscon_modal" class="nsm-button primary small text-end"><strong>Edit</strong></button>  
                                         </div>
                                     </div>
                                     <div class="nsm-card-content">
@@ -839,7 +846,7 @@
                                             <span class="d-block">Terms of Use</span>
                                         </div>
                                         <div class="nsm-card-controls">
-                                            <button type="button" id="" data-bs-toggle="modal" data-bs-target="#update_termsuse_modal" class="nsm-button primary small text-end"><strong>Update Terms of Use</strong></button>
+                                            <button type="button" id="" data-bs-toggle="modal" data-bs-target="#update_termsuse_modal" class="nsm-button primary small text-end"><strong>Edit</strong></button>
                                         </div>
                                     </div>
                                     <div class="nsm-card-content">
@@ -856,7 +863,7 @@
                         </div>
                     </div>
                     <div class="col-12">
-                        <div class="nsm-card">
+                        <div class="nsm-card primary">
                             <div class="nsm-card-header">
                                 <div class="nsm-card-title d-block">
                                     <span class="d-block">Signature</span>
@@ -1195,7 +1202,7 @@ $(document).on('click', '#btn_add_checklist', function(){
         }        
     }); 
     
-    if( dupe_checklist.length > 0 ){
+    /*if( dupe_checklist.length > 0 ){
         var err_msg = 'Checklist ' + dupe_checklist.toString() + ' already selected.';
         Swal.fire({            
             text: err_msg,
@@ -1203,7 +1210,7 @@ $(document).on('click', '#btn_add_checklist', function(){
             showCancelButton: false,
             confirmButtonText: 'Okay'
         });
-    }
+    }*/
 });
 
 $(document).on('click', '.delete-row-checklist', function(){
@@ -2528,7 +2535,7 @@ $(document).ready(function(){
                                     
                 var phone  = response.phone_h;            
                 var mobile = response.phone_m;
-                var customer_address = response.mail_add + ', ' + response.city + ', ' +
+                var customer_address = response.mail_add + ' ' + response.city + ', ' +
                         ' ' + response.state + ' ' + response.zip_code;
 
                 var test_p = phone.replace(/(\d{3})(\d{3})(\d{3})/, "$1-$2-$3")

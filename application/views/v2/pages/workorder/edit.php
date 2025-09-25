@@ -153,12 +153,18 @@
     padding:0px;
 }
 .selected-checklists li{
-    width: 50%;
-    padding: 10px;
-    font-size: 17px;
+    width: 18%;
+    padding: 7px;
+    font-size: 14px;
     background-color: #6a4a86;
     color: #ffff;
     margin: 10px 0px;
+    display: inline-block;
+    margin: 10px;
+}
+.selected-checklists li a{
+    background-color:#ffffff !important;
+    float:right;
 }
 .delete-row-checklist i{
     position: relative;
@@ -201,98 +207,103 @@
                                 <div class="col-12">
                                     <div class="nsm-card-header">
                                         <div class="nsm-card-title">
-                                            <span class="d-block">Header</span>                                            
-                                        </div>
-                                        <div class="nsm-card-controls align-items-start">                                            
-                                            <button type="button" id="" data-bs-toggle="modal" data-bs-target="#edit_update_header_modal" class="nsm-button primary small text-end" style="float: right;"><strong>Update Header</strong></button>                                            
-                                        </div>
+                                            <span class="d-block">Work Order Details</span>                                            
+                                        </div>                                        
                                     </div>
-                                    <div class="nsm-card-content">
-                                        <label class="nsm-subtitle mb-4" id="header_text"><?php echo $workorder->header; ?></label>
-                                        <input type="hidden" class="nsm-field form-control" id="workorder-header" name="header" value="<?php echo $workorder->header; ?>">
+                                    <div class="nsm-card-content">                                        
                                         <div class="row g-3">
-                                            <div class="col-12 col-md-4">
-                                                <div class="row g-3">
-                                                    <div class="col-6">
-                                                        <label class="content-subtitle fw-bold d-block mb-2">Customer</label>
-                                                    </div>                                                            
-                                                </div>
-                                                <div class="row g-3">
-                                                    <div class="col-8">
+                                            <div class="col-sm-12 col-md-5">
+                                                <div class="row">
+                                                    <div class="col-12 col-md-12 mb-3">
+                                                        <div class="d-flex justify-content-between">
+                                                            <label class="content-subtitle fw-bold d-block mb-2">Customer</label>
+                                                            <div class="d-flex" style="margin-bottom:5px;">
+                                                                <a class="nsm-button btn-small d-flex" data-bs-toggle="modal"
+                                                                    data-bs-target="#quick-add-customer" href="javascript:void(0);">
+                                                                    Add New Customer
+                                                                </a>
+                                                            </div>                                                            
+                                                        </div> 
                                                         <select class="nsm-field form-select select2" name="customer_id" id="sel-customer" style="width:50%;">
                                                             <option value="<?= $customer->prof_id; ?>"><?= $customer->first_name . ' ' . $customer->last_name; ?></option>
-                                                        </select>
+                                                        </select> 
                                                     </div>
-                                                    <div class="col-4">
-                                                        <button type="button" id="" data-bs-toggle="modal" data-bs-target="#new_customer" class="nsm-button small text-end" ><strong>Add New Customer</strong></button>                                                    
+                                                    <div class="col-12 col-md-6 mb-3">
+                                                        <label class="content-subtitle fw-bold d-block mb-2">Social Security Number</label>
+                                                        <input type="text" name="security_number" value="<?= $customer->ssn; ?>" id="security_number" class="nsm-field form-control number-field" placeholder="xxx-xx-xxxx" required />
+                                                    </div>
+                                                    <div class="col-12 col-md-6 mb-3">
+                                                        <label class="content-subtitle fw-bold d-block mb-2">Birth Date</label>
+                                                        <input type="text" name="birthdate" id="birthdate" value="<?= date("m/d/Y", strtotime($customer->date_of_birth)); ?>" class="nsm-field form-control datepicker" />
+                                                    </div>
+                                                    <div class="col-12 col-md-6 mb-3">
+                                                        <label class="content-subtitle fw-bold d-block mb-2">Phone Number</label>
+                                                        <input type="text" name="phone_number" id="phone_no" value="<?= $customer->phone_h; ?>" class="nsm-field form-control number-field" />
+                                                    </div>
+                                                    <div class="col-12 col-md-6 mb-3">
+                                                        <label class="content-subtitle fw-bold d-block mb-2">Mobile Number</label>
+                                                        <input type="text" name="mobile_number" id="mobile_no" value="<?= $customer->phone_m; ?>" class="nsm-field form-control number-field" />
+                                                    </div>
+                                                    <div class="col-12 col-md-6 mb-3">
+                                                        <label class="content-subtitle fw-bold d-block mb-2">Email</label>
+                                                        <input type="email" name="email" id="email" class="nsm-field form-control" value="<?= $customer->email; ?>" required />
+                                                    </div>
+                                                    <div class="col-12 col-md-6 mb-3">
+                                                        <label class="content-subtitle fw-bold d-block mb-2">Password</label>
+                                                        <input type="password" name="password" id="password" value="<?= $workorder->password; ?>" class="nsm-field form-control" required />
+                                                    </div>
+                                                    <div class="col-12 col-md-12 mb-3">
+                                                        <label class="content-subtitle fw-bold d-block mb-2">Business Name (Optional)</label>
+                                                        <input type="text" name="business_name" id="business_name" value="<?= $workorder->business_name; ?>" class="nsm-field form-control" value="" />
+                                                    </div>                                      
+                                                    <div class="col-12 col-md-12 mb-3">
+                                                        <label class="content-subtitle fw-bold d-block mb-2" style="display:inline-block;">Address</label>
+                                                        <a class="nsm-button btn-small btn-use-different-address" id="btn-use-different-address" data-id="<?= $customer->prof_id; ?>" href="javascript:void(0);" style="float: right;">Use Other Address</a>
+                                                        <input type="text" name="cross_street" id="cross_street" value="<?= $customer->cross_street; ?>" class="nsm-field form-control" />
+                                                    </div>
+                                                    <div class="col-12 col-md-5 mb-3">
+                                                        <label class="content-subtitle fw-bold d-block mb-2">City</label>
+                                                        <input type="text" name="city" id="city" class="nsm-field form-control" value="<?= $customer->city; ?>" required />
+                                                    </div>
+                                                    <div class="col-12 col-md-5 mb-3">
+                                                        <label class="content-subtitle fw-bold d-block mb-2">State</label>
+                                                        <input type="text" name="state" id="state" class="nsm-field form-control" value="<?= $customer->state; ?>" required />
+                                                    </div>                                            
+                                                    <div class="col-12 col-md-2 mb-3">
+                                                        <label class="content-subtitle fw-bold d-block mb-2">Zip code</label>
+                                                        <input type="text" name="zip_code" id="zip" class="nsm-field form-control" value="<?= $customer->zip_code; ?>" required />
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="col-12 col-md-4">
-                                                <label class="content-subtitle fw-bold d-block mb-2">Social Security Number</label>
-                                                <input type="text" name="security_number" value="<?= $customer->ssn; ?>" id="security_number" class="nsm-field form-control number-field" placeholder="xxx-xx-xxxx" required />
+                                            <div class="col-sm-12 col-md-7">
+                                                <div class="col-md-12 MAP_LOADER_CONTAINER">
+                                                    <div class="text-center MAP_LOADER">
+                                                        <?php 
+                                                            $map_source = 'http://maps.google.com/maps?q='.$customer->mail_add.' '.$customer->city.', '.$customer->state.' '.$customer->zip_code.'&output=embed';
+                                                        ?>
+                                                        <iframe id="TEMPORARY_MAP_VIEW" src="<?= $map_source; ?>" height="370" width="100%" style=""></iframe>
+                                                    </div>
+                                                </div>
                                             </div>
-                                            <div class="col-12 col-md-4">
-                                                <label class="content-subtitle fw-bold d-block mb-2">Birth Date</label>
-                                                <input type="text" name="birthdate" id="birthdate" value="<?= date("m/d/Y", strtotime($customer->date_of_birth)); ?>" class="nsm-field form-control datepicker" />
-                                            </div>
-                                            <div class="col-12 col-md-4">
-                                                <label class="content-subtitle fw-bold d-block mb-2">Phone Number</label>
-                                                <input type="text" name="phone_number" id="phone_no" value="<?= $customer->phone_h; ?>" class="nsm-field form-control number-field" />
-                                            </div>
-                                            <div class="col-12 col-md-4">
-                                                <label class="content-subtitle fw-bold d-block mb-2">Mobile Number</label>
-                                                <input type="text" name="mobile_number" id="mobile_no" value="<?= $customer->phone_m; ?>" class="nsm-field form-control number-field" />
-                                            </div>
-                                            <div class="col-12 col-md-4">
-                                                <label class="content-subtitle fw-bold d-block mb-2">Email</label>
-                                                <input type="email" name="email" id="email" class="nsm-field form-control" value="<?= $customer->email; ?>" required />
-                                            </div>
-                                            <div class="col-12 col-md-4">
-                                                <label class="content-subtitle fw-bold d-block mb-2">Password</label>
-                                                <input type="password" name="password" id="password" value="<?= $workorder->password; ?>" class="nsm-field form-control" required />
-                                            </div>
-                                            <div class="col-12 col-md-4">
-                                                <label class="content-subtitle fw-bold d-block mb-2">Business Name (Optional)</label>
-                                                <input type="text" name="business_name" id="business_name" value="<?= $workorder->business_name; ?>" class="nsm-field form-control" value="" />
-                                            </div>
-                                            <div class="col-12 col-md-4"></div>                                            
-                                            <div class="col-12 col-md-4">
-                                                <label class="content-subtitle fw-bold d-block mb-2">Address</label>
-                                                <input type="text" name="cross_street" id="cross_street" value="<?= $customer->cross_street; ?>" class="nsm-field form-control" />
-                                            </div>
-                                            <div class="col-12 col-md-2">
-                                                <label class="content-subtitle fw-bold d-block mb-2">City</label>
-                                                <input type="text" name="city" id="city" class="nsm-field form-control" value="<?= $customer->city; ?>" required />
-                                            </div>
-                                            <div class="col-12 col-md-2">
-                                                <label class="content-subtitle fw-bold d-block mb-2">State</label>
-                                                <input type="text" name="state" id="state" class="nsm-field form-control" value="<?= $customer->state; ?>" required />
-                                            </div>                                            
-                                            <div class="col-12 col-md-1">
-                                                <label class="content-subtitle fw-bold d-block mb-2">Zip code</label>
-                                                <input type="text" name="zip_code" id="zip" class="nsm-field form-control" value="<?= $customer->zip_code; ?>" required />
-                                            </div>    
-                                            <div class="col-12 col-md-2" style="padding-top: 26px;">
-                                                <a class="btn-use-different-address nsm-button small text-end" id="btn-use-different-address" data-id="<?= $customer->prof_id; ?>" href="javascript:void(0);">Use Other Address</a>
-                                            </div> 
-
-                                            <?php 
-                                            foreach ($custom_fields as $field) { ?>
-                                                <div class="col-12 col-md-6">
-                                                    <div class="row g-3">
-                                                        <div class="col-6">
-                                                            <label class="content-subtitle fw-bold d-block mb-2"><?php echo $field->name; ?></label>
+                                        </div>                                        
+                                        <div class="row g-3">
+                                            <?php if( $custom_fields ){ ?>
+                                                <div class="col-12 col-md-12 d-flex align-items-center">
+                                                    <h6 class="card_header custom-workorder-header">Custom Fields</h6>
+                                                </div>
+                                                <?php 
+                                                foreach ($custom_fields as $field) { ?>
+                                                    <div class="col-12 col-md-6">
+                                                        <div class="row g-3">
+                                                            <div class="col-6">
+                                                                <label class="content-subtitle fw-bold d-block mb-2"><?php echo $field->name; ?></label>
+                                                            </div>
                                                         </div>
+                                                        <input type="text" name="custom_value[<?= $field->id; ?>]" value="<?= $field->value; ?>" class="nsm-field form-control" />
+                                                        <input type="hidden" name="custom_field[<?= $field->id; ?>]" value="<?= $field->name; ?>" class="nsm-field form-control" />
                                                     </div>
-                                                    <input type="text" name="custom_value[<?= $field->id; ?>]" value="<?= $field->value; ?>" class="nsm-field form-control" />
-                                                    <input type="hidden" name="custom_field[<?= $field->id; ?>]" value="<?= $field->name; ?>" class="nsm-field form-control" />
-                                                </div>
+                                                <?php } ?>
                                             <?php } ?>
-
-                                            <div class="col-12">
-                                                <hr>
-                                            </div>
                                             <div class="col-12 col-md-12 d-flex align-items-center">
                                                 <!-- <label class="content-title">Item Summary</label> -->
                                                 <h6 class="custom-workorder-header">Item Summary</h6>
@@ -364,13 +375,8 @@
                                             <div class="col-12 col-md-8">
                                                 <div class="row g-3">
                                                     <div class="col-12">
-                                                        <button type="button" class="nsm-button ms-0" data-bs-toggle="modal" data-bs-target="#item_list"><i class='bx bx-fw bx-plus-circle'></i> Add Items</button>                                                        
-                                                    </div>
-                                                    <div class="col-12 col-md-3">
-                                                        <label class="content-subtitle fw-bold d-block mb-2">Enter an offer code</label>
-                                                        <input type="text" name="offer_code" id="offer_code" class="nsm-field form-control mb-2" />
-                                                        <button type="button" class="nsm-button primary m-0" id="btn_validate_offer">Validate</button>
-                                                    </div>
+                                                        <button type="button" class="nsm-button primary small" data-bs-toggle="modal" data-bs-target="#item_list"><i class='bx bx-plus'></i> Add Items</button>                                                        
+                                                    </div>                                                    
                                                 </div>
                                             </div>
                                             <div class="col-12 col-md-4">
@@ -441,7 +447,7 @@
                                     <label class="nsm-subtitle">You can set up a checklist for employees.</label>
                                 </div>
                                 <div class="nsm-card-controls">
-                                    <button type="button" id="" data-bs-toggle="modal" data-bs-target="#select_checklist_modal" class="nsm-button primary small text-end"><strong>Select Checklist</strong></button>                                                                                
+                                    <button type="button" id="" data-bs-toggle="modal" data-bs-target="#select_checklist_modal" class="nsm-button primary small text-end"><strong>Add Checklist</strong></button>                                                                                
                                 </div>
                             </div>
                             <div class="nsm-card-content">
@@ -451,7 +457,7 @@
                                             <?php foreach($selected_checklists as $c){ ?>
                                                 <li>
                                                     <input type="hidden" name="checklists[]" value="<?= $c['id']; ?>" />
-                                                    <div class='row'><div class='col-11'><?= $c['name']; ?></div><div class='col-1'><a data-id='<?= $c['id']; ?>' class='nsm-button primary delete-row-checklist'><i class='bx bx-fw bx-trash'></i></a></div></div></li>
+                                                    <div class='row'><div class='col-11'><?= $c['name']; ?></div><div class='col-1'><a data-id='<?= $c['id']; ?>' class='nsm-button btn-small default delete-row-checklist' href="javascript:void(0);"><i class='bx bx-fw bx-trash'></i></a></div></div></li>
                                             <?php } ?>
                                         </ul>
                                     </div>
@@ -473,14 +479,14 @@
                                             <div class="col-12 col-md-12">
                                                 <div class="row g-3">
                                                     <div class="col-4">
-                                                        <label class="content-subtitle fw-bold d-block mb-2">Job Name</label>
+                                                        <label class="content-subtitle fw-bold d-block mb-2" style="padding-bottom:11px;">Job Name</label>
                                                         <input type="text" name="job_name" class="nsm-field form-control" value="<?php echo $workorder->job_name; ?>" required />
                                                     </div>
                                                     <div class="col-12 col-md-2">
                                                         <div class="d-flex justify-content-between">
-                                                            <h6>Job Type</h6>
-                                                            <a class="nsm-link d-flex align-items-center btn-quick-add-job-type" href="javascript:void(0);">
-                                                                <span class="bx bx-plus"></span>Create Job Type
+                                                            <label class="content-subtitle fw-bold d-block mb-2" style="padding-bottom:11px;">Job Type</label>
+                                                            <a class="nsm-button btn-small btn-quick-add-job-type" href="javascript:void(0);">
+                                                                <span class="fa fa-plus"></span> Add New Job Type
                                                             </a>
                                                         </div>
                                                         <select name="job_type" id="job_type" class="nsm-field form-select">
@@ -491,11 +497,11 @@
                                                     </div>  
                                                     <div class="col-12 col-md-2">
                                                         <div class="d-flex justify-content-between">
-                                                            <h6>Job Tag</h6>
-                                                            <a class="nsm-link d-flex align-items-center btn-quick-add-job-tag" href="javascript:void(0);">
-                                                                <span class="bx bx-plus"></span>Create Job Tag
+                                                            <label class="content-subtitle fw-bold d-block mb-2" style="padding-bottom:11px;">Job Tag</label>
+                                                            <a class="nsm-button btn-small btn-quick-add-job-tag" href="javascript:void(0);">
+                                                                <span class="fa fa-plus"></span> Add New Job Tag
                                                             </a>
-                                                        </div>                                                        
+                                                        </div>                                                     
                                                         <select name="job_tag" id="job_tag" class="nsm-field form-select">
                                                             <?php foreach ($job_tags as $tags) { ?>
                                                                 <option value="<?php echo $tags->name; ?>"><?php echo $tags->name; ?></option>
@@ -503,7 +509,7 @@
                                                         </select>
                                                     </div>
                                                     <div class="col-12 col-md-2">
-                                                        <label class="content-subtitle fw-bold d-block mb-2">Status</label>
+                                                        <label class="content-subtitle fw-bold d-block mb-2" style="padding-bottom:11px;">Status</label>
                                                         <select name="status" class="nsm-field form-select">
                                                             <option value="New">New</option>
                                                             <option value="Draft">Draft</option>
@@ -521,15 +527,15 @@
                                             <div class="col-12 col-md-12">
                                                 <div class="row g-3">
                                                     <div class="col-12 col-md-4">
-                                                        <label class="content-subtitle fw-bold d-block mb-2">Job Location</label>
+                                                        <label class="content-subtitle fw-bold d-block mb-2" style="padding-bottom:11px;">Job Location</label>
                                                         <input type="text" name="job_location" id="job_location" value="<?php echo $workorder->job_location; ?>" class="nsm-field form-control" required />
                                                     </div>  
                                                     <div class="col-12 col-md-2">
-                                                        <label class="content-subtitle fw-bold d-block mb-2">Schedule Date Given</label>
+                                                        <label class="content-subtitle fw-bold d-block mb-2" style="padding-bottom:11px;">Schedule Date Given</label>
                                                         <input type="text" name="schedule_date_given" value="<?php echo date("m/d/Y", strtotime($workorder->date_issued)); ?>" class="nsm-field form-control" id="datepicker_dateissued" required />
                                                     </div>
                                                     <div class="col-12 col-md-2">
-                                                        <label class="content-subtitle fw-bold d-block mb-2">Priority</label>
+                                                        <label class="content-subtitle fw-bold d-block mb-2" style="padding-bottom:11px;">Priority</label>
                                                         <select name="priority" class="nsm-field form-select" id="wo-priority">
                                                             <option value="Standard" <?php echo $workorder->priority == 'Standard' ? 'selected="selected"' : ''; ?>>Standard</option>
                                                             <option value="Emergency" <?php echo $workorder->priority == 'Emergency' ? 'selected="selected"' : ''; ?>>Emergency</option>
@@ -539,11 +545,11 @@
                                                     </div>
                                                     <div class="col-12 col-md-2">
                                                         <div class="d-flex justify-content-between">
-                                                            <h6>Lead Source</h6>
-                                                            <a class="nsm-link d-flex align-items-center btn-quick-add-lead-source" href="javascript:void(0);">
-                                                                <span class="bx bx-plus"></span>Create Lead Source
+                                                            <label class="content-subtitle fw-bold d-block mb-2" style="padding-bottom:11px;">Lead Source</label>
+                                                            <a class="nsm-button btn-small btn-quick-add-lead-source" href="javascript:void(0);">
+                                                                <span class="bx bx-plus"></span> Create Lead Source
                                                             </a>
-                                                        </div>                                                            
+                                                        </div>                                                          
                                                         <select name="lead_source" class="nsm-field form-select" id="lead_source">
                                                             <?php foreach ($lead_source as $lead) { ?>
                                                                 <option value="<?php echo $lead->ls_id; ?>" <?php echo $workorder->lead_source_id == $lead->ls_id ? 'selected="selected"' : ''; ?>><?php echo $lead->ls_name; ?></option>
@@ -815,10 +821,31 @@
                                 <div class="col-12">
                                     <div class="nsm-card-header">
                                         <div class="nsm-card-title d-block">
+                                            <span class="d-block">Header</span>
+                                        </div>
+                                        <div class="nsm-card-controls">
+                                            <button type="button" id="" data-bs-toggle="modal" data-bs-target="#edit_update_header_modal" class="nsm-button primary small text-end"><strong>Edit</strong></button>  
+                                        </div>
+                                    </div>
+                                    <div class="nsm-card-content">
+                                        <input type="hidden" class="form-control" name="header" id="workorder-header" value="<?php echo $workorder->header; ?>" />
+                                        <div class="row g-3">
+                                            <div class="col-12" id="header_text">
+                                                <?php echo $workorder->header; ?>
+                                            </div>                                            
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-12">
+                                    <hr>
+                                </div>
+                                <div class="col-12">
+                                    <div class="nsm-card-header">
+                                        <div class="nsm-card-title d-block">
                                             <span class="d-block">Terms and Conditions</span>
                                         </div>
                                         <div class="nsm-card-controls">
-                                            <button type="button" id="" data-bs-toggle="modal" data-bs-target="#edit_update_termscon_modal" class="nsm-button primary small text-end"><strong>Update Terms and Condition</strong></button>  
+                                            <button type="button" id="" data-bs-toggle="modal" data-bs-target="#edit_update_termscon_modal" class="nsm-button primary small text-end"><strong>Edit</strong></button>  
                                         </div>
                                     </div>
                                     <div class="nsm-card-content">
@@ -839,7 +866,7 @@
                                             <span class="d-block">Terms of Use</span>
                                         </div>
                                         <div class="nsm-card-controls">
-                                            <button type="button" id="" data-bs-toggle="modal" data-bs-target="#edit_update_termsuse_modal" class="nsm-button primary small text-end"><strong>Update Terms of Use</strong></button>
+                                            <button type="button" id="" data-bs-toggle="modal" data-bs-target="#edit_update_termsuse_modal" class="nsm-button primary small text-end"><strong>Edit</strong></button>
                                         </div>
                                     </div>
                                     <div class="nsm-card-content">
@@ -953,62 +980,74 @@
                 <?php echo form_close(); ?>
 
                 <!-- Modal -->
-                <div class="modal fade nsm-modal" id="item_list" tabindex="-1" role="dialog" aria-labelledby="newcustomerLabel" aria-hidden="true">
-                    <div class="modal-dialog modal-lg" role="document">
+                <div class="modal fade" id="item_list" tabindex="-1"  aria-labelledby="newcustomerLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-lg modal-dialog-centered">
                         <div class="modal-content">
                             <div class="modal-header">
-                                <h5 class="modal-title" id="newcustomerLabel">Item Lists</h5>
-                                <button type="button" class="close" data-dismiss="modal" data-bs-dismiss="modal" aria-label="Close">
-                                    <i class="bx bx-fw bx-x m-0"></i>
-                                </button>
+                                <span class="modal-title content-title" style="font-size: 17px;">Items List</span>
+                                <button class="border-0 rounded mx-1" data-bs-dismiss="modal" style="cursor: pointer;"><i class="fas fa-times m-0 text-muted"></i></button>
                             </div>
                             <div class="modal-body">
-                                <div class="row">
-                                    <div class="col-md-12">
-                                        <table id="modal_items_list" class="table-hover" style="width: 100%;">
-                                            <thead>
-                                            <tr>
-                                                <td></td>
-                                                <td>Name</td>
-                                                <td>On Hand</td>                                                
-                                                <td>Price</td>  
-                                                <td>Type</td>                                              
-                                            </tr>
-                                            </thead>
-                                            <tbody>
-                                            <?php foreach($items as $item){ ?>
-                                                <tr>
-                                                    <td style="width: 5% !important;">
-                                                        <button id="<?= $item->id; ?>" data-quantity="<?= $item->units; ?>" data-itemname="<?= $item->title; ?>" data-price="<?= $item->price; ?>" type="button" data-dismiss="modal" class="nsm-button primary small select_item">
-                                                        <i class='bx bx-plus-medical'></i>
-                                                        </button>
-                                                    </td>
-                                                    <td><?php echo $item->title; ?></td>                                                
-                                                    <td>
-                                                    <?php 
-                                                        foreach($itemsLocation as $itemLoc){
-                                                            if($itemLoc->item_id == $item->id){
-                                                                echo "<div class='data-block'>";
-                                                                echo $itemLoc->name. " = " .$itemLoc->qty;
-                                                                echo "</div>";
-                                                            } 
-                                                        }
+                                    <div class="row">                        
+                                        <div class="col-sm-12">
+                                            <div class="row">
+                                                <div class="col-12 col-md-12 grid-mb">
+                                                    <div class="nsm-field-group search">
+                                                        <input type="text" class="nsm-field nsm-search form-control mb-2" id="search_field" for="items_table" placeholder="Search List">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <table id="items_table" class="nsm-table w-100">
+                                                <thead class="bg-light">
+                                                    <tr>
+                                                        <td data-name="Action" style="width: 0% !important;"></td>
+                                                        <td data-name="Name"><strong>Name</strong></td>
+                                                        <td data-name="Type"><strong>Type</strong></td>
+                                                        <td data-name="Stock"><strong>Stock</strong></td>
+                                                        <td data-name="Price"><strong>Price</strong></td>       
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <?php
+                                                        if (!empty($items)) {
+                                                            foreach ($items as $item) {
+                                                            $item_qty = get_total_item_qty($item->id);
                                                     ?>
-                                                    </td>                                                    
-                                                    <td>$<?php echo $item->price; ?></td>                                                    
-                                                    <td><?php echo $item->type; ?></td>
-                                                </tr>
-                                                
-                                            <?php } ?>
-                                            </tbody>
-                                        </table>
+                                                    <tr id="<?php echo "ITEMLIST_PRODUCT_$item->id"; ?>">
+                                                        <td style="width: 0% !important;">                                                            
+                                                            <button type="button" data-bs-dismiss="modal" class='nsm-button default select_item' id="<?= $item->id; ?>" data-item_type="<?= ucfirst($item->type); ?>" data-quantity="<?= $item_qty[0]->total_qty; ?>" data-itemname="<?= $item->title; ?>" data-price="<?= $item->price; ?>" data-retail="<?= $item->retail; ?>" data-location_name="<?= $item->location_name; ?>" data-location_id="<?= $item->location_id; ?>"><i class='bx bx-plus-medical'></i></button>
+                                                        </td>
+                                                        <td class="show nsm-text-primary"><?php echo $item->title; ?></td>
+                                                        <td class="nsm-text-primary"><?php echo $item->type; ?></td>
+                                                        <td>
+                                                            <?php 
+                                                            $total_stock = 0;
+                                                            foreach($itemsLocation as $itemLoc){
+                                                                if($itemLoc->item_id == $item->id){
+                                                                    $total_stock += $itemLoc->qty;
+                                                                    //echo "<div class='data-block'>";
+                                                                    //echo $itemLoc->name. " = " .$itemLoc->qty;
+                                                                    //echo "</div>";
+                                                                } 
+                                                            }
+                                                            echo $total_stock;
+                                                            ?>
+                                                        </td>
+                                                        <td>
+                                                            <?php 
+                                                                if( $item->price > 0 ){
+                                                                    echo $item->price;
+                                                                }else{
+                                                                    echo '0.00';
+                                                                }                                                
+                                                            ?>                                                
+                                                        </td>  
+                                                    </tr>
+                                                    <?php } } ?>
+                                                </tbody>
+                                            </table>
+                                        </div>
                                     </div>
-                                </div>
-                            </div>
-                            <div class="modal-footer modal-footer-detail">
-                                <div class="button-modal-list">
-                                    <button type="button" class="btn btn-secondary" data-dismiss="modal" data-bs-dismiss="modal"><span class="fa fa-remove"></span> Close</button>
-                                </div>
                             </div>
                         </div>
                     </div>
@@ -1019,7 +1058,7 @@
     </div>
 </div>
 <?php include viewPath('v2/includes/customer/other_address'); ?>
-<?php include viewPath('v2/pages/job/modals/new_customer'); ?>
+<?php include viewPath('v2/includes/customer/quick_add_customer'); ?>
 <?php include viewPath('v2/includes/job/quick_add'); ?>
 <?php //include viewPath('includes/footer'); ?>
 
@@ -1030,6 +1069,18 @@
 <script>
 
 $(document).ready(function () {
+    $("#items_table").nsmPagination({itemsPerPage:10});
+    $("#search_field").on("input", debounce(function() {
+        let search = $(this).val();
+        if( search == '' ){
+            $("#items_table").nsmPagination();
+            $("#items_table").find("tbody .nsm-noresult").remove();
+        }else{
+            tableSearch($(this));        
+        }
+        
+    }, 1000));
+    
     $(document).on('click', '.btn-use-other-address', function(){
         let prof_id = $(this).attr('data-id');
         let other_address = $(this).attr('data-address');
@@ -1158,14 +1209,14 @@ $(document).on('click', '#btn_add_checklist', function(){
                 dupe_checklist.push(chk_name);
             }else{
                 var input_hidden  = '<input type="hidden" name="checklists[]" value="'+chk_id+'" />';
-                var add_checklist = "<li>"+input_hidden+"<div class='row'><div class='col-11'>"+chk_name+"</div><div class='col-1'><a data-id='"+chk_id+"' class='nsm-button primary delete-row-checklist'><i class='bx bx-fw bx-trash'></i></a></div></div></li>";
+                var add_checklist = "<li>"+input_hidden+"<div class='row'><div class='col-sm-12 col-md-10'>"+chk_name+"</div><div class='col-sm-12 col-md-2'><a data-id='"+chk_id+"' href='javascript:void(0);' class='nsm-button btn-small default delete-row-checklist'><i class='bx bx-fw bx-trash'></i></a></div></div></li>";
                 $('.selected-checklists').append(add_checklist);
                 selected_checklists.push(chk_id);
             }
         }        
     }); 
     
-    if( dupe_checklist.length > 0 ){
+    /*if( dupe_checklist.length > 0 ){
         var err_msg = 'Checklist ' + dupe_checklist.toString() + ' already selected.';
         Swal.fire({            
             text: err_msg,
@@ -1173,7 +1224,7 @@ $(document).on('click', '#btn_add_checklist', function(){
             showCancelButton: false,
             confirmButtonText: 'Okay'
         });
-    }
+    }*/
 });
 
 $(document).on('click', '.delete-row-checklist', function(){
@@ -2441,6 +2492,8 @@ $(document).ready(function(){
             success: function(response){               
                 var phone = response.phone_h;            
                 var mobile = response.phone_m;
+                var customer_address = response.mail_add + ' ' + response.city + ', ' +
+                        ' ' + response.state + ' ' + response.zip_code;
 
                 if(response.prof_id) {
                     $(".btn-use-different-address").attr("data-id",response.prof_id);
@@ -2462,6 +2515,12 @@ $(document).ready(function(){
                 $("#business_name").val(response.business_name);
                 $("#job_name").val(response.first_name + ' ' + response.last_name);
                 $("#primary_account_holder_name").val(response.first_name + ' ' + response.last_name);
+
+                var map_source = 'http://maps.google.com/maps?q=' + customer_address +
+                        '&output=embed';
+                var map_iframe = '<iframe id="TEMPORARY_MAP_VIEW" src="' + map_source +
+                    '" height="370" width="100%" style=""></iframe>';
+                $('.MAP_LOADER').hide().html(map_iframe).fadeIn('slow');
             },
                 error: function(response){
 

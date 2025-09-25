@@ -664,12 +664,14 @@ $route['accounting/products-and-services/get-item-details/(:any)/(:any)'] = 'acc
 $route['accounting/products-and-services/get-item-locations/(:any)'] = 'accounting_controllers/products_and_services/get_item_locations/$1';
 $route['accounting/products-and-services/get-import-data']['post'] = 'accounting_controllers/products_and_services/get_import_data';
 $route['accounting/products-and-services/import-items-data']['post'] = 'accounting_controllers/products_and_services/import_items_data';
+$route['accounting/products-and-services/_archive_selected_items']['post'] = 'accounting_controllers/products_and_services/ajax_archive_selected_items';
 
 // Accounting product categories
 $route['accounting/product-categories'] = 'accounting_controllers/product_categories/index';
 $route['accounting/product-categories/load']['post'] = 'accounting_controllers/product_categories/load_product_categories';
 $route['accounting/product-categories/get'] = 'accounting_controllers/product_categories/get_categories';
 $route['accounting/product-categories/create']['post'] = 'accounting_controllers/product_categories/create';
+$route['accounting/product-categories/_create'] = 'accounting_controllers/product_categories/ajax_create';
 $route['accounting/product-categories/get/(:any)'] = 'accounting_controllers/product_categories/get_category_details/$1';
 $route['accounting/product-categories/update/(:any)']['post'] = 'accounting_controllers/product_categories/update/$1';
 $route['accounting/product-categories/delete/(:any)']['DELETE'] = 'accounting_controllers/product_categories/delete/$1';
@@ -1787,6 +1789,8 @@ $route['inventory/_edit_inventory_fee'] = 'inventory/ajax_edit_inventory_fee';
 $route['inventory/_update_inventory_fee'] = 'inventory/ajax_update_inventory_fee';  
 
 $route['inventory/_delete_selected_vendor'] = 'inventory/ajax_delete_selected_vendor';
+$route['inventory/_create_location'] = 'inventory/ajax_create_location';
+$route['inventory/_update_location'] = 'inventory/ajax_update_location';
 
 // Inventory Fees
 $route['inventory/fees/edit/(:num)'] = 'inventory/edit_fee/$1';

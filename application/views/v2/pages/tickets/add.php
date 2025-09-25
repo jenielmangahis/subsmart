@@ -2043,8 +2043,5 @@ $(document).on('click', '.saveCustomer', function() {
                 });
 
 });
-alert(4);
 </script>
-
-
 <script src="<?php echo $url->assets ?>js/add.js"></script>
