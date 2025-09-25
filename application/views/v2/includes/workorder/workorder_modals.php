@@ -694,7 +694,7 @@
 </div>
 
 <div class="modal fade nsm-modal fade" id="add_cra_sign_modal" tabindex="-1" aria-labelledby="add_cra_sign_modal_label" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
                 <span class="modal-title content-title">Company Representative Approval</span>
