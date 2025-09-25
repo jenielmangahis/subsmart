@@ -753,8 +753,6 @@ class Workorder extends MY_Controller
         $this->load->view('workorder/editWorkorderSolar', $this->page_data);
     }
 
-
-
     public function edit($id)
     {
         $this->load->model('AcsProfile_model');
