@@ -106,6 +106,23 @@ class Checklist_model extends MY_Model
     public function deleteById($id){
         $this->db->delete($this->table, array('id' => $id));
     }
+
+    public function bulkDelete($ids = [], $filters = [])
+    {
+        if( count($ids) > 0 ){
+            $this->db->where_in('id', $ids);
+
+            if( $filters ){
+                foreach( $filters as $filter ){
+                    $this->db->where($filter['field'], $filter['value']);
+                }
+            }
+
+            $this->db->delete($this->table);
+        }        
+
+        return $this->db->affected_rows();
+    }
 }
 
 /* End of file Checklist_model.php */
