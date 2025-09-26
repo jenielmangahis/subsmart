@@ -31,8 +31,16 @@
                             <input type="text" class="nsm-field nsm-search form-control mb-2" id="search_field" name="search" value="" placeholder="Search Checklist">
                         </div>
                     </div>
-                    <?php if(checkRoleCanAccessModule('work-order-settings', 'write')){ ?>
+                    <?php if(checkRoleCanAccessModule('work-order-settings', 'write')){ ?>                    
                     <div class="col-12 col-md-6 grid-mb text-end">
+                        <div class="dropdown d-inline-block">
+                            <button type="button" class="dropdown-toggle nsm-button" data-bs-toggle="dropdown">
+                                <span id="num-checked"></span> With Selected  <i class='bx bx-fw bx-chevron-down'></i>
+                            </button>
+                            <ul class="dropdown-menu dropdown-menu-end">
+                                <li><a class="dropdown-item btn-with-selected" id="with-selected-delete" href="javascript:void(0);" data-action="delete">Delete</a></li>                                
+                            </ul>
+                        </div>
                         <div class="nsm-page-buttons page-button-container">
                             <button type="button" class="nsm-button primary" onclick="location.href='<?php echo base_url('/workorder/add_checklist') ?>'">
                                 <i class='bx bx-fw bx-plus'></i> Add Checklist
@@ -41,11 +49,17 @@
                     </div>
                     <?php } ?>
                 </div>                
-                <table class="nsm-table">
+                <form id="frm-with-selected">
+                <table class="nsm-table" id="tbl-checklists">
                     <thead>
                         <tr>
+                            <?php if(checkRoleCanAccessModule('work-order-settings', 'write')){ ?>
+                            <td class="table-icon text-center sorting_disabled">
+                                <input class="form-check-input select-all table-select" type="checkbox" name="id_selector" value="0" id="select-all">
+                            </td>
+                            <?php } ?>
                             <td class="table-icon"></td>
-                            <td data-name="Checklist Name">Checklist Name</td>
+                            <td data-name="Checklist Name">Name</td>
                             <td data-name="Manage"></td>
                         </tr>
                     </thead>
@@ -56,7 +70,12 @@
                             <?php
                             foreach ($checklists as $checklist) :
                             ?>
-                                <tr>
+                                <tr>        
+                                    <?php if(checkRoleCanAccessModule('work-order-settings', 'write')){ ?>
+                                    <td>
+                                        <input class="form-check-input row-select table-select" name="checklists[]" type="checkbox" value="<?= $checklist->id; ?>">
+                                    </td>
+                                    <?php } ?>                            
                                     <td>
                                         <div class="table-row-icon">
                                             <i class='bx bx-list-check'></i>
@@ -101,6 +120,7 @@
                         ?>
                     </tbody>
                 </table>
+                </form>
             </div>
         </div>
     </div>
@@ -108,11 +128,95 @@
 
 <script type="text/javascript">
     $(document).ready(function() {
+
+        $(document).on('change', '#select-all', function(){
+            $('tr:visible .row-select:checkbox').prop('checked', this.checked);  
+            let total= $('#tbl-checklists tr:visible input[name="checklists[]"]:checked').length;
+            if( total > 0 ){
+                $('#num-checked').text(`(${total})`);
+            }else{
+                $('#num-checked').text('');
+            }
+        });
+
+        $(document).on('change', '.row-select', function(){
+            let total= $('#tbl-checklists input[name="checklists[]"]:checked').length;
+            if( total > 0 ){
+                $('#num-checked').text(`(${total})`);
+            }else{
+                $('#num-checked').text('');
+            }
+        });
+
         $(".nsm-table").nsmPagination();
 
         $("#search_field").on("input", debounce(function() {
             tableSearch($(this));
         }, 1000));
+
+        $(document).on('click', '#with-selected-delete', function(){
+            let total= $('#tbl-checklists input[name="checklists[]"]:checked').length;
+            if( total <= 0 ){
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: 'Please select rows',
+                });
+            }else{
+                Swal.fire({
+                    title: 'Delete Checklists',
+                    html: `Are you sure you want to delete selected rows?<br /><br /><small>This cannot be undone.</small>`,
+                    icon: 'question',
+                    confirmButtonText: 'Proceed',
+                    showCancelButton: true,
+                    cancelButtonText: "Cancel"
+                }).then((result) => {
+                    if (result.value) {
+                        $.ajax({
+                            method: 'POST',
+                            url: base_url + 'workorder/_delete_selected_checklists',
+                            dataType: 'json',
+                            data: $('#frm-with-selected').serialize(),
+                            success: function(result) {                        
+                                if( result.is_success == 1 ) {
+                                    Swal.fire({
+                                        title: 'Delete Checklists',
+                                        text: "Data deleted successfully!",
+                                        icon: 'success',
+                                        showCancelButton: false,
+                                        confirmButtonText: 'Okay'
+                                    }).then((result) => {
+                                        //if (result.value) {
+                                            location.reload();
+                                        //}
+                                    });
+                                } else {
+                                    Swal.fire({
+                                        icon: 'error',
+                                        title: 'Error',
+                                        text: result.msg,
+                                    });
+                                }
+                            },
+                            beforeSend: function(){
+                                Swal.fire({
+                                    icon: "info",
+                                    title: "Processing",
+                                    html: "Please wait while the process is running...",
+                                    allowOutsideClick: false,
+                                    allowEscapeKey: false,
+                                    showConfirmButton: false,
+                                    didOpen: () => {
+                                        Swal.showLoading();
+                                    },
+                                });
+                            }
+                        });
+
+                    }
+                });
+            }        
+        });
     });
 
     $(document).on("click", ".delete-item", function(event) {
@@ -155,6 +259,19 @@
                                 confirmButtonText: 'Okay'
                             });
                         }
+                    },
+                    beforeSend: function(){
+                        Swal.fire({
+                            icon: "info",
+                            title: "Processing",
+                            html: "Please wait while the process is running...",
+                            allowOutsideClick: false,
+                            allowEscapeKey: false,
+                            showConfirmButton: false,
+                            didOpen: () => {
+                                Swal.showLoading();
+                            },
+                        });
                     }
                 });
             }

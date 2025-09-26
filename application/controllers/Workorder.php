@@ -753,8 +753,6 @@ class Workorder extends MY_Controller
         $this->load->view('workorder/editWorkorderSolar', $this->page_data);
     }
 
-
-
     public function edit($id)
     {
         $this->load->model('AcsProfile_model');
@@ -3380,6 +3378,8 @@ class Workorder extends MY_Controller
 
     public function priority()
     {
+        $this->load->helper('functions');
+        
         if(!checkRoleCanAccessModule('work-order-settings', 'read')){
 			show403Error();
 			return false;
@@ -3587,6 +3587,37 @@ class Workorder extends MY_Controller
 		$this->page_data['page']->parent = 'Sales';
         $this->page_data['checklists'] = $checklists;        
         $this->load->view('v2/pages/workorder/checklist/list', $this->page_data);
+    }
+
+    public function ajax_delete_selected_checklists()
+    {
+        $this->load->model('Checklist_model');
+
+		$is_success = 0;
+        $msg    = 'Please select data';
+
+        $company_id  = logged('company_id');
+        $post = $this->input->post();
+
+        if( $post['checklists'] ){
+
+            $filters[] = ['field' => 'company_id', 'value' => $company_id];
+            $total_deleted = $this->Checklist_model->bulkDelete($post['checklists'], $filters);
+
+			//Activity Logs
+			$activity_name = 'Checklists : Permanently deleted ' .$total_deleted. ' checklist(s)'; 
+			createActivityLog($activity_name);
+
+            $is_success = 1;
+            $msg    = '';
+        }
+
+        $return = [
+            'is_success' => $is_success,
+            'msg' => $msg
+        ];
+
+        echo json_encode($return);
     }
 
     public function add_checklist()
@@ -12056,7 +12087,7 @@ class Workorder extends MY_Controller
             $this->Checklist_model->deleteById($checklist->id);
 
             //Activity Logs
-            $activity_name = 'Workorder Checklist : Deleted checklist ' . $checklist->checklist_name; 
+            $activity_name = 'Checklists : Deleted checklist ' . $checklist->checklist_name; 
             createActivityLog($activity_name);
 
         }else{

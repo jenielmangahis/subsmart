@@ -167,12 +167,9 @@ function workordermodule__formatWorkOrderNumber($number) {
                             <ul class="dropdown-menu dropdown-menu-end select-filter">
                                 <li><a class="dropdown-item" href="<?php echo base_url('workorder') ?>">All</a></li>
                                 <li><a class="dropdown-item" href="<?php echo base_url('workorder?status=new') ?>">New</a></li>
-                                <li><a class="dropdown-item" href="<?php echo base_url('workorder?status=scheduled') ?>">Scheduled</a></li>
-                                <li><a class="dropdown-item" href="<?php echo base_url('workorder?status=started') ?>">Started</a></li>
-                                <li><a class="dropdown-item" href="<?php echo base_url('workorder?status=paused') ?>">Paused</a></li>
-                                <li><a class="dropdown-item" href="<?php echo base_url('workorder?status=invoiced') ?>">Invoiced</a></li>
-                                <li><a class="dropdown-item" href="<?php echo base_url('workorder?status=withdrawn') ?>">Withdrawn</a></li>
-                                <li><a class="dropdown-item" href="<?php echo base_url('workorder?status=closed') ?>">Closed</a></li>
+                                <li><a class="dropdown-item" href="<?php echo base_url('workorder?status=submitted') ?>">Submitted</a></li>
+                                <li><a class="dropdown-item" href="<?php echo base_url('workorder?status=converted') ?>">Converted</a></li>
+                                <li><a class="dropdown-item" href="<?php echo base_url('workorder?status=finished') ?>">Finished</a></li>
                             </ul>
                         </div>
                         <?php if(checkRoleCanAccessModule('work-orders', 'write')){ ?>
@@ -251,30 +248,15 @@ function workordermodule__formatWorkOrderNumber($number) {
 
                                 switch ($workorder->w_status):
                                     case "New":
-                                        $status_badge = "success";
-                                        break;
-                                    case "Draft":
-                                        $status_badge = "";
-                                        break;
-                                    case "Scheduled":
-                                        $status_badge = "secondary";
-                                        break;
-                                    case "Started":
                                         $status_badge = "primary";
                                         break;
-                                    case "Paused":
+                                    case "Submitted":
+                                        $status_badge = "";
+                                        break;
+                                    case "Converted":
                                         $status_badge = "secondary";
                                         break;
-                                    case "Completed":
-                                        $status_badge = "success";
-                                        break;
-                                    case "Invoiced":
-                                        $status_badge = "success";
-                                        break;
-                                    case "Withdrawn":
-                                        $status_badge = "success";
-                                        break;
-                                    case "Closed":
+                                    case "Finished":
                                         $status_badge = "success";
                                         break;
                                 endswitch;
@@ -578,14 +560,9 @@ function workordermodule__formatWorkOrderNumber($number) {
                             <div class="input-group mb-3">
                                 <select class="form-select" id="with-selected-status">
                                     <option value="New">New</option>
-                                    <option value="Draft">Draft</option>
-                                    <option value="Scheduled">Scheduled</option>
-                                    <option value="Started">Started</option>
-                                    <option value="Paused">Paused</option>
-                                    <option value="Completed">Completed</option>
-                                    <option value="Invoiced">Invoiced</option>
-                                    <option value="Withdrawn">Withdrawn</option>
-                                    <option value="Closed">Closed</option>
+                                    <option value="Submitted">Submitted</option>
+                                    <option value="Converted">Converted</option>
+                                    <option value="Finished">Finished</option>
                                 </select>
                             </div>
                         </div>
