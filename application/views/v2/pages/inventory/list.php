@@ -172,7 +172,7 @@
                                 </td>
                                 <td><?php echo $item[7] != '' ? $item[7] : '---'; ?></td>
                                 <td><?php echo $item[2] != '' ? $item[2] : '---'; ?></td>
-                                <td style="text-align:right;"><?php echo getItemQtyOH($item[3]); ?></td>
+                                <td style="text-align:right;"><?php echo getItemQtyOH($item[3]) >= 0 ? getItemQtyOH($item[3]) : 0; ?></td>
                                 <td style="text-align:right;"><?php echo $item[8] != '' ? $item[8] : 0; ?></td>
                                 <td style="text-align:right;"><?php echo $item[9] != '' ? $item[9] : 0; ?></td>
                                 <td>
@@ -256,7 +256,7 @@
                     <div class="row">
                         <div class="col-lg-12 mb-5">
                             <strong>Quantity</strong>
-                            <input type="number" class="form-control " name="qty" id="qty" required />
+                            <input type="number" class="form-control" name="qty" id="qty" step="any" min="0" required />
                         </div>
                     </div>
                     <div class="d-flex justify-content-end">
@@ -289,7 +289,7 @@
                     <div class="row">
                         <div class="col-lg-12 mb-5">
                             <strong>Quantity</strong>
-                            <input type="number" class="form-control " name="qty" id="update-location-qty" required />
+                            <input type="number" class="form-control" name="qty" id="update-location-qty" step="any" min="0" required />
                         </div>
                     </div>
                     <div class="d-flex justify-content-end">
