@@ -43,7 +43,7 @@
                         </div>
                         <div class="nsm-page-buttons page-button-container">
                             <button type="button" class="nsm-button primary" onclick="location.href='<?php echo base_url('/workorder/add_checklist') ?>'">
-                                <i class='bx bx-fw bx-plus'></i> Add Checklist
+                                <i class='bx bx-fw bx-plus'></i> Checklist
                             </button>
                         </div>
                     </div>
