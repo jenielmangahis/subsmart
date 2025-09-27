@@ -150,6 +150,31 @@ if ($this->session->userdata('usertimezone') == null) {
             display:block;
             font-size:19px;
         }
+
+        .icon-badge-container-o {
+        position: relative;
+        display: inline-block;
+        }
+
+        .icon-badge-o {
+        position: absolute;
+        top: 0;
+        right: 0;
+        transform: translate(-15%, 30%);
+        }
+        
+        .icon-badge-container {
+        position: relative;
+        display: inline-block;
+        }
+
+        .icon-badge {
+        position: absolute;
+        top: 0;
+        right: 0;
+        transform: translate(10%, -30%);
+        }
+       
     </style>
     <!-- Pusher JS -->
     <script src="https://js.pusher.com/8.3.0/pusher.min.js"></script>
@@ -561,14 +586,44 @@ $newtasks = getTasks();
                                 </div>
                             </div>
                         </li>
-                        <li>
+                        <!-- Current Notification V2 Sept 2025 -->
+                        <!-- <li>                           
                             <div class="dropdown d-flex">
-                                <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown"><i class='bx bx-fw bx-bell'></i></a>
+                                <a href="#" class="dropdown-toggle icon-badge-container-0" data-bs-toggle="dropdown">
+                                    <i class='bx bx-fw bx-bell'></i>
+                                    <div id="notif-badge-count-o" class="notif-badge-count-o"></div>
+                                </a>
                                 <div class="dropdown-menu dropdown-list nsm-nav-dropdown">
                                     <div class="list-header">
                                         <h6 class="dropdown-header fw-bold">Notifications</h6>
                                     </div>
                                     <div id="notifications_container">
+                                        <div class="text-center py-3">
+                                            <span class="content-subtitle">No notifications for now.</span>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <hr class="dropdown-divider">
+                                    </div>
+                                    <div class="list-item text-center" onclick="location.href='<?php echo site_url(); ?>timesheet/notification'">
+                                        <span class="content-subtitle">View All</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </li> -->
+
+                        <!-- New Version Ongoing V3 -->
+                        <li>                           
+                            <div class="dropdown d-flex">
+                                <a href="#" class="dropdown-toggle icon-badge-container" data-bs-toggle="dropdown">
+                                    <i class='bx bx-fw bx-bell'></i>
+                                    <div id="notif-badge-count" class="notif-badge-count"></div>
+                                </a>
+                                <div class="dropdown-menu dropdown-list nsm-nav-dropdown">
+                                    <div class="list-header">
+                                        <h6 class="dropdown-header fw-bold">Notifications</h6>
+                                    </div>
+                                    <div id="all_notifications_container">
                                         <div class="text-center py-3">
                                             <span class="content-subtitle">No notifications for now.</span>
                                         </div>
@@ -587,18 +642,18 @@ $newtasks = getTasks();
                                 <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown">
                                     <?php
                                     $image = userProfilePicture(logged('id'));
-if (is_null($image)) {
-    ?>
-                                        <div class="profile-img" style="background-image: url('')">
-                                            <span><?php echo getLoggedNameInitials(logged('id')); ?></span>
-                                        <?php
-} else {
-    ?>
-                                            <div class="profile-img" style="background-image: url('<?php echo $image; ?>')">
-                                            <?php
-}
-?>
-                                            </div>
+                                    if (is_null($image)) {
+                                    ?>
+                                    <div class="profile-img" style="background-image: url('')">
+                                        <span><?php echo getLoggedNameInitials(logged('id')); ?></span>
+                                    <?php
+                                    } else {
+                                        ?>
+                                        <div class="profile-img" style="background-image: url('<?php echo $image; ?>')">
+                                    <?php
+                                    }
+                                    ?>
+                                    </div>
                                 </a>
                                 <div class="dropdown-menu dropdown-list">
                                     <div class="list-header">
