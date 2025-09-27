@@ -24,6 +24,9 @@
   top: -4px;
   position: relative;
 }
+.btn-remove-checklist-item {
+    background-color: #ffffff !important;
+}
 </style>
 
 <div class="row page-content g-0">
@@ -64,9 +67,8 @@
                                         <input type="text" name="checklist_name" value=""  class="form-control" required="" autocomplete="off" />
                                       </div>
                                       <div class="form-group mt-3">
-                                        <label for="formClient-Name">Attach this checklist to all Work Orders for *</label><br />
-                                        <small class="text-muted">Select from the options below to which this checklist will be automatically attached when you create a new Work Order.</small>
-                                        <select class="groups-select form-control" id="attach-to-work-order" name="attach_to_work_order" required="">
+                                        <label for="formClient-Name">Attach this checklist to all Work Orders for * <i id="help-popover-attach" class='bx bx-fw bx-info-circle ms-2 text-muted'></i></label><br />
+                                        <select class="groups-select form-select" id="attach-to-work-order" name="attach_to_work_order" required="">
                                           <option value="">- Select -</option>
                                           <?php foreach($checklistAttachType as $key => $value){ ?>
                                               <option value="<?= $key; ?>"><?= $value; ?></option>
@@ -82,7 +84,7 @@
                                             <h5>Checklist Items</h5>
                                         </div>        
                                         <div class="col-sm-6">
-                                          <a href="javascript:void(0);" class="btn-add-checklist-item nsm-button primary" style="float:right;"><span class="fa fa-plus-square fa-margin-right"></span> Add Item</a>
+                                          <a href="javascript:void(0);" class="btn-add-checklist-item nsm-button primary" style="float:right;">Add Item</a>
                                         </div> 
                                       </div>
                                       <div class="row" style="margin-top: 20px;">
@@ -99,7 +101,7 @@
             </div>
             <div class="row">
                 <div class="col-12 mt-3 text-end">                  
-                    <button type="submit" class="nsm-button" onclick="location.href='<?php echo base_url('workorder/checklists'); ?>'">Cancel</button>
+                    <button type="button" class="nsm-button btn-cancel">Cancel</button>
                     <button type="submit" class="nsm-button primary" id="btn-save-checklist">Save</button>
                 </div>
             </div>
@@ -123,7 +125,7 @@
                                 </div>
                             </div>
                             <div class="d-flex justify-content-end">                        
-                                <button type="button" id="" class="nsm-button" data-bs-dismiss="modal">Close</button>
+                                <button type="button" class="nsm-button" data-bs-dismiss="modal">Close</button>
                                 <button type="submit" class="nsm-button primary btn-add-checklist">Save</button>
                             </div>
                         <?php echo form_close(); ?>
@@ -138,9 +140,22 @@
 <?php include viewPath('v2/includes/footer'); ?>
 <script>
 $(function(){
-  $(".btn-add-checklist-item").click(function(){
+    $(".btn-add-checklist-item").click(function(){
         $("#modalAddChecklistItem").modal("show");
     });
+
+    $('.btn-cancel').on('click', function(){
+      location.href = base_url + 'workorder/checklists';
+    });
+
+    $('#help-popover-attach').popover({
+        placement: 'top',
+        html : true, 
+        trigger: "hover focus",
+        content: function() {
+            return 'Checklist that will be automatically attached when you create a new work order.';
+        } 
+    }); 
 
     $("#frm-add-checklist-item").submit(function(e){
         e.preventDefault();
@@ -162,7 +177,7 @@ $(function(){
           });
         }else{
           var item_name = $("#item_name").val();
-          var add_row = '<li><input type="hidden" name="checklistItems[]" value="'+item_name+'" />'+item_name+'<a class="btn-remove-checklist-item nsm-button primary small" href="javascript:void(0);"><i class="bx bx-trash"></i></a></li>';
+          var add_row = '<li><input type="hidden" name="checklistItems[]" value="'+item_name+'" />'+item_name+'<a class="btn-remove-checklist-item nsm-button default small" href="javascript:void(0);"><i class="bx bx-trash"></i></a></li>';
 
           $(".checklist-container").append(add_row).children(':last').hide().fadeIn(300);
 
@@ -180,7 +195,7 @@ $(function(){
     $("#frm-create-checklist").submit(function(e){
         e.preventDefault();
         var url = base_url + 'workorder/_create_checklist';
-        $("#btn-save-checklist").html('<span class="spinner-border spinner-border-sm m-0"></span> Saving');
+        $("#btn-save-checklist").html('<span class="spinner-border spinner-border-sm m-0"></span>');
         setTimeout(function () {
             $.ajax({
                  type: "POST",
