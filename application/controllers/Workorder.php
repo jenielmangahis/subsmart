@@ -11977,6 +11977,10 @@ class Workorder extends MY_Controller
                     $this->ChecklistItem_model->create($data);
                 }    
             }
+
+            //Activity Logs
+            $activity_name = 'Checklists : Created checklist ' . $post['checklist_name']; 
+            createActivityLog($activity_name);
     
             $is_success = 1;
             $msg = '';
@@ -12021,6 +12025,10 @@ class Workorder extends MY_Controller
                     $this->ChecklistItem_model->create($data);
                 }    
             }
+
+            //Activity Logs
+            $activity_name = 'Checklists : Updated checklist ' . $post['checklist_name']; 
+            createActivityLog($activity_name);
 
             $is_success = 1;
         }
