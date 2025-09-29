@@ -1179,6 +1179,8 @@ $route['workorder/new'] = 'Workorder/NewworkOrder';
 $route['workorder/_update_workorder_settings'] = 'Workorder/ajax_update_workoder_settings';
 $route['workorder/checklists'] = 'Workorder/checklists';
 $route['workorder/add_checklist'] = 'Workorder/add_checklist';
+$route['workorder/_delete_selected_checklists'] = 'Workorder/ajax_delete_selected_checklists';
+
 $route['workorder/create_checklist'] = 'Workorder/create_checklist';
 $route['workorder/edit_checklist/(:num)'] = 'Workorder/edit_checklist/$1';
 $route['workorder/_load_checklist_items'] = 'Workorder/ajax_load_checklist_items';
@@ -2157,6 +2159,9 @@ $route['timesheet/export_overtime_request_list'] = 'Timesheet/export_overtime_re
 
 //Timesheet Settings
 $route['timesheet/_update_settings'] = 'Timesheet/ajax_update_settings';
+
+//Notifications
+$route['notifications/_get_notifications'] = 'Notifications/ajax_get_notifications';
 
 //Employment Details
 $route['accounting/employees/_update_employment_details'] = 'accounting_controllers/Employees/ajax_update_employment_details';

@@ -135,6 +135,7 @@ var notification_html_holder_ctr = 0;
 $(document).ready(function() {
 
     getNotificationsAll();
+    getAllNotifications();
 
     $(".check-input-rules").click(function() {
         var count_rule_list_check = $('.check-input-rules').filter(':checked').length;
@@ -442,6 +443,26 @@ function getNotificationsAll() {
         success: function(data) {
             if (data.notifyCount > 0) {
                 $('#notifications_container').html(data.autoNotifications);
+                $('#notif-badge-count-o').html('<span class="badge bg-danger rounded-pill icon-badge-o">' + data.notifyCount + '</span>'); 
+                notification_badge_value = data.badgeCount;
+            }
+        }
+    });
+}
+
+function getAllNotifications() {
+    $.ajax({
+        url: baseURL + "notifications/_get_notifications",
+        type: "POST",
+        dataType: "json",
+        data: {
+            type: 'all',
+            badgeCount: notification_badge_value
+        },
+        success: function(data) {
+            if (data.notifyCount > 0) {
+                $('#all_notifications_container').html(data.autoNotifications);
+                $('#notif-badge-count').html('<span class="badge bg-danger rounded-pill icon-badge">' + data.notifyCount + '</span>'); 
                 notification_badge_value = data.badgeCount;
             }
         }

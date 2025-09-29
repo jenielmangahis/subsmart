@@ -2555,6 +2555,7 @@ class Timesheet extends MY_Controller
         $userid = logged('id');
         $badgeCount = $this->input->post('badgeCount');
         $notification = $this->timesheet_model->get_unreadNotification($badgeCount, "");
+
         $html = '';
         date_default_timezone_set($this->session->userdata('usertimezone'));
         if ($notification != null) {
@@ -2625,6 +2626,7 @@ class Timesheet extends MY_Controller
             'badgeCount' => $this->timesheet_model->get_unreadNotification($notifyCount, "counter"),
             'autoNotifications' => $html,
         );
+
         echo json_encode($notificationListArray);
     }
 

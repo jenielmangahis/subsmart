@@ -172,7 +172,7 @@
                                 </td>
                                 <td><?php echo $item[7] != '' ? $item[7] : '---'; ?></td>
                                 <td><?php echo $item[2] != '' ? $item[2] : '---'; ?></td>
-                                <td style="text-align:right;"><?php echo getItemQtyOH($item[3]); ?></td>
+                                <td style="text-align:right;"><?php echo getItemQtyOH($item[3]) >= 0 ? getItemQtyOH($item[3]) : 0; ?></td>
                                 <td style="text-align:right;"><?php echo $item[8] != '' ? $item[8] : 0; ?></td>
                                 <td style="text-align:right;"><?php echo $item[9] != '' ? $item[9] : 0; ?></td>
                                 <td>
@@ -256,7 +256,7 @@
                     <div class="row">
                         <div class="col-lg-12 mb-5">
                             <strong>Quantity</strong>
-                            <input type="number" class="form-control " name="qty" id="qty" required />
+                            <input type="number" class="form-control" name="qty" id="qty" step="any" min="0" required />
                         </div>
                     </div>
                     <div class="d-flex justify-content-end">
@@ -289,7 +289,7 @@
                     <div class="row">
                         <div class="col-lg-12 mb-5">
                             <strong>Quantity</strong>
-                            <input type="number" class="form-control " name="qty" id="update-location-qty" required />
+                            <input type="number" class="form-control" name="qty" id="update-location-qty" step="any" min="0" required />
                         </div>
                     </div>
                     <div class="d-flex justify-content-end">
@@ -944,69 +944,7 @@
 
         $(".export-items").click(function() {
             window.location.href = "<?php echo base_url('inventory/export_list') ?>";
-        });
-
-        /*$(document).on("change", ".table-select", function() {
-            //$('tr:visible .row-select:checkbox').prop('checked', this.checked);              
-            let _this = $(this);
-            let id = _this.attr("data-id");
-            if (!_this.prop("checked") && $(".select-all").prop("checked")) {
-                $(".select-all").prop("checked", false);
-            }
-
-            if (!_this.prop("checked")) {
-                selectedIds = $.grep(selectedIds, function(value) {
-                    return value != id
-                });
-
-                $("#selected_ids").val(selectedIds);
-            } else {
-                selectedIds.push(id);
-                $("#selected_ids").val(selectedIds);
-            }
-            let total_selected = $(".table-select:checked").length;
-            
-            toggleBatchDelete($(".table-select:checked").length > 0);
-        });*/
-
-        /*$(document).on("change", ".select-all", function() {
-            let _this = $(this);
-
-            if (_this.prop("checked")) {
-                $(".table-select").prop("checked", true);
-                selectedIds = [];
-
-                $(".table-select").each(function() {
-                    if ($(this).prop("checked"))
-                        selectedIds.push($(this).attr("data-id"));
-                })
-                $("#selected_ids").val(selectedIds);
-            } else {
-                $(".table-select").prop("checked", false);
-                $("#selected_ids").val('');
-                $("#delete_selected").addClass("disabled");
-            }
-
-            toggleBatchDelete(_this.prop("checked"));
-        });*/
-
-        /*$("#INVENTORY_TABLE thead #select-all").on("change", function() {
-            let isChecked = $(this).is(":checked");
-            if (isChecked) {
-                $(".nsm-table").find(".select-one").prop("checked", true);
-                $(".batch-actions").find("a.dropdown-item").removeClass("disabled");
-            } else {
-                $(".nsm-table").find(".select-one").prop("checked", false);
-                $(".batch-actions").find("a.dropdown-item").addClass("disabled");
-            }
-
-            const checkedBoxes = $('#INVENTORY_TABLE tbody tr:visible .table-select:checked').length;
-            if(checkedBoxes > 0) {
-                $('#num-checked-items').text(`(${checkedBoxes})`);        
-            } else {
-                $('#num-checked-items').text(``);  
-            }
-        });*/      
+        });    
 
         $(document).on('change', '#select-all', function(){
             $('tr:visible .row-select:checkbox').prop('checked', this.checked);  
@@ -1021,7 +959,6 @@
         });    
         
         $(document).on('change', '.row-select', function(){
-
             let _this = $(this);
             let id = _this.attr("data-id");
 
