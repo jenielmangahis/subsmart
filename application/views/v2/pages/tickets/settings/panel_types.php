@@ -1,5 +1,4 @@
 <?php include viewPath('v2/includes/header'); ?>
-<?php include viewPath('v2/includes/customer/customer_modals'); ?>
 
 <div class="nsm-fab-container">
     <div class="nsm-fab nsm-fab-icon nsm-bxshadow" data-bs-toggle="modal" data-bs-target="#new_sales_area_modal">
@@ -116,52 +115,52 @@
     </div>
 
     <div class="modal fade" id="modal-add-new-panel-type" role="dialog">
-        <div class="modal-dialog modal-md">
-            <div class="modal-content">
-                <form id="frm-create-panel-type" method="post">
-                    <div class="modal-header">
-                        <span class="modal-title content-title" style="font-size: 17px;"><span id="modal-header-label">Add New Panel Type</span></span>
-                        <button class="border-0 rounded mx-1" data-bs-dismiss="modal" style="cursor: pointer;"><i class="fas fa-times m-0 text-muted"></i></button>
-                    </div>
-                    <div class="modal-body">                        
-                        <div class="row">
-                            <div class="col-12 mb-3">
-                                <label for="panel-type-name" class="content-subtitle fw-bold d-block mb-2">Name </label>
-                                <input type="text" name="panel_type_name" id="panel-type-name" class="nsm-field form-control" placeholder="" required>
-                            </div>
-                        </div> 
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="nsm-button" data-bs-dismiss="modal">Cancel</button>
-                        <button type="submit" class="nsm-button primary" id="btn-create-panel-type">Save</button>
-                    </div>                                       
-                </form>
+        <div class="modal-dialog modal-md modal-dialog-centered">
+            <div class="modal-content">                
+                <div class="modal-header">
+                    <span class="modal-title content-title" style="font-size: 17px;"><span id="modal-header-label">Add Panel Type</span></span>
+                    <button class="border-0 rounded mx-1" data-bs-dismiss="modal" style="cursor: pointer;"><i class="fas fa-times m-0 text-muted"></i></button>
+                </div>
+                <div class="modal-body">                        
+                    <form id="frm-create-panel-type" method="post">
+                    <div class="row">
+                        <div class="col-12 mb-3">
+                            <label for="panel-type-name" class="content-subtitle fw-bold d-block mb-2">Name </label>
+                            <input type="text" name="panel_type_name" id="panel-type-name" class="nsm-field form-control" placeholder="" required>
+                        </div>
+                    </div> 
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="nsm-button" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="nsm-button primary" id="btn-create-panel-type" form="frm-create-panel-type">Save</button>
+                </div> 
             </div>
         </div>
     </div>
 
     <div class="modal fade" id="modal-edit-panel-type" role="dialog">
-        <div class="modal-dialog modal-md">
-            <div class="modal-content">
-                <form id="frm-update-panel-type" method="post">
+        <div class="modal-dialog modal-md modal-dialog-centered">
+            <div class="modal-content">                                
+                <div class="modal-header">
+                    <span class="modal-title content-title" style="font-size: 17px;"><span id="modal-header-label">Edit Panel Type</span></span>
+                    <button class="border-0 rounded mx-1" data-bs-dismiss="modal" style="cursor: pointer;"><i class="fas fa-times m-0 text-muted"></i></button>
+                </div>
+                <div class="modal-body">                        
+                    <form id="frm-update-panel-type" method="post">
                     <input type="hidden" name="pid" id="pid" value="" />
-                    <div class="modal-header">
-                        <span class="modal-title content-title" style="font-size: 17px;"><span id="modal-header-label">Edit Panel Type</span></span>
-                        <button class="border-0 rounded mx-1" data-bs-dismiss="modal" style="cursor: pointer;"><i class="fas fa-times m-0 text-muted"></i></button>
-                    </div>
-                    <div class="modal-body">                        
-                        <div class="row">
-                            <div class="col-12 mb-3">
-                                <label for="panel-type-name" class="content-subtitle fw-bold d-block mb-2">Name </label>
-                                <input type="text" name="panel_type_name" id="edit-panel-type-name" class="nsm-field form-control" placeholder="" required>
-                            </div>
-                        </div> 
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="nsm-button" data-bs-dismiss="modal">Cancel</button>
-                        <button type="submit" class="nsm-button primary" id="btn-update-panel-type">Save</button>
-                    </div>                                       
-                </form>
+                    <div class="row">
+                        <div class="col-12 mb-3">
+                            <label for="panel-type-name" class="content-subtitle fw-bold d-block mb-2">Name </label>
+                            <input type="text" name="panel_type_name" id="edit-panel-type-name" class="nsm-field form-control" placeholder="" required>
+                        </div>
+                    </div> 
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="nsm-button" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="nsm-button primary" id="btn-update-panel-type" form="frm-update-panel-type">Save</button>
+                </div>     
             </div>
         </div>
     </div>
@@ -292,7 +291,7 @@ $(function(){
                         if( result.is_success == 1 ) {
                             Swal.fire({
                             icon: 'success',
-                            title: 'Delete',
+                            title: 'Del;ete Panel Type',
                             text: 'Panel type was successfully deleted.',
                             }).then((result) => {
                                 window.location.reload();
@@ -324,7 +323,7 @@ $(function(){
                 if (data.is_success) {
                     $('#modal-add-new-panel-type').modal('hide');
                     Swal.fire({
-                        title: 'Create',
+                        title: 'Add Panel Type',
                         text: 'Data was successfully created',
                         icon: 'success',
                         showCancelButton: false,
@@ -366,7 +365,7 @@ $(function(){
                 if (data.is_success) {
                     $('#modal-edit-panel-type').modal('hide');
                     Swal.fire({
-                        title: 'Update',
+                        title: 'Update Panel Type',
                         text: 'Data was successfully updated',
                         icon: 'success',
                         showCancelButton: false,
