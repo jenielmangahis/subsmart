@@ -378,11 +378,11 @@
                 dataType: "json",
                 data: $("#frm-buy-license").serialize(),
                 success: function(o)
-                {
-                    $("#modal-buy-license").modal('hide'); 
+                {                    
                     if( o.is_success == 1 ){
+                        $("#modal-buy-license").modal('hide'); 
                         Swal.fire({
-                            title: 'Payment Successful!',
+                            title: 'Plan License',
                             text: "Your plan license was successfully updated",
                             icon: 'success',
                             showCancelButton: false,
@@ -421,14 +421,14 @@
                 dataType: "json",
                 data: $("#frm-upgrade-subscription").serialize(),
                 success: function(o)
-                {
-                    $("#modal-upgrade-plan").modal('hide'); 
+                { 
                     $("#btn-modal-upgrade-plan").prop("disabled", false);
                     $("#btn-modal-upgrade-plan").html('Upgrade');
 
                     if( o.is_success == 1 ){                        
+                        $("#upgrade_plan_modal").modal('hide'); 
                         Swal.fire({
-                            title: 'Update Successful!',
+                            title: 'Plan Upgrade',
                             text: "Your plan was successfully upgraded",
                             icon: 'success',
                             showCancelButton: false,
@@ -469,12 +469,12 @@
                 {
                     $("#btn-modal-pay-subscription").prop("disabled", false);
                     $("#btn-modal-pay-subscription").html('Pay');
-                    $("#modal-upgrade-plan").modal('hide'); 
 
                     if( o.is_success == 1 ){
+                        $("#modal-pay-subscription").modal('hide'); 
                         Swal.fire({
                             title: 'Subscription Payment',
-                            text: "Payment successful. Your subscription plan was successfully updated.",
+                            text: "Your subscription plan was successfully updated.",
                             icon: 'success',
                             showCancelButton: false,
                             confirmButtonColor: '#32243d',
