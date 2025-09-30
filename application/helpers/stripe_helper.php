@@ -7,7 +7,8 @@ class Stripe {
 
     public function __construct()
     {
-
+        // Stripe SDK
+        include APPPATH . 'libraries/stripe/init.php';   
     }
 
     function check_user_token($code)
@@ -49,6 +50,57 @@ class Stripe {
             ];
         }
 
+        return $return;
+    }
+
+    function validateCardDetailsV2($card_info = [])
+    {
+        try {
+            \Stripe\Stripe::setApiKey(STRIPE_SECRET_KEY);
+            $token = \Stripe\Token::create([
+                'card' => [
+                    'number' => $card_info['number'],
+                    'exp_month' => $card_info['exp_month'],
+                    'exp_year' => $card_info['exp_year'],
+                    'cvc' => $card_info['cvc'],
+                ],
+            ]);
+            $err_message = '';
+        } catch (\Stripe\Exception\ApiErrorException $e) {
+            $token = [];
+            $err_message = 'Error : ' . $e->getMessage();
+        }
+
+        $return = ['token' => $token, 'err_message' => $err_message];
+        return $return;
+    }
+
+    function createPaymentIntent($amount)
+    {
+        $is_success  = false;
+        $err_message = '';
+        $stripe_amount = number_format(($amount*100) , 0, '', '');
+        try {            
+            \Stripe\Stripe::setApiKey(STRIPE_SECRET_KEY);
+            $paymentIntent = \Stripe\PaymentIntent::create([
+                'amount' => $stripe_amount, // Amount in cents (e.g., $20.00)
+                'currency' => 'usd',
+                'payment_method_types' => ['card'], // Specify allowed payment method types
+                // Optionally, add a customer ID if you have one
+                // 'customer' => 'cus_XXXXXXXXXXXXXX',
+                // Optionally, add a description
+                // 'description' => 'Payment for order #12345',
+            ]);
+            $payment_intent_id = $paymentIntent->client_secret;
+            $is_success = true;
+
+        } catch (\Stripe\Exception\ApiErrorException $e) {
+            // Handle API errors
+            $payment_intent_id = '';
+            $err_message = 'Error: ' . $e->getMessage();
+        }
+
+        $return = ['is_success' => $is_success, 'payment_intent_id' => $payment_intent_id, 'err_message' => $err_message];
         return $return;
     }
 }
