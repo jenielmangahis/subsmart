@@ -1771,6 +1771,7 @@ $route['customer/_quick_save'] = 'Customer/ajax_quick_save_customer_v2';
 $route['customer/export_customer'] = 'Customer/customer_export';
 $route['customer/export_customer_ledger'] = 'Customer/export_customer_ledger';
 $route['customer/_create_sales_area'] = 'Customer/ajax_create_sales_area';
+$route['customer/_load_item_details'] = 'Customer/ajax_load_item_details';
 
 // Trac360
 $route['on-my-way-to-job'] = 'Job/update_jobs_status';

@@ -13369,4 +13369,11 @@ class Customer extends MY_Controller
 
 		fpassthru($f);
 	}
+
+    public function ajax_load_item_details()
+    {
+        $post = $this->input->post();
+        $this->page_data['item_details'] = $this->customer_ad_model->get_customer_item_details($post['customer_id']);
+        $this->load->view('v2/pages/customer/ajax_load_item_details', $this->page_data);
+    }
 }
