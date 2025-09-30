@@ -666,8 +666,7 @@ $(document).ready(function() {
                         est_num: est_id
                     },
                     dataType: "JSON",
-                    success: function(result) {
-                         $('#modal-archived-estimates').modal('hide');
+                    success: function(result) {                        
                         if (result.is_success) {
                             var estimate_id = result.estimate_id;
                             Swal.fire({

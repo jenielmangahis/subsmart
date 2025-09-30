@@ -5,9 +5,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 <script src="https://js.stripe.com/v3/"></script>
 <script src="https://checkout.stripe.com/checkout.js"></script>
 <script src="https://www.paypal.com/sdk/js?client-id=<?= $paypal_client_id; ?>&currency=USD"></script>
-<script src="https://api.convergepay.com/hosted-payments/PayWithConverge.js"></script> <!-- Production --> 
 <script src="https://www.google.com/recaptcha/api.js"></script>
-<!-- <script src="https://demo.convergepay.com/hosted-payments/PayWithConverge.js"></script> --> <!-- Demo -->
 <style>
 	.steps-form {
 	    display: table;
@@ -145,63 +143,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 	}
 	.payment-method li input{
 		margin-right: 10px;
-	}
-
-	/**
-	 * The CSS shown here will not be introduced in the Quickstart guide, but shows
-	 * how you can use CSS to style your Element's container.
-	 */
-	.StripeElement {
-	  box-sizing: border-box;
-
-	  height: 40px;
-
-	  padding: 10px 12px;
-
-	  border: 1px solid transparent;
-	  border-radius: 4px;
-	  background-color: white;
-
-	  box-shadow: 0 1px 3px 0 #e6ebf1;
-	  -webkit-transition: box-shadow 150ms ease;
-	  transition: box-shadow 150ms ease;
-	}
-
-	.StripeElement--focus {
-	  box-shadow: 0 1px 3px 0 #cfd7df;
-	}
-
-	.StripeElement--invalid {
-	  border-color: #fa755a;
-	}
-
-	.StripeElement--webkit-autofill {
-	  background-color: #fefde5 !important;
-	}
-	.stripe-btn{
-		border: none;
-	    border-radius: 4px;
-	    outline: none;
-	    text-decoration: none;
-	    color: #fff;
-	    background: #32325d;
-	    white-space: nowrap;
-	    display: inline-block;
-	    height: 40px;
-	    line-height: 40px;
-	    padding: 0 14px;
-	    box-shadow: 0 4px 6px rgba(50, 50, 93, .11), 0 1px 3px rgba(0, 0, 0, .08);
-	    border-radius: 4px;
-	    font-size: 15px;
-	    font-weight: 600;
-	    letter-spacing: 0.025em;
-	    text-decoration: none;
-	    -webkit-transition: all 150ms ease;
-	    transition: all 150ms ease;
-	    float: left;
-	    margin-left: 12px;
-	    margin-top: 28px;
-	}
+	}	
 	.terms{
 		overflow-y: scroll;
 		height: 500px;
@@ -217,20 +159,6 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 	.terms-content{
 		/*margin-left: 17px;*/
 	}
-	#stripe-button{
-		width: 100%;
-	    color: #ffffff;
-	    font-weight: bold;
-	    padding: 12px;
-	    background-color: #5469d4;
-	}
-	#converge-button{
-		width: 100%;
-	    color: #ffffff;
-	    font-weight: bold;
-	    padding: 12px;
-	    background-color: #0070ba;
-	}
 	.has-error{
 		border: 1px solid red;
 	}
@@ -239,6 +167,13 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 	}
 	.form_line{
 	    margin-bottom: 10px;
+	}
+	#credit-card-payment{
+		width:100%;
+		background-color:#006ab1 !important;
+		padding:14px;
+		font-weight:bold;
+		font-size:19px;
 	}
 </style>
 <section page="register" message="" class="ng-isolate-scope">
@@ -290,6 +225,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
 						    		<?php echo form_open_multipart('register/subscribe', [ 'class' => 'form-validate subscribe-form-payment', 'id' => 'subscribe-form-payment', 'autocomplete' => 'off' ]); ?>
 						    		<input type="hidden" name="payment_method" id="payment-method" value="">
+									<input type="hidden" name="payment_intent_id" id="payment-intent-id" value="">
 						    		<input type="hidden" name="payment_method_status" id="payment-method-status" value="">
 							      	<input type="hidden" name="plan_id" id="plan_id" value="">
 						            <input type="hidden" name="plan_price" id="plan_price" value="">
@@ -461,15 +397,14 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 							      	<!-- Third Step -->
 							      	<div class="row setup-content" id="step-3">
 								        <div class="col-md-12">
-								          <h3 class="font-weight-bold pl-0 my-4"><strong>Step 3 : Payment Method</strong></h3>
+								          <h3 class="font-weight-bold pl-0 my-4"><strong>Step 3 : Payment</strong></h3>
 								          <div class="payment-method" style="display: block;margin-bottom: 74px;">
 								          	<label>Plan : <b><span class="plan-selected"></span> / <span class="plan-price"></span></b></label><br />
 								          	<label>Total Amount : <b><span class="total-amount"></span></b></label><br />
 								          	<hr />
 								          	<div class="payment-method-container">
-									          	<p><b>Payment Method</b></p>
 									          	<ul class="payment-method">
-													<li><a class="btn btn-primary" id="converge-button" href="javascript:void(0);">CREDIT CARD PAYMENT</a></li>
+													<li><a class="btn btn-primary" id="credit-card-payment" href="javascript:void(0);">Credit Card</a></li>
 									          		<li><div id="paypal-button-container"></div></li>									          		
 									          		<li>
 									          			<div class="form-row align-items-center" style="margin-top: 30px;">
@@ -533,14 +468,14 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
 						<!-- MODAL USE OFFER CODE -->
 						<div id="modalTermsAgreement" class="modal fade" role="dialog">
-						    <div class="modal-dialog modal-lg">
+						    <div class="modal-dialog modal-lg modal-dialog-scrollable">
 						        <!-- Modal content-->
 						        <div class="modal-content">
 						            <div class="modal-header">
 						                <h4 class="modal-title">Software as a Service Subscription License Agreement</h4>
 						                <button name="button" type="button" class="close" data-dismiss="modal">&times;</button>
 						            </div>
-						            <div class="modal-body" style="padding: 0px;">
+						            <div class="modal-body">
 						                <div class="terms">
 										  	<p>Software as a Service Subscription License Agreement</p>
 											<p>DEFINITIONS</p>
@@ -677,92 +612,23 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 	</div>
 </div>
 
-<div class="modal fade" id="modal-converge-subscribe" tabindex="-1" role="dialog" aria-labelledby="modalLoadingMsgTitle" aria-hidden="true">
+<div class="modal fade" id="modal-credit-card-form" tabindex="-1" role="dialog" aria-labelledby="modalLoadingMsgTitle" aria-hidden="true">
     <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title" id="">Pay Subscription Plan</h5>
+          <h5 class="modal-title" id="">Credit Card Payment</h5>
           <button name="button" type="button" class="close" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">&times;</span>
           </button>
         </div>        
         <div class="modal-body">
-			<form id="frm-pay-subscription" method="post">
-            <div class="row">
-                <div class="col-md-12">
-                    <div class="card-body">                            
-                        <div id="credit_card">
-                            <div class="row form_line">
-                                <div class="col-md-4">
-                                    Card Number
-                                </div>
-                                <div class="col-md-8">
-                                    <input type="text" class="form-control" name="card_number" id="cardnumber" value="" required/>
-                                </div>
-                            </div>
-                            <div class="row form_line">
-                                <div class="col-md-4">
-                                    <label for="">Expiration 
-                                </div>
-                                <div class="col-md-8">
-                                    <div class="row">
-                                        <div class="col-md-4">
-                                            <select id="exp_month" name="exp_month" class="form-control exp_month" required>
-                                                <option  value="">Month</option>
-                                                <option  value="01">01</option>
-                                                <option  value="02">02</option>
-                                                <option  value="03">03</option>
-                                                <option  value="04">04</option>
-                                                <option  value="05">05</option>
-                                                <option  value="06">06</option>
-                                                <option  value="07">07</option>
-                                                <option  value="08">08</option>
-                                                <option  value="09">09</option>
-                                                <option  value="10">10</option>
-                                                <option  value="11">11</option>
-                                                <option  value="12">12</option>
-                                            </select>
-                                        </div>
-                                        <div class="col-md-4">
-                                            <select id="exp_year" name="exp_year" class="form-control exp_year" required>
-                                                <option  value="">Year</option>
-												<?php for( $x = date("Y"); $x<=date("Y", strtotime("+20 years")); $x++ ){ ?>
-													<option value="<?= $x; ?>"><?= $x; ?></option>
-												<?php } ?>
-                                            </select>
-                                        </div>
-                                        <div class="col-md-4">
-                                            <input type="text" maxlength="4" class="form-control" name="cvc" id="cvc" value="" placeholder="CVC" required/>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <hr />
-                            <div class="row form_line">
-                                <div class="col-md-4">Total Amount</div>
-                                <div class="col-md-5">
-                                    <div class="input-group">
-                                        <div class="input-group-prepend">
-                                            <span class="input-group-text" id="basic-addon1">$</span>
-                                        </div>
-                                        <input type="number" class="form-control" name="plan_amount" id="plan_amount" value="<?= number_format($plan->price,2); ?>" disabled="">
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>			
-        	</form>
-        </div>
-        <div class="modal-footer">
-            <button name="button" class="btn btn-indigo" type="button" data-dismiss="modal">Close</button>
-            <button name="button" class="btn btn-indigo btn-modal-pay-subscription" type="submit" form="frm-pay-subscription">Pay</button>
+			<form id='payment-form' method='post' action="">   
+				<div id="card-container"></div>
+			</form>
         </div>
       </div>
     </div>
 </div>
-
 </section>
 <?php include viewPath('frontcommon/footer'); ?>
 <script>
@@ -877,66 +743,6 @@ $(function(){
 	    	}
     	}
     }
-
-    $("#frm-pay-subscription").submit(function(e){
-    	e.preventDefault();
-
-    	var total_amount = $("#plan_price_discounted").val();
-        var firstname = $("#firstname").val();
-        var lastname  = $("#lastname").val();
-        var email_add = $("#email_address").val();
-        var zipcode   = $("#zip_code").val();
-        var ccnumber  = $("#cardnumber").val();
-        var expmonth  = $("#exp_month").val();
-        var expyear   = $("#exp_year").val();
-        var cvc       = $("#cvc").val();
-        var plan_id   = $("#plan_id").val();
-        var address   = $("#business_address").val();
-        var url 	  = base_url + 'registration/_pay_subscription';
-
-        $.ajax({
-			type: "POST",
-			url: url,
-			dataType: "json",
-			data: {
-			total_amount:total_amount,
-			firstname:firstname,
-			lastname:lastname,
-			email_add:email_add,
-			zipcode:zipcode,
-			address:address,
-			ccnumber:ccnumber,
-			expmonth:expmonth,
-			expyear:expyear,
-			plan_id:plan_id,
-			cvc:cvc
-			},
-			success: function(o)
-			{
-				$("#frm-pay-subscription").modal('hide'); 
-
-				if( o.is_success == 1 ){
-					$("#modal-converge-subscribe").modal('hide');
-					$("#payment-method").val('converge');
-					$("#payment-method-status").val('COMPLETED');
-					activate_registration();
-				}else{
-					Swal.fire({
-					icon: 'error',
-					title: 'Cannot process payment',
-					text: o.message
-					});
-				}
-
-				$('.btn-modal-pay-subscription').prop("disabled", false);
-				$(".btn-modal-pay-subscription").html('Pay');
-			},
-			beforeSend:function(){
-				$('.btn-modal-pay-subscription').prop("disabled", true);
-            	$('.btn-modal-pay-subscription').html('<span class="spinner-border spinner-border-sm m-0"></span>');
-			}
-		});
-    });
 
     allNextBtn.click(function(){
 
@@ -1193,117 +999,26 @@ $(function(){
 		});
     });
 
+	$('#credit-card-payment').on('click', function(){
+		var amount = $("#plan_price_discounted").val();
+		var url = base_url + 'registration/_card_payment_form';
 
-    //Stripe
-    var handler = StripeCheckout.configure({
-		key: '<?= STRIPE_PUBLISH_KEY; ?>',
-		image: '',
-		token: function(token) {
-			$("#payment-method").val('stripe');
-            $("#payment-method-status").val('COMPLETED');
-            activate_registration();   
-			/*$("#stripeToken").val(token.id);
-			$("#stripeEmail").val(token.email);
-			$("#amountInCents").val(Math.floor($("#amountInDollars").val() * 100));
-			$("#myForm").submit();*/
+		$('#modal-credit-card-form').modal('show');
 
-		}
+		$.ajax({
+			type: "POST",
+			url: url,
+			data: $("#subscribe-form-payment").serialize(),
+			success: function(o)
+			{	
+				$('#card-container').html(o);
+				$('#modal-credit-card-form').modal('handleUpdate'); 
+			},
+			beforeSend:function(){
+				$('#card-container').html('<span class="spinner-border spinner-border-sm m-0"></span>');
+			}
+		});
 	});
-
-	$('#stripe-button').on('click', function(e) {
-	var amountInCents = Math.floor($("#plan_price_discounted").val() * 100);
-	var displayAmount = parseFloat(Math.floor($("#plan_price_discounted").val() * 100) / 100).toFixed(2);
-	// Open Checkout with further options
-	handler.open({
-		name: 'nSmarTrac',
-		description: 'Subscription amount ($' + displayAmount + ')',
-		amount: amountInCents,
-	});
-	e.preventDefault();
-	});
-
-	// Close Checkout on page navigation
-	$(window).on('popstate', function() {
-	handler.close();
-	});
-
-	//Converge payment
-	$("#converge-button").click(function(){
-		//initiateLightbox();
-		var total_amount = $("#plan_price_discounted").val();
-		$("#plan_amount").val(total_amount);
-		$("#modal-converge-subscribe").modal('show');
-	});
-
-	function initiateLightbox () {
-	  var job_id = $("#jobid").val();
-	  var total_amount = $("#plan_price_discounted").val();
-	  var firstname = $("#firstname").val();
-	  var lastname  = $("#lastname").val();
-	  var business_address   = $("#business_address").val();
-	  var zip_code = $("#zip_code").val();
-
-	  var url = base_url + 'registration/_converge_request_token';
-	  $("#converge-button").html('<span class="spinner-border spinner-border-sm m-0"></span>');
-	  setTimeout(function () {
-	    $.ajax({
-	       type: "POST",
-	       url: url,
-	       dataType: "json",
-	       data: {firstname:firstname, lastname:lastname, business_address:business_address, zip_code:zip_code, total_amount:total_amount},
-	       success: function(o)
-	       {
-	          if( o.is_success ){
-	              openLightbox(o.token)
-	          }else{
-	            Swal.fire({
-	              icon: 'error',
-	              title: 'Cannot Process Payment',
-	              text: o.msg
-	            });
-	          }
-
-	          $("#converge-button").html('PAY VIA CONVERGE');
-	       }
-	    });
-	  }, 500);
-	}
-
-	function openLightbox (token) {
-	  var paymentFields = {
-	          ssl_txn_auth_token: token
-	  };
-	  var callback = {
-	      onError: function (error) {
-	          //showResult("error", error);
-	          Swal.fire({
-	            icon: 'error',
-	            title: 'Error',
-	            text: error
-	          });
-	      },
-	      onCancelled: function () {
-	          //showResult("cancelled", "");
-	      },
-	      onDeclined: function (response) {
-	        Swal.fire({
-	          icon: 'error',
-	          title: 'Declined',
-	          text: 'Please check your entries and try again'
-	        });
-	        //showResult("declined", JSON.stringify(response, null, '\t'));
-	      },
-	      onApproval: function (response) {	          
-	          $("#payment-method").val('converge');
-	          $("#payment-method-status").val('COMPLETED');
-	          activate_registration();
-	          //showResult("approval", JSON.stringify(response, null, '\t'));
-	      }
-	  };
-	  PayWithConverge.open(paymentFields, callback);
-	  return false;
-	}
-
 
 	//Paypal
 	// Render the PayPal button into #paypal-button-container
@@ -1337,7 +1052,8 @@ $(function(){
         onApprove: function(data, actions) {
             return actions.order.capture().then(function(details) {
                 // Show a success message to the buyer
-                //console.log(details);
+                //console.log('paypal',details);				
+				$('#payment-intent-id').val(details.id);
                 $("#payment-method").val('paypal');
                 $("#payment-method-status").val(details.status);
                 activate_registration();                
@@ -1355,7 +1071,7 @@ $(function(){
 			data: $("#subscribe-form-payment").serialize(),
 			success: function(o)
 			{	
-				$('.trial-register-btn').html('Register');
+				//$('.trial-register-btn').html('Register');
 				if( o.is_success ){
 					Swal.fire({
 						title: 'Registration Completed!',
@@ -1381,7 +1097,18 @@ $(function(){
 				
 			},
 			beforeSend:function(){
-				$('.trial-register-btn').html('<span class="spinner-border spinner-border-sm m-0"></span>');
+				Swal.fire({
+					icon: "info",
+					title: "Processing",
+					html: "Please wait while the payment is being process...",
+					allowOutsideClick: false,
+					allowEscapeKey: false,
+					showConfirmButton: false,
+					didOpen: () => {
+						Swal.showLoading();
+					},
+				});
+				//$('.trial-register-btn').html('<span class="spinner-border spinner-border-sm m-0"></span>');
 			}
 		});
     }

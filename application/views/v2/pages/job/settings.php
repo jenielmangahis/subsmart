@@ -67,7 +67,7 @@ table.dataTable.no-footer {
                                                         <input type="text" placeholder="Prefix" name="job_settings_prefix" id="number-prefix" class="nsm-field form-control" value="<?php echo $settings_prefix ?>" autocomplete="off" <?= $input_disabled; ?> />
                                                     </div>
                                                     <div class="col-12 col-md-9">
-                                                        <input type="text" placeholder="Next Number" name="job_settings_next_number" id="number-base" class="nsm-field form-control" value="<?php echo $settings_next_num; ?>" autocomplete="off" <?= $input_disabled; ?> />
+                                                        <input type="number" placeholder="Next Number" name="job_settings_next_number" id="number-base" class="nsm-field form-control" value="<?php echo $settings_next_num; ?>" autocomplete="off" <?= $input_disabled; ?> />
                                                     </div>
                                                 </div>
                                             </div>
@@ -86,7 +86,7 @@ table.dataTable.no-footer {
                                                         <input type="text" placeholder="" class="nsm-field form-control" value="<?php echo $comp_id.'-'; ?>" disabled="" readonly="" />
                                                     </div>
                                                     <div class="col-12 col-md-9">
-                                                        <input type="text" placeholder="Next Number" name="job_settings_account_number_next_number" id="job-account-number-base" class="nsm-field form-control" value="<?php echo $settings_job_account_next_num; ?>" autocomplete="off" <?= $input_disabled; ?> />
+                                                        <input type="number" placeholder="Next Number" name="job_settings_account_number_next_number" id="job-account-number-base" class="nsm-field form-control" value="<?php echo $settings_job_account_next_num; ?>" autocomplete="off" <?= $input_disabled; ?> />
                                                     </div>
                                                 </div>
                                             </div>
