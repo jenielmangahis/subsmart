@@ -1557,11 +1557,33 @@ class Invoice extends MY_Controller
         }elseif($is_automation_activated && $this->input->post('status') == 'Overdue') {
             createAutomationQueue('send_email', 'invoice', 'invoice', 'past_due', $id);
             createAutomationQueue('send_sms', 'invoice', 'invoice', 'past_due', $id);
-
         }
         /**
          *  After successfully update invoice to paid, check for automation and add send email queue - end
-         */              
+         */         
+
+        $company_users = $this->users_model->getAllUsersByCompanyID($cid);
+        /**
+         * Add notification for all company user - start
+         */
+            if($this->input->post('status') == 'Overdue' && $objInvoice->status != 'Overdue') {
+                $content_notification = 'Invoice #' . $objInvoice->invoice_number . ' is already overdue';
+                foreach($company_users as $cuser) {
+                    $invoice_od_notify = array(
+                        'user_id' => $cuser->id,
+                        'title' => 'Invoice Overdue',
+                        'content' => $content_notification,
+                        'status' => 1,
+                        'date_created' => date("Y-m-d H:i:s"),
+                        'company_id' => $cid
+
+                    );                       
+                    $this->db->insert('user_notification', $invoice_od_notify);                    
+                }
+            }
+        /**
+         * Add notification for all company user - end
+         */
 
         $return = [
             'is_success' => $is_success,

@@ -40,16 +40,18 @@ class Notifications extends MY_Controller
         $post         = $this->input->post();
         $user_id      = logged('id');
         $company_id   = logged('company_id');
+        $notif_status = 1; //1=unread,0=read
 
-        $notification = $this->timesheet_model->get_unreadNotification($badgeCount, "");
+        $notification = $this->User_notification_model->get_notifications($company_id, $user_id, $notif_status);
 
         $html = '';
         
         if ($notification != null) {
             $notifyCount = count($notification);
             foreach ($notification as $notify) {
+
                 $seen = '';
-                if ($notify->status == 1) {
+                if ($notify->status == 0) {
                     $seen = 'read';
                 }
 
@@ -88,7 +90,7 @@ class Notifications extends MY_Controller
                                     </div>
                                 </div>
                             </div>';
-                } else {
+                } elseif ($notify->title == 'Clock In' || $notify->title == 'Clock Out') {
                     $html .= '<div class="list-item" onclick="location.href=\'' . site_url("timesheet/attendance") . '\'" data-id="' . $notify->id . '">
                                 <div class="nsm-notification-item">';
 
@@ -100,6 +102,38 @@ class Notifications extends MY_Controller
 
                     $html .= '<div class="nsm-notification-content ' . $seen . '">
                                         <span class="content-title fw-bold mb-1">' . $notify->FName . " " . $notify->LName . '</span>
+                                        <span class="content-subtitle">' . $notify->content . '</span>
+                                    </div>
+                                </div>
+                            </div>';
+                } elseif ($notify->title == 'Invoice Overdue') {
+                    $html .= '<div class="list-item" onclick="location.href=\'' . site_url("invoice/tab/overdue") . '\'" data-id="' . $notify->id . '">
+                                <div class="nsm-notification-item">';
+
+                    if (is_null($image)) :
+                        $html .= '<div class="nsm-profile"><span>' . ucwords($notify->FName[0]) . ucwords($notify->LName[0]) . '</span></div>';
+                    else :
+                        $html .= '<div class="nsm-profile" style="background-image: url(' . $image . ');"></div>';
+                    endif;
+
+                    $html .= '<div class="nsm-notification-content ' . $seen . '">
+                                        <span class="content-title fw-bold mb-1">' . $notify->FName . " " . $notify->LName . '</span>
+                                        <span class="content-subtitle">' . $notify->content . '</span>
+                                    </div>
+                                </div>
+                            </div>';
+                } elseif ($notify->title == 'Invoice Late Fee') {
+                    $html .= '<div class="list-item" onclick="location.href=\'' . site_url("invoice") . '\'" data-id="' . $notify->id . '">
+                                <div class="nsm-notification-item">';
+
+                    if (is_null($image)) :
+                        $html .= '<div class="nsm-profile"><span>' . ucwords($notify->FName[0]) . ucwords($notify->LName[0]) . '</span></div>';
+                    else :
+                        $html .= '<div class="nsm-profile" style="background-image: url(' . $image . ');"></div>';
+                    endif;
+
+                    $html .= '<div class="nsm-notification-content ' . $seen . '">
+                                        <span class="content-title fw-bold mb-1">Hi ' . $notify->FName . " " . $notify->LName . '</span>
                                         <span class="content-subtitle">' . $notify->content . '</span>
                                     </div>
                                 </div>
@@ -116,8 +150,6 @@ class Notifications extends MY_Controller
         echo json_encode($notificationListArray);
     }
     
-
- 
 }
 
 
