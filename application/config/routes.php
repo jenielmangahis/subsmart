@@ -2165,6 +2165,7 @@ $route['timesheet/_update_settings'] = 'Timesheet/ajax_update_settings';
 //Notifications
 $route['notifications'] = 'Notifications/index';
 $route['notifications/_get_notifications'] = 'Notifications/ajax_get_notifications';
+$route['notifications/clear_all'] = 'Notifications/clear_all';
 
 //Employment Details
 $route['accounting/employees/_update_employment_details'] = 'accounting_controllers/Employees/ajax_update_employment_details';

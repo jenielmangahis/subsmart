@@ -1562,10 +1562,11 @@ class Invoice extends MY_Controller
          *  After successfully update invoice to paid, check for automation and add send email queue - end
          */         
 
-        $company_users = $this->users_model->getAllUsersByCompanyID($cid);
+        
         /**
          * Add notification for all company user - start
          */
+            $company_users = $this->users_model->getAllUsersByCompanyID($cid);
             if($this->input->post('status') == 'Overdue' && $objInvoice->status != 'Overdue') {
                 $content_notification = 'Invoice #' . $objInvoice->invoice_number . ' is already overdue';
                 foreach($company_users as $cuser) {
