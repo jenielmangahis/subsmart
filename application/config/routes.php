@@ -1248,6 +1248,8 @@ $route['registration/_use_offer_code'] = 'Register/registration_use_code';
 $route['registration/_create_registration'] = 'Register/ajax_create_registration';
 $route['registration/_converge_request_token'] = 'Register/ajax_converge_token_request';
 $route['registration/_pay_subscription'] = 'Register/ajax_converge_payment';
+$route['registration/_card_payment_form'] = 'Register/ajax_card_payment_form';
+$route['registration/_process_card_payment'] = 'Register/ajax_process_card_payment';
 
 // Public Add Employee
 $route['add_company_employee/(:any)'] = 'Pages/front_add_employee/$1';
