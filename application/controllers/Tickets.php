@@ -3075,6 +3075,37 @@ class Tickets extends MY_Controller
         $this->page_data['page']->title = 'Panel Types';
         $this->load->view('v2/pages/tickets/settings/panel_types', $this->page_data);
     }
+
+    public function ajax_with_selected_delete_panel_types()
+	{
+		$this->load->model('PanelType_model');
+
+		$is_success = 0;
+        $msg    = 'Please select data';
+
+        $company_id  = logged('company_id');
+        $post = $this->input->post();
+
+        if( $post['panelTypes'] ){
+
+            $filters[] = ['field' => 'company_id', 'value' => $company_id];
+            $total_deleted = $this->PanelType_model->bulkDelete($post['panelTypes'], $filters);
+
+			//Activity Logs
+			$activity_name = 'Panel Types : Permanently deleted ' .$total_deleted. ' panel type(s)'; 
+			createActivityLog($activity_name);
+
+            $is_success = 1;
+            $msg    = '';
+        }
+
+        $return = [
+            'is_success' => $is_success,
+            'msg' => $msg
+        ];
+
+        echo json_encode($return);
+	}
     
     public function ajax_create_panel_type()
     {
@@ -3106,7 +3137,7 @@ class Tickets extends MY_Controller
             $this->PanelType_model->create($data);
 
             //Activity Logs
-            $activity_name = 'Panel Type : Created Panel Type ' . $post['panel_type_name']; 
+            $activity_name = 'Panel Types : Created Panel Type ' . $post['panel_type_name']; 
             createActivityLog($activity_name);
 
         }
@@ -3145,7 +3176,7 @@ class Tickets extends MY_Controller
             $this->PanelType_model->update($panelType->id, $data);
 
             //Activity Logs
-            $activity_name = 'Panel Type : Updated Panel Type ' . $post['panel_type_name']; 
+            $activity_name = 'Panel Types : Updated Panel Type ' . $post['panel_type_name']; 
             createActivityLog($activity_name);
 
         }else{
@@ -3177,7 +3208,7 @@ class Tickets extends MY_Controller
         if( $panelType && $panelType->company_id == $cid ){
 
             //Activity Logs
-            $activity_name = 'Panel Type : Deleted Panel Type ' . $panelType->name; 
+            $activity_name = 'Panel Types : Deleted Panel Type ' . $panelType->name; 
             createActivityLog($activity_name);
 
             $this->PanelType_model->delete($panelType->id);

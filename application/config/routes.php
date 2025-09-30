@@ -1179,6 +1179,8 @@ $route['workorder/new'] = 'Workorder/NewworkOrder';
 $route['workorder/_update_workorder_settings'] = 'Workorder/ajax_update_workoder_settings';
 $route['workorder/checklists'] = 'Workorder/checklists';
 $route['workorder/add_checklist'] = 'Workorder/add_checklist';
+$route['workorder/_delete_selected_checklists'] = 'Workorder/ajax_delete_selected_checklists';
+
 $route['workorder/create_checklist'] = 'Workorder/create_checklist';
 $route['workorder/edit_checklist/(:num)'] = 'Workorder/edit_checklist/$1';
 $route['workorder/_load_checklist_items'] = 'Workorder/ajax_load_checklist_items';
@@ -2190,6 +2192,7 @@ $route['tickets/settings_panel_types'] = 'Tickets/settings_panel_types';
 $route['tickets/_create_panel_type'] = 'Tickets/ajax_create_panel_type';
 $route['tickets/_update_panel_type'] = 'Tickets/ajax_update_panel_type';
 $route['tickets/_delete_panel_type'] = 'Tickets/ajax_delete_panel_type';
+$route['tickets/_with_selected_delete_panel_types'] = 'Tickets/ajax_with_selected_delete_panel_types';
 
 //Setting : Panel Types
 $route['tickets/settings_plan_types'] = 'Tickets/settings_plan_types';

@@ -291,7 +291,7 @@
             <div class="col-lg-10 mb-1">
                 <div class="input-group float-start">
                     <input class="form-control recentEditCheckTableSearch" type="text" placeholder="Search...">
-                    <select class="form-select checkAddCategorySearch"></select>
+                    <select class="form-select checkEditCategorySearch"></select>
                 </div>
             </div>
             <div class="col-lg-2 mb-1">

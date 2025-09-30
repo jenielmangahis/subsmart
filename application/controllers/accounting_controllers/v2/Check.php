@@ -225,7 +225,7 @@ class Check extends MY_Controller
 
             $memo = !empty($getDatas->memo) ? $getDatas->memo : '<small class="text-muted fst-italic">Not Specified</small>';
             $payment_date = !empty($getDatas->payment_date) ? date('m/d/Y', strtotime($getDatas->payment_date)) : '<small class="text-muted fst-italic">Not Specified</small>';
-            $total_amount = isset($getDatas->total_amount) ? (($getDatas->total_amount < 0 ? '-$' : '$') . number_format(abs($getDatas->total_amount), 2)) : '<small class="text-muted fst-italic">Not Specified</small>';
+            $total_amount = isset($getDatas->total_amount) ? (($getDatas->total_amount < 0 ? '-$' : '$') . number_format(abs($getDatas->total_amount), 2)) : '<span>$0.00</span>';
 
             switch ($getDatas->status) {
                 case 0:
@@ -238,6 +238,7 @@ class Check extends MY_Controller
                 case 2:
                     $status = "<span class='badge bg-danger'>VOIDED</span>";
                     $memo .= " <small class='text-muted fst-italic'>&mdash; VOIDED</small>";
+                    $total_amount = isset($getDatas->total_amount) ? '<s class="text-muted text-small">' . (($getDatas->total_amount < 0 ? '-$' : '$') . number_format(abs($getDatas->total_amount), 2)) . '</s>' : '<s class="text-muted">$0.00</s>';
                     break;
             }
             
@@ -324,7 +325,7 @@ class Check extends MY_Controller
         $i = $this->input->post('start');
 
         foreach ($getData as $getDatas) {
-            $checkboxSelection = "<input class='form-check-input verticalAlign $recentType' data-check_id='$getDatas->id' type='checkbox'>";
+            $checkboxSelection = "<input class='form-check-input $recentType' data-check_id='$getDatas->id' type='checkbox'>";
             $check_no = !empty($getDatas->check_no) ? $getDatas->check_no : '<small class="text-muted fst-italic">Print Later</small>';
             $payee_name = !empty($getDatas->payee_name) ? $getDatas->payee_name : '';
             $total_amount = isset($getDatas->total_amount) ? (($getDatas->total_amount < 0 ? '-$' : '$') . number_format(abs($getDatas->total_amount), 2)) : '<small class="text-muted fst-italic">Not Specified</small>';
@@ -925,7 +926,7 @@ class Check extends MY_Controller
 
         $this->db->where('id', $check_id);
         $updated = $this->db->update('accounting_check', [
-            'total_amount' => 0,
+            // 'total_amount' => 0,
             'status' => 2
         ]);
 
@@ -967,7 +968,7 @@ class Check extends MY_Controller
 
         $this->db->where_in('id', $check_ids);
         $updated = $this->db->update('accounting_check', [
-            'total_amount' => 0,
+            // 'total_amount' => 0,
             'status' => 2
         ]);
 

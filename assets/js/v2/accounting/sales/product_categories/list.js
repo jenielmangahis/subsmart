@@ -230,4 +230,63 @@ $(".check-input-product-category").click(function() {
         $('.dropdown-item-delete').addClass('disabled');
         $('#num-checked').text('');
     }
-})
+});
+
+$(document).on('submit', '#create-category-form', function(e){
+    let _this = $(this);
+    e.preventDefault();
+
+    let url = base_url + "accounting/product-categories/_create";
+    let formData = new FormData(_this[0]);  
+
+    $.ajax({
+        type: 'POST',
+        url: url,
+        data: _this.serialize(),
+        dataType: "json",
+        success: function(result) {
+            if (result.is_success == 1) {
+                $("#change_profile_modal").modal('hide');
+                Swal.fire({
+                    title: 'Product Category',
+                    text: "Product category was successfully created.",
+                    icon: 'success',
+                    showCancelButton: false,
+                    confirmButtonText: 'Okay'
+                }).then((result) => {
+                    //if (result.value) {
+                        location.reload();
+                    //}
+                });                 
+            } else {
+                Swal.fire({
+                    title: 'Failed',
+                    text: result.msg,
+                    icon: 'error',
+                    showCancelButton: false,
+                    confirmButtonText: 'Okay'
+                });
+            }
+
+            $('#btn-create-product-category').html("Save");
+            $('#btn-create-product-category').prop("disabled", false);
+        },
+        beforeSend: function(){
+            $('#btn-create-product-category').html("Saving");
+            $('#btn-create-product-category').prop("disabled", true);
+
+            Swal.fire({
+                icon: "info",
+                title: "Processing",
+                html: "Please wait while the process is running...",
+                allowOutsideClick: false,
+                allowEscapeKey: false,
+                showConfirmButton: false,
+                didOpen: () => {
+                    Swal.showLoading();
+                },
+            });
+        }
+    });
+    
+});

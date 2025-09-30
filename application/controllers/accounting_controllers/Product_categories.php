@@ -174,6 +174,41 @@ class Product_categories extends MY_Controller {
         redirect("accounting/product-categories");
     }
 
+    public function ajax_create()
+    {
+        $is_success = 0;
+        $msg    = 'Cannot save data';
+
+        $post = $this->input->post();
+        $company_id = logged('company_id');
+
+        $data = [
+            'company_id' => $company_id,
+            'name' => $post['name'],
+            'description' => $post['description'],
+            'parent_id' => isset($post['parent_id']) ? $post['parent_id'] : null
+        ];
+
+        $create = $this->items_model->insertCategory($data);
+        $name = $data['name'];
+
+        if($create) {
+            //Activity Logs
+			$activity_name = 'Accounting Product Categories : Created product category ' . $name; 
+			createActivityLog($activity_name);
+            
+            $is_success = 1;
+            $msg = '';
+        }
+
+        $return = [
+            'is_success' => $is_success,
+            'msg' => $msg
+        ];
+
+        echo json_encode($return);
+    }
+
     public function get_category_details($id)
     {
         $category = $this->items_model->getCategory($id);
@@ -230,12 +265,16 @@ class Product_categories extends MY_Controller {
 
         $name   = $this->items_model->getCategory($id)->name;
         $delete = $this->items_model->deleteCategory($id);
-
         $removeItemCategories = $this->items_model->remove_item_categories($id);
 
         if($delete) {
             $is_success = 1;
             $msg = "Product category successfully deleted!";
+
+            //Activity Logs
+			$activity_name = 'Accounting Product Categories : Deleted category ' . $name; 
+			createActivityLog($activity_name);
+            
         } else {
             $is_success = 0;
             $msg = "Error deleting category";
