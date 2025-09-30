@@ -24,7 +24,7 @@ class Notifications extends MY_Controller
         if ($user_type == 7) {
             $activityLogs = $this->Activity_model->getActivityLogs($cid);
         } else {
-            $activityLogs = $this->Activity_model->getActivityLogsByUserId($user_id);
+            $activityLogs = $this->Activity_model->getActivityLogsByUserId($uid);
         }
 
         $this->page_data['page']->title  = 'Notification';
@@ -117,7 +117,7 @@ class Notifications extends MY_Controller
                     endif;
 
                     $html .= '<div class="nsm-notification-content ' . $seen . '">
-                                        <span class="content-title fw-bold mb-1">' . $notify->FName . " " . $notify->LName . '</span>
+                                        <span class="content-title fw-bold mb-1">Hi! ' . $notify->FName . " " . $notify->LName . '</span>
                                         <span class="content-subtitle">' . $notify->content . '</span>
                                     </div>
                                 </div>
@@ -133,7 +133,7 @@ class Notifications extends MY_Controller
                     endif;
 
                     $html .= '<div class="nsm-notification-content ' . $seen . '">
-                                        <span class="content-title fw-bold mb-1">Hi ' . $notify->FName . " " . $notify->LName . '</span>
+                                        <span class="content-title fw-bold mb-1">Hi! ' . $notify->FName . " " . $notify->LName . '</span>
                                         <span class="content-subtitle">' . $notify->content . '</span>
                                     </div>
                                 </div>
@@ -148,6 +148,14 @@ class Notifications extends MY_Controller
         );
 
         echo json_encode($notificationListArray);
+    }
+
+    public function clear_all() 
+    {
+        $cid = logged('company_id');
+        $this->User_notification_model->read_all_by_company_id($cid);
+
+        return redirect('notifications')->with('message', 'Clear notification completed!');
     }
     
 }

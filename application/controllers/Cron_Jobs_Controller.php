@@ -3705,6 +3705,7 @@ class Cron_Jobs_Controller extends CI_Controller
         $invoices_data = $this->invoice_model->getAllActiveInvoice([],1);
         //$invoices_data = $this->invoice_model->getActiveInvoiceByInvoiceNumber([], 'INV-0000105');
 
+        $enable_late_fee_notification = true;
         $deduct_days_computation = 0;
         $total_records           = 0;
         $total_pause             = 0;
@@ -3807,9 +3808,35 @@ class Cron_Jobs_Controller extends CI_Controller
                     'grand_total' => $new_invoice_grand_total,
                     'total_due' => $new_invoice_grand_total,
                     'late_fee' => $late_fee
-                ];         
-                
+                ];
+                                
                 $this->customer_ad_model->update_data($invdata, 'invoices', 'id');	
+
+                /**
+                 * Add late fee notification for all company user - start
+                 */
+                    if($late_fee > 0 && $enable_late_fee_notification == true) {
+                        if($invdata && $inv_data->invoice_number != 'undefined') {
+                            $company_users = $this->users_model->getAllUsersByCompanyID($inv_data->company_id);
+                            $content_notification = 'Invoice #' . $inv_data->invoice_number . ' have late fee amount of $' . number_format($late_fee,2);
+                            foreach($company_users as $cuser) {
+                                $invoice_lf_notify = array(
+                                    'user_id' => $cuser->id,
+                                    'title' => 'Invoice Late Fee',
+                                    'content' => $content_notification,
+                                    'status' => 1,
+                                    'date_created' => date("Y-m-d H:i:s"),
+                                    'company_id' => $inv_data->company_id
+
+                                );                       
+                                $this->db->insert('user_notification', $invoice_lf_notify);                    
+                            }                            
+                        }
+                    }
+                /**
+                 * Add late fee notification for all company user - end
+                 */
+
                 $total_records++;
 
             } else {

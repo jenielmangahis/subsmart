@@ -18,6 +18,7 @@ class User_notification_model extends MY_Model
 
     public function get_notifications($company_id, $user_id, $status = 1) //Note: 1=unread,0=read
     {
+        $limit = 100;
         $this->db->reset_query();
         
         $date = date_create(date("Y-m-d H:i:s"));
@@ -30,12 +31,24 @@ class User_notification_model extends MY_Model
             where user_notification.company_id = " . $company_id . " AND user_notification.status = " . $status . " 
             AND user_notification.user_id = " . $user_id . "
             and user_notification.date_created >= '" . $date_2days_ago . "' " . $and_query . " 
-            order by user_notification.date_created Desc");
+            order by user_notification.date_created Desc limit " . $limit);
 
         return $query->result();
     }    
 
-
+    public function read_all_by_company_id($company_id = null) {
+        $return = false;
+        if($company_id != null) {
+            $update = array(
+                'status' => 0
+            );
+            $this->db->where('company_id', $company_id);
+            $this->db->update('user_notification', $update);
+            $return = true;
+        }
+        
+        return $return;
+    }
 
 }
 
