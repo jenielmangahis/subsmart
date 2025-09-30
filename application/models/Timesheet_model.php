@@ -154,7 +154,6 @@ class Timesheet_model extends MY_Model
             return $query->result();
         }
 
-
         // $query = $this->db->get();
         // var_dump(query);
         // $qry = $query->result();

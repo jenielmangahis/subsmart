@@ -2164,6 +2164,7 @@ $route['timesheet/export_overtime_request_list'] = 'Timesheet/export_overtime_re
 $route['timesheet/_update_settings'] = 'Timesheet/ajax_update_settings';
 
 //Notifications
+$route['notifications'] = 'Notifications/index';
 $route['notifications/_get_notifications'] = 'Notifications/ajax_get_notifications';
 
 //Employment Details

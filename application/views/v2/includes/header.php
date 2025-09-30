@@ -586,6 +586,7 @@ $newtasks = getTasks();
                                 </div>
                             </div>
                         </li>
+
                         <!-- Current Notification V2 Sept 2025 -->
                         <!-- <li>                           
                             <div class="dropdown d-flex">
@@ -631,7 +632,7 @@ $newtasks = getTasks();
                                     <div>
                                         <hr class="dropdown-divider">
                                     </div>
-                                    <div class="list-item text-center" onclick="location.href='<?php echo site_url(); ?>timesheet/notification'">
+                                    <div class="list-item text-center" onclick="location.href='<?php echo site_url(); ?>notifications'">
                                         <span class="content-subtitle">View All</span>
                                     </div>
                                 </div>
