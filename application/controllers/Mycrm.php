@@ -273,6 +273,7 @@ class Mycrm extends MY_Controller
         $this->load->model('IndustryType_model');
         $this->load->model('IndustryTemplateModules_model');
         $this->load->helper('converge_payment_helper');
+        $this->load->helper('stripe_helper');
 
         $is_success = 0;
         $message = '';
@@ -293,71 +294,75 @@ class Mycrm extends MY_Controller
 
             $address = $company->street.' '.$company->city.' '.$company->state;
             $zip_code = $company->postal_code;
-            $converge_data = [
-                'amount' => $amount,
-                'card_number' => $post['card_number'],
+
+            $stripeHelper = new Stripe;
+            $card_info = [
+                'number' => $post['card_number'],
                 'exp_month' => $post['exp_month'],
                 'exp_year' => $post['exp_year'],
-                'card_cvc' => $post['cvc'],
-                'address' => $address,
-                'zip' => $zip_code,
+                'cvc' => $post['cvc'],
             ];
-            $result = convergeSendSale($converge_data);
-            if ($result['is_success']) {
-                //$next_billing_date = date('Y-m-d', strtotime('+1 month'));
-                $data = [
-                    'payment_method' => 'converge',   
-                    'plan_date_registered' => date("Y-m-d"),
-                    'plan_date_expiration' => $next_billing_date,
-                    'date_modified' => date('Y-m-d H:i:s'),
-                    'is_plan_active' => 1,
-                    'nsmart_plan_id' => $plan->nsmart_plans_id,
-                    'is_trial' => 0,
-                    'payment_method' => 'converge',
-                    'next_billing_date' => $next_billing_date,
-                    'num_months_discounted' => 0,
-                    'recurring_payment_type' => $post['subscription_type'],
-                ];
-                $this->Clients_model->update($company_id, $data);
+            $result = $stripeHelper->validateCardDetailsV2($card_info);
+            if ($result['token']) {
+                $payment = $stripeHelper->createPaymentIntent($amount);
+                if( $payment['is_success'] ){
+                    //$next_billing_date = date('Y-m-d', strtotime('+1 month'));
+                    $data = [
+                        'payment_method' => 'stripe',   
+                        'plan_date_registered' => date("Y-m-d"),
+                        'plan_date_expiration' => $next_billing_date,
+                        'date_modified' => date('Y-m-d H:i:s'),
+                        'is_plan_active' => 1,
+                        'nsmart_plan_id' => $plan->nsmart_plans_id,
+                        'is_trial' => 0,
+                        'payment_method' => 'converge',
+                        'next_billing_date' => $next_billing_date,
+                        'num_months_discounted' => 0,
+                        'recurring_payment_type' => $post['subscription_type'],
+                    ];
+                    $this->Clients_model->update($company_id, $data);
 
-                // Update access modules
-                $industryType = $this->IndustryType_model->getById($client->industry_type_id);
-                if ($industryType) {
-                    $access_modules  = [];
-                    $industryModules = $this->IndustryTemplateModules_model->getAllByTemplateId($industryType->industry_template_id);                    
-                    foreach ($industryModules as $im) {
-                        $access_modules[] = $im->industry_module_id;
+                    // Update access modules
+                    $industryType = $this->IndustryType_model->getById($client->industry_type_id);
+                    if ($industryType) {
+                        $access_modules  = [];
+                        $industryModules = $this->IndustryTemplateModules_model->getAllByTemplateId($industryType->industry_template_id);                    
+                        foreach ($industryModules as $im) {
+                            $access_modules[] = $im->industry_module_id;
+                        }
+
+                        $this->session->set_userdata('userAccessModules', $access_modules);
+                        $this->session->set_userdata('is_plan_active', 1);
                     }
 
-                    $this->session->set_userdata('userAccessModules', $access_modules);
-                    $this->session->set_userdata('is_plan_active', 1);
+                    // Record payment
+                    $data_payment = [
+                        'company_id' => $company_id,
+                        'payment_id' => $payment['payment_intent_id'],
+                        'payment_api' => $this->CompanySubscriptionPayments_model->paymentApiStripe(),
+                        'transaction_type' => $this->CompanySubscriptionPayments_model->transactionTypePlanUpgrade(),
+                        'description' => 'Paid Membership - Plan Upgrade (' . ucwords($post['subscription_type']) . ')',
+                        'payment_date' => date('Y-m-d'),
+                        'total_amount' => $amount,
+                        'date_created' => date('Y-m-d H:i:s'),
+                    ];
+
+                    $id = $this->CompanySubscriptionPayments_model->create($data_payment);
+                    $order_number = $this->CompanySubscriptionPayments_model->generateORNumber($id);
+
+                    $data = ['order_number' => $order_number];
+                    $this->CompanySubscriptionPayments_model->update($id, $data);
+
+                    //Activity Logs
+                    $activity_name = 'MyCRM : Paid Membership - Plan Upgrade (' . ucwords($post['subscription_type']) . ')'; 
+                    createActivityLog($activity_name);
+
+                    $is_success = 1;
+                }else{
+                    $message = $payment['err_message'];
                 }
-
-                // Record payment
-                $data_payment = [
-                    'company_id' => $company_id,
-                    'payment_id' => $result['ssl_txn_id'],
-                    'payment_api' => $this->CompanySubscriptionPayments_model->paymentApiConverge(),
-                    'transaction_type' => $this->CompanySubscriptionPayments_model->transactionTypePlanUpgrade(),
-                    'description' => 'Paid Membership - Plan Upgrade (' . ucwords($post['subscription_type']) . ')',
-                    'payment_date' => date('Y-m-d'),
-                    'total_amount' => $amount,
-                    'date_created' => date('Y-m-d H:i:s'),
-                ];
-
-                $id = $this->CompanySubscriptionPayments_model->create($data_payment);
-                $order_number = $this->CompanySubscriptionPayments_model->generateORNumber($id);
-
-                $data = ['order_number' => $order_number];
-                $this->CompanySubscriptionPayments_model->update($id, $data);
-
-                //Activity Logs
-                $activity_name = 'MyCRM : Paid Membership - Plan Upgrade (' . ucwords($post['subscription_type']) . ')'; 
-                createActivityLog($activity_name);
-
-                $is_success = 1;
             } else {
-                $message = $result['msg'];
+                $message = $result['err_message'];
             }
         }
 
@@ -374,6 +379,7 @@ class Mycrm extends MY_Controller
         $this->load->model('IndustryType_model');
         $this->load->model('IndustryTemplateModules_model');
         $this->load->helper('converge_payment_helper');
+        $this->load->helper('stripe_helper');
 
         $is_success = 0;
         $message = '';
@@ -423,80 +429,83 @@ class Mycrm extends MY_Controller
             $company  = $this->Business_model->getByCompanyId($company_id);
             $address  = $company->street.' '.$company->city.' '.$company->state;
             $zip_code = $company->postal_code;
-            $converge_data = [
-                'amount' => $amount,
-                'card_number' => $post['card_number'],
+            $stripeHelper = new Stripe;
+            $card_info = [
+                'number' => $post['card_number'],
                 'exp_month' => $post['exp_month'],
                 'exp_year' => $post['exp_year'],
-                'card_cvc' => $post['cvc'],
-                'address' => $address,
-                'zip' => $zip_code,
+                'cvc' => $post['cvc'],
             ];
-            $result = convergeSendSale($converge_data);
-            if ($result['is_success']) {
-                $data = [
-                    'payment_method' => 'converge',
-                    'plan_date_expiration' => $plan_date_expiration,
-                    'date_modified' => date('Y-m-d H:i:s'),
-                    'is_plan_active' => 1,
-                    'is_trial' => 0,
-                    'next_billing_date' => $next_billing_date,
-                    'num_months_discounted' => $num_months_discounted,
-                ];
-                $this->Clients_model->update($company_id, $data);
-                $this->session->set_userdata('is_plan_active', 1);
+            $result = $stripeHelper->validateCardDetailsV2($card_info);
+            if ($result['token']) {
+                $payment = $stripeHelper->createPaymentIntent($amount);
+                if( $payment['is_success'] ){
+                    $data = [
+                        'payment_method' => 'stripe',
+                        'plan_date_expiration' => $plan_date_expiration,
+                        'date_modified' => date('Y-m-d H:i:s'),
+                        'is_plan_active' => 1,
+                        'is_trial' => 0,
+                        'next_billing_date' => $next_billing_date,
+                        'num_months_discounted' => $num_months_discounted,
+                    ];
+                    $this->Clients_model->update($company_id, $data);
+                    $this->session->set_userdata('is_plan_active', 1);
 
-                //Delete addons if requested to remove
-                $this->SubscriberNsmartUpgrade_model->deleteAllRequestRemovalByClientId($client->id);
+                    //Delete addons if requested to remove
+                    $this->SubscriberNsmartUpgrade_model->deleteAllRequestRemovalByClientId($client->id);
 
-                //Update session active addons
-                $addons = $this->SubscriberNsmartUpgrade_model->getAllByClientId($client->id);
-                $active_addons = array();
-                foreach( $addons as $a ){
-                    $active_addons[$a->plan_upgrade_id] = $a->plan_upgrade_id;
-                }
-                $this->session->set_userdata('plan_active_addons', $active_addons);
+                    //Update session active addons
+                    $addons = $this->SubscriberNsmartUpgrade_model->getAllByClientId($client->id);
+                    $active_addons = array();
+                    foreach( $addons as $a ){
+                        $active_addons[$a->plan_upgrade_id] = $a->plan_upgrade_id;
+                    }
+                    $this->session->set_userdata('plan_active_addons', $active_addons);
 
-                // Update access modules
-                $industryType = $this->IndustryType_model->getById($client->industry_type_id);
-                if ($industryType) {
-                    $access_modules  = [];
-                    $industryModules = $this->IndustryTemplateModules_model->getAllByTemplateId($industryType->industry_template_id);
-                    foreach ($industryModules as $im) {
-                        $access_modules[] = $im->industry_module_id;
+                    // Update access modules
+                    $industryType = $this->IndustryType_model->getById($client->industry_type_id);
+                    if ($industryType) {
+                        $access_modules  = [];
+                        $industryModules = $this->IndustryTemplateModules_model->getAllByTemplateId($industryType->industry_template_id);
+                        foreach ($industryModules as $im) {
+                            $access_modules[] = $im->industry_module_id;
+                        }
+
+                        $this->session->set_userdata('userAccessModules', $access_modules);                    
                     }
 
-                    $this->session->set_userdata('userAccessModules', $access_modules);                    
-                }
+                    // Record payment
+                    $data_payment = [
+                        'company_id' => $company_id,
+                        'payment_id' => $payment['payment_intent_id'],
+                        'payment_api' => $this->CompanySubscriptionPayments_model->paymentApiStripe(),
+                        'transaction_type' => $this->CompanySubscriptionPayments_model->transactionTypeSubscription(),
+                        'description' => 'Paid Membership - '.ucwords($client->recurring_payment_type),
+                        'payment_date' => date('Y-m-d'),
+                        'total_amount' => $amount,
+                        'date_created' => date('Y-m-d H:i:s'),
+                    ];
 
-                // Record payment
-                $data_payment = [
-                    'company_id' => $company_id,
-                    'payment_id' => $result['ssl_txn_id'],
-                    'payment_api' => $this->CompanySubscriptionPayments_model->paymentApiConverge(),
-                    'transaction_type' => $this->CompanySubscriptionPayments_model->transactionTypeSubscription(),
-                    'description' => 'Paid Membership - '.ucwords($client->recurring_payment_type),
-                    'payment_date' => date('Y-m-d'),
-                    'total_amount' => $amount,
-                    'date_created' => date('Y-m-d H:i:s'),
-                ];
+                    $payment_id = $this->CompanySubscriptionPayments_model->create($data_payment);
+                    $order_number = $this->CompanySubscriptionPayments_model->generateORNumber($payment_id);
 
-                $payment_id = $this->CompanySubscriptionPayments_model->create($data_payment);
-                $order_number = $this->CompanySubscriptionPayments_model->generateORNumber($payment_id);
+                    $data = ['order_number' => $order_number];
+                    $this->CompanySubscriptionPayments_model->update($payment_id, $data);
 
-                $data = ['order_number' => $order_number];
-                $this->CompanySubscriptionPayments_model->update($payment_id, $data);
+                    // Send mail
+                    $this->send_invoice_email($payment_id);
 
-                // Send mail
-                $this->send_invoice_email($payment_id);
+                    //Activity Logs
+                    $activity_name = 'MyCRM : Paid Subscription'; 
+                    createActivityLog($activity_name);
 
-                //Activity Logs
-                $activity_name = 'MyCRM : Paid Subscription'; 
-                createActivityLog($activity_name);
-
-                $is_success = 1;
+                    $is_success = 1;
+                }else{
+                    $message = $payment['err_message'];
+                }                
             } else {
-                $message = $result['msg'];
+                $message = $result['err_message'];
             }
         }
 
@@ -818,6 +827,7 @@ class Mycrm extends MY_Controller
         $this->load->model('CompanySubscriptionPayments_model');
         $this->load->model('SubscriberNsmartUpgrade_model');
         $this->load->helper('converge_payment_helper');
+        $this->load->helper('stripe_helper');
 
         $is_success = 0;
         $message = '';
@@ -833,52 +843,54 @@ class Mycrm extends MY_Controller
             $company = $this->Business_model->getByCompanyId($company_id);
             $address = $company->street.' '.$company->city.' '.$company->state;
             $zip_code = $company->postal_code;
-            $converge_data = [
-                'amount' => $amount,
-                'card_number' => $post['card_number'],
+            $stripeHelper = new Stripe;
+            $card_info = [
+                'number' => $post['card_number'],
                 'exp_month' => $post['exp_month'],
                 'exp_year' => $post['exp_year'],
-                'card_cvc' => $post['cvc'],
-                'address' => $address,
-                'zip' => $zip_code,
+                'cvc' => $post['cvc'],
             ];
-            $result = convergeSendSale($converge_data);
-            if ($result['is_success']) {
-                $data = [
-                    'number_of_license' => $new_num_license,
-                ];
-                $this->Clients_model->update($company_id, $data);
+            $result = $stripeHelper->validateCardDetailsV2($card_info);
+            if ($result['token']) {
+                $payment = $stripeHelper->createPaymentIntent($amount);
+                if( $payment['is_success'] ){
+                    $data = [
+                        'number_of_license' => $new_num_license,
+                    ];
+                    $this->Clients_model->update($company_id, $data);
 
-                // Record payment
-                $data_payment = [
-                    'company_id' => $company_id,
-                    'payment_id' => $result['ssl_txn_id'],
-                    'payment_api' => $this->CompanySubscriptionPayments_model->paymentApiConverge(),
-                    'transaction_type' => $this->CompanySubscriptionPayments_model->transactionTypeLicense(),
-                    'description' => 'Paid Plan License',
-                    'payment_date' => date('Y-m-d'),
-                    'total_amount' => $amount,
-                    'date_created' => date('Y-m-d H:i:s'),
-                ];
+                    // Record payment
+                    $data_payment = [
+                        'company_id' => $company_id,
+                        'payment_id' => $payment['payment_intent_id'],
+                        'payment_api' => $this->CompanySubscriptionPayments_model->paymentApiStripe(),
+                        'transaction_type' => $this->CompanySubscriptionPayments_model->transactionTypeLicense(),
+                        'description' => 'Paid Plan License',
+                        'payment_date' => date('Y-m-d'),
+                        'total_amount' => $amount,
+                        'date_created' => date('Y-m-d H:i:s'),
+                    ];
 
-                $id = $this->CompanySubscriptionPayments_model->create($data_payment);
-                $order_number = $this->CompanySubscriptionPayments_model->generateORNumber($id);
+                    $id = $this->CompanySubscriptionPayments_model->create($data_payment);
+                    $order_number = $this->CompanySubscriptionPayments_model->generateORNumber($id);
 
-                $data = ['order_number' => $order_number];
-                $this->CompanySubscriptionPayments_model->update($id, $data);
+                    $data = ['order_number' => $order_number];
+                    $this->CompanySubscriptionPayments_model->update($id, $data);
 
-                $is_success = 1;
+                    $is_success = 1;
 
-                //Activity Logs
-                if( $post['num_license'] > 1 ){
-                    $activity_name = 'MyCRM : Purchased ' . $post['num_license'] . ' plan licenses'; 
+                    //Activity Logs
+                    if( $post['num_license'] > 1 ){
+                        $activity_name = 'MyCRM : Purchased ' . $post['num_license'] . ' plan licenses'; 
+                    }else{
+                        $activity_name = 'MyCRM : Purchased ' . $post['num_license'] . ' plan license'; 
+                    }
+                    createActivityLog($activity_name);
                 }else{
-                    $activity_name = 'MyCRM : Purchased ' . $post['num_license'] . ' plan license'; 
+                    $message = $payment['err_message'];
                 }
-                createActivityLog($activity_name);
-
             } else {
-                $message = $result['msg'];
+                $message = $result['err_message'];
             }
         }
 
