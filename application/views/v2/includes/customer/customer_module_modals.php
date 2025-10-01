@@ -59,10 +59,14 @@
                                 </div> 
                                 <div class="nsm-card-content">
                                     <?php 
-                                        $default_plaintiff_name = $profile_info->first_name . ' ' . $profile_info->last_name;
-                                        $default_plaintiff_address = $profile_info->mail_add;
-                                        $default_plaintiff_city_state_zip = $profile_info->city . ', ' . $profile_info->state . ' ' . $profile_info->zip_code;
-                                        $default_plaintiff_phone = $profile_info->phone_m;
+                                        $default_defendant_name = $profile_info->first_name . ' ' . $profile_info->last_name;
+                                        $default_defendant_address = $profile_info->mail_add;
+                                        $default_defendant_city_state_zip = $profile_info->city . ', ' . $profile_info->state . ' ' . $profile_info->zip_code;
+
+                                        $default_plaintiff_name = $companyInfo->business_name;
+                                        $default_plaintiff_address = $companyInfo->address;
+                                        $default_plaintiff_city_state_zip = $companyInfo->city . ', ' . $companyInfo->state . ' ' . $companyInfo->zip;
+                                        $default_plaintiff_phone = $companyInfo->business_phone;
                                     ?>
                                     <div class="form-group mb-3">
                                         <label>Name</label>                                        
@@ -93,15 +97,15 @@
                                 <div class="nsm-card-content">
                                     <div class="form-group mb-3">
                                         <label>Name</label>
-                                        <input type="text" class="form-control" name="defendant_name" value="<?= $statementClaim ? $statementClaim->defendant_name : ''; ?>" placeholder="">
+                                        <input type="text" class="form-control" name="defendant_name" value="<?= $statementClaim ? $statementClaim->defendant_name : $default_defendant_name; ?>" placeholder="">
                                     </div>
                                     <div class="form-group mb-3">
                                         <label>Street Address</label>
-                                        <input type="text" class="form-control" name="defendant_adress" value="<?= $statementClaim ? $statementClaim->defendant_street_address : ''; ?>" placeholder="">
+                                        <input type="text" class="form-control" name="defendant_adress" value="<?= $statementClaim ? $statementClaim->defendant_street_address : $default_defendant_address; ?>" placeholder="">
                                     </div>
                                     <div class="form-group mb-3">
                                         <label>City, State, Zip</label>
-                                        <input type="text" class="form-control" name="defendant_city_state_zip" value="<?= $statementClaim ? $statementClaim->defendant_city_state_zip : ''; ?>" placeholder="">
+                                        <input type="text" class="form-control" name="defendant_city_state_zip" value="<?= $statementClaim ? $statementClaim->defendant_city_state_zip : $default_defendant_city_state_zip; ?>" placeholder="">
                                     </div>
                                     <!-- <div class="form-group mb-3">
                                         <label>Phone</label>
