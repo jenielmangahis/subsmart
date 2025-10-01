@@ -138,6 +138,22 @@ class Notifications extends MY_Controller
                                     </div>
                                 </div>
                             </div>';
+                } else {
+                    $html .= '<div class="list-item" onclick="location.href=\'' . site_url("timesheet/attendance") . '\'" data-id="' . $notify->id . '">
+                                <div class="nsm-notification-item">';
+
+                    if (is_null($image)) :
+                        $html .= '<div class="nsm-profile"><span>' . ucwords($notify->FName[0]) . ucwords($notify->LName[0]) . '</span></div>';
+                    else :
+                        $html .= '<div class="nsm-profile" style="background-image: url(' . $image . ');"></div>';
+                    endif;
+
+                    $html .= '<div class="nsm-notification-content ' . $seen . '">
+                                        <span class="content-title fw-bold mb-1">Hi! ' . $notify->FName . " " . $notify->LName . '</span>
+                                        <span class="content-subtitle">' . $notify->content . '</span>
+                                    </div>
+                                </div>
+                            </div>';
                 }
             }
         }
