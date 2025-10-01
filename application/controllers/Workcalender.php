@@ -765,7 +765,7 @@ class Workcalender extends MY_Controller
             $resources_user_events[$inc]['customerId'] = $st->customer_id;
             $resources_user_events[$inc]['eventStatus'] = $st->ticket_status;
             $resources_user_events[$inc]['resourceIds'] = $resourceIds;
-            $resources_user_events[$inc]['title'] = 'Service Ticket : ' . date('Y-m-d g:i A', strtotime($st->ticket_date));
+            $resources_user_events[$inc]['title'] = $st->ticket_no . ' - ' . date('m/d/Y g:i A', strtotime($st->ticket_date));
             $resources_user_events[$inc]['customHtml'] = $custom_html;
             $resources_user_events[$inc]['start'] = $start_date_time;
             $resources_user_events[$inc]['end'] = $start_date_end;
@@ -913,7 +913,8 @@ class Workcalender extends MY_Controller
                 $resources_user_events[$inc]['customerId'] = $j->customer_id;
                 $resources_user_events[$inc]['eventStatus'] = $j->status;
                 $resources_user_events[$inc]['resourceIds'] = $resourceIds;
-                $resources_user_events[$inc]['title'] = $j->job_description;
+                $resources_user_events[$inc]['title'] = $j->job_number . ' - ' . date('m/d/Y g:i A', strtotime($j->start_date));
+                //$resources_user_events[$inc]['title'] = $j->job_description;
                 $resources_user_events[$inc]['customHtml'] = $custom_html;
                 $resources_user_events[$inc]['start'] = $start_date_time;
                 $resources_user_events[$inc]['end'] = $start_date_end;
