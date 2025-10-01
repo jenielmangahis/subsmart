@@ -284,7 +284,7 @@ class Customer_advance_model extends MY_Model
 
     public function get_customer_item_details($id)
     {
-        $this->db->select('items.title,job_items.qty,items.type, jobs.job_number');
+        $this->db->select('items.title,job_items.qty,job_items.total AS job_item_total_amount, job_items.job_id, items.type, jobs.job_number');
         $this->db->from('job_items');
         $this->db->join('jobs', 'jobs.id = job_items.job_id', 'left');
         $this->db->join('items', 'job_items.items_id = items.id', 'left');

@@ -89,6 +89,11 @@ class CompanySubscriptionPayments_model extends MY_Model
         return 'Converge';
     }
 
+    public function paymentApiStripe()
+    {
+        return 'Stripe';
+    }
+
     public function transactionTypeLicense()
     {
         return 'License';
