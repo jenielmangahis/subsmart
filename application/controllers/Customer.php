@@ -2912,6 +2912,9 @@ class Customer extends MY_Controller
 
             $this->session->set_userdata('module_customer_id', $id);
 
+            $companyInfo = $this->Business_model->getByCompanyId($cid);
+
+            $this->page_data['companyInfo']   = $companyInfo;
             $this->page_data['twilioAccount'] = $twilioAccount;
             $this->page_data['ringCentralAccount'] = $ringCentralAccount;
             $this->page_data['enable_twilio_call'] = $enable_twilio_call;

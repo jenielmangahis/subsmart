@@ -758,6 +758,8 @@ class Workcalender extends MY_Controller
                 $esignId = $docfile->id;
             }
 
+            $date = $st->ticket_date . ' ' . $st->scheduled_time;
+
             $resources_user_events[$inc]['eventId'] = $st->id;
             $resources_user_events[$inc]['eventType'] = 'service_ticket';
             $resources_user_events[$inc]['eventOrderNum'] = $st->ticket_no;
@@ -765,7 +767,7 @@ class Workcalender extends MY_Controller
             $resources_user_events[$inc]['customerId'] = $st->customer_id;
             $resources_user_events[$inc]['eventStatus'] = $st->ticket_status;
             $resources_user_events[$inc]['resourceIds'] = $resourceIds;
-            $resources_user_events[$inc]['title'] = $st->ticket_no . ' - ' . date('m/d/Y g:i A', strtotime($st->ticket_date));
+            $resources_user_events[$inc]['title'] = $st->ticket_no . ' - ' . $st->job_tag;
             $resources_user_events[$inc]['customHtml'] = $custom_html;
             $resources_user_events[$inc]['start'] = $start_date_time;
             $resources_user_events[$inc]['end'] = $start_date_end;
@@ -906,6 +908,7 @@ class Workcalender extends MY_Controller
                     $esignId = $docFile->id;
                 }
 
+                $date = $j->start_date . ' ' . $j->start_time;
                 $resources_user_events[$inc]['eventId'] = $j->id;
                 $resources_user_events[$inc]['eventType'] = 'job';
                 $resources_user_events[$inc]['eventOrderNum'] = $j->job_number;
@@ -913,7 +916,7 @@ class Workcalender extends MY_Controller
                 $resources_user_events[$inc]['customerId'] = $j->customer_id;
                 $resources_user_events[$inc]['eventStatus'] = $j->status;
                 $resources_user_events[$inc]['resourceIds'] = $resourceIds;
-                $resources_user_events[$inc]['title'] = $j->job_number . ' - ' . date('m/d/Y g:i A', strtotime($j->start_date));
+                $resources_user_events[$inc]['title'] = $j->job_number . ' - ' . $j->tags;
                 //$resources_user_events[$inc]['title'] = $j->job_description;
                 $resources_user_events[$inc]['customHtml'] = $custom_html;
                 $resources_user_events[$inc]['start'] = $start_date_time;
