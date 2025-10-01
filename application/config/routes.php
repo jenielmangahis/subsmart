@@ -1718,6 +1718,10 @@ $route['mycrm/_customize_menu'] = 'Mycrm/ajax_customize_menu';
 $route['mycrm/_update_menu_setting'] = 'Mycrm/ajax_update_menu_setting';
 $route['mycrm/_license_card_payment_form'] = 'Mycrm/ajax_license_card_payment_form';
 $route['mycrm/_process_license_payment'] = 'Mycrm/ajax_process_license_payment';
+$route['mycrm/_upgrade_plan_card_payment_form'] = 'Mycrm/ajax_upgrade_plan_card_payment_form';
+$route['mycrm/_process_upgrade_plan_payment'] = 'Mycrm/ajax_process_upgrade_plan_payment';
+$route['mycrm/_subscription_payment_form'] = 'Mycrm/ajax_subscription_payment_form';
+$route['mycrm/_process_subscription_payment'] = 'Mycrm/ajax_process_subscription_payment';
 
 // Addons
 $route['more/_load_addons_list'] = 'More/ajax_load_addons_list';
