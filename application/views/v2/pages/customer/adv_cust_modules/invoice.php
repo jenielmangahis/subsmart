@@ -36,7 +36,7 @@
                     </div>
                 </div>
                 <div class="col-12">
-                    <table class="nsm-table">
+                    <table class="nsm-table" id="invoice-items-table">
                         <thead>
                             <tr>
                                 <td data-name="Invoice Number">Invoice Number</td>
@@ -118,3 +118,10 @@
         </div>
     </div>
 </div>
+<script>
+$(function(){
+    $("#invoice-items-table").nsmPagination({
+        itemsPerPage: 10,
+    });
+});
+</script>
