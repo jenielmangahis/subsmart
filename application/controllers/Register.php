@@ -174,6 +174,31 @@ class Register extends MYF_Controller {
         $this->load->view('registration', $this->page_data);
     }
 
+    public function ajax_card_payment_form()
+    {
+        $post = $this->input->post();
+        $stripe_amount  = number_format(($post['plan_price_discounted']*100) , 0, '', '');
+        //$stripe_amount = $post['plan_price_discounted'];
+
+        $stripe = new Stripe\StripeClient(STRIPE_SECRET_KEY);
+        $result = $stripe->paymentIntents->create([
+            'amount' => $stripe_amount,
+            'currency' => 'usd',
+            'automatic_payment_methods' => ['enabled' => true],
+        ]);
+
+        $stripe_client_secret = $result->client_secret;
+        $this->page_data['stripe_client_secret']    = $stripe_client_secret;
+        $this->load->view('ajax_card_payment_form', $this->page_data);
+    }
+
+    public function ajax_process_card_payment()
+    {
+        $post = $this->input->post();
+        echo $post['payment_intent_id'];
+        echo 56;exit;
+        exit;
+    }
     
     public function authenticating_registrationBackup()
     {
@@ -1010,22 +1035,21 @@ class Register extends MYF_Controller {
         $is_valid   = false;
         $msg = '';
 
-        $post = $this->input->post(); 
+        $post = $this->input->post();         
         if( $post['subscription_type'] != 'trial' ){
+            $payment_intent_id = $post['payment_intent_id'];
             if( $post['payment_method'] == 'paypal' ){
                 if( $post['payment_method_status'] == 'COMPLETED' ){
                     $is_valid = true;   
                 }
             }elseif( $post['payment_method'] == 'stripe' ){
-                if( $post['payment_method_status'] == 'COMPLETED' ){
-                    $is_valid = true;   
-                }
+                $is_valid = true;   
             }elseif( $post['payment_method'] == 'converge' ){
                 $is_valid = true;
             }
-            
-            $payment_method = $post['payment_method'];
+            $payment_method = ucfirst($post['payment_method']);
         }else{
+            $payment_intent_id = '';
             $is_valid = true;
             $payment_method = 'trial';
         }        
@@ -1108,16 +1132,20 @@ class Register extends MYF_Controller {
                 ]); 
 
                 if( $is_trial == 0 ){
-                    $or_amount = $plan_amount;
+                    $payment_api = $payment_method;
+                    $or_amount   = $plan_amount;
                     $or_description = 'Paid Membership, Monthly';
                 }else{
                     $or_amount = 0;
+                    $payment_api    = 'Trial Account';
                     $or_description = 'Trial Membership';
                 }
 
                 //Record payment
                 $data_payment = [
                     'company_id' => $cid,
+                    'payment_id' => $payment_intent_id,
+                    'payment_api' => $payment_api,
                     'description' => $or_description,
                     'payment_date' => date("Y-m-d"),
                     'total_amount' => $or_amount,
@@ -1279,6 +1307,132 @@ class Register extends MYF_Controller {
 
         echo json_encode($json_data);
         //echo $sessiontoken;  //shows the session token.
+    }
+
+    public function ajax_process_credit_card_payment()
+    {
+        $this->load->model('CompanySubscriptionPayments_model');
+        $this->load->model('NsmartPlan_model');
+        $this->load->model('Customer_advance_model', 'customer_ad_model');
+        $this->load->model('CardsFile_model');
+
+        $is_success = true;
+        $is_valid   = false;
+        $msg = '';        
+
+        $post = $this->input->post(); 
+        if( $post['payment_intent_id'] != '' ){
+            $is_trial = 0;
+            $plan_amount = 0;
+            $num_months_discounted = 0;
+            if( $post['subscription_type'] == 'trial' ){
+                $is_trial = 1;
+            }else{
+                $num_months_discounted = REGISTRATION_MONTHS_DISCOUNTED - 1;
+                $plan_amount = $post['plan_price_discounted'];
+            }
+
+            $captcha_validated = true;
+            if( $is_trial == 1 ){ //Validate captcha
+                $verifyResponse = file_get_contents('https://www.google.com/recaptcha/api/siteverify?secret='.GOOGLE_CAPTCHA_SECRET_KEY.'&response='.$post['g-recaptcha-response']);
+                $responseData = json_decode($verifyResponse);
+                if( $responseData->success != 1 ){
+                    $captcha_validated = false;
+                }
+            }
+
+            if( $captcha_validated ){
+                $plan = $this->NsmartPlan_model->getById($post['plan_id']);
+                if( $is_trial == 1 ){
+                    $next_billing_date = date("Y-m-d", strtotime("+14 days"));
+                }else{
+                    $next_billing_date = date("Y-m-d", strtotime("+1 month"));
+                }
+                
+                $today = strtotime(date("Y-m-d"));
+                //$startup_checklist = generateClientChecklist();
+
+                $cid = $this->Clients_model->create([
+                    'first_name' => $post['firstname'],
+                    'last_name'  => $post['lastname'],
+                    'email_address' => $post['email'],
+                    'phone_number'  => $post['phone'],
+                    'business_name' => $post['business_name'],                
+                    'business_address' => $post['business_address'],
+                    'city' => $post['business_city'],
+                    'state' => $post['business_state'],
+                    'zip_code' => $post['zip_code'],
+                    'number_of_employee' => $post['number_of_employee'],
+                    'industry_type_id' => $post['industry_type_id'],
+                    'password' => $post['password'],
+                    'ip_address' => getValidIpAddress(),
+                    'date_created'  => date("Y-m-d H:i:s"),
+                    'date_modified' => date("Y-m-d H:i:s"),
+                    'is_plan_active' => 1,
+                    'nsmart_plan_id' => $post['plan_id'],
+                    'payment_method' => $payment_method,
+                    'plan_date_registered' => date("Y-m-d", $today),
+                    'plan_date_expiration' => $next_billing_date,
+                    'is_trial' => $is_trial,
+                    'is_startup' => 1,              
+                    'is_auto_renew' => 0,  
+                    'number_of_license' => $plan->num_license,
+                    'next_billing_date' => $next_billing_date,
+                    'num_months_discounted' => $num_months_discounted,
+                    'recurring_payment_type' => 'monthly',
+                    'checklist' => '',
+                    'is_checklist' => 1
+                ]);
+
+                $uid = $this->users_model->create([
+                    'role' => 7,
+                    'FName' => $post['firstname'],
+                    'LName' => $post['lastname'],
+                    'username' => $post['email'],
+                    'email' => $post['email'],
+                    'company_id' => $cid,
+                    'status' => 1,
+                    'user_type' => 4,
+                    'password_plain' =>  $post['password'],
+                    'password' => hash( "sha256", $post['password'] ),
+                    'is_archived' => 'No'
+                ]); 
+
+                if( $is_trial == 0 ){
+                    $or_amount = $plan_amount;
+                    $or_description = 'Paid Membership, Monthly';
+                }else{
+                    $or_amount = 0;
+                    $or_description = 'Trial Membership';
+                }
+
+                //Record payment
+                $data_payment = [
+                    'company_id' => $cid,
+                    'description' => $or_description,
+                    'payment_date' => date("Y-m-d"),
+                    'total_amount' => $or_amount,
+                    'date_created' => date("Y-m-d H:i:s")
+                ];
+
+                $sid = $this->CompanySubscriptionPayments_model->create($data_payment);                
+                $order_number = $this->CompanySubscriptionPayments_model->generateORNumber($sid);
+
+                $or_data = ['order_number' => $order_number];
+                $this->CompanySubscriptionPayments_model->update($sid, $or_data);
+
+                //Send invoice
+                $this->send_welcome_email($cid, $sid);
+            }else{
+                $is_success = false;
+                $msg = 'Invalid captcha';
+            }
+            
+        }       
+
+        $json_data = ['is_success' => $is_success, 'msg' => $msg];
+
+        echo json_encode($json_data);
     }
 
     public function ajax_converge_payment()

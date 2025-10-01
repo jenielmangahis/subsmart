@@ -586,6 +586,7 @@ $newtasks = getTasks();
                                 </div>
                             </div>
                         </li>
+
                         <!-- Current Notification V2 Sept 2025 -->
                         <!-- <li>                           
                             <div class="dropdown d-flex">
@@ -619,7 +620,7 @@ $newtasks = getTasks();
                                     <i class='bx bx-fw bx-bell'></i>
                                     <div id="notif-badge-count" class="notif-badge-count"></div>
                                 </a>
-                                <div class="dropdown-menu dropdown-list nsm-nav-dropdown">
+                                <div class="dropdown-menu dropdown-list nsm-nav-dropdown" style="max-height: 650px; overflow-y: auto;">
                                     <div class="list-header">
                                         <h6 class="dropdown-header fw-bold">Notifications</h6>
                                     </div>
@@ -631,7 +632,10 @@ $newtasks = getTasks();
                                     <div>
                                         <hr class="dropdown-divider">
                                     </div>
-                                    <div class="list-item text-center" onclick="location.href='<?php echo site_url(); ?>timesheet/notification'">
+                                    <div class="list-item" style="float:left; width: 50%;" onclick="location.href='<?php echo site_url(); ?>notifications/clear_all'">
+                                        <span class="content-subtitle">Clear Notifications</span>
+                                    </div>
+                                    <div class="list-item" style="float: right; width: 50%; text-align: right;" onclick="location.href='<?php echo site_url(); ?>notifications'">
                                         <span class="content-subtitle">View All</span>
                                     </div>
                                 </div>

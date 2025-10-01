@@ -1334,9 +1334,10 @@ class Invoice_model extends MY_Model
 
     public function filterBy($filters = array(), $company_id = 0, $type)
     {
-        $this->db->select('invoices.*, jobs.id AS jobid, jobs.job_number AS jobnumber');
+        $this->db->select('invoices.*, jobs.id AS jobid, jobs.job_number AS jobnumber, acs_profile.prof_id, acs_profile.first_name, acs_profile.last_name');
         $this->db->from($this->table);
         $this->db->join('jobs', 'invoices.job_id = jobs.id', 'LEFT');      
+        $this->db->join('acs_profile', 'invoices.customer_id = acs_profile.prof_id', 'LEFT');        
         $this->db->where('invoices.view_flag', 0);
 
         if($type != '') {

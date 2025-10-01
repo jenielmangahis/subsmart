@@ -2343,16 +2343,22 @@ class Job extends MY_Controller
         $job_settings = $this->general->get_data_with_param($get_job_settings, false);
         if ($job_settings) {
             $prefix   = $job_settings->job_num_prefix;
-            $next_num = str_pad($job_settings->job_num_next, 5, '0', STR_PAD_LEFT);
-            $job_account_next_num = str_pad($job_settings->job_account_next_num, 5, '0', STR_PAD_LEFT);
+            //$next_num = str_pad($job_settings->job_num_next, 5, '0', STR_PAD_LEFT);
+            $next_num = $job_settings->job_num_next;
+            //$job_account_next_num = str_pad($job_settings->job_account_next_num, 5, '0', STR_PAD_LEFT);
+            $job_account_next_num = $job_settings->job_account_next_num;
         } else {
             $prefix   = 'JOB-';
-            $next_num = str_pad(1, 5, '0', STR_PAD_LEFT);
-            $job_account_next_num = str_pad(1, 5, '0', STR_PAD_LEFT);
+            //$next_num = str_pad(1, 5, '0', STR_PAD_LEFT);
+            $next_num = 1;
+            //$job_account_next_num = str_pad(1, 5, '0', STR_PAD_LEFT);
+            $job_account_next_num = 1;
             $lastId = $this->jobs_model->getlastInsert($comp_id);
             if ($lastId) {
-                $next_num = str_pad($lastId->id, 5, '0', STR_PAD_LEFT);
-                $job_account_next_num = str_pad($lastId->id, 5, '0', STR_PAD_LEFT);
+                // $next_num = str_pad($lastId->id, 5, '0', STR_PAD_LEFT);
+                // $job_account_next_num = str_pad($lastId->id, 5, '0', STR_PAD_LEFT);
+                $next_num = $lastId->id;
+                $job_account_next_num = $lastId->id;
             }
         }      
 
