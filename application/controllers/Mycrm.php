@@ -1746,6 +1746,377 @@ class Mycrm extends MY_Controller
         $return = ['is_success' => $is_success, 'msg' => $msg];
         echo json_encode($return);
     }
+
+    public function ajax_license_card_payment_form()
+    {
+        // Stripe SDK
+        include APPPATH . 'libraries/stripe/init.php';  
+        
+        $this->load->model('NsmartPlan_model');
+
+        $post = $this->input->post();
+        $company_id = logged('company_id');
+
+        $client = $this->Clients_model->getById($company_id);
+        $plan   = $this->NsmartPlan_model->getById($client->nsmart_plan_id);
+        $cost_per_license = $plan->price_per_license;
+        $total_cost = $cost_per_license * $post['num_license'];
+        
+        $stripe_amount  = number_format(($total_cost*100) , 0, '', '');
+        //$stripe_amount = $post['plan_price_discounted'];
+
+        $stripe = new Stripe\StripeClient(STRIPE_SECRET_KEY);
+        $result = $stripe->paymentIntents->create([
+            'amount' => $stripe_amount,
+            'currency' => 'usd',
+            'automatic_payment_methods' => ['enabled' => true],
+        ]);
+
+        $stripe_client_secret = $result->client_secret;
+        $this->page_data['total_cost'] = $total_cost;
+        $this->page_data['num_license'] = $post['num_license'];
+        $this->page_data['stripe_client_secret']    = $stripe_client_secret;
+        $this->load->view('v2/pages/mycrm/ajax_license_card_payment_form', $this->page_data);
+    }
+
+    public function ajax_process_license_payment()
+    {
+        $this->load->model('Business_model');
+        $this->load->model('NsmartPlan_model');
+        $this->load->model('Clients_model');
+        $this->load->model('CompanySubscriptionPayments_model');
+        $this->load->model('SubscriberNsmartUpgrade_model');
+
+        $is_success = 0;
+        $message = 'Cannot process payment';
+
+        $company_id = logged('company_id');
+        $post = $this->input->post();
+
+        $client = $this->Clients_model->getById($company_id);
+        $plan = $this->NsmartPlan_model->getById($client->nsmart_plan_id);
+        if ($plan && $post['payment_intent_id']) {
+            $new_num_license = $client->number_of_license + $post['num_license'];
+            $amount = $plan->price_per_license * $post['num_license'];
+
+            $company = $this->Business_model->getByCompanyId($company_id);
+            $data = [
+                'number_of_license' => $new_num_license,
+            ];
+            $this->Clients_model->update($company_id, $data);
+
+            // Record payment
+            $data_payment = [
+                'company_id' => $company_id,
+                'payment_id' => $post['payment_intent_id'],
+                'payment_api' => $this->CompanySubscriptionPayments_model->paymentApiStripe(),
+                'transaction_type' => $this->CompanySubscriptionPayments_model->transactionTypeLicense(),
+                'description' => 'Paid Plan License',
+                'payment_date' => date('Y-m-d'),
+                'total_amount' => $amount,
+                'date_created' => date('Y-m-d H:i:s'),
+            ];
+
+            $id = $this->CompanySubscriptionPayments_model->create($data_payment);
+            $order_number = $this->CompanySubscriptionPayments_model->generateORNumber($id);
+
+            $data = ['order_number' => $order_number];
+            $this->CompanySubscriptionPayments_model->update($id, $data);
+
+            $is_success = 1;
+
+            //Activity Logs
+            if( $post['num_license'] > 1 ){
+                $activity_name = 'MyCRM : Purchased ' . $post['num_license'] . ' plan licenses'; 
+            }else{
+                $activity_name = 'MyCRM : Purchased ' . $post['num_license'] . ' plan license'; 
+            }
+            createActivityLog($activity_name);
+        }
+
+        echo json_encode(['is_success' => $is_success, 'message' => $message]);
+    }
+
+    public function ajax_upgrade_plan_card_payment_form()
+    {
+        // Stripe SDK
+        include APPPATH . 'libraries/stripe/init.php';  
+        
+        $this->load->model('Business_model');
+        $this->load->model('NsmartPlan_model');
+        $this->load->model('Clients_model');
+        $this->load->model('CompanySubscriptionPayments_model');
+        $this->load->model('IndustryType_model');
+        $this->load->model('IndustryTemplateModules_model');
+        $this->load->helper('converge_payment_helper');
+        $this->load->helper('stripe_helper');
+
+        $post   = $this->input->post();
+        $client = $this->Clients_model->getById($company_id);
+        $plan   = $this->NsmartPlan_model->getById($post['subscription_plan']);
+
+        if ($post['subscription_type'] == 'yearly') {
+            $total_cost = $plan->price * 12;
+        } else {
+            $total_cost = $plan->price;
+        }
+        
+        $stripe_amount  = number_format(($total_cost*100) , 0, '', '');
+        $stripe = new Stripe\StripeClient(STRIPE_SECRET_KEY);
+        $result = $stripe->paymentIntents->create([
+            'amount' => $stripe_amount,
+            'currency' => 'usd',
+            'automatic_payment_methods' => ['enabled' => true],
+        ]);
+
+        $stripe_client_secret = $result->client_secret;
+        $this->page_data['stripe_client_secret'] = $stripe_client_secret;
+        $this->page_data['total_cost'] = $total_cost;
+        $this->page_data['plan'] = $plan;
+        $this->page_data['subscription_type'] = $post['subscription_type'];
+        $this->load->view('v2/pages/mycrm/ajax_upgrade_plan_card_payment_form', $this->page_data);
+    }
+
+    public function ajax_process_upgrade_plan_payment()
+    {
+        $this->load->model('Business_model');
+        $this->load->model('NsmartPlan_model');
+        $this->load->model('Clients_model');
+        $this->load->model('CompanySubscriptionPayments_model');
+        $this->load->model('IndustryType_model');
+        $this->load->model('IndustryTemplateModules_model');
+
+        $is_success = 0;
+        $message = '';
+        $company_id = logged('company_id');
+        $post = $this->input->post();
+
+        $company = $this->Business_model->getByCompanyId($company_id);
+        $client  = $this->Clients_model->getById($company_id);
+        $plan    = $this->NsmartPlan_model->getById($post['plan_id']);
+        if ($plan && $post['payment_intent_id']) {
+            if ($post['subscription_type'] == 'yearly') {
+                $amount = $plan->price * 12;
+                $next_billing_date = date('Y-m-d', strtotime('+1 year'));
+            } else {
+                $amount = $plan->price;
+                $next_billing_date = date('Y-m-d', strtotime('+1 month'));
+            }
+            
+            //$next_billing_date = date('Y-m-d', strtotime('+1 month'));
+            $data = [
+                'payment_method' => 'stripe',   
+                'plan_date_registered' => date("Y-m-d"),
+                'plan_date_expiration' => $next_billing_date,
+                'date_modified' => date('Y-m-d H:i:s'),
+                'is_plan_active' => 1,
+                'nsmart_plan_id' => $plan->nsmart_plans_id,
+                'is_trial' => 0,
+                'payment_method' => 'converge',
+                'next_billing_date' => $next_billing_date,
+                'num_months_discounted' => 0,
+                'recurring_payment_type' => $post['subscription_type'],
+            ];
+            $this->Clients_model->update($company_id, $data);
+
+            // Update access modules
+            $industryType = $this->IndustryType_model->getById($client->industry_type_id);
+            if ($industryType) {
+                $access_modules  = [];
+                $industryModules = $this->IndustryTemplateModules_model->getAllByTemplateId($industryType->industry_template_id);                    
+                foreach ($industryModules as $im) {
+                    $access_modules[] = $im->industry_module_id;
+                }
+
+                $this->session->set_userdata('userAccessModules', $access_modules);
+                $this->session->set_userdata('is_plan_active', 1);
+            }
+
+            // Record payment
+            $data_payment = [
+                'company_id' => $company_id,
+                'payment_id' => $post['payment_intent_id'],
+                'payment_api' => $this->CompanySubscriptionPayments_model->paymentApiStripe(),
+                'transaction_type' => $this->CompanySubscriptionPayments_model->transactionTypePlanUpgrade(),
+                'description' => 'Paid Membership - Plan Upgrade (' . ucwords($post['subscription_type']) . ')',
+                'payment_date' => date('Y-m-d'),
+                'total_amount' => $amount,
+                'date_created' => date('Y-m-d H:i:s'),
+            ];
+
+            $id = $this->CompanySubscriptionPayments_model->create($data_payment);
+            $order_number = $this->CompanySubscriptionPayments_model->generateORNumber($id);
+
+            $data = ['order_number' => $order_number];
+            $this->CompanySubscriptionPayments_model->update($id, $data);
+
+            //Activity Logs
+            $activity_name = 'MyCRM : Paid Membership - Plan Upgrade (' . ucwords($post['subscription_type']) . ')'; 
+            createActivityLog($activity_name);
+
+            $is_success = 1;
+        }
+
+        echo json_encode(['is_success' => $is_success, 'message' => $message]);
+    }
+
+    public function ajax_subscription_payment_form()
+    {
+        // Stripe SDK
+        include APPPATH . 'libraries/stripe/init.php';  
+
+        $this->load->model('Clients_model');
+        $this->load->model('SubscriberNsmartUpgrade_model');
+        $this->load->helper('stripe_helper');
+        
+        $company_id = logged('company_id');
+        $client = $this->Clients_model->getById($company_id);        
+        $addons = $this->SubscriberNsmartUpgrade_model->getAllByClientId($client->id);
+        $total_addon_price = 0;
+        foreach ($addons as $a) {
+            $total_addon_price += $a->service_fee;
+        }
+
+        if ($client->recurring_payment_type == 'monthly') {
+            $total_membership_cost = $plan->price + $total_addon_price;
+        } else {
+            $total_membership_cost = ($plan->price + $total_addon_price) * 12;
+        }
+
+        $stripe_amount  = number_format(($total_membership_cost*100) , 0, '', '');
+        $stripe = new Stripe\StripeClient(STRIPE_SECRET_KEY);
+        $result = $stripe->paymentIntents->create([
+            'amount' => $stripe_amount,
+            'currency' => 'usd',
+            'automatic_payment_methods' => ['enabled' => true],
+        ]);
+
+        $stripe_client_secret = $result->client_secret;
+        $this->page_data['stripe_client_secret'] = $stripe_client_secret;
+        $this->load->view('v2/pages/mycrm/ajax_subscription_payment_form', $this->page_data);
+    }
+
+    public function ajax_process_subscription_payment()
+    {
+        $this->load->model('Business_model');
+        $this->load->model('NsmartPlan_model');
+        $this->load->model('Clients_model');
+        $this->load->model('CompanySubscriptionPayments_model');
+        $this->load->model('SubscriberNsmartUpgrade_model');
+        $this->load->model('IndustryType_model');
+        $this->load->model('IndustryTemplateModules_model');
+
+        $is_success = 0;
+        $message = '';
+        $company_id = logged('company_id');
+        $post = $this->input->post();
+
+        $client = $this->Clients_model->getById($company_id);
+        $plan   = $this->NsmartPlan_model->getById($client->nsmart_plan_id);
+        if ($plan) {
+            if ($client->num_months_discounted <= 0) {
+                $amount = $plan->price;
+            } else {
+                $amount = $plan->discount;
+            }
+
+            $addons = $this->SubscriberNsmartUpgrade_model->getAllByClientId($client->id);
+            $total_addon_price = 0;
+            foreach ($addons as $a) {
+                $total_addon_price += $a->service_fee;
+            }
+
+            $amount = 0;
+            $date = date("Y-m-d");
+            $num_months_discounted = 0;
+            if ($client->recurring_payment_type == 'monthly') {
+                if ($client->num_months_discounted <= 0) {
+                    $amount = $plan->price;
+                } else {
+                    $amount = $plan->discount;
+                    $num_months_discounted = $client->num_months_discounted - 1;
+                }
+                $amount = $amount + $total_addon_price;
+                $next_billing_date    = date('Y-m-d', strtotime('+1 month', strtotime($date)));
+                $plan_date_expiration = date('Y-m-d', strtotime('+1 month', strtotime($date)));
+            } else {
+                if ($client->num_months_discounted <= 0) {
+                    $amount = $plan->price;
+                } else {
+                    $amount = $plan->discount;
+                    $num_months_discounted = max($client->num_months_discounted - 12,0);
+                }
+                $amount = ($amount + $total_addon_price) * 12;
+                $next_billing_date    = date('Y-m-d', strtotime('+1 year', strtotime($date)));
+                $plan_date_expiration = date('Y-m-d', strtotime('+1 year', strtotime($date)));
+            }
+
+            $company  = $this->Business_model->getByCompanyId($company_id);
+            $data = [
+                'payment_method' => 'stripe',
+                'plan_date_expiration' => $plan_date_expiration,
+                'date_modified' => date('Y-m-d H:i:s'),
+                'is_plan_active' => 1,
+                'is_trial' => 0,
+                'next_billing_date' => $next_billing_date,
+                'num_months_discounted' => $num_months_discounted,
+            ];
+            $this->Clients_model->update($company_id, $data);
+            $this->session->set_userdata('is_plan_active', 1);
+
+            //Delete addons if requested to remove
+            $this->SubscriberNsmartUpgrade_model->deleteAllRequestRemovalByClientId($client->id);
+
+            //Update session active addons
+            $addons = $this->SubscriberNsmartUpgrade_model->getAllByClientId($client->id);
+            $active_addons = array();
+            foreach( $addons as $a ){
+                $active_addons[$a->plan_upgrade_id] = $a->plan_upgrade_id;
+            }
+            $this->session->set_userdata('plan_active_addons', $active_addons);
+
+            // Update access modules
+            $industryType = $this->IndustryType_model->getById($client->industry_type_id);
+            if ($industryType) {
+                $access_modules  = [];
+                $industryModules = $this->IndustryTemplateModules_model->getAllByTemplateId($industryType->industry_template_id);
+                foreach ($industryModules as $im) {
+                    $access_modules[] = $im->industry_module_id;
+                }
+
+                $this->session->set_userdata('userAccessModules', $access_modules);                    
+            }
+
+            // Record payment
+            $data_payment = [
+                'company_id' => $company_id,
+                'payment_id' => $payment['payment_intent_id'],
+                'payment_api' => $this->CompanySubscriptionPayments_model->paymentApiStripe(),
+                'transaction_type' => $this->CompanySubscriptionPayments_model->transactionTypeSubscription(),
+                'description' => 'Paid Membership - '.ucwords($client->recurring_payment_type),
+                'payment_date' => date('Y-m-d'),
+                'total_amount' => $amount,
+                'date_created' => date('Y-m-d H:i:s'),
+            ];
+
+            $payment_id = $this->CompanySubscriptionPayments_model->create($data_payment);
+            $order_number = $this->CompanySubscriptionPayments_model->generateORNumber($payment_id);
+
+            $data = ['order_number' => $order_number];
+            $this->CompanySubscriptionPayments_model->update($payment_id, $data);
+
+            // Send mail
+            //$this->send_invoice_email($payment_id);
+
+            //Activity Logs
+            $activity_name = 'MyCRM : Paid Subscription'; 
+            createActivityLog($activity_name);
+
+            $is_success = 1;
+        }
+
+        echo json_encode(['is_success' => $is_success, 'message' => $message]);
+    }
 }
 
 /* End of file Mycrm.php */
