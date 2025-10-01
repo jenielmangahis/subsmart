@@ -784,6 +784,7 @@
         $('.checkAddPayee')[0].selectize.clear();
         $('.checkAddMailingAddress').val('');
         $('.checkAddMemo').val('');
+        $('#virtualCheckAddAmountInput').val(null).change();
 
         const $catTbody = $('.checkAddCategoryTable tbody');
         const $newCatRow = $(getCheckAddCategoryRowHtml());
