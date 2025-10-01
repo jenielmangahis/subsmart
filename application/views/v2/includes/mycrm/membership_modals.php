@@ -4,13 +4,14 @@
             <div class="modal-header">
                 <span class="modal-title content-title">Upgrade Plan</span>
                 <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
-            </div>
-            <form method="POST" id="frm-upgrade-subscription">
+            </div>            
             <div class="modal-body">
-                <div class="row g-3">
+                <form method="POST" id="frm-upgrade-subscription">
+                <input type="hidden" id="upgrade-plan-payment-intent-id" name="payment_intent_id" value="" />
+                <div class="row g-3" id="upgrade-plan-details">
                     <div class="col-12">
                         <label class="content-subtitle d-block mb-2"><b>Subscription Plan</b> <a href="<?= base_url("/pricing"); ?>" target="_new" class="content-subtitle nsm-link pull-right">See Plan List</a></label>
-                        <select class="nsm-field form-select mb-1 subscription_plans" name="plan_id" required>
+                        <select class="nsm-field form-select mb-1 subscription_plans" id="upgrade-subscription-plan" name="plan_id" required>
                             <option value="" selected="selected" disabled>Select Plan</option>
                             <?php foreach ($nsPlans as $ns) : ?>
                                 <option value="<?= $ns->nsmart_plans_id; ?>" data-price="<?= $ns->price; ?>"><?= $ns->plan_name; ?></option>
@@ -25,43 +26,6 @@
                             <option value="monthly">Monthly</option>
                             <option value="yearly">Yearly</option>
                         </select>
-                    </div>
-                    <div class="col-12">
-                        <label class="content-subtitle fw-bold d-block mb-2">Card Number</label>
-                        <input type="text" placeholder="" name="card_number" class="nsm-field form-control" required />
-                    </div>
-                    <div class="col-12">
-                        <label class="content-subtitle fw-bold d-block mb-2">Expiration</label>
-                        <div class="row g-3">
-                            <div class="col-12 col-md-5">
-                                <select class="nsm-field form-select" name="exp_month" required>
-                                    <option value="" selected="selected" disabled>Month</option>
-                                    <option value="01">01</option>
-                                    <option value="02">02</option>
-                                    <option value="03">03</option>
-                                    <option value="04">04</option>
-                                    <option value="05">05</option>
-                                    <option value="06">06</option>
-                                    <option value="07">07</option>
-                                    <option value="08">08</option>
-                                    <option value="09">09</option>
-                                    <option value="10">10</option>
-                                    <option value="11">11</option>
-                                    <option value="12">12</option>
-                                </select>
-                            </div>
-                            <div class="col-12 col-md-5">
-                                <select class="nsm-field form-select" name="exp_year" required>
-                                    <option value="" selected="selected" disabled>Year</option>
-                                    <?php for( $x = date("Y"); $x<=date("Y", strtotime("+20 years")); $x++ ){ ?>
-                                        <option value="<?= $x; ?>"><?= $x; ?></option>
-                                    <?php } ?>
-                                </select>
-                            </div>
-                            <div class="col-12 col-md-2">
-                                <input type="password" placeholder="CVC" name="cvc" class="nsm-field form-control" required maxlength="4" />
-                            </div>
-                        </div>
                     </div>
                     <div class="col-12">
                         <label class="content-subtitle fw-bold d-block mb-2">Plan Amount</label>
@@ -82,12 +46,17 @@
                         </div>
                     <?php endif; ?>
                 </div>
+                </form>
+                <form id='upgrade-plan-payment-form' method='post' action=""> 
+                    <div class="mt-2" id="stripe-upgrade-plan-form-container"></div>
+                </form>
             </div>
             <div class="modal-footer">
+                <button type="button" class="nsm-button primary" id="btn-upgrade-plan">Payment</button>
+                <button type="button" class="nsm-button primary" id="btn-upgrade-plan-back" style="display:none;">Back</button>
                 <button type="button" class="nsm-button" data-bs-dismiss="modal">Close</button>
-                <button type="submit" class="nsm-button primary" id="btn-modal-upgrade-plan">Upgrade</button>
             </div>
-            </form>
+            
         </div>        
     </div>
 </div>
@@ -98,77 +67,55 @@
             <div class="modal-header">
                 <span class="modal-title content-title">Buy License</span>
                 <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
-            </div>
-            <form id="frm-buy-license" method="post">
+            </div>            
             <div class="modal-body">
-                <div class="row">
-                    <div class="col-6">
-                        <label>Price per license</label>
-                        <div class="col-auto">
-                            <label class="visually-hidden" for="price-per-license">Amount</label>
-                            <div class="input-group">
-                                <div class="input-group-text">$</div>
-                                <input type="text" class="form-control" id="price-per-license" value="<?= number_format($plan->price_per_license, 2); ?>" disabled="" />
+                <form id="frm-buy-license" method="post">
+                <input type="hidden" id="payment-intent-id" name="payment_intent_id" value="" />
+                <div id="license-details">
+                    <div class="row">
+                        <div class="col-6">
+                            <label>Price per license</label>
+                            <div class="col-auto">
+                                <label class="visually-hidden" for="price-per-license">Amount</label>
+                                <div class="input-group">
+                                    <div class="input-group-text">$</div>
+                                    <input type="text" class="form-control" id="price-per-license" value="<?= number_format($plan->price_per_license, 2); ?>" disabled="" />
+                                </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="col-6">
-                        <label>Number of license to buy</label>
-                        <input type="number" step="1" min="1" class="form-control" name="num_license" id="num-license" value="1" required/>
-                    </div>
-                    <div class="col-6 mt-4">
-                        <label>Card Number</label>
-                        <input type="text" class="form-control" name="card_number" id="" value="" required/>
-                    </div>
-                    <div class="col-6 mt-4">
-                        <label>Expiration</label>
-                        <br />
-                        <select class="nsm-field form-select" name="exp_month" style="width:33%;display:inline-block;">
-                            <option value="" selected="selected" disabled>MM</option>
-                            <option value="01">01</option>
-                            <option value="02">02</option>
-                            <option value="03">03</option>
-                            <option value="04">04</option>
-                            <option value="05">05</option>
-                            <option value="06">06</option>
-                            <option value="07">07</option>
-                            <option value="08">08</option>
-                            <option value="09">09</option>
-                            <option value="10">10</option>
-                            <option value="11">11</option>
-                            <option value="12">12</option>
-                        </select>
-                        <select class="nsm-field form-select" name="exp_year" style="width:37%;display:inline-block;">
-                            <option value="" selected="selected" disabled>YY</option>
-                            <?php for( $x = date("Y"); $x<=date("Y", strtotime("+20 years")); $x++ ){ ?>
-                                <option value="<?= $x; ?>"><?= $x; ?></option>
-                            <?php } ?>
-                        </select>
-                        <input type="password" maxlength="4" class="form-control" name="cvc" id="cvc" value="" style="width:26%;display:inline-block;" placeholder="CVC" required/>
-                    </div>
-                    <div class="col-6 mt-2">
-                        <label>Total Amount</label>
-                        <div class="col-auto">
-                            <label class="visually-hidden" for="license-total-amount">Total Amount</label>
-                            <div class="input-group">
-                                <div class="input-group-text">$</div>
-                                <input type="number" class="form-control" name="total_license"  id="license-total-amount" value="<?= number_format($plan->price_per_license, 2); ?>" disabled="">
+                        <div class="col-6"></div>
+                        <div class="col-6 mt-2">
+                            <label>Number of license to buy</label>
+                            <input type="number" step="1" min="1" class="form-control" name="num_license" id="num-license" value="1" required/>
+                        </div>                    
+                        <div class="col-6 mt-2">
+                            <label>Total Amount</label>
+                            <div class="col-auto">
+                                <label class="visually-hidden" for="license-total-amount">Total Amount</label>
+                                <div class="input-group">
+                                    <div class="input-group-text">$</div>
+                                    <input type="number" class="form-control" name="total_license"  id="license-total-amount" value="<?= number_format($plan->price_per_license, 2); ?>" disabled="">
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
+                </form>
+                <form id='payment-form' method='post' action=""> 
+                    <div class="mt-2" id="stripe-form-container"></div>
+                </form>
             </div>
             <div class="modal-footer">
-                <button type="button" class="nsm-button" data-bs-dismiss="modal">Close</button>
-                <button type="submit" class="nsm-button primary" id="btn-buy-license">Buy</button>
+                <button type="button" class="nsm-button primary" id="btn-buy-license">Payment</button>
+                <button type="button" class="nsm-button primary" id="btn-buy-license-back" style="display:none;">Back</button>
+                <button type="button" class="nsm-button" data-bs-dismiss="modal">Close</button>                
             </div>
-            </form>
         </div>        
     </div>
 </div>
 
 <div class="modal fade nsm-modal fade" id="modal-pay-subscription" tabindex="-1" aria-labelledby="modal-pay-subscription_label" aria-hidden="true">
-    <div class="modal-dialog modal-md modal-dialog-centered">        
+    <div class="modal-dialog modal-lg modal-dialog-centered">        
         <div class="modal-content">
             <div class="modal-header">
                 <span class="modal-title content-title">
@@ -179,68 +126,41 @@
                     <?php } ?>
                 </span>
                 <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
-            </div>
-            <form id="frm-pay-subscription" method="post">
+            </div>            
             <div class="modal-body">
-                <div class="row g-3">   
-                    <div class="col-12">
-                        <label class="content-subtitle fw-bold d-block mb-2">Subscription Plan</label>
-                        <input type="text" class="field form-control" value="<?= $plan->plan_name; ?>" readonly="">
-                    </div>
-                    <div class="col-12">
-                        <label class="content-subtitle fw-bold d-block mb-2">Plan Amount</label>
-                        <input type="text" class="field form-control" value="<?= number_format($total_plan_cost,2); ?>" readonly="">
-                    </div>
-                    <div class="col-12">
-                        <label class="content-subtitle fw-bold d-block mb-2">Addon Amount</label>
-                        <input type="text" class="field form-control" value="<?= number_format($total_addon_price,2); ?>" readonly="">
-                    </div>
-                    <div class="col-12">
-                        <label class="content-subtitle fw-bold d-block mb-2">Total Amount</label>
-                        <input type="text" class="field form-control" value="<?= number_format($total_membership_cost,2); ?>" readonly="">
-                    </div>                 
-                    <div class="col-12">
-                        <label class="content-subtitle fw-bold d-block mb-2">Card Number</label>
-                        <input type="text" placeholder="" name="card_number" class="nsm-field form-control" required />
-                    </div>
-                    <div class="col-12">
-                        <label class="content-subtitle fw-bold d-block mb-2">Expiration</label>
-                        <div class="row g-3">
-                            <div class="col-12 col-md-5">
-                                <select class="nsm-field form-select" name="exp_month" required>
-                                    <option value="" selected="selected" disabled>Month</option>
-                                    <option value="01">01</option>
-                                    <option value="02">02</option>
-                                    <option value="03">03</option>
-                                    <option value="04">04</option>
-                                    <option value="05">05</option>
-                                    <option value="06">06</option>
-                                    <option value="07">07</option>
-                                    <option value="08">08</option>
-                                    <option value="09">09</option>
-                                    <option value="10">10</option>
-                                    <option value="11">11</option>
-                                    <option value="12">12</option>
-                                </select>
+                <div class="row">
+                    <div class="col-12 col-md-6">
+                        <form id="frm-pay-subscription" method="post">
+                        <input type="hidden" id="subscription-payment-intent-id" name="payment_intent_id" value="" />
+                        <div class="row g-3">   
+                            <div class="col-12">
+                                <label class="content-subtitle fw-bold d-block mb-2">Subscription Plan</label>
+                                <input type="text" class="field form-control" value="<?= $plan->plan_name; ?>" readonly="">
                             </div>
-                            <div class="col-12 col-md-5">
-                                <select class="nsm-field form-select" name="exp_year" required>
-                                    <option value="" selected="selected" disabled>Year</option>
-                                    <?php for( $x = date("Y"); $x<=date("Y", strtotime("+20 years")); $x++ ){ ?>
-                                        <option value="<?= $x; ?>"><?= $x; ?></option>
-                                    <?php } ?>
-                                </select>
+                            <div class="col-12">
+                                <label class="content-subtitle fw-bold d-block mb-2">Plan Amount</label>
+                                <input type="text" class="field form-control" value="<?= number_format($total_plan_cost,2); ?>" readonly="">
                             </div>
-                            <div class="col-12 col-md-2">
-                                <input type="password" placeholder="CVC" name="cvc" class="nsm-field form-control" required maxlength="4" />
+                            <div class="col-12">
+                                <label class="content-subtitle fw-bold d-block mb-2">Addon Amount</label>
+                                <input type="text" class="field form-control" value="<?= number_format($total_addon_price,2); ?>" readonly="">
                             </div>
+                            <div class="col-12">
+                                <label class="content-subtitle fw-bold d-block mb-2">Total Amount</label>
+                                <input type="text" class="field form-control" value="<?= number_format($total_membership_cost,2); ?>" readonly="">
+                            </div>                                                         
                         </div>
-                    </div>                    
+                        </form>
+                    </div>
+                    <div class="col-12 col-md-6">
+                        <form id='subscription-payment-form' method='post' action=""> 
+                            <div class="mt-2" id="stripe-subscription-payment-form-container"></div>
+                        </form>
+                    </div>
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="nsm-button" data-bs-dismiss="modal">Close</button>
-                <button type="submit" class="nsm-button primary" id="btn-modal-pay-subscription">Pay</button>
+                <button type="button" class="nsm-button" data-bs-dismiss="modal">Close</button>                
             </div>
             </form>
         </div>        
@@ -289,6 +209,79 @@ $(function(){
         }
 
         compute_plan_amount();
+    });
+
+    $('#btn-upgrade-plan').on('click', function(){
+        var subscription_plan = $("#upgrade-subscription-plan").val();
+        var subscription_type = $("#upgrade-subscription-type").val();
+		var url = base_url + 'mycrm/_upgrade_plan_card_payment_form';
+
+        if( subscription_plan === null ){
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'Please select plan'
+            });
+        }else if( subscription_type === null ){
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'Please select plan type'
+            });
+        }else{
+            $.ajax({
+                type: "POST",
+                url: url,
+                data: {subscription_plan:subscription_plan, subscription_type:subscription_type},
+                success: function(o)
+                {	
+                    $('#stripe-upgrade-plan-form-container').html(o);
+                },
+                beforeSend:function(){
+                    $('#upgrade-plan-details').hide();
+                    $('#btn-upgrade-plan').hide();
+                    $('#btn-upgrade-plan-back').show();
+                    $('#stripe-upgrade-plan-form-container').html('<span class="bx bx-loader bx-spin"></span> loading payment form...');
+                }
+            });
+        }
+    });
+
+    $('#btn-buy-license').on('click', function(){
+        var num_license = $("#num-license").val();
+		var url = base_url + 'mycrm/_license_card_payment_form';
+
+		$.ajax({
+			type: "POST",
+			url: url,
+			data: {num_license:num_license},
+			success: function(o)
+			{	
+				$('#stripe-form-container').html(o);
+			},
+			beforeSend:function(){
+                $('#license-details').hide();
+                $('#btn-buy-license').hide();
+                $('#btn-buy-license-back').show();
+				$('#stripe-form-container').html('<span class="bx bx-loader bx-spin"></span> loading payment form...');
+			}
+		});
+    });
+
+    $('#btn-buy-license-back').on('click', function(){
+        $('#license-details').show();
+        $('#btn-buy-license').show();
+
+        $('#stripe-form-container').html('');
+        $(this).hide();
+    });
+
+    $('#btn-upgrade-plan-back').on('click', function(){
+        $('#upgrade-plan-details').show();
+        $('#btn-upgrade-plan').show();
+
+        $('#stripe-upgrade-plan-form-container').html('');
+        $(this).hide();
     });
 });
 </script>
