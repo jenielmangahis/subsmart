@@ -113,10 +113,8 @@ define('CONVERGE_MERCHANTPIN', 'IJFZ3DQUK9MPLHGUS618ZJ9KWH7EI3G0QTQ5IGI6NY3701LZ
 //Non Demo
 define('CONVERGE_TOKENURL', 'https://api.convergepay.com/hosted-payments/transaction_token');
 define('CONVERGE_HPPURL', 'https://api.convergepay.com/hosted-payments');
-
 // define('STRIPE_SECRET_KEY', 'sk_test_51IcoTsKPiost1m5gz29sxuGcntYe2NsiBInRphNPMvRQiNN9FQeNmOfG72Lpky3NU5XD0gXCCNZabc2xdsjfZQcM00GzFDajwW');
 // define('STRIPE_PUBLISH_KEY', 'pk_test_51IcoTsKPiost1m5gilfxDCpqQR0T139pAGFVUv6rSIMEn4N14ARbfQUL8MIWMLSyBloYhEluuY5Dh9N9oZG2Ku1600AgrjHJA6');
-
 define('STRIPE_SECRET_KEY', 'sk_test_51JzxZ0BffKnivrEf2fYMjGnijLyNoN0iNcgeNShc371dMiFGVUpZFqmj6J7QRz2grg59ryiPcQdzem6HgVwBXBAC00l2MsxUrG');
 define('STRIPE_PUBLISH_KEY', 'pk_test_51JzxZ0BffKnivrEf2fhmvhwWMzcmnqnzG8o9OcULN9YN669w1ukWd5zawNrS8lpHbhhelVZYDwh4477zi4psjNsV00D8aFOO2J');
 
