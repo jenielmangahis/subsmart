@@ -1,6 +1,7 @@
 <?php include viewPath('v2/includes/header'); ?>
 <?php include viewPath('v2/includes/mycrm/membership_modals'); ?>
-
+<script src="https://js.stripe.com/v3/"></script>
+<script src="https://checkout.stripe.com/checkout.js"></script>
 <div class="row page-content g-0">
     <div class="col-12 mb-3">
         <?php include viewPath('v2/includes/page_navigations/my_crm_tabs'); ?>
@@ -163,17 +164,7 @@
                                                     <?= date("m/d/Y", strtotime($client->next_billing_date)); ?>
                                                 <?php } ?>
                                                 
-                                            </div>
-                                            <div class="col-12 col-md-6">
-                                                <label class="content-title">Recurring Payments <i class="bx bx-fw bx-help-circle" id="popover-recurring-payments"></i></label>                                                
-                                            </div>
-                                            <div class="col-12 col-md-6">
-                                                <?php if ($client->is_auto_renew == 1) : ?>
-                                                    Active <button class="nsm-button btn-sm ms-3 btn-deactivate-recurring">Deactivate</button>
-                                                <?php else : ?>
-                                                    Inactive <button class="nsm-button btn-sm ms-3 btn-activate-recurring">Activate</button>
-                                                <?php endif; ?>
-                                            </div>
+                                            </div>                                            
                                         </div>
                                     </div>
                                     <div class="col-12 col-md-6">
@@ -201,37 +192,7 @@
                                                     on <?= date("m/d/Y", strtotime($lastPayment->payment_date)); ?>
                                                     <button class="nsm-button btn-sm ms-3" onclick="location.href='<?= base_url('mycrm/view_payment/' . $lastPayment->id); ?>'">View</button>
                                                 <?php endif; ?>
-                                            </div>
-                                            <div class="col-12 col-md-6">
-                                                <label class="content-title">Primary Card</label>
-                                            </div>
-                                            <div class="col-12 col-md-6">
-                                                <?php if ($primaryCard) : ?>
-                                                    <?php
-                                                    $card_type = strtolower($primaryCard->cc_type);
-                                                    $card_type = str_replace(" ", "", $card_type);
-                                                    ?>
-                                                    <span class="card-type <?= $card_type; ?>"></span>
-                                                    <?php
-                                                    $card_number = maskCreditCardNumber($primaryCard->card_number);
-                                                    echo $card_number;
-                                                    ?>
-                                                    <?php
-                                                    $today = date("y-m-d");
-                                                    $day   = date("d");
-                                                    $expires = date("y-m-d", strtotime($primaryCard->expiration_year . "-" . $primaryCard->expiration_month . "-" . $day));
-                                                    $expired = 'expires';
-                                                    if (strtotime($expires) < strtotime($today)) :
-                                                        $expired = 'expired';
-                                                    endif;
-
-                                                    ?>
-                                                    <span class="<?= $expired; ?>"> (<?= $expired; ?> <?= $primaryCard->expiration_month . "/" . $primaryCard->expiration_year; ?>)</span>
-                                                <?php else : ?>
-                                                    ---
-                                                <?php endif; ?>
-                                                <button class="nsm-button btn-sm ms-3" id="btn-manage-cards">Manage Card</button>
-                                            </div>
+                                            </div>                                            
                                         </div>
                                     </div>
                                 </div>
@@ -357,11 +318,30 @@
         });
 
         $(".btn-buy-license").click(function(){
+            $('#license-details').show();
+            $('#btn-buy-license').show();
+
+            $('#stripe-form-container').html('');
+            $('#btn-buy-license-back').hide();
+
             $("#modal-buy-license").modal('show');
         });
 
-        $(".btn-pay-subscription").click(function(){
+        $(".btn-pay-subscription").click(function(){            
+            var url = base_url + 'mycrm/_subscription_payment_form';
             $("#modal-pay-subscription").modal('show');
+            
+            $.ajax({
+                type: "POST",
+                url: url,
+                success: function(o)
+                {	
+                    $('#stripe-subscription-payment-form-container').html(o);
+                },
+                beforeSend:function(){
+                    $('#stripe-subscription-payment-form-container').html('<span class="bx bx-loader bx-spin"></span> loading payment form...');
+                }
+            });
         });
 
         $('#btn-manage-cards').on('click', function(){
