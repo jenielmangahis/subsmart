@@ -334,6 +334,7 @@ $route['invoice/_permanent_delete'] = 'Invoice/ajax_permanent_delete';
 $route['invoice/export_list'] = 'Invoice/export_list';
 $route['invoice/_delete_all_archived_invoices'] = 'Invoice/ajax_delete_all_archived_invoices';
 $route['invoice/_delete_all_recurring_archived_invoices'] = 'Invoice/ajax_delete_all_recurring_archived_invoices';
+$route['invoice/_print_invoice_lists/(:any)'] = 'Invoice/ajax_print_invoice_lists/$1';
 
 $route['customer_invoice/(:any)/(:any)'] = 'Pages/front_customer_invoice_pay_now_v2/$1/$2';
 $route['customer_view/(:any)/(:any)'] = 'Pages/front_customer_preview/$1/$2';
@@ -1715,6 +1716,12 @@ $route['mycrm/_login_main_multi_account'] = 'Mycrm/ajax_login_main_multi_account
 $route['mycrm/_check_max_link_account'] = 'Mycrm/ajax_check_company_max_link_account';
 $route['mycrm/_customize_menu'] = 'Mycrm/ajax_customize_menu';
 $route['mycrm/_update_menu_setting'] = 'Mycrm/ajax_update_menu_setting';
+$route['mycrm/_license_card_payment_form'] = 'Mycrm/ajax_license_card_payment_form';
+$route['mycrm/_process_license_payment'] = 'Mycrm/ajax_process_license_payment';
+$route['mycrm/_upgrade_plan_card_payment_form'] = 'Mycrm/ajax_upgrade_plan_card_payment_form';
+$route['mycrm/_process_upgrade_plan_payment'] = 'Mycrm/ajax_process_upgrade_plan_payment';
+$route['mycrm/_subscription_payment_form'] = 'Mycrm/ajax_subscription_payment_form';
+$route['mycrm/_process_subscription_payment'] = 'Mycrm/ajax_process_subscription_payment';
 
 // Addons
 $route['more/_load_addons_list'] = 'More/ajax_load_addons_list';
@@ -1771,6 +1778,7 @@ $route['customer/_quick_save'] = 'Customer/ajax_quick_save_customer_v2';
 $route['customer/export_customer'] = 'Customer/customer_export';
 $route['customer/export_customer_ledger'] = 'Customer/export_customer_ledger';
 $route['customer/_create_sales_area'] = 'Customer/ajax_create_sales_area';
+$route['customer/_load_item_details'] = 'Customer/ajax_load_item_details';
 
 // Trac360
 $route['on-my-way-to-job'] = 'Job/update_jobs_status';

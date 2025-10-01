@@ -318,8 +318,8 @@ class Customers extends MY_Controller {
         // Initialize Table Information
         $initializeTable = $this->serverside_table->initializeTable(
             "accounting_customer_view", 
-            array('customer_name', 'business_name', 'customer_address', 'phone_h', 'phone_m', 'email', 'customer_type', 'open_balance'),
-            array('customer_name', 'business_name', 'customer_address', 'phone_h', 'phone_m', 'email', 'customer_type', 'open_balance'),
+            array('customer_no', 'customer_name', 'business_name', 'customer_address', 'phone_h', 'phone_m', 'email', 'customer_type', 'open_balance', 'is_archived'),
+            array('customer_no', 'customer_name', 'business_name', 'customer_address', 'phone_h', 'phone_m', 'email', 'customer_type', 'open_balance', 'is_archived'),
             null,  
             array(
                 'company_id' => $company_id,
@@ -353,7 +353,7 @@ class Customers extends MY_Controller {
 
                 $data[] = array(
                     '<center><div class="table-row-icon table-checkbox"><input class="form-check-input select-one table-select check-input-customers" id="check-input-customers" name="customer_prof_ids[]" type="checkbox" value="'.$customer_id.'"></div></center>',
-                    "<a class='customerViewInfo' onclick='location.href=`" . base_url('accounting/customers/view/'). $customer_id . "`'><strong>$customer_name</strong></a>",
+                    "<a class='customerViewInfo' onclick='location.href=`" . base_url('accounting/customers/view/'). $customer_id . "`'><strong>$customer_name</strong></a><small class='text-muted content-subtitle d-block mt-1'>$getDatas->customer_no</small>",
                     $customer_address, 
                     $contact, 
                     $email,

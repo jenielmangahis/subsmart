@@ -134,6 +134,7 @@
                         </div>                         
                         <div class="dropdown d-inline-block">
                             <button type="button" class="dropdown-toggle nsm-button" data-bs-toggle="dropdown">
+                                <?php $status = $status == 'Partially_paid' ? 'Partiall Paid' : $status; ?>
                                 <span>Filter : <?= $status ?></span> <i class='bx bx-fw bx-chevron-down'></i>
                             </button>
                             <ul class="dropdown-menu dropdown-menu-end select-filter">
@@ -163,9 +164,11 @@
                                 <button type="button" class="btn btn-nsm dropdown-toggle dropdown-toggle-split btn-nsm-custom" data-bs-toggle="dropdown" aria-expanded="false">
                                     <span class=""><i class='bx bx-chevron-down' ></i></span>
                                 </button>
-                                <ul class="dropdown-menu">                                
-                                    <li><a class="dropdown-item" id="export-invoice-list" href="javascript:void(0);">Export</a></li>                               
-                                    <li><a class="dropdown-item" id="archived-invoice-list" href="javascript:void(0);">Archived</a></li>                               
+                                <ul class="dropdown-menu">            
+                                    <li><a class="dropdown-item" id="archived-invoice-list" href="javascript:void(0);">Archived</a></li>                     
+                                    <li><div class="dropdown-divider"></div></li> 
+                                    <li><a class="dropdown-item" id="export-invoice-list" href="javascript:void(0);">Export</a></li>                                                                   
+                                    <li><a class="dropdown-item" id="print-invoice-list" href="javascript:void(0);">Print</a></li>                                                             
                                 </ul>
                             </div>
                             <?php } ?>
@@ -459,7 +462,7 @@
         </div>
     </div>
 </div>
-
+<script src="<?= base_url("assets/js/v2/printThis.js") ?>"></script>
 <script type="text/javascript">
     $(document).ready(function() {
 
@@ -490,6 +493,28 @@
                 $('#num-checked').text('');
             }
         });   
+
+        $('#print-invoice-list').on('click', function() {            
+            var status = '<?= strtolower($status); ?>';
+            var url = base_url + 'invoice/_print_invoice_lists/' + status;
+            $('#print_list_modal').modal('show');
+            $("#print-list-container").html('<span class="bx bx-loader bx-spin"></span> loading list...');
+
+            setTimeout(function() {
+                $.ajax({
+                    type: "POST",
+                    url: url,
+                    data: {},
+                    success: function(o) {
+                        $("#print-list-container").html(o);
+                    }
+                });
+            }, 800);
+        });
+
+        $(document).on('click', '#btn_print_list', function() {
+            $("#tbl-print-ajax").printThis();
+        });
         
         $(document).on('click', '#with-selected-delete', function(){
 

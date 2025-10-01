@@ -88,28 +88,44 @@
 </div>
 
 <div class="modal fade nsm-modal fade" id="modal-resend-invoice-late-fee" tabindex="-1" aria-labelledby="modal-resend-invoice-late-fee_label" aria-hidden="true">
-        <div class="modal-dialog modal-sm">
-            <form id="frm-send-invoice-late-fee" method="POST">
-                <input type="hidden" name="invoice_id" id="invoice-id" value="" />
-                <div class="modal-content" style="width:560px;">
-                    <div class="modal-header">
-                        <span class="modal-title content-title">Resend Invoice</span>
-                        <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
-                    </div>
-                    <div class="modal-body">
-                        <div class="form-group">
-                            <label for="late-fee mb-2">Late Fee</label>
-                            <input type="number" step="any" required="" class="form-control" id="late-fee" name="late_fee" placeholder="Late Fee" value="<?= $default_late_fee; ?>">
-                        </div>
-                    </div>
-                    <div class="modal-footer">                    
-                        <button type="button" class="nsm-button" data-bs-dismiss="modal">Cancel</button>
-                        <button type="submit" id="btn-record-payment" class="nsm-button primary">Send</button>
+    <div class="modal-dialog modal-sm">
+        <form id="frm-send-invoice-late-fee" method="POST">
+            <input type="hidden" name="invoice_id" id="invoice-id" value="" />
+            <div class="modal-content" style="width:560px;">
+                <div class="modal-header">
+                    <span class="modal-title content-title">Resend Invoice</span>
+                    <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="late-fee mb-2">Late Fee</label>
+                        <input type="number" step="any" required="" class="form-control" id="late-fee" name="late_fee" placeholder="Late Fee" value="<?= $default_late_fee; ?>">
                     </div>
                 </div>
-            </form>
+                <div class="modal-footer">                    
+                    <button type="button" class="nsm-button" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" id="btn-record-payment" class="nsm-button primary">Send</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="modal fade nsm-modal fade" id="print_list_modal" tabindex="-1" aria-labelledby="print_list_modal_label" aria-hidden="true">
+    <div class="modal-dialog modal-xxl modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <span class="modal-title content-title">Print List</span>
+                <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
+            </div>
+            <div class="modal-body" id="print-list-container"></div>
+            <div class="modal-footer">
+                <button type="button" class="nsm-button" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="nsm-button primary" id="btn_print_list">Print</button>
+            </div>
         </div>
     </div>
+</div>
 
 <script>
 $(function(){

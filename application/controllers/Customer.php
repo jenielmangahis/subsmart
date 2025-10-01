@@ -287,7 +287,8 @@ class Customer extends MY_Controller
                     if( $customer->email != '' ){
                         $customer_email = $customer->email;
                     }
-                    $name = "<label class='nsm-link default d-block fw-bold' onclick='location.href=\"".base_url('customer/module/'.$customer->prof_id.'')."\"'>".$labelName."</label><label class='nsm-link default content-subtitle fst-italic d-block'><i class='bx bx-envelope'></i> ".$customer_email.'</label>';
+                    $name = "
+                        <label class='nsm-link default d-block fw-bold' onclick='location.href=\"".base_url('customer/module/'.$customer->prof_id.'')."\"'>".$labelName."</label><small class='text-muted content-subtitle d-block mt-1'>$customer->customer_no</small><small class='text-muted'>".$customer_email.'</small>';
                     if ($customer->adt_sales_project_id > 0) {
                         $name .= '<span class="badge badge-primary">ADT SALES PORTAL DATA</label>';
                     }
@@ -571,7 +572,8 @@ class Customer extends MY_Controller
                     if( $customer->email != '' ){
                         $customer_email = $customer->email;
                     }
-                    $name = "<label class='nsm-link default d-block fw-bold' onclick='location.href=\"".base_url('customer/module/'.$customer->prof_id.'')."\"'>".$labelName."</label><label class='nsm-link default content-subtitle fst-italic d-block'><i class='bx bx-envelope'></i> ".$customer_email.'</label>';
+                    $name = "
+                        <label class='nsm-link default d-block fw-bold' onclick='location.href=\"".base_url('customer/module/'.$customer->prof_id.'')."\"'>".$labelName."</label><small class='text-muted content-subtitle d-block mt-1'>$customer->customer_no</small><small class='text-muted'>".$customer_email.'</small>';
                     if ($customer->adt_sales_project_id > 0) {
                         $name .= '<span class="badge badge-primary">ADT SALES PORTAL DATA</label>';
                     }
@@ -1006,7 +1008,8 @@ class Customer extends MY_Controller
                     if( $customer->email != '' ){
                         $customer_email = $customer->email;
                     }
-                    $name = "<label class='nsm-link default d-block fw-bold' onclick='location.href=\"".base_url('customer/module/'.$customer->prof_id.'')."\"'>".$labelName."</label><label class='nsm-link default content-subtitle fst-italic d-block'><i class='bx bx-envelope'></i> ".$customer_email.'</label>';
+                    $name = "
+                        <label class='nsm-link default d-block fw-bold' onclick='location.href=\"".base_url('customer/module/'.$customer->prof_id.'')."\"'>".$labelName."</label><small class='text-muted content-subtitle d-block mt-1'>$customer->customer_no</small><small class='text-muted'>".$customer_email.'</small>';
                     if ($customer->adt_sales_project_id > 0) {
                         $name .= '<span class="badge badge-primary">ADT SALES PORTAL DATA</label>';
                     }
@@ -13369,4 +13372,11 @@ class Customer extends MY_Controller
 
 		fpassthru($f);
 	}
+
+    public function ajax_load_item_details()
+    {
+        $post = $this->input->post();
+        $this->page_data['item_details'] = $this->customer_ad_model->get_customer_item_details($post['customer_id']);
+        $this->load->view('v2/pages/customer/ajax_load_item_details', $this->page_data);
+    }
 }

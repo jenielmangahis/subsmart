@@ -12,12 +12,12 @@
                 <span>Membership</span>
             </a>
         </li>
-        <li class="<?php if($page->title == 'Cards File'): echo 'active'; endif; ?>">
+        <!-- <li class="<?php if($page->title == 'Cards File'): echo 'active'; endif; ?>">
             <a class="nsm-page-link" href="<?php echo base_url('cards_file/list') ?>">
                 <i class='bx bx-fw bx-credit-card'></i>
                 <span>Cards on File</span>
             </a>
-        </li>
+        </li> -->
         <!-- <li class="<?php if($page->title == 'Orders' || $page->title == 'Orders : Payment Details'): echo 'active'; endif; ?>">
             <a class="nsm-page-link" href="<?php echo base_url('mycrm/orders') ?>">
                 <i class='bx bx-fw bx-cart-alt'></i>
