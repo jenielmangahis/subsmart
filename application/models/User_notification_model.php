@@ -5,16 +5,29 @@ class User_notification_model extends MY_Model
 {
     public $table = 'user_notification';
 
-    public function getAllByUserCompanyId($user_id, $cid)
+    public function getAllByUserCompanyIdStatus($company_id, $user_id, $status = null)
     {        
-        $this->db->select('user_notification.*');
-        $this->db->from($this->table);
-        $this->db->where('user_id', $user_id);
-        $this->db->where('company_id', $cid);
+        $limit = 100;
 
+        $this->db->select('user_notification.*, users.FName, users.MName, users.LName, users.email');
+        $this->db->from($this->table);
+        $this->db->join('users', 'user_notification.user_id = users.id', 'left');
+        $this->db->where('user_notification.user_id', $user_id);
+        $this->db->where('user_notification.company_id', $company_id);
+
+        if($status != null) {
+            $this->db->where('user_notification.status', $status);
+        }
+
+        $this->db->order_by('user_notification.date_created', 'desc');
+
+        if($limit > 0) {
+            $this->db->limit($limit);
+        }
+        
         $query = $this->db->get();
         return $query->result();
-    }
+    }    
 
     public function get_notifications($company_id, $user_id, $status = 1) //Note: 1=unread,0=read
     {
@@ -34,9 +47,9 @@ class User_notification_model extends MY_Model
             order by user_notification.date_created Desc limit " . $limit);
 
         return $query->result();
-    }    
+    }        
 
-    public function read_all_by_company_id($company_id = null) {
+    public function readAllByCompanyId($company_id = null) {
         $return = false;
         if($company_id != null) {
             $update = array(

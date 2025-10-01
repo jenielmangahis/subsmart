@@ -17,20 +17,17 @@ class Notifications extends MY_Controller
     {
         $this->load->model('Activity_model');
 
-        $uid = logged('id');
-        $cid = logged('company_id');
-        $user_type = logged('user_type');
+        $user_id    = logged('id');
+        $company_id = logged('company_id');
+        $user_type  = logged('user_type');
 
-        if ($user_type == 7) {
-            $activityLogs = $this->Activity_model->getActivityLogs($cid);
-        } else {
-            $activityLogs = $this->Activity_model->getActivityLogsByUserId($uid);
-        }
+        $notif_status  = null; //note: null means all
+        $notifications = $this->User_notification_model->getAllByUserCompanyIdStatus($company_id, $user_id, $notif_status);
 
         $this->page_data['page']->title  = 'Notification';
-        $this->page_data['page']->parent = 'timesheet';
-        $this->page_data['activityLogs'] = $activityLogs;
-        $this->load->view('v2/pages/users/timesheet_notification_list', $this->page_data);
+        $this->page_data['page']->parent = 'notification';
+        $this->page_data['notifications'] = $notifications;
+        $this->load->view('v2/pages/users/notifications/list', $this->page_data);
     }
 
     public function ajax_get_notifications()
@@ -75,7 +72,7 @@ class Notifications extends MY_Controller
                                 </div>
                             </div>';
                 } elseif ($notify->title == 'New Estimates') {
-                    $html .= '<div class="list-item" onclick="location.href=\'' . site_url("estimates") . '\'" data-id="' . $notify->id . '">
+                    $html .= '<div class="list-item" onclick="location.href=\'' . site_url("estimate") . '\'" data-id="' . $notify->id . '">
                                 <div class="nsm-notification-item">';
 
                     if (is_null($image)) :
@@ -169,7 +166,7 @@ class Notifications extends MY_Controller
     public function clear_all() 
     {
         $cid = logged('company_id');
-        $this->User_notification_model->read_all_by_company_id($cid);
+        $this->User_notification_model->readAllByCompanyId($cid);
 
         return redirect('notifications')->with('message', 'Clear notification completed!');
     }
