@@ -3,7 +3,7 @@
 		<label>Upgrade Plan</label>
 		<div class="col-auto">
 			<div class="input-group">
-				<div class="input-group-text"><i class='bx bxs-user-account'></i></div>
+				<div class="input-group-text"><i class='bx bx-fw bx-id-card'></i></div>
 				<input type="text" class="form-control" value="<?= $plan->plan_name; ?>" disabled="">
 			</div>
 		</div>
