@@ -60,7 +60,7 @@
                     </div>
                 </div>
                 <div class="row g-3 mb-3">
-                    <div class="col-12 col-md-4">
+                    <div class="col-12 col-md-3">
                         <div class="nsm-counter primary h-100 mb-2 select-filter-card" data-status='all'>
                             <div class="row h-100">
                                 <div class="col-12 col-md-4 d-flex justify-content-center align-items-center">
@@ -73,7 +73,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-12 col-md-4">
+                    <div class="col-12 col-md-3">
                         <div class="nsm-counter secondary h-100 mb-2 select-filter-card" data-status='unpaid'>
                             <div class="row h-100">
                                 <div class="col-12 col-md-4 d-flex justify-content-center align-items-center">
@@ -86,7 +86,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-12 col-md-4">
+                    <div class="col-12 col-md-3">
                         <div class="nsm-counter success h-100 mb-2 select-filter-card" data-status='paid'>
                             <div class="row h-100">
                                 <div class="col-12 col-md-4 d-flex justify-content-center align-items-center">
@@ -98,6 +98,22 @@
                                         $<?php echo get_total_invoice_amount('paid', logged('company_id'), 0); ?>
                                     </h2>
                                     <span>Paid</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 col-md-3">
+                        <div class="nsm-counter error h-100 mb-2 select-filter-card" data-status='due'>
+                            <div class="row h-100">
+                                <div class="col-12 col-md-4 d-flex justify-content-center align-items-center">
+                                    <i class='bx bx-receipt'></i>
+                                </div>
+                                <div class="col-12 col-md-8 text-center text-md-start d-flex flex-column justify-content-center">
+                                    <h2 id="paid_total">
+                                        <!-- $<?php //echo get_invoice_amount('paid') ?> -->
+                                        $<?php echo get_total_invoice_amount('due', logged('company_id'), 0); ?>
+                                    </h2>
+                                    <span>Due</span>
                                 </div>
                             </div>
                         </div>
