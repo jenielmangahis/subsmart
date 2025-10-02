@@ -1580,6 +1580,11 @@
                         $('#job-status-finished').css('display', 'none');
                     }
                 }else{
+                    if( appointment_type == 'appointment' ){
+                        $('#upcoming-schedule-view-more-details').css('display', 'none');
+                        $('#view-esign').css('display', 'none');
+                    }
+                    
                     $('#send-esign').css('display', 'none');
                     $('#job-status-arrived').css('display', 'none');
                     $('#job-status-started').css('display', 'none');
@@ -2721,8 +2726,29 @@
             quickEditTcOff(schedule_id);
         }else if( schedule_type == 'event' ){
             location.href = base_url + 'events/event_add/' + schedule_id;
+        }else if( schedule_type == 'appointment' ){
+            editAppointment(schedule_id);
         }
     });
+
+    function editAppointment(appointment_id){
+        var url = base_url + "calendar/_edit_appointment";
+
+        $("#edit-aid").val(appointment_id);
+        $('#modal-quick-view-upcoming-schedule').modal('hide');
+        $("#edit_appointment_modal").modal("show");
+
+        $.ajax({
+            type: "POST",
+            url: url,
+            data: {
+                appointment_id: appointment_id
+            },
+            success: function(result) {
+                $('#edit_appointment_container').html(result);
+            }
+        });
+    }
 
     function quickEditTcOff(schedule_id){
         var url = base_url + "calendar/_quick_edit_tc_off_form";
@@ -2860,7 +2886,8 @@
                     $('#modal-quick-add-appointment').modal('hide');                  
 
                     Swal.fire({
-                        text: 'Appointment has been added!',
+                        title: 'Create Appointment',
+                        text: 'Appointment has been added',
                         icon: 'success',
                         showCancelButton: false,
                         confirmButtonColor: '#6a4a86',
