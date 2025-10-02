@@ -606,7 +606,9 @@ class Customer extends MY_Controller
                 }
 
                 if (in_array('source', $enabled_table_headers)) {
-                    $lead = 'Not Specified';
+                    $lead =  ($customer->lead_source != "") ? $customer->lead_source : 'Door';
+                    // $lead = 'Door';
+                    // $lead = 'Not Specified';
                     array_push($data_arr, $lead);
                 }
                 if (in_array('added', $enabled_table_headers)) {
@@ -1041,8 +1043,8 @@ class Customer extends MY_Controller
                 }
 
                 if (in_array('source', $enabled_table_headers)) {
-                    // $lead =  $customer->lead_source != "" ? $customer->lead_source : Door';
-                    $lead = 'Door';
+                    $lead =  ($customer->lead_source != "") ? $customer->lead_source : 'Door';
+                    // $lead = 'Door';
                     array_push($data_arr, $lead);
                 }
                 if (in_array('added', $enabled_table_headers)) {
