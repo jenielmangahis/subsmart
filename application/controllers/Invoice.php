@@ -3969,7 +3969,20 @@ class Invoice extends MY_Controller
 		header('Content-Disposition: attachment; filename="' . $filename . '";');
 
 		fpassthru($f);
-	}    
+	}  
+    
+    public function ajax_print_invoice_lists($status = '')
+    {   
+        $type = '';
+        $comp_id = logged('company_id');
+        if ( $status != 'all' ) {  
+            $status = ucfirst($status);   
+            $this->page_data['invoices'] = $this->invoice_model->filterBy(array('status' => $status), $comp_id, $type);
+        } else {
+            $this->page_data['invoices'] = $invoices_data = $this->invoice_model->getAllActiveByCompanyId($comp_id, $type);
+        }
+        $this->load->view('v2/pages/invoice/ajax_print_invoice_lists', $this->page_data);
+    }
 }
 
 /* End of file Invoice.php */

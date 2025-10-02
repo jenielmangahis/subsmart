@@ -2599,7 +2599,9 @@ function get_total_invoice_amount($type, $company_id = 0, $is_arhived = 0)
             }
 
             return number_format($total_invoice_amount, 2, '.', ',');
-
+        case "due":
+            $result = $CI->invoice_model->getCompanyTotalAmountDueInvoices($company_id, []);
+            return number_format($result->total_amount, 2, '.', ',');
         default:        
             $result = $CI->invoice_model->getByWhere(array('company_id' => $company_id, 'date_issued >=' => $start_date, 'date_issued <=' => $end_date, 'status !=' => 'Draft'));
             return total_invoice_amount($result);
