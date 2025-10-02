@@ -134,7 +134,39 @@ var notification_html_holder_ctr = 0;
 
 $(document).ready(function() {
 
-    getNotificationsAll();
+    $("#clear-user-notifications").click(function() {
+        //$('#all_notifications_container').html('<i class="fa fa-spin fa-spinner"></i> Loading...');   
+        var url = base_url + "notifications/_clear_all_notifications";
+        $.ajax({
+            type: 'POST',
+            url: url,
+            dataType:'json',
+            success: function(result) {
+                if (result.is_success === 1) {
+                    Swal.fire({
+                        title: 'Notification!',
+                        html: result.msg,
+                        icon: 'success',
+                        showCancelButton: false,
+                        confirmButtonText: 'Okay'
+                    }).then((result) => {  
+                        setTimeout(() => {
+                            getAllNotifications();
+                        }, 1000);                        
+                    });
+                } else {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error!',
+                        html: result.msg
+                    });
+                    getAllNotifications();
+                }
+            },
+        });        
+    });       
+
+    //getNotificationsAll();
     getAllNotifications();
 
     $(".check-input-rules").click(function() {
@@ -144,7 +176,7 @@ $(document).ready(function() {
         } else {
             $('.dropdown-item-delete-rule').addClass('disabled');
         }
-    })
+    }) 
 
     $(".select-all-rules").click(function() {
         if (this.checked) {
@@ -463,6 +495,10 @@ function getAllNotifications() {
             if (data.notifyCount > 0) {
                 $('#all_notifications_container').html(data.autoNotifications);
                 $('#notif-badge-count').html('<span class="badge bg-danger rounded-pill icon-badge">' + data.notifyCount + '</span>'); 
+                notification_badge_value = data.badgeCount;
+            }else if(data.notifyCount == null) {
+                $('#all_notifications_container').html('<div class="text-center py-3"><span class="content-subtitle">No notifications for now.</span></div>');
+                $('#notif-badge-count').html(''); 
                 notification_badge_value = data.badgeCount;
             }
         }
