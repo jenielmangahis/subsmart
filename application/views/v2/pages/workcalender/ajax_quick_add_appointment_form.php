@@ -11,10 +11,10 @@
                         <input type="text" name="appointment_date" id="appointment_date" class="nsm-field form-control datepicker" placeholder="Date" required style="padding: 0.375rem 0.75rem;" value="<?= date("l, F d, Y", strtotime($default_start_date)); ?>">                                    
                     </div>
                     <div class="col-12 col-md-3">
-                        <input type="text" name="appointment_time_from" id="appointment_time" class="nsm-field form-control timepicker-from" value="<?= $default_time_to; ?>" placeholder="Time From" required />
+                        <input type="time" name="appointment_time_from" id="appointment_time" class="nsm-field form-control" value="<?= $default_time_to; ?>" placeholder="Time From" required />
                     </div>
                     <div class="col-12 col-md-3">
-                        <input type="text" name="appointment_time_to" id="appointment_time_to" class="nsm-field form-control timepicker-to" placeholder="Time To" value="<?= $default_time_to; ?>" required />
+                        <input type="time" name="appointment_time_to" id="appointment_time_to" class="nsm-field form-control" placeholder="Time To" value="<?= $default_time_to; ?>" required />
                     </div>
                 </div>
             </div>
@@ -53,9 +53,6 @@
                 <div class="row g-3">
                     <div class="col-6">
                         <label class="content-subtitle fw-bold d-block mb-2">Which Customer</label>
-                    </div>
-                    <div class="col-6 text-end">
-                        <a href="javascript:void(0);" class="content-subtitle d-block mb-2 nsm-link btn-quick-add-customer"><i class='bx bx-fw bx-plus'></i>  Add New Customer</a>
                     </div>
                 </div>
                 <span id="add-customer-popover" data-toggle="popover" data-placement="right"data-container="body">
@@ -115,7 +112,6 @@
                                         $manage_tags_url = base_url('job/job_tags');
                                     }
                                 ?>
-                                <a href="<?= $manage_tags_url; ?>" class="content-subtitle d-block mb-2 nsm-link btn-quick-add-manage-tags"><i class='bx bx-fw bx-plus'></i>  Manage Tags</a>
                             </div>
                         </div>
                         
