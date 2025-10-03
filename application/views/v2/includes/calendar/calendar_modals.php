@@ -260,24 +260,23 @@
 </div>
 
 <div class="modal fade nsm-modal fade" id="edit_appointment_modal" tabindex="-1" aria-labelledby="edit_appointment_modal_label" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
-        <form id="frm-update-appointment" method="POST">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <span class="modal-title content-title">Edit Appointment</span>
-                    <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
-                </div>
-                <div class="modal-body">
-                    <input type="hidden" name="aid" id="edit-aid" value="">
-                    <div class="row g-3" id="edit_appointment_container">
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="nsm-button" data-bs-dismiss="modal">Cancel</button>
-                    <button type="submit" class="nsm-button primary">Update</button>
-                </div>
+    <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header">
+                <span class="modal-title content-title">Edit Appointment</span>
+                <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
             </div>
-        </form>
+            <div class="modal-body">
+                <form id="frm-update-appointment" method="POST">
+                    <input type="hidden" name="aid" id="edit-aid" value="">
+                    <div id="edit_appointment_container"></div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="nsm-button" data-bs-dismiss="modal">Cancel</button>
+                <button type="submit" class="nsm-button primary" form="frm-update-appointment">Update</button>
+            </div>
+        </div>
     </div>
 </div>
 
@@ -578,18 +577,21 @@
 </div>
 
 <div class="modal fade nsm-modal fade" id="modal-quick-add-appointment" aria-labelledby="modal-quick-add-appointment-label" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
-        <form method="post" id="quick-add-appointment-form">   
+    <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">        
             <div class="modal-content">
                 <div class="modal-header">
                     <span class="modal-title content-title">Create Appointment</span>
                     <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
                 </div>
-                <div class="modal-body" id="quick-add-appointment-form-container" style="max-height: 800px; overflow:auto;"></div>
+                <div class="modal-body">
+                    <form method="post" id="quick-add-appointment-form">   
+                        <div id="quick-add-appointment-form-container"></div>
+                    </form>
+                </div>
                 <div class="modal-footer" style="display:block;">                    
                     <div style="float:right;">
-                        <button type="button" class="nsm-button primary" data-bs-dismiss="modal">Cancel</button>
-                        <button type="submit" class="nsm-button primary" id="btn-appointment-submit">Schedule</button>
+                        <button type="button" class="nsm-button" data-bs-dismiss="modal">Cancel</button>
+                        <button type="submit" class="nsm-button primary" id="btn-appointment-submit" form="quick-add-appointment-form">Schedule</button>
                     </div>
                 </div>
             </div>

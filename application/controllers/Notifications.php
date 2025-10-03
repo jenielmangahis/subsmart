@@ -17,20 +17,17 @@ class Notifications extends MY_Controller
     {
         $this->load->model('Activity_model');
 
-        $uid = logged('id');
-        $cid = logged('company_id');
-        $user_type = logged('user_type');
+        $user_id    = logged('id');
+        $company_id = logged('company_id');
+        $user_type  = logged('user_type');
 
-        if ($user_type == 7) {
-            $activityLogs = $this->Activity_model->getActivityLogs($cid);
-        } else {
-            $activityLogs = $this->Activity_model->getActivityLogsByUserId($uid);
-        }
+        $notif_status  = null; //note: null means all
+        $notifications = $this->User_notification_model->getAllByUserCompanyIdStatus($company_id, $user_id, $notif_status);
 
         $this->page_data['page']->title  = 'Notification';
-        $this->page_data['page']->parent = 'timesheet';
-        $this->page_data['activityLogs'] = $activityLogs;
-        $this->load->view('v2/pages/users/timesheet_notification_list', $this->page_data);
+        $this->page_data['page']->parent = 'notification';
+        $this->page_data['notifications'] = $notifications;
+        $this->load->view('v2/pages/users/notifications/list', $this->page_data);
     }
 
     public function ajax_get_notifications()
@@ -43,7 +40,6 @@ class Notifications extends MY_Controller
         $notif_status = 1; //1=unread,0=read
 
         $notification = $this->User_notification_model->get_notifications($company_id, $user_id, $notif_status);
-
         $html = '';
         
         if ($notification != null) {
@@ -51,8 +47,10 @@ class Notifications extends MY_Controller
             foreach ($notification as $notify) {
 
                 $seen = '';
+                $is_bold = ''; //'fw-bold mb-1';
                 if ($notify->status == 0) {
                     $seen = 'read';
+                    $is_bold = '';
                 }
 
                 $image        = userProfilePicture($notify->user_id);
@@ -62,30 +60,28 @@ class Notifications extends MY_Controller
                     $html .= '<div class="list-item" onclick="location.href=\'' . site_url("workorder") . '\'" data-id="' . $notify->id . '">
                                 <div class="nsm-notification-item">';
 
-                    if (is_null($image)) :
+                    /*if (is_null($image)) :
                         $html .= '<div class="nsm-profile"><span>' . ucwords($notify->FName[0]) . ucwords($notify->LName[0]) . '</span></div>';
                     else :
                         $html .= '<div class="nsm-profile" style="background-image: url(' . $image . ');"></div>';
-                    endif;
+                    endif;*/
 
                     $html .= '<div class="nsm-notification-content ' . $seen . '">
-                                        <span class="content-title fw-bold mb-1">' . $notify->FName . " " . $notify->LName . '</span>
                                         <span class="content-subtitle">' . $notify->content . '</span>
                                     </div>
                                 </div>
                             </div>';
                 } elseif ($notify->title == 'New Estimates') {
-                    $html .= '<div class="list-item" onclick="location.href=\'' . site_url("estimates") . '\'" data-id="' . $notify->id . '">
+                    $html .= '<div class="list-item" onclick="location.href=\'' . site_url("estimate") . '\'" data-id="' . $notify->id . '">
                                 <div class="nsm-notification-item">';
 
-                    if (is_null($image)) :
+                    /*if (is_null($image)) :
                         $html .= '<div class="nsm-profile"><span>' . ucwords($notify->FName[0]) . ucwords($notify->LName[0]) . '</span></div>';
                     else :
                         $html .= '<div class="nsm-profile" style="background-image: url(' . $image . ');"></div>';
-                    endif;
+                    endif;*/
 
                     $html .= '<div class="nsm-notification-content ' . $seen . '">
-                                        <span class="content-title fw-bold mb-1">' . $notify->FName . " " . $notify->LName . '</span>
                                         <span class="content-subtitle">' . $notify->content . '</span>
                                     </div>
                                 </div>
@@ -94,15 +90,14 @@ class Notifications extends MY_Controller
                     $html .= '<div class="list-item" onclick="location.href=\'' . site_url("timesheet/attendance") . '\'" data-id="' . $notify->id . '">
                                 <div class="nsm-notification-item">';
 
-                    if (is_null($image)) :
+                    /*if (is_null($image)) :
                         $html .= '<div class="nsm-profile"><span>' . ucwords($notify->FName[0]) . ucwords($notify->LName[0]) . '</span></div>';
                     else :
                         $html .= '<div class="nsm-profile" style="background-image: url(' . $image . ');"></div>';
-                    endif;
+                    endif;*/
 
                     $html .= '<div class="nsm-notification-content ' . $seen . '">
-                                        <span class="content-title fw-bold mb-1">' . $notify->FName . " " . $notify->LName . '</span>
-                                        <span class="content-subtitle">' . $notify->content . '</span>
+                                        <span class="content-subtitle '. $is_bold .'">' . $notify->content . '</span>
                                     </div>
                                 </div>
                             </div>';
@@ -110,15 +105,15 @@ class Notifications extends MY_Controller
                     $html .= '<div class="list-item" onclick="location.href=\'' . site_url("invoice/tab/overdue") . '\'" data-id="' . $notify->id . '">
                                 <div class="nsm-notification-item">';
 
-                    if (is_null($image)) :
+                    /*if (is_null($image)) :
                         $html .= '<div class="nsm-profile"><span>' . ucwords($notify->FName[0]) . ucwords($notify->LName[0]) . '</span></div>';
                     else :
                         $html .= '<div class="nsm-profile" style="background-image: url(' . $image . ');"></div>';
-                    endif;
+                    endif;*/
 
                     $html .= '<div class="nsm-notification-content ' . $seen . '">
-                                        <span class="content-title fw-bold mb-1">Hi! ' . $notify->FName . " " . $notify->LName . '</span>
-                                        <span class="content-subtitle">' . $notify->content . '</span>
+                                        <span class="content-title"></span>
+                                        <span class="content-subtitle '. $is_bold .'">' . $notify->content . '</span>
                                     </div>
                                 </div>
                             </div>';
@@ -126,15 +121,14 @@ class Notifications extends MY_Controller
                     $html .= '<div class="list-item" onclick="location.href=\'' . site_url("invoice") . '\'" data-id="' . $notify->id . '">
                                 <div class="nsm-notification-item">';
 
-                    if (is_null($image)) :
+                    /*if (is_null($image)) :
                         $html .= '<div class="nsm-profile"><span>' . ucwords($notify->FName[0]) . ucwords($notify->LName[0]) . '</span></div>';
                     else :
                         $html .= '<div class="nsm-profile" style="background-image: url(' . $image . ');"></div>';
-                    endif;
+                    endif;*/
 
                     $html .= '<div class="nsm-notification-content ' . $seen . '">
-                                        <span class="content-title fw-bold mb-1">Hi! ' . $notify->FName . " " . $notify->LName . '</span>
-                                        <span class="content-subtitle">' . $notify->content . '</span>
+                                        <span class="content-subtitle '. $is_bold .'">' . $notify->content . '</span>
                                     </div>
                                 </div>
                             </div>';
@@ -142,15 +136,14 @@ class Notifications extends MY_Controller
                     $html .= '<div class="list-item" onclick="location.href=\'' . site_url("timesheet/attendance") . '\'" data-id="' . $notify->id . '">
                                 <div class="nsm-notification-item">';
 
-                    if (is_null($image)) :
+                    /*if (is_null($image)) :
                         $html .= '<div class="nsm-profile"><span>' . ucwords($notify->FName[0]) . ucwords($notify->LName[0]) . '</span></div>';
                     else :
                         $html .= '<div class="nsm-profile" style="background-image: url(' . $image . ');"></div>';
-                    endif;
+                    endif;*/
 
                     $html .= '<div class="nsm-notification-content ' . $seen . '">
-                                        <span class="content-title fw-bold mb-1">Hi! ' . $notify->FName . " " . $notify->LName . '</span>
-                                        <span class="content-subtitle">' . $notify->content . '</span>
+                                        <span class="content-subtitle '. $is_bold .'">' . $notify->content . '</span>
                                     </div>
                                 </div>
                             </div>';
@@ -166,10 +159,23 @@ class Notifications extends MY_Controller
         echo json_encode($notificationListArray);
     }
 
+    public function ajax_clear_all_notifications()
+    {
+        $is_success = 0;
+        $cid = logged('company_id');
+        $this->User_notification_model->readAllByCompanyId($cid);
+
+        $is_success = 1;
+        $msg = 'All notification has been cleared.';
+
+        $json_data = ['is_success' => $is_success, 'msg' => $msg];
+        echo json_encode($json_data);
+    }
+
     public function clear_all() 
     {
         $cid = logged('company_id');
-        $this->User_notification_model->read_all_by_company_id($cid);
+        $this->User_notification_model->readAllByCompanyId($cid);
 
         return redirect('notifications')->with('message', 'Clear notification completed!');
     }

@@ -21,7 +21,7 @@
                         </a>
                         <ul class="dropdown-menu dropdown-menu-end">
                             <li><a class="dropdown-item removeDashboardCard" data-id='<?php echo $id; ?>' href="javascript:void(0)">Remove</a></li>
-                            <!-- <li>
+                            <li>
                                 <hr class="dropdown-divider">
                             </li>
                             <li class="px-3 showGraphButton">
@@ -29,7 +29,7 @@
                                     <input class="form-check-input <?php echo "showHideGraphCheckbox_$id"; ?> graphCheckbox" type="checkbox" <?php echo ($graphState == 'block') ? 'checked' : ''; ?>>
                                     <label class="form-check-label text-muted graphCheckboxLabel">Show Graph</label>
                                 </div>
-                            </li> -->
+                            </li>
                         </ul>
                     </div>
                 </h5>
@@ -58,12 +58,6 @@
             </div>
         </div>
         <div class="row">
-            <div class="col text-nowrap <?php echo "textDataContainer_$id"; ?>">
-                <div class="text-center textData">
-                    <small class="text-muted text-uppercase fw-bold">TOTAL AMOUNT</small>
-                    <h4 class="<?php echo "textData1_$id"; ?>"></h4>
-                </div>
-            </div>
             <div class="col text-nowrap <?php echo "textDataContainer_$id"; ?>">
                 <div class="text-center textData">
                     <small class="text-muted text-uppercase fw-bold">TOTAL COUNT</small>
@@ -152,9 +146,6 @@
                     let categories = Object.keys(filteredGraphData).map(month => month.split(' ')[1]);
                     let values = Object.values(filteredGraphData);
 
-                    $('.<?php echo "textData1_$id"; ?>').parent().parent().attr(`onclick`, `window.open('${window.origin}/invoice/tab/paid', '_blank')`);
-                    $('.<?php echo "textData2_$id"; ?>').parent().parent().attr(`onclick`, `window.open('${window.origin}/invoice/tab/paid', '_blank')`);
-
                     if (values.length === 0) {
                         $('.<?php echo "textDataContainer_$id"; ?>').hide();
                         $('.<?php echo "graphDataContainer_$id"; ?>').hide();
@@ -177,13 +168,13 @@
 
                         <?php echo "graphChart_$id"; ?>.updateOptions({
                             xaxis: { categories: categories },
-                            yaxis: {
-                                labels: {
-                                    formatter: function(value) {
-                                        return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(value);
-                                    }
-                                }
-                            },
+                            // yaxis: {
+                            //     labels: {
+                            //         formatter: function(value) {
+                            //             return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(value);
+                            //         }
+                            //     }
+                            // },
                             colors: <?php echo "graphColorRandomizer_$id"; ?>('multiple')
                         });
 
@@ -192,6 +183,9 @@
                             data: values
                         }]);
                     }
+
+                    $('.<?php echo "textData1_$id"; ?>').parent().parent().attr(`onclick`, `window.open('${window.origin}/customer/ticketslist', '_blank')`);
+                    $('.<?php echo "textData2_$id"; ?>').parent().parent().attr(`onclick`, `window.open('${window.origin}/customer/ticketslist', '_blank')`);
                 } else {
                     $('.<?php echo "textDataContainer_$id"; ?>').hide();
                     $('.<?php echo "graphDataContainer_$id"; ?>').hide();

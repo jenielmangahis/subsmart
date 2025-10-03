@@ -12,7 +12,7 @@
         <div class="row">
             <div class="col-md-12">
                 <h5 class="mt-0 fw-bold">
-                    <a role="button" class="text-decoration-none widget-header-widget-default-arrow" href="javascript:void(0)" style="color:#6a4a86 !important">
+                    <a role="button" class="text-decoration-none" href="javascript:void(0)" style="color:#6a4a86 !important">
                         <?php echo "<i class='$icon'></i>&nbsp;&nbsp;$title"; ?> <span class="badge widgetBadge position-absolute opacity-25"><?php echo ucfirst($type); ?></span>
                     </a>
                     <div class="dropdown float-end widgetDropdownMenu display_none">

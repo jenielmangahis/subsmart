@@ -2435,7 +2435,7 @@ class Dashboard extends Widgets
                     
                     $accumulativeValue += $datas->total;
                     $accumulativeCount += 1;
-                    $graphData['GRAPH'][$month] = number_format($accumulativeCount, 2, '.', '');
+                    $graphData['GRAPH'][$month] = $accumulativeCount;
                     $lastMonth = $month;
                 }
             
@@ -2805,13 +2805,53 @@ class Dashboard extends Widgets
                 $data['role_id'] = $role_id;
                 echo json_encode($data);
             break;
+            case 'payment_methods':
+                foreach ($data as $datas) {
+                    if ($datas->payment_method == "cc") {
+                        $graphData['Credit Card'] += $datas->total;
+                    } else if ($datas->payment_method == "paypal") {
+                        $graphData['PayPal'] += $datas->total;
+                    } else if ($datas->payment_method == "check") {
+                        $graphData['Check'] += $datas->total;
+                    } else if ($datas->payment_method == "cash") {
+                        $graphData['Cash'] += $datas->total;
+                    } else if ($datas->payment_method == "deposit") {
+                        $graphData['Direct Deposit'] += $datas->total;
+                    }
+                }
+                echo json_encode($graphData);
+            break;
+            case 'customer_states':
+                foreach ($data as $datas) {
+                    $graphData[$datas->state] = $datas->total;
+                }
+                echo json_encode($graphData);
+            break;
+            case 'job_install':
+                $graphData = ['GRAPH' => [], 'TOTAL_COUNT' => count($data)];
+            
+                $accumulativeCount = 0;
+                $lastMonth = ''; 
+                
+                foreach ($data as $datas) {
+                    $month = strtoupper(date('Y M', strtotime($datas->date)));
+                    
+                    if ($month !== $lastMonth) {
+                        $accumulativeCount = 0; 
+                    }
+                    
+                    $accumulativeCount += 1;
+                    $graphData['GRAPH'][$month] = $accumulativeCount;
+                    $lastMonth = $month;
+                }
+            
+                echo json_encode($graphData);
+            break;
             default:
                 $graphData = ['error' => 'Invalid category'];
             break;
         }
-
     }
-
 }
 
 /* End of file Dashboard.php */
