@@ -622,7 +622,7 @@ $newtasks = getTasks();
                                 </a>
                                 <div class="dropdown-menu dropdown-list nsm-nav-dropdown" style="max-height: 650px; overflow-y: auto;">
                                     <div class="list-header">
-                                        <h6 class="dropdown-header fw-bold">Notifications</h6>
+                                        <h6 class="dropdown-header fw-bold">Notifications: </h6>
                                     </div>
                                     <div id="all_notifications_container">
                                         <div class="text-center py-3">
@@ -632,7 +632,8 @@ $newtasks = getTasks();
                                     <div>
                                         <hr class="dropdown-divider">
                                     </div>
-                                    <div class="list-item" style="float:left; width: 50%;" onclick="location.href='<?php echo site_url(); ?>notifications/clear_all'">
+                                    <!-- onclick="location.href='<?php //echo site_url(); ?>notifications/clear_all'" -->
+                                    <div class="list-item clear-user-notifications" style="float:left; width: 50%;" id="clear-user-notifications">
                                         <span class="content-subtitle">Clear Notifications</span>
                                     </div>
                                     <div class="list-item" style="float: right; width: 50%; text-align: right;" onclick="location.href='<?php echo site_url(); ?>notifications'">

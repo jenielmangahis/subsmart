@@ -21,7 +21,7 @@
                         </a>
                         <ul class="dropdown-menu dropdown-menu-end">
                             <li><a class="dropdown-item removeDashboardCard" data-id='<?php echo $id; ?>' href="javascript:void(0)">Remove</a></li>
-                            <!-- <li>
+                            <li>
                                 <hr class="dropdown-divider">
                             </li>
                             <li class="px-3 showGraphButton">
@@ -29,7 +29,7 @@
                                     <input class="form-check-input <?php echo "showHideGraphCheckbox_$id"; ?> graphCheckbox" type="checkbox" <?php echo ($graphState == 'block') ? 'checked' : ''; ?>>
                                     <label class="form-check-label text-muted graphCheckboxLabel">Show Graph</label>
                                 </div>
-                            </li> -->
+                            </li>
                         </ul>
                     </div>
                 </h5>
@@ -44,8 +44,8 @@
             <div class="col-md-12">
                 <div class="input-group">
                     <select class="form-select <?php echo "widgetFilter1_$id"; ?>">
-                        <!-- <option value="all_time">All Time</option> -->
-                        <option value="this_year" selected>This Year</option>
+                        <option value="all_time" selected>All Time</option>
+                        <option value="this_year">This Year</option>
                     </select>
                     <select class="form-select <?php echo "widgetFilter2_$id"; ?>">
                         <option value="recent" selected>Recent</option>
@@ -57,21 +57,14 @@
                 </div>
             </div>
         </div>
-        <div class="row">
+        <div class="row <?php echo "textDatas_$id"; ?>">
             <div class="col text-nowrap <?php echo "textDataContainer_$id"; ?>">
                 <div class="text-center textData">
-                    <small class="text-muted text-uppercase fw-bold">TOTAL AMOUNT</small>
-                    <h4 class="<?php echo "textData1_$id"; ?>"></h4>
-                </div>
-            </div>
-            <div class="col text-nowrap <?php echo "textDataContainer_$id"; ?>">
-                <div class="text-center textData">
-                    <small class="text-muted text-uppercase fw-bold">TOTAL COUNT</small>
-                    <h4 class="<?php echo "textData2_$id"; ?>"></h4>
+                    
                 </div>
             </div>
             <div class="col mt-2 <?php echo "graphDataContainer_$id"; ?> widgetGraphDisplay display_none">
-                <div id="<?php echo "apexThumbnailGraph_$id"; ?>"></div>
+                <div id="<?php echo "apexwidgetGraph_$id"; ?>"></div>
             </div>
             <div class="col mt-2 <?php echo "graphLoaderContainer_$id"; ?> graphLoader display_none">
                 <div class="text-center">
@@ -137,61 +130,52 @@
             },
             success: function(response) {
                 if (response != "null") {
-                    let <?php echo "textData1_$id"; ?> = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(JSON.parse(response)['TOTAL_AMOUNT']);
-                    let <?php echo "textData2_$id"; ?> = JSON.parse(response)['TOTAL_COUNT'];
-                    let graphData = JSON.parse(response)['GRAPH'];
-                    let currentYear = new Date().getFullYear().toString();
+                    let data = JSON.parse(response);
+                    let graphLabels = [];
+                    let graphSeries = [];
+                    let labelWithCounts = [];
 
-                    let filteredGraphData = Object.keys(graphData)
-                        .filter(key => key.startsWith(currentYear))
-                        .reduce((obj, key) => {
-                            obj[key] = parseFloat(graphData[key]);
-                            return obj;
-                        }, {});
+                    $('.<?php echo "textDataContainer_$id"; ?>').remove();
 
-                    let categories = Object.keys(filteredGraphData).map(month => month.split(' ')[1]);
-                    let values = Object.values(filteredGraphData);
+                    Object.entries(data).forEach(([key, value]) => {
+                        graphLabels.push(key);
+                        graphSeries.push(parseInt(value));
+                        labelWithCounts.push(`${key}: ${value}`);
+                        // let url_filter = `${window.origin}/job?job_tag=${key}`;
 
-                    $('.<?php echo "textData1_$id"; ?>').parent().parent().attr(`onclick`, `window.open('${window.origin}/invoice/tab/paid', '_blank')`);
-                    $('.<?php echo "textData2_$id"; ?>').parent().parent().attr(`onclick`, `window.open('${window.origin}/invoice/tab/paid', '_blank')`);
+                        $('.<?php echo "textDatas_$id"; ?>').append(`
+                            <div class='col-6 col-md-4 <?php echo "textDataContainer_$id"; ?>'>
+                                <div class='text-center textData'>
+                                    <small class='text-muted text-uppercase fw-bold'>${key}</small>
+                                    <h4>${value}</h4>
+                                </div>
+                            </div>
+                        `);
+                    });
 
-                    if (values.length === 0) {
+                    $('.<?php echo "graphLoaderContainer_$id"; ?>').hide();
+                    $('.<?php echo "noRecordFoundContainer_$id"; ?>').hide();
+                    $('.<?php echo "networkErrorContainer_$id"; ?>').hide();
+                    if ($('.<?php echo "showHideGraphCheckbox_$id"; ?>').is(':checked')) {
                         $('.<?php echo "textDataContainer_$id"; ?>').hide();
-                        $('.<?php echo "graphDataContainer_$id"; ?>').hide();
-                        $('.<?php echo "graphLoaderContainer_$id"; ?>').hide();
-                        $('.<?php echo "noRecordFoundContainer_$id"; ?>').show();
-                        $('.<?php echo "networkErrorContainer_$id"; ?>').hide();
+                        $('.<?php echo "graphDataContainer_$id"; ?>').show();
                     } else {
-                        if ($('.<?php echo "showHideGraphCheckbox_$id"; ?>').is(':checked')) {
-                            $('.<?php echo "textDataContainer_$id"; ?>').hide();
-                            $('.<?php echo "graphDataContainer_$id"; ?>').show();
-                        } else {
-                            $('.<?php echo "textDataContainer_$id"; ?>').show();
-                            $('.<?php echo "graphDataContainer_$id"; ?>').hide();
-                        }
-                        $('.<?php echo "graphLoaderContainer_$id"; ?>').hide();
-                        $('.<?php echo "noRecordFoundContainer_$id"; ?>').hide();
-                        $('.<?php echo "networkErrorContainer_$id"; ?>').hide();
-                        $('.<?php echo "textData1_$id"; ?>').text(<?php echo "textData1_$id"; ?>);
-                        $('.<?php echo "textData2_$id"; ?>').text(<?php echo "textData2_$id"; ?>);
-
-                        <?php echo "graphChart_$id"; ?>.updateOptions({
-                            xaxis: { categories: categories },
-                            yaxis: {
-                                labels: {
-                                    formatter: function(value) {
-                                        return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(value);
-                                    }
-                                }
-                            },
-                            colors: <?php echo "graphColorRandomizer_$id"; ?>('multiple')
-                        });
-
-                        <?php echo "graphChart_$id"; ?>.updateSeries([{
-                            name: "<?php echo $title; ?>",
-                            data: values
-                        }]);
+                        $('.<?php echo "textDataContainer_$id"; ?>').show();
+                        $('.<?php echo "graphDataContainer_$id"; ?>').hide();
                     }
+
+                    <?php echo "graphChart_$id"; ?>.updateOptions({
+                        labels: graphLabels,
+                        colors: <?php echo "graphColorRandomizer_$id"; ?>('multiple'),
+                        legend: {
+                            formatter: function(seriesName, opts) {
+                                const count = opts.w.config.series[opts.seriesIndex];
+                                return `${seriesName}: <strong>${count}</strong>`;
+                            }
+                        }
+                    });
+
+                    <?php echo "graphChart_$id"; ?>.updateSeries(graphSeries);
                 } else {
                     $('.<?php echo "textDataContainer_$id"; ?>').hide();
                     $('.<?php echo "graphDataContainer_$id"; ?>').hide();
@@ -221,17 +205,24 @@
     );
     
     let <?php echo "options_$id"; ?> = {
-        series: [{ name: "<?php echo $title; ?>", data: [] }],
-        xaxis: { categories: [] },
-        chart: { height: 150, type: 'bar', zoom: { enabled: false }, toolbar: { show: false } },
-        dataLabels: { enabled: false },
-        stroke: { curve: 'smooth', width: 3 },
-        grid: { show: true, xaxis: { lines: { show: true } } },
-        markers: { size: 6, strokeWidth: 3, hover: { size: 10 } },
+        series: [],
+        chart: {
+            height: 400,
+            type: 'pie'
+        },
+        legend: { position: 'bottom' },
+        labels: [],
+        responsive: [{
+            breakpoint: 480,
+            options: {
+                chart: { height: 150 },
+                legend: { position: 'bottom' }
+            }
+        }],
         colors: <?php echo "graphColorRandomizer_$id"; ?>('multiple')
     };
     
-    let <?php echo "graphChart_$id"; ?> = new ApexCharts(document.querySelector("#<?php echo "apexThumbnailGraph_$id"; ?>"), <?php echo "options_$id"; ?>);
+    let <?php echo "graphChart_$id"; ?> = new ApexCharts(document.querySelector("#<?php echo "apexwidgetGraph_$id"; ?>"), <?php echo "options_$id"; ?>);
     <?php echo "graphChart_$id"; ?>.render(); 
 
     $(document).on('change', '.<?php echo "widgetFilter1_$id"; ?>, .<?php echo "widgetFilter2_$id"; ?>, .<?php echo "widgetFilter3_$id"; ?>', function() {

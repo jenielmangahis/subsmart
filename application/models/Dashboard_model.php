@@ -988,6 +988,51 @@ class Dashboard_model extends MY_Model
                 $data = $query->result();
                 return $data;
             break;
+            
+
+            
+            
+            
+            
+            
+            
+            
+
+
+            
+            case 'payment_methods':
+                $this->db->select('payment_records.id AS id,payment_records.company_id AS company_id,payment_records.payment_method AS payment_method,COUNT(payment_records.payment_method) AS total,payment_records.payment_date AS date');
+                $this->db->from('payment_records');
+                $this->db->where('payment_records.company_id ', $company_id);
+                $this->db->where("DATE_FORMAT(payment_records.payment_date, '%Y-%m-%d') >=", $dateFrom);
+                $this->db->where("DATE_FORMAT(payment_records.payment_date, '%Y-%m-%d') <=", $dateTo);
+                $this->db->group_by('payment_records.payment_method');
+                $query = $this->db->get();
+                return $query->result();
+            break;
+            case 'customer_states':
+                $this->db->select('acs_profile.prof_id AS id, acs_profile.state AS state, COUNT(acs_profile.prof_id) AS total, acs_profile.created_at AS date');
+                $this->db->from('acs_profile');
+                $this->db->where('acs_profile.company_id', $company_id);
+                $this->db->where('acs_profile.state !=', "");
+                $this->db->where("DATE_FORMAT(acs_profile.created_at, '%Y-%m-%d') >=", $dateFrom);
+                $this->db->where("DATE_FORMAT(acs_profile.created_at, '%Y-%m-%d') <=", $dateTo);
+                $this->db->group_by('acs_profile.state');
+                $query = $this->db->get();
+                return $query->result();
+            break;
+            case 'job_install':
+                $this->db->select('jobs.id AS id, jobs.company_id AS company_id, jobs.job_type AS job_type, jobs.tags AS tags, jobs.date_created AS date');
+                $this->db->from('jobs');
+                $this->db->where('jobs.company_id', $company_id);
+                $this->db->where('jobs.job_type =', "Install");
+                $this->db->where('jobs.tags !=', "");
+                $this->db->where('jobs.status NOT IN ("Draft", "Cancelled")');
+                $this->db->where("DATE_FORMAT(jobs.date_created, '%Y-%m-%d') >=", $dateFrom);
+                $this->db->where("DATE_FORMAT(jobs.date_created, '%Y-%m-%d') <=", $dateTo);
+                $query = $this->db->get();
+                return $query->result();
+            break;
         }
     }
 }
