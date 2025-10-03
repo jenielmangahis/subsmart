@@ -250,9 +250,9 @@
     font-size: 20px;
 }
 
-.widget-header-widget-default-arrow {
-    cursor: default !important;
-}   
+.widgetBorder > div > div > div > h5 > a {
+    cursor: default;
+}
 </style>
 
 <div class="nsm-fab-container">
