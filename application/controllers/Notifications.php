@@ -86,8 +86,14 @@ class Notifications extends MY_Controller
                                     </div>
                                 </div>
                             </div>';
-                } elseif ($notify->title == 'Clock In' || $notify->title == 'Clock Out') {
-                    $html .= '<div class="list-item" onclick="location.href=\'' . site_url("timesheet/attendance") . '\'" data-id="' . $notify->id . '">
+                } elseif (strtolower($notify->title) == 'clock in' || strtolower($notify->title) == 'clock out') {
+
+                    $redirect_url = site_url("timesheet/attendance");
+                    if($notify->entity_id != null && $notify->entity_id > 0) {
+                        $redirect_url = site_url("timesheet/attendance") . '?notif_id=' . $notify->id;
+                    }                       
+
+                    $html .= '<div class="list-item" onclick="location.href=\'' . $redirect_url . '\'" data-id="' . $notify->id . '">
                                 <div class="nsm-notification-item">';
 
                     /*if (is_null($image)) :
@@ -102,7 +108,11 @@ class Notifications extends MY_Controller
                                 </div>
                             </div>';
                 } elseif ($notify->title == 'Invoice Overdue') {
-                    $html .= '<div class="list-item" onclick="location.href=\'' . site_url("invoice/tab/overdue") . '\'" data-id="' . $notify->id . '">
+                    $redirect_url = site_url("invoice/tab/overdue");
+                    if($notify->entity_id != null && $notify->entity_id > 0) {
+                        $redirect_url = site_url("invoice/genview/") . $notify->entity_id . '?notif_id=' . $notify->id;
+                    }                    
+                    $html .= '<div class="list-item" onclick="location.href=\'' . $redirect_url . '\'" data-id="' . $notify->id . '">
                                 <div class="nsm-notification-item">';
 
                     /*if (is_null($image)) :
@@ -113,12 +123,16 @@ class Notifications extends MY_Controller
 
                     $html .= '<div class="nsm-notification-content ' . $seen . '">
                                         <span class="content-title"></span>
-                                        <span class="content-subtitle '. $is_bold .'">' . $notify->content . '</span>
+                                        <span class="content-subtitle '. $is_bold .'">' . $notify->title . " | " . $notify->content . '</span>
                                     </div>
                                 </div>
                             </div>';
                 } elseif ($notify->title == 'Invoice Late Fee') {
-                    $html .= '<div class="list-item" onclick="location.href=\'' . site_url("invoice") . '\'" data-id="' . $notify->id . '">
+                    $redirect_url = site_url("invoice");
+                    if($notify->entity_id != null && $notify->entity_id > 0) {
+                        $redirect_url = site_url("invoice/genview/") . $notify->entity_id . '?notif_id=' . $notify->id;
+                    }
+                    $html .= '<div class="list-item" onclick="location.href=\'' . $redirect_url . '\'" data-id="' . $notify->id . '">
                                 <div class="nsm-notification-item">';
 
                     /*if (is_null($image)) :
@@ -128,12 +142,18 @@ class Notifications extends MY_Controller
                     endif;*/
 
                     $html .= '<div class="nsm-notification-content ' . $seen . '">
-                                        <span class="content-subtitle '. $is_bold .'">' . $notify->content . '</span>
+                                        <span class="content-subtitle '. $is_bold .'">' . $notify->title . " | " . $notify->content . '</span>
                                     </div>
                                 </div>
                             </div>';
                 } else {
-                    $html .= '<div class="list-item" onclick="location.href=\'' . site_url("timesheet/attendance") . '\'" data-id="' . $notify->id . '">
+
+                    $redirect_url = site_url("timesheet/attendance");
+                    if($notify->entity_id != null && $notify->entity_id > 0) {
+                        $redirect_url = site_url("timesheet/attendance") . '?notif_id=' . $notify->id;
+                    }                         
+
+                    $html .= '<div class="list-item" onclick="location.href=\'' . $redirect_url . '\'" data-id="' . $notify->id . '">
                                 <div class="nsm-notification-item">';
 
                     /*if (is_null($image)) :
