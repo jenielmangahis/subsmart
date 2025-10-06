@@ -89,9 +89,9 @@ class Notifications extends MY_Controller
                 } elseif (strtolower($notify->title) == 'clock in' || strtolower($notify->title) == 'clock out') {
 
                     $redirect_url = site_url("timesheet/attendance");
-                    if($notify->entity_id != null && $notify->entity_id > 0) {
+                    //if($notify->entity_id != null && $notify->entity_id > 0) {
                         $redirect_url = site_url("timesheet/attendance") . '?notif_id=' . $notify->id;
-                    }                       
+                    //}                       
 
                     $html .= '<div class="list-item" onclick="location.href=\'' . $redirect_url . '\'" data-id="' . $notify->id . '">
                                 <div class="nsm-notification-item">';
@@ -146,6 +146,20 @@ class Notifications extends MY_Controller
                                     </div>
                                 </div>
                             </div>';
+                } elseif($notify->title == 'Job Status') {
+                    $redirect_url = site_url("job");
+                    if($notify->entity_id != null && $notify->entity_id > 0) {
+                        $redirect_url = site_url("job/edit/") . $notify->entity_id . '?notif_id=' . $notify->id;
+                    }
+                    $html .= '<div class="list-item" onclick="location.href=\'' . $redirect_url . '\'" data-id="' . $notify->id . '">
+                                <div class="nsm-notification-item">';
+
+
+                    $html .= '<div class="nsm-notification-content ' . $seen . '">
+                                        <span class="content-subtitle '. $is_bold .'">' . $notify->title . " | " . $notify->content . '</span>
+                                    </div>
+                                </div>
+                            </div>';                    
                 } else {
 
                     $redirect_url = site_url("timesheet/attendance");
