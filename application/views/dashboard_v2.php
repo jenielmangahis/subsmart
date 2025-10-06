@@ -253,6 +253,11 @@
 .widgetBorder > div > div > div > h5 > a {
     cursor: default;
 }
+
+.thumbnailLayoutControl > a,
+.widgetLayoutControl > a {
+    border-color: lightgray !important;
+}
 </style>
 
 <div class="nsm-fab-container">
@@ -398,11 +403,19 @@
 ?>
 
 <div class="row page-content g-0">
+    <div class="col-lg-12 noThumbnailWidgetAlert">
+        <div class="alert alert-primary" role="alert">
+            <span>
+                To customize your view, <a href="javascript:void(0)" class="fw-bold" data-bs-toggle="modal" data-bs-target="#dashboardThumbnailWidgetSettingsModal">click here</a> or click/tap the <strong>cog icon <i class="bx bx-fw bx-cog"></i></strong>in the top-right corner and select the items you want to show.
+            </span>
+            <button type="button" class="btn-close float-end" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    </div>
     <div class="col-lg-12">
-        <div class="thumbnailLayoutControl display_none">
-            <a href="javascript:void(0)" class="text-decoration-none thumbnailCustomizeLayout nsm-button"><span>Customize Thumbnail Layout</span></a>
-            <a href="javascript:void(0)" class="text-decoration-none thumbnailSaveLayout display_none nsm-button"><span>Save Layout</span></a>&nbsp;&nbsp;
-            <a href="javascript:void(0)" class="text-decoration-none thumbnailCancelLayout display_none text-muted nsm-button"><span>Cancel</span></a>
+        <div class="thumbnailLayoutControl  <?php echo (!$isThumbnailPresent) ? 'display_none' : ''; ?>">
+            <a href="javascript:void(0)" class="text-decoration-none thumbnailCustomizeLayout btn btn-light"><span><i class="fas fa-cogs text-muted"></i>&ensp;Edit Layout</span></a>
+            <a href="javascript:void(0)" class="text-decoration-none thumbnailSaveLayout display_none btn btn-light"><span>Save Layout</span></a>&nbsp;&nbsp;
+            <a href="javascript:void(0)" class="text-decoration-none thumbnailCancelLayout display_none btn btn-light"><span>Cancel</span></a>
         </div>
         <div id="thumbnailMasonry" class="row thumbnailSortable thumbnailCardContainers">
             <?php 
@@ -432,10 +445,10 @@
     </div>
     <div class="col-lg-12 mt-5 mb-5"></div>
     <div class="col-lg-12">
-        <div class="widgetLayoutControl display_none">
-            <a href="javascript:void(0)" class="text-decoration-none widgetCustomizeLayout nsm-button"><span>Customize Widget Layout</span></a>
-            <a href="javascript:void(0)" class="text-decoration-none widgetSaveLayout display_none nsm-button"><span>Save Layout</span></a>&nbsp;&nbsp;
-            <a href="javascript:void(0)" class="text-decoration-none widgetCancelLayout display_none text-muted nsm-button"><span>Cancel</span></a>
+        <div class="widgetLayoutControl <?php echo (!$isWidgetPresent) ? 'display_none' : ''; ?>">
+            <a href="javascript:void(0)" class="text-decoration-none widgetCustomizeLayout btn btn-light"><span><i class="fas fa-cogs text-muted"></i>&ensp;Edit Layout</span></a>
+            <a href="javascript:void(0)" class="text-decoration-none widgetSaveLayout display_none btn btn-light"><span>Save Layout</span></a>&nbsp;&nbsp;
+            <a href="javascript:void(0)" class="text-decoration-none widgetCancelLayout display_none text-muted btn btn-light"><span>Cancel</span></a>
         </div>
         <div id="widgetMasonry" class="row widgetSortable widgetCardContainers">
             <?php 
@@ -462,15 +475,6 @@
                 }
             ?>
         </div>
-        <script>
-            $('#thumbnailMasonry').ready(function () {
-                $('.thumbnailLayoutControl').show();
-            });
-
-            $('#widgetMasonry').ready(function () {
-                $('.widgetLayoutControl').show();
-            });
-    </script>
     </div>
     <div class="col-lg-12">
         <div class="row row-cols-md-3" id="nsm_widgets2">

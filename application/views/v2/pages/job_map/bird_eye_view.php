@@ -619,6 +619,11 @@ $(function(){
                 var date_to   = info.endStr;
                 updateMapMarker(date_from, date_to);
             },
+            dateClick: function(info) { 
+                var date_from = info.dateStr;
+                var date_to   = date_from;
+                updateMapMarker(date_from, date_to);                
+            },
             dayCellDidMount(info) {    
                 
             },

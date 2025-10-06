@@ -28,8 +28,8 @@
                 <ul class="dropdown-menu">
                     <li><a class="dropdown-item" href="<?php echo base_url('timesheet/attendance') ?>">Attendance</a></li>    
                     <li><a class="dropdown-item" href="<?php echo base_url('timesheet/attendance_logs') ?>">Time Logs</a></li>
-                    <li><a class="dropdown-item" href="<?php echo base_url('timesheet/notification') ?>">Notification</a></li>
-
+                    <li><a class="dropdown-item" href="<?php echo base_url('notifications') ?>">Notification</a></li>
+                    <!-- <li><a class="dropdown-item" href="<?php //echo base_url('timesheet/notification') ?>">Activity Logs</a></li> -->
                     <?php if (logged("user_type") == 7): ?>
                         <li><a class="dropdown-item" href="<?php echo base_url('timesheet/schedule') ?>">Schedule</a></li>
                     <?php endif; ?>
