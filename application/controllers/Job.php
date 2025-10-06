@@ -6850,37 +6850,54 @@ class Job extends MY_Controller
 
     public function ajax_update_job_status()
     {
+        $this->load->model('Invoice_model', 'invoice_model');
+
         $is_success = 0;
+        $invoice_id = 0;
         $msg = 'Cannot find job data';
 
         $company_id = logged('company_id');
         $post       = $this->input->post();
+        $is_valid   = false;
 
         $job = $this->jobs_model->getByIdAndCompanyId($post['job_id'], $company_id);
-        if ($job) {                        
-            
+        $invoice = $this->invoice_model->getByJobId($post['job_id']);
+        if ($job) {      
+
             if( $post['job_status'] == 'Arrival' ){
                 $data = [
                     'omw_date' => date("Y-m-d",strtotime($post['omw_date'])),
-                    'omw_time' => $post['omw_time'],
+                    'omw_time' => date("h:i A",strtotime($post['omw_time'])),
                     'status' => 'Arrival'
                 ];
+                $is_valid = true;
             }elseif( $post['job_status'] == 'Started' ){
                 $data = [
-                    'job_start_time' => date("Y-m-d",strtotime($post['job_start_date'])),
-                    'job_start_date' => $post['job_start_time'],
+                    'job_start_date' => date("Y-m-d",strtotime($post['job_start_date'])),
+                    'job_start_time' => date("h:i A",strtotime($post['job_start_time'])),
                     'status' => 'Started'
                 ];
+                $is_valid = true;
             }elseif( $post['job_status'] == 'Finished' ){
                 $data = [
-                    'job_start_time' => date("Y-m-d",strtotime($post['job_start_date'])),
-                    'job_start_date' => $post['job_start_time'],
+                    'finished_date' => date("Y-m-d",strtotime($post['finished_date'])),
+                    'finished_time' => date("h:i A",strtotime($post['finished_time'])),
                     'status' => 'Started'
                 ];
+                $is_valid = true;
+            }elseif( $post['job_status'] == 'Approved' ){
+                $data = [
+                    'status' => 'Approved'
+                ];
+                $is_valid = true;
             }
 
-            if( $data ){
+            if( $data && $is_valid ){
                 $this->jobs_model->update($job->id, $data);
+
+                if( $invoice ){
+                    $invoice_id = $invoice->id;
+                }
 
                 //Activity Logs
                 $activity_name = 'Jobs : Changed job number ' . $job->job_number . ' status to ' . $post['job_status']; 
@@ -6902,7 +6919,7 @@ class Job extends MY_Controller
             $this->payscale_model->updateCommissionStatus($post['job_id'], $post['job_status']);
         }
 
-        $return = ['is_success' => $is_success, 'msg' => $msg];
+        $return = ['is_success' => $is_success, 'invoice_id' => $invoice_id, 'msg' => $msg];
         echo json_encode($return);
     }
 
