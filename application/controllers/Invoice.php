@@ -25,6 +25,8 @@ class Invoice extends MY_Controller
         $this->load->model('accounting_receive_payment_model');
         $this->load->model('Workorder_model', 'workorder_model');
 
+        $this->load->model('User_notification_model', 'User_notification_model');
+
         // add css and js file path so that they can be attached on this page dynamically
         // add_css and add_footer_js are the helper function defined in the helpers/basic_helper.php
         add_css(array(            
@@ -1568,7 +1570,7 @@ class Invoice extends MY_Controller
          */
             $company_users = $this->users_model->getAllUsersByCompanyID($cid);
             if($this->input->post('status') == 'Overdue' && $objInvoice->status != 'Overdue') {
-                $content_notification = 'Invoice #' . $objInvoice->invoice_number . ' is already overdue';
+                $content_notification = 'Invoice #' . $objInvoice->invoice_number;
                 foreach($company_users as $cuser) {
                     $invoice_od_notify = array(
                         'user_id' => $cuser->id,
@@ -1576,10 +1578,11 @@ class Invoice extends MY_Controller
                         'content' => $content_notification,
                         'status' => 1,
                         'date_created' => date("Y-m-d H:i:s"),
-                        'company_id' => $cid
+                        'company_id' => $cid,
+                        'entity_id' => $objInvoice->id
 
                     );                       
-                    $this->db->insert('user_notification', $invoice_od_notify);                    
+                    $this->db->insert('user_notification', $invoice_od_notify);                 
                 }
             }
         /**
@@ -1697,6 +1700,11 @@ class Invoice extends MY_Controller
         $this->load->model('Tickets_model');
 
         $invoice = get_invoice_by_id($id);
+
+        //Update notification to read status
+        if($this->input->get('notif_id')) {
+            $this->User_notification_model->readNotificationByIdEntityId($this->input->get('notif_id'), $id);
+        }
 
         if( $invoice->view_flag == 1 ){
             redirect('invoice');
