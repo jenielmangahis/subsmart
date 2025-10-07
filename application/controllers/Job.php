@@ -168,7 +168,7 @@ class Job extends MY_Controller
     }
 
     public function new_job1($id = null)
-    {    
+    {   
         $this->load->model('AcsProfile_model');
         $this->load->model('CalendarSettings_model');
         $this->load->model('Tickets_model');
@@ -2567,6 +2567,7 @@ class Job extends MY_Controller
             $estimate_id = 0;
             if ($input['estimate_id'] > 0) {
                 $estimate_id = $input['estimate_id'];
+                $input['tax_percentage'] = 0;
             }
 
             $get_customer_info = array(
