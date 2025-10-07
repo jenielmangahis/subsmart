@@ -871,7 +871,11 @@ class Job extends MY_Controller
     public function estimate_job($id = null)
     {
         $this->load->model('AcsProfile_model');
+        $this->load->model('CalendarSettings_model');
+        $this->load->model('Tickets_model');
         $this->load->helper('functions');
+        $this->load->model('Invoice_settings_model');
+
         $comp_id = logged('company_id');
         $user_id = logged('id');
 
@@ -1003,7 +1007,7 @@ class Job extends MY_Controller
         $settings = $this->settings_model->getValueByKey(DB_SETTINGS_TABLE_KEY_SCHEDULE);
         $this->page_data['settings'] = unserialize($settings);
 
-        $this->load->model('workorder_model');
+        $this->load->model('workorder_model');        
         if ($id != null) {
             $get_estimate_query = array(
                 'where' => array(
@@ -1016,8 +1020,6 @@ class Job extends MY_Controller
             $jobs_data = $this->general->get_data_with_param($get_estimate_query, false);
 
             if ($jobs_data->status != 'Accepted') {
-                $this->session->set_flashdata('message', 'Only Accepted estimates can be converted into a job.');
-                $this->session->set_flashdata('alert_class', 'alert-danger');
                 return redirect('/estimate');
             }
 
@@ -1026,7 +1028,7 @@ class Job extends MY_Controller
             $default_customer_name = '';
 
             $customer = $this->AcsProfile_model->getByProfId($jobs_data->customer_id);
-            if ($customer) {
+            if ($customer) {                
                 $default_customer_id   = $customer->prof_id;
                 $default_customer_name = $customer->first_name . ' ' . $customer->last_name;
             }
@@ -1050,24 +1052,56 @@ class Job extends MY_Controller
 
 
         $this->page_data['table'] = 'estimates';
-        add_css([
-            'assets/css/esign/fill-and-sign/fill-and-sign.css',
-        ]);
-
+        
         add_footer_js([
-            'assets/js/esign/fill-and-sign/step1.js',
-            'assets/js/esign/fill-and-sign/step2.js',
-            'assets/js/esign/fill-and-sign/job/script.js',
-
-            'https://cdnjs.cloudflare.com/ajax/libs/signature_pad/1.5.3/signature_pad.min.js',
-            'https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.3.0/jspdf.umd.min.js',
-            'https://html2canvas.hertzen.com/dist/html2canvas.js',
-            'https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js',
-
-            'assets/js/esign/libs/pdf.js',
-            'assets/js/esign/libs/pdf.worker.js',
-            'assets/js/esign/fill-and-sign/step2.js',
+            'assets/js/esign/fill-and-sign/job/approve.js',
         ]);
+
+        // check if settings has been set
+        $get_job_settings = array(
+            'where' => array(
+                'company_id' => $comp_id
+            ),
+            'table' => 'job_settings',
+            'select' => '*',
+        );
+        $job_settings = $this->general->get_data_with_param($get_job_settings, false);
+        if ($job_settings) {        
+            $job_account_next_num = str_pad($job_settings->job_account_next_num, 5, '0', STR_PAD_LEFT);
+        } else {
+            $next_num = str_pad(1, 5, '0', STR_PAD_LEFT);
+            $job_account_next_num = str_pad(1, 5, '0', STR_PAD_LEFT);
+            $lastId = $this->jobs_model->getlastInsert($comp_id);
+            if ($lastId) {
+                $next_num = str_pad($lastId->id, 5, '0', STR_PAD_LEFT);
+                $job_account_next_num = str_pad($lastId->id, 5, '0', STR_PAD_LEFT);
+            }
+        }  
+        
+        $default_job_account_number = $comp_id . '-' . $job_account_next_num;        
+        $this->page_data['default_job_account_number'] = $default_job_account_number;
+
+        $settings = $this->settings_model->getValueByKey(DB_SETTINGS_TABLE_KEY_SCHEDULE);
+        $calendarSettings = $this->CalendarSettings_model->getByCompanyId($comp_id);      
+        $time_interval = 1;
+        if( $calendarSettings && $calendarSettings->time_interval != ''){
+            $settingsTime  = explode(" ", $calendarSettings->time_interval);
+            $time_interval = $settingsTime[0];
+        }   
+        $this->page_data['settings'] = unserialize($settings);        
+        $this->page_data['time_interval'] = $time_interval;
+
+        // get items
+        $get_items = array(
+            'where' => array(
+                'is_active' => 1
+            ),
+            'table' => 'items',
+            'select' => 'items.id,title,price,type',
+        );
+
+        $this->page_data['items'] = $this->general->get_data_with_param($get_items);     
+        $this->page_data['itemsLocation'] = $this->items_model->getLocationStorage();   
         $this->page_data['page']->title = 'Estimates';
         $this->page_data['idd'] = $id;
         $this->load->view('v2/pages/job/job_estimates', $this->page_data);

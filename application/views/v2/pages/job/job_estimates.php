@@ -1,42 +1,393 @@
-<?php 
-    include viewPath('v2/includes/header'); 
-    add_css(array(
-        'https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/css/select2.min.css',
-        'https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/css/bootstrap-datetimepicker.min.css',
-        'https://cdn.datatables.net/select/1.3.1/css/select.dataTables.min.css',
-        'https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css',
-        //'assets/frontend/css/workorder/main.css',
-        // 'assets/css/beforeafter.css',
-    ));
-?>
-
+<?php include viewPath('v2/includes/header');?>
+<!-- add css for this page -->
 <?php include viewPath('v2/pages/job/css/job_new'); ?>
 
+<!-- Script for autosaving form -->
+<?php if(!isset($jobs_data)): ?>
+    <!-- autosave only when creating -->
+    <!-- disable autosave, because we want to handle form submit - send SMS to employeee -->
+    <!-- <script src="<?=base_url("assets/js/jobs/autosave.js")?>"></script> -->
+<?php endif; ?>
 <style>
+    .CC_INPUTS,
+    .DC_INPUTS,
+    .CHECK_INPUTS,
+    .ACH_INPUTS,
+    .VENMO_INPUTS,
+    .PP_INPUTS,
+    .SQ_INPUTS,
+    .WW_INPUTS,
+    .HOF_INPUTS,
+    .ET_INPUTS,
+    .INV_INPUTS,
+    .OCCP_INPUTS,
+    .OPT_INPUTS {
+        display: none;
+    }
+
+    .nsm-badge.primary-enhanced {
+        background-color: #6a4a86;
+    }
+
     div[wrapper__section] {
         padding: 60px 10px !important;
     }
-    .card_plus_sign{
+
+    .card_plus_sign {
         float: right;
         padding-right: 40px;
         font-size: 20px;
         display: block;
         margin-top: -38px;
     }
-    .box_footer_icon{
+
+    .box_footer_icon {
         font-size: 20px;
     }
-    .box_right{
+
+    .box_right {
         border-color: #e0e0e0 !important;
         border: 1px solid;
     }
-    .card{
-        box-shadow: 0 0 13px 0 rgb(116 116 117 / 44%) !important;
+
+    .card {
+        /*box-shadow: 0 0 13px 0 rgb(116 116 117 / 44%) !important;*/
     }
+
+    .label-width .form-control {
+        width: 80% !important;
+    }
+
+    /** css fix for data table missing search input **/
+    label>input {
+        visibility: visible !important;
+        position: inherit !important;
+    }
+
+    #progress-bar-container li .step-inner {
+        position: absolute;
+        width: 100%;
+        bottom: 0;
+        font-size: 14px;
+    }
+
+    #progress-bar-container li.active,
+    #progress-bar-container li:hover {
+        color: #444;
+    }
+
+    #progress-bar-container li::after {
+        content: " ";
+        display: block;
+        width: 6px;
+        height: 6px;
+        background-color: #777;
+        margin: auto;
+        border: 7px solid #fff;
+        border-radius: 50%;
+        margin-top: 40px;
+        box-shadow: 0 2px 13px -1px rgba(0, 0, 0, 0.2);
+        transition: all ease 0.25s;
+    }
+
+    #progress-bar-container li:hover::after {
+        background: #555;
+    }
+
+    #progress-bar-container li.active::after {
+        background: #207893;
+    }
+
+    #progress-bar-container #line {
+        width: 100%;
+        margin: auto;
+        background-color: #eee;
+        height: 6px;
+        position: absolute;
+        left: 8%;
+        top: 50px;
+        z-index: 1;
+        border-radius: 50px;
+        transition: all ease 0.75s;
+    }
+
+    #progress-bar-container #line-progress {
+        content: " ";
+        width: 8%;
+        height: 100%;
+        background-color: #207893;
+        background: linear-gradient(to right #207893 0%, #2ea3b7 100%);
+        position: absolute;
+        z-index: 2;
+        border-radius: 50px;
+        transition: 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.25);
+    }
+
+    #progress-content-section {
+        position: relative;
+        top: 100px;
+        width: 90%;
+        margin: auto;
+        background: #f3f3f3;
+        border-radius: 4px;
+    }
+
+    #progress-content-section .section-content {
+        padding: 30px 40px;
+        text-align: center;
+    }
+
+    .section-content h2 {
+        font-size: 17px;
+        text-transform: uppercase;
+        color: #333;
+        letter-spacing: 1px;
+    }
+
+    .section-content p {
+        font-size: 16px;
+        line-height: 1.8rem;
+        color: #777;
+    }
+
+    .section-content {
+        display: none;
+        animation: FadeinUp 0.7s ease 1 forwards;
+        transform: translateY(15px);
+        opacity: 0;
+    }
+
+    .section-content.active {
+        display: block;
+        opacity: 1;
+    }
+
+    .progress-wrapper {
+        margin: auto;
+        max-width: auto;
+    }
+
+    #progress-bar-container {
+        position: relative;
+        width: 90%;
+        margin: auto;
+        height: 100%;
+        margin-top: 65px;
+    }
+
+    #progress-bar-container ul {
+        padding-top: 15px;
+        z-index: 999;
+        position: absolute;
+        width: 100%;
+        margin-top: -40px;
+    }
+
+    #progress-bar-container li::before {
+        content: " ";
+        display: block;
+        margin: auto;
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+        border: 2px solid #aaa;
+        transition: all ease 0.3s;
+    }
+
+    #progress-bar-container li.active::before,
+    #progress-bar-container li:hover::before {
+        border: 2px solid #fff;
+        background-color: #32243d;
+    }
+
+    #progress-bar-container li {
+        list-style: none;
+        float: left;
+        width: 12.5%;
+        text-align: center;
+        color: #aaa;
+        text-transform: uppercase;
+        font-size: 11px;
+        cursor: pointer;
+        font-weight: 700;
+        transition: all ease 0.2s;
+        vertical-align: bottom;
+        height: 60px;
+        position: relative;
+    }
+
+    @keyframes FadeInUp {
+        0% {
+            transform: translateY(15px);
+            opacity: 0;
+        }
+
+        100% {
+            transform: translateY(0px);
+            opacity: 1;
+        }
+    }
+
+    .card_header {
+        text-align: left;
+    }
+
+    .btn-circle {
+        width: 40px;
+        height: 40px;
+        text-align: center;
+        padding: 5px 7px 0 7px;
+        font-size: 16px;
+        line-height: 1.428571429;
+        border-radius: 20px;
+    }
+
+    .calendar_button {
+        color: #ffffff;
+        font-size: 20px;
+        padding-top: 3px;
+    }
+
+    .color-box-custom {
+        padding: 20px 0px;
+    }
+
+    .color-box-custom ul {
+        margin: 0px;
+        padding: 0px;
+        list-style: none;
+    }
+
+    .color-box-custom ul li {
+        display: inline-block;
+    }
+
+    .color-box-custom ul li span {
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+        background-color: #000;
+        display: block;
+    }
+
+    .color-box-custom ul li span.bg-1 {
+        background-color: #4baf51;
+    }
+
+    .color-box-custom ul li span.bg-2 {
+        background-color: #d86566;
+    }
+
+    .color-box-custom ul li span.bg-3 {
+        background-color: #e57399;
+    }
+
+    .color-box-custom ul li span.bg-4 {
+        background-color: #b273b3;
+    }
+
+    .color-box-custom ul li span.bg-5 {
+        background-color: #8b63d7;
+    }
+
+    .color-box-custom ul li span.bg-6 {
+        background-color: #678cda;
+    }
+
+    .color-box-custom ul li span.bg-7 {
+        background-color: #59bdb3;
+    }
+
+    .color-box-custom ul li span.bg-8 {
+        background-color: #64ae89;
+    }
+
+    .color-box-custom ul li span.bg-9 {
+        background-color: #f1a740;
+    }
+
+    .table-custom table th,
+    .table-custom table td {
+        border: none;
+    }
+
+    .table-custom table {
+        border: none;
+    }
+
+    .table-custom table td a i {
+        color: #45a73c;
+        padding-left: 0px;
+    }
+
+    .table-custom table td.d-flex {
+        padding-top: 23px;
+    }
+
+    .table-custom table td a {
+        padding-left: 11px;
+    }
+
+    .table-hover tbody tr:hover,
+    .table-striped tbody tr:nth-of-type(odd),
+    .thead-default th {
+        background-color: #fff;
+    }
+
+    .upload input[type=file]:before {
+        width: 100%;
+        height: 60px;
+        font-size: 16px;
+        line-height: 32px;
+        content: 'Upload Existing Estimate';
+        display: inline-block;
+        background: #45a73c;
+        padding: 5px 10px;
+        text-align: center;
+        color: #fff;
+        border-radius: 0px;
+    }
+
+    .upload.workorder input[type=file]:before {
+        content: 'Upload Workorder';
+    }
+
+    .upload.invoice input[type=file]:before {
+        content: 'Upload Invoice';
+    }
+
+    .upload input[type=file] {
+        cursor: pointer;
+        width: 100%;
+        height: 44px;
+        overflow: hidden;
+    }
+
+    .modal {
+        /* z-index: 999999 !important; */
+    }
+
+    .a-bold {
+        color: black !important;
+    }
+
+    .items-8 li a {
+        color: #bebebe;
+        text-decoration: none !important;
+    }
+
+    #emp2_id,
+    #emp3_id,
+    #emp4_id,
+    #emp5_id,
+    #emp6_id {
+        background: none;
+        border: 0;
+        font-weight: bold;
+    }
+
     .loader {
         padding: 136px 0;
-/*        border: 1px solid lightgray; */
-/*        border-radius: 10px;*/
     }
 
     .loader>div {
@@ -56,9 +407,9 @@
     table {
         width: 100% !important;
     }
-    /*.dataTables_filter, .dataTables_length{
+    .dataTables_filter, .dataTables_length{
         display: none;
-    }*/
+    }
     table.dataTable thead th, table.dataTable thead td {
     padding: 10px 18px;
     border-bottom: 1px solid lightgray;
@@ -73,16 +424,50 @@
         border-color: lightgray;
         border-width: 0;
     }
-    /** css fix for data table missing search input **/
-    label>input {
-        visibility: visible !important;
-        position: inherit !important;
+    .MAP_LOADER_CONTAINER{
+        min-height: 350px;
+    }
+    #items_table thead td{
+        background-color:#6a4a86;
+        color:#ffffff;
+    }
+    #items_table td:nth-child(5){
+    text-align:right !important;
+    }
+    .col-icon, .col-info{
+        display:inline-block;
+        margin:5px;
+        font-size:14px;
+    }
+    .col-icon{
+        vertical-align:top;
+    }
+    .address-info{
+        width:90%;
     }
 </style>
+<?php if(isset($jobs_data)): ?>
+    <input type="hidden" value="<?= $jobs_data->id ?>" id="esignJobId" />
+    <input type="hidden" value="<?= $jobs_data->status ?>" id="esignJobStatus" />
+<?php endif; ?>
+
+<div class="nsm-fab-container">
+    <div class="nsm-fab nsm-fab-icon nsm-bxshadow">
+        <i class="bx bx-plus"></i>
+    </div>
+    <ul class="nsm-fab-options">        
+        <li onclick="location.href='<?= base_url('job'); ?>'">
+            <div class="nsm-fab-icon">
+                <i class="bx bx-message-square-error"></i>
+            </div>
+            <span class="nsm-fab-label">List Job</span>
+        </li>
+    </ul>   
+</div>
 
 <div class="row page-content g-0">
     <div class="col-12 mb-3">
-        <?php include viewPath('v2/includes/page_navigations/sales_tabs'); ?>
+        <?php include viewPath('v2/includes/page_navigations/job_tabs_v2'); ?>
     </div>
     <div class="col-12 mb-3">
         <?php include viewPath('v2/includes/page_navigations/job_subtabs'); ?>
@@ -94,27 +479,41 @@
                     <div class="col-12">
                         <div class="nsm-callout primary">
                             <button><i class='bx bx-x'></i></button>
-                            With a few clicks, you will be on your way to storing all information about the job performed for an account.
-                                        Stores incident details, resource, expenses, tasks, item audits, communications, billing and more.
-                                        Try our quick import form buttons to seamlessly schedule a job.
+                            With a few clicks, you will be on your way to storing all information about the job performed for an account. 
+                            Stores incident details, resource, expenses, tasks, item audits, communications, billing and more. 
+                            Try our quick import form buttons to seamlessly schedule a job.
                         </div>
                     </div>
                 </div>
                 <form method="post" name="myform" id="jobs_form">
                 <input type="hidden" name="estimate_id" value="<?= $jobs_data->id; ?>">
+                <input type="hidden" id="redirect-calendar" value="<?= $redirect_calendar; ?>">
+                <input type="hidden" name="job_number" id="jobNumber" class="form-control" value="<?= isset($jobs_data->job_number) ? $jobs_data->job_number : ''; ?>">
+                <input type="hidden" name="job_hash" id="johHash" class="form-control" value="<?= isset($jobs_data->hash_id) ? $jobs_data->hash_id : ''; ?>">
+                <input type="hidden" name="job_location" id="job-location" value="<?= isset($jobs_data->job_location) ? $jobs_data->job_location : ''; ?>" />
+                <input type="hidden" name="job_address" id="job-address" value="<?= isset($jobs_data->job_address) ? $jobs_data->job_address : ''; ?>" />
+                <input type="hidden" name="job_city" id="job-city" value="<?= isset($jobs_data->job_city) ? $jobs_data->job_city : ''; ?>" />
+                <input type="hidden" name="job_state" id="job-state" value="<?= isset($jobs_data->job_state) ? $jobs_data->job_state : ''; ?>" />
+                <input type="hidden" name="job_zip" id="job-zip" value="<?= isset($jobs_data->job_zip) ? $jobs_data->job_zip : ''; ?>" />
                 <div class="row g-3 align-items-start">
-                    <div class="col-12 ">
+                    <div class="col-12 ">                        
                         <div class="row g-3">
                             <div class="col-md-4">
                                 <div class="nsm-card primary" style="margin-top: 30px;">
                                     <div class="nsm-card-header d-block">
-                                        <div class="nsm-card-title"><span><i class='bx bx-refresh'></i>&nbsp;Converting Estimate to Job</span></div>
+                                        <div class="nsm-card-title">
+                                            <span><i class='bx bx-refresh'></i>&nbsp;Convert Estimate to Job</span>
+                                            <?php if( $jobs_data ){ ?>
+                                            <span style="float:right;"><?= $jobs_data->job_number; ?></span>
+                                            <?php } ?>
+                                        </div>
                                     </div>
                                     <hr>
                                     <div class="nsm-card-content">
-                                        <?php if(!isset($jobs_data)): ?>
-                                        <p>Import Data from Wordorder/Invoice/Estimates</p>
-                                        <div id="import_buttons">
+                                        <!-- <h6 class="page-title "><span style="font-size: 20px;"  class="fa fa-calendar"></span>&nbsp; &nbsp;Schedule Job</h6> -->                                        
+                                        <?php if(!isset($jobs_data)): ?>                                                                                                                        
+                                        <!-- <div id="import_buttons">
+                                            <p>Import Data from Wordorder/Invoice/Estimates</p>
                                             <button type="button" data-bs-toggle="modal" data-bs-target="#estimates_import" class="nsm-button primary">
                                                 <span class="fa fa-upload"></span> Estimates
                                             </button> &nbsp;&nbsp;
@@ -125,7 +524,7 @@
                                                 <span class="fa fa-upload"></span> Invoice
                                             </button>
                                         </div>
-                                        <hr>
+                                        <hr> -->
                                         <?php endif; ?>
                                         <div class="form-group">
                                             <div class="row g-3 align-items-center mb-3">
@@ -133,7 +532,7 @@
                                                 <label>From:</label>
                                               </div>
                                               <div class="col-sm-5">
-                                                <input type="date" name="start_date" id="start_date" class="form-control" value="<?= isset($jobs_data) ?  $jobs_data->estimate_date : $default_start_date; ?>" required>
+                                                <input type="date" name="start_date" id="start_date" class="form-control" value="<?= isset($jobs_data) ?  $jobs_data->start_date : $default_start_date;  ?>" required>
                                               </div>
                                               <div class="col-sm-5">
                                                   <?php if( isset($jobs_data) ){ $default_start_time = strtolower($jobs_data->start_time); } ?>
@@ -150,7 +549,7 @@
                                                 <label>To:</label>
                                               </div>
                                               <div class="col-sm-5">
-                                                <input type="date" name="end_date" id="end_date" class="form-control mr-2" value="<?= isset($jobs_data->expiry_date) ?  $jobs_data->expiry_date : (new DateTime())->format('Y-m-d');  ?>" required>
+                                                <input type="date" name="end_date" id="end_date" class="form-control mr-2" value="<?= isset($jobs_data) ?  $jobs_data->end_date : $default_start_date;  ?>" required>
                                               </div>
                                               <div class="col-sm-5">
                                                   <select id="end_time" name="end_time" class="nsm-field form-select " required>
@@ -162,6 +561,24 @@
                                               </div>
                                             </div>
                                         </div>
+                                        <!-- <div class="form-group">
+                                            <div class="row">
+                                                <div class="col-lg-1">
+                                                    <label>To</label>
+                                                </div>
+                                                <div class="col-lg-5">
+                                                    <input type="date" name="end_date" id="end_date" class="form-control mr-2" value="<?= isset($jobs_data) ?  $jobs_data->end_date : '';  ?>" required>
+                                                </div>
+                                                <div class="col-lg-5">
+                                                    <select id="end_time" name="end_time" class="nsm-field form-select " required>
+                                                        <option value="">End time</option>
+                                                        <?php for($x=0;$x<time_availability(0,TRUE);$x++){ ?>
+                                                            <option <?= isset($jobs_data) && strtolower($jobs_data->end_time) == time_availability($x) ?  'selected' : '';  ?> value="<?= time_availability($x); ?>"><?= time_availability($x); ?></option>
+                                                        <?php } ?>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div> -->
                                         <br>
                                         <div class="form-group">
                                             <h6>Select Priority</h6>
@@ -173,32 +590,67 @@
                                             </select>
                                         </div><br>
                                         <h6>Sales Rep</h6>
+                                            <?php 
+                                                if( isset($jobs_data) ){
+                                                    $default_user = $jobs_data->employee_id;
+                                                }
+                                            ?>
                                             <select id="employee_id" name="employee_id" class="form-control " required>
-                                                <!-- <option value="10001">Select All</option> -->
+                                                <option value="10001">Select All</option>
                                                 <?php if(!empty($sales_rep)): ?>
                                                     <?php foreach ($sales_rep as $employee): ?>
-                                                        <option <?= isset($jobs_data) && $jobs_data->user_id == $employee->id ? 'selected' : '';  ?> value="<?= $employee->id; ?>"><?= $employee->FName.','.$employee->LName; ?></option>
+                                                        <option <?= isset($jobs_data) && $jobs_data->user_id == $employee->id ? 'selected' : '';  ?> value="<?= $employee->id; ?>"><?= $employee->FName.' '.$employee->LName; ?></option>
                                                     <?php endforeach; ?>
                                                 <?php endif; ?>
                                             </select><br>
                                         <div class="color-box-custom">
-                                            <h6>Event Color on Calendar</h6>
+                                            <h6>Job Color on Calendar</h6>
+                                            <?php 
+                                                $is_default_color_exists = 0;
+                                                $default_color = '#2e9e39'; 
+                                            ?>
                                             <ul>
                                                 <?php if(isset($color_settings)): ?>
                                                     <?php foreach ($color_settings as $color): ?>
+                                                        <?php 
+                                                            if( strtolower($color->color_code) == $default_color){
+                                                                $is_default_color_exists = 1;
+                                                            }
+                                                        ?>
                                                         <li>
-                                                            <a style="background-color: <?= $color->color_code; ?>; border-radius: 0px;border: 1px solid black;margin-bottom: 4px;"" id="<?= $color->id; ?>" type="button" class="btn btn-default color-scheme btn-circle bg-1" title="<?= $color->color_name; ?>">
-                                                                <?php if(isset($jobs_data) && $jobs_data->event_color == $color->id) {echo '<i class="bx bx-check"></i>'; } ?>
-                                                            </a>
+                                                            <?php if( empty($jobs_data) && strtolower($color->color_code) == $default_color ){ ?>
+                                                                <a style="background-color: <?= $color->color_code; ?>; border-radius: 0px;border: 1px solid black;margin-bottom: 4px;" id="<?= $color->id; ?>" type="button" class="btn btn-default color-scheme btn-circle bg-1" title="<?= $color->color_name; ?>">
+                                                                <i class="bx bx-check calendar_button" aria-hidden="true"></i>
+                                                                </a>
+                                                            <?php }else{ ?>
+                                                                <a style="background-color: <?= $color->color_code; ?>; border-radius: 0px;border: 1px solid black;margin-bottom: 4px;" id="<?= $color->id; ?>" type="button" class="btn btn-default color-scheme btn-circle bg-1" title="<?= $color->color_name; ?>">
+                                                                    <?php if(isset($jobs_data) && $jobs_data->event_color == $color->id) {echo '<i class="bx bx-check calendar_button" aria-hidden="true"></i>'; } ?>
+                                                                </a>
+                                                            <?php } ?>                                                            
                                                         </li>
                                                     <?php endforeach; ?>
                                                 <?php endif; ?>
+                                                <?php if( $is_default_color_exists == 0 ){ ?>
+                                                    <li>
+                                                        <a data-color="<?= $default_color; ?>" style="background-color: <?= $default_color; ?>; border-radius: 0px;border: 1px solid black;margin-bottom: 4px;" id="default-event-color" type="button" class="btn btn-default color-scheme btn-circle bg-1" title="Default Event Color">
+                                                        <?php 
+                                                            if(isset($jobs_data) && $jobs_data->event_color == $default_color){
+                                                                echo '<i class="bx bx-check calendar_button event-color-check" aria-hidden="true"></i>'; 
+                                                            }
+
+                                                            if( empty($jobs_data) ){
+                                                                echo '<i class="bx bx-check calendar_button event-color-check" aria-hidden="true"></i>'; 
+                                                            }
+                                                        ?>
+                                                        </a>
+                                                    </li>
+                                                <?php } ?>
                                             </ul>
-                                            <input value="<?= (isset($jobs_data) && $jobs_data->event_color == $color->id) ? $jobs_data->event_color : ''; ?>" id="job_color_id" name="event_color" type="hidden" />
+                                            <input value="<?= (isset($jobs_data) && isset($jobs_data->event_color)) ? $jobs_data->event_color : 0; ?>" id="job_color_id" name="event_color" type="hidden" />
                                         </div>
                                         <div class="mb-3">
                                             <h6>Customer Reminder Notification</h6>
-                                            <select name="customer_reminder_notification" class="form-control ">
+                                            <select id="customer_reminder" name="customer_reminder_notification" class="form-control ">
                                                 <option value="0">None</option>
                                                 <option <?= (isset($jobs_data) && $jobs_data->customer_reminder_notification == 'PT5M') ? 'selected' : ''; ?> value="PT5M">5 minutes before</option>
                                                 <option <?= (isset($jobs_data) && $jobs_data->customer_reminder_notification == 'PT15M') ? 'selected' : ''; ?> value="PT15M">15 minutes before</option>
@@ -218,88 +670,57 @@
                                         <div class="mb-3">
                                             <h6>Time Zone</h6>
                                             <select id="inputState" name="timezone" class="form-control ">
-                                            <?php foreach (config_item('calendar_timezone') as $key => $zone) { ?>
-                                                <option value="<?php echo $key ?>" <?= $jobs_data && $jobs_data->timezone == $key ? 'selected="selected"' : ''; ?>>
-                                                    <?php echo $zone ?>
-                                                </option>
-                                            <?php } ?>                                            
+                                                <?php foreach (config_item('calendar_timezone') as $key => $zone) { ?>
+                                                    <option value="<?php echo $key ?>" <?= $jobs_data && $jobs_data->timezone == $key ? 'selected="selected"' : ''; ?>>
+                                                        <?php echo $zone ?>
+                                                    </option>
+                                                <?php } ?>
+                                                <!-- <option value="utc5">Central Time (UTC -5)</option> -->
                                             </select>
                                         </div>
-                                        <div class="mb-3">
-                                            <div class="d-flex justify-content-between">
-                                                <h6>Select Job Type</h6>
-                                                <a class="nsm-link d-flex align-items-center" target="_blank" href="<?= base_url('job/job_types'); ?>">
-                                                    <span class="bx bx-plus"></span>Manage Job Types
-                                                </a>
-                                            </div>
-                                            <select id="job_type_option" name="jobtypes" class="form-control " required>
-                                                <option value="">Select Type</option>
-                                                <?php foreach ($job_types as $type): ?>
-                                                    <option value="<?= $type->title; ?>"><?= $type->title; ?></option>
-                                                <?php endforeach; ?>
-                                            </select>
-                                        </div>
-                                        <div class="mb-3">
-                                            <div class="d-flex justify-content-between">
-                                                <h6>Select Job Tag</h6>
-                                                <a class="nsm-link d-flex align-items-center" target="_blank" href="<?= base_url('job/job_tags'); ?>">
-                                                    <span class="bx bx-plus"></span>Manage Job Tags
-                                                </a>
-                                            </div>
-                                            <select id="job_tags" name="tags" class="form-control " required>
-                                                <option value="">Select Tags</option>
-                                                <?php if(!empty($tags)): ?>
-                                                    <?php foreach ($tags as $tag): ?>
-                                                        <option <?php if(isset($jobs_data) && $jobs_data->tags == $tag->name) {echo 'selected'; } ?> value="<?= $tag->id; ?>"><?= $tag->name; ?></option>
-                                                    <?php endforeach; ?>
-                                                <?php endif; ?>
-                                            </select>
-                                        </div>
-                                        <h6>Assigned To</h6>
-                                        <div class="row">
-                                            <div class="col-sm-12 mb-2 ASSIGNED_TO_1">
-                                                <input type="text" id="emp2_id" name="emp2_id" value= "<?php if(isset($jobs_data) && !empty($jobs_data->employee2_id)){ echo $jobs_data->employee2_id; } ?>" hidden>
-                                                <select id="EMPLOYEE_SELECT_2" name="employee2_" class="form-control">
-                                                    <option value="">Select Employee</option>
-                                                    <?php if(!empty($employees)): ?>
-                                                        <?php foreach ($employees as $employee): ?>
-                                                            <option <?php if(isset($jobs_data) && $jobs_data->employee2_id == $employee->id) {echo 'selected'; } ?> value="<?= $employee->id; ?>"><?= $employee->LName.','.$employee->FName; ?></option>
-                                                        <?php endforeach; ?>
-                                                    <?php endif; ?>
-                                                </select>
-                                                <!-- <input type="text" value= "<?= (isset($jobs_data) && !empty($jobs_data->employee2_id)) ? get_employee_name($jobs_data->employee2_id): 'Employee 1' ?>" id="emp2_txt"  class="form-control" readonly> -->
-                                            </div>
-                                            <div class="col-sm-12 mb-2 ASSIGNED_TO_2">
-                                                <input type="text" id="emp3_id" name="emp3_id" value= "<?php if(isset($jobs_data) && !empty($jobs_data->employee3_id)){ echo $jobs_data->employee3_id; } ?>" hidden>
-                                                <select id="EMPLOYEE_SELECT_3" name="employee3_" class="form-control">
-                                                    <option value="">Select Employee</option>
-                                                    <?php if(!empty($employees)): ?>
-                                                        <?php foreach ($employees as $employee): ?>
-                                                            <option <?php if(isset($jobs_data) && $jobs_data->employee3_id == $employee->id) {echo 'selected'; } ?> value="<?= $employee->id; ?>"><?= $employee->LName.','.$employee->FName; ?></option>
-                                                        <?php endforeach; ?>
-                                                    <?php endif; ?>
-                                                </select>
-                                                <!-- <input type="text" value= "<?= (isset($jobs_data) && !empty($jobs_data->employee3_id)) ? get_employee_name($jobs_data->employee3_id): 'Employee 2' ?>" id="emp3_txt" class="form-control" readonly> -->
-                                            </div>
-                                            <div class="col-sm-12 mb-2 ASSIGNED_TO_3">
-                                                <input type="text" id="emp4_id" name="emp4_id" value= "<?php if(isset($jobs_data) && !empty($jobs_data->employee4_id)){ echo $jobs_data->employee4_id; } ?>" hidden>
-                                                <select id="EMPLOYEE_SELECT_4" name="employee4_" class="form-control">
-                                                    <option value="">Select Employee</option>
-                                                    <?php if(!empty($employees)): ?>
-                                                        <?php foreach ($employees as $employee): ?>
-                                                            <option <?php if(isset($jobs_data) && $jobs_data->employee4_id == $employee->id) {echo 'selected'; } ?> value="<?= $employee->id; ?>"><?= $employee->LName.','.$employee->FName; ?></option>
-                                                        <?php endforeach; ?>
-                                                    <?php endif; ?>
-                                                </select>
-                                                <!-- <input type="text" value= "<?= (isset($jobs_data) && !empty($jobs_data->employee4_id)) ? get_employee_name($jobs_data->employee4_id): 'Employee 3' ?>"  id="emp4_txt"  class="form-control" readonly> -->
-                                            </div>
-                                            <div class="col-sm-12 mb-2 ASSIGNED_TO_4">
+                                        <div>
+                                            <h6>Assigned Users</h6>
+                                            <div class="row">
+                                                <div class="col-sm-12 mb-2 ASSIGNED_TO_1">
+                                                    <input type="text" id="emp2_id" name="emp2_id" value= "<?php if(isset($jobs_data) && !empty($jobs_data->employee2_id)){ echo $jobs_data->employee2_id; } ?>" hidden>
+                                                    <select id="EMPLOYEE_SELECT_2" name="employee2_" class="form-control">
+                                                        <option value="">Select Employee</option>
+                                                        <?php if(!empty($employees)): ?>
+                                                            <?php foreach ($employees as $employee): ?>
+                                                                <option <?php if(isset($jobs_data) && $jobs_data->employee2_id == $employee->id) {echo 'selected'; } ?> value="<?= $employee->id; ?>"><?= $employee->LName.' '.$employee->FName; ?></option>
+                                                            <?php endforeach; ?>
+                                                        <?php endif; ?>
+                                                    </select>
+                                                </div>
+                                                <div class="col-sm-12 mb-2 ASSIGNED_TO_2">
+                                                    <input type="text" id="emp3_id" name="emp3_id" value= "<?php if(isset($jobs_data) && !empty($jobs_data->employee3_id)){ echo $jobs_data->employee3_id; } ?>" hidden>
+                                                    <select id="EMPLOYEE_SELECT_3" name="employee3_" class="form-control">
+                                                        <option value="">Select Employee</option>
+                                                        <?php if(!empty($employees)): ?>
+                                                            <?php foreach ($employees as $employee): ?>
+                                                                <option <?php if(isset($jobs_data) && $jobs_data->employee3_id == $employee->id) {echo 'selected'; } ?> value="<?= $employee->id; ?>"><?= $employee->LName.' '.$employee->FName; ?></option>
+                                                            <?php endforeach; ?>
+                                                        <?php endif; ?>
+                                                    </select>
+                                                </div>
+                                                <div class="col-sm-12 mb-2 ASSIGNED_TO_3">
+                                                    <input type="text" id="emp4_id" name="emp4_id" value= "<?php if(isset($jobs_data) && !empty($jobs_data->employee4_id)){ echo $jobs_data->employee4_id; } ?>" hidden>
+                                                    <select id="EMPLOYEE_SELECT_4" name="employee4_" class="form-control">
+                                                        <option value="">Select Employee</option>
+                                                        <?php if(!empty($employees)): ?>
+                                                            <?php foreach ($employees as $employee): ?>
+                                                                <option <?php if(isset($jobs_data) && $jobs_data->employee4_id == $employee->id) {echo 'selected'; } ?> value="<?= $employee->id; ?>"><?= $employee->LName.' '.$employee->FName; ?></option>
+                                                            <?php endforeach; ?>
+                                                        <?php endif; ?>
+                                                    </select>
+                                                </div>
+                                                <div class="col-sm-12 mb-2 ASSIGNED_TO_4">
                                                     <input type="text" id="emp5_id" name="emp5_id" value= "<?php if(isset($jobs_data) && !empty($jobs_data->employee5_id)){ echo $jobs_data->employee5_id; } ?>" hidden>
                                                     <select id="EMPLOYEE_SELECT_5" name="employee5_" class="form-control">
                                                         <option value="">Select Employee</option>
                                                         <?php if(!empty($employees)): ?>
                                                             <?php foreach ($employees as $employee): ?>
-                                                                <option <?php if(isset($jobs_data) && $jobs_data->employee5_id == $employee->id) {echo 'selected'; } ?> value="<?= $employee->id; ?>"><?= $employee->LName.','.$employee->FName; ?></option>
+                                                                <option <?php if(isset($jobs_data) && $jobs_data->employee5_id == $employee->id) {echo 'selected'; } ?> value="<?= $employee->id; ?>"><?= $employee->LName.' '.$employee->FName; ?></option>
                                                             <?php endforeach; ?>
                                                         <?php endif; ?>
                                                     </select>
@@ -310,11 +731,12 @@
                                                         <option value="">Select Employee</option>
                                                         <?php if(!empty($employees)): ?>
                                                             <?php foreach ($employees as $employee): ?>
-                                                                <option <?php if(isset($jobs_data) && $jobs_data->employee6_id == $employee->id) {echo 'selected'; } ?> value="<?= $employee->id; ?>"><?= $employee->LName.','.$employee->FName; ?></option>
+                                                                <option <?php if(isset($jobs_data) && $jobs_data->employee6_id == $employee->id) {echo 'selected'; } ?> value="<?= $employee->id; ?>"><?= $employee->LName.' '.$employee->FName; ?></option>
                                                             <?php endforeach; ?>
                                                         <?php endif; ?>
                                                     </select>
                                                 </div>
+                                            </div>
                                         </div>
                                         <div class="float-end">
                                             <div class="group">
@@ -322,12 +744,6 @@
                                                 <button class="nsm-button small REMOVE_ASSIGN_EMPLOYEE" type="button"><i class='bx bx-user-minus'></i>&nbsp;Remove</button>
                                             </div>
                                         </div>
-                                        <!-- <br>
-                                        <center>
-                                        <a href="#" data-bs-toggle="modal" data-bs-target="#share_job_modal" data-backdrop="static" data-keyboard="false" class="btn btn-primary">
-                                            <span class="fa fa-plus"></span> Assign Job
-                                        </a>
-                                        </center> -->
                                     </div>
                                 </div>
                             </div>
@@ -335,86 +751,131 @@
                                 <div class="nsm-card primary table-custom" style="margin-top: 30px;">
                                     <div class="nsm-card-header d-block">
                                         <div class="nsm-card-title">
-                                            <b>Created By: </b>&nbsp;&nbsp; <span> <?= ' '.$logged_in_user->FName.' '.$logged_in_user->LName; ?></span>
-                                            
+                                            <div class="row">
+                                                <div class="col-sm-6">
+                                                    <?php 
+                                                        if( !empty($job_created_by) ){
+                                                            $created_by = $job_created_by->FName . ' ' . $job_created_by->LName;
+                                                        }else{
+                                                            $created_by = $logged_in_user->FName . ' ' . $logged_in_user->LName;
+                                                        }
+                                                    ?>
+                                                    <strong>Created By:</strong>&nbsp;<strong style="font-size: 20px;"> <?= ' '.$created_by; ?></strong style="font-size: 17px;">
+                                                </div>
+                                                <div class="col-sm-6">
+                                                     <button type="button" id="btn-add-new-customer" data-bs-toggle="modal" data-bs-target="#quick-add-customer" class="nsm-button small text-end" style="float: right;"><i class='bx bx-fw bx-plus'></i><strong>Add New Customer</strong></button>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>     
                                     <div class="nsm-card-content">
                                         <div class="row">
-                                            
                                             <hr>
                                             <div class="col-md-5">
-                                                <h6>Customer Info</h6>
+                                                <h6>Customer</h6>
                                                 <select id="customer_id" name="customer_id" data-customer-source="dropdown" class="form-control searchable-dropdown" required>
+                                                    <option value="">- Select Customer -</option>
+                                                    <!-- <option value="4801" selected>Test</option> -->
                                                     <?php if( $default_customer_id > 0 ){ ?>
-                                                        <option value="<?= $default_customer_id; ?>"><?= $default_customer_name; ?></option>
+                                                        <option value="<?= $default_customer_id; ?>" selected><?= $default_customer_name; ?></option>
                                                     <?php } ?>                                        
                                                 </select>
-                                                <table id="customer_info" class="table">
-                                                    <thead>
-                                                    <tr>
-                                                        <td></td>
-                                                    </tr>
-                                                    </thead>
-                                                    <tbody>
-                                                    <tr>
-                                                        <td id="cust_fullname">xxxxx xxxxx</td>
-                                                        <td><a target="_blank" href="#" id="customer_preview"><span class="fa fa-user customer_right_icon"></span></a></td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td >
-                                                            <div id="cust_address">-------------</div>
-                                                            <div id="cust_address2">-------------</div>
-                                                        </td>
-                                                        <td><a href=""><span class="fa fa-map-marker customer_right_icon"></span></a></td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td id="cust_number">(xxx) xxx-xxxx</td>
-                                                        <td><a href=""><span class="fa fa-phone customer_right_icon"></span></a></td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td id="cust_email">xxxxx@xxxxx.xxx</td>
-                                                        <td><a id="mail_to" href="#"><span class="fa fa-envelope-o customer_right_icon"></span></a></td>
-                                                    </tr>
-                                                    </tbody>
-                                                </table>
-                                            </div>
-                                            <div class="col-md-7">
-                                                <div class="col-md-12">
-                                                    <!-- <div id="streetViewBody" class="col-md-6 float-left no-padding"></div>
-                                                    <div id="map" class="col-md-6 float-left"></div> -->
-                                                    <div class="text-center MAP_LOADER">
-                                                        <div class="loader">
-                                                            <div class="spinner-border" role="status"></div>
-                                                            <span style="">Loading Map...</span>
+                                                <div class="row mt-4">
+                                                    <div class="col-12">
+                                                        <div class="col-icon">
+                                                            <i class='bx bx-map'></i>
+                                                        </div>
+                                                        <div class="col-info address-info">
+                                                            <span id="cust_address">----</span>                                                            
                                                         </div>
                                                     </div>
-                                                    <iframe id="TEMPORARY_MAP_VIEW" height="300" width="100%" style="display: none;"></iframe>
+                                                    <div class="col-12 mt-2">
+                                                        <div class="col-icon">
+                                                            <i class='bx bx-mobile'></i>
+                                                        </div>
+                                                        <div class="col-info">
+                                                            <span id="cust_number">----</span>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-12 mt-2">
+                                                        <div class="col-icon">
+                                                            <i class='bx bx-envelope'></i>
+                                                        </div>
+                                                        <div class="col-info">
+                                                            <span id="cust_email">----</span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-7">
+                                                <div class="col-md-12 MAP_LOADER_CONTAINER">                                          
+                                                    <div class="text-center MAP_LOADER">
+                                                        <iframe id="TEMPORARY_MAP_VIEW" src="http://maps.google.com/maps?output=embed" height="300" width="100%" style=""></iframe>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-12">                                                
+                                                <div class="col-md-12">
+                                                    <hr>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-md-6">
+                                                        <div class="mb-3">
+                                                            <div class="d-flex justify-content-between">
+                                                                <h6>Job Type</h6>
+                                                                <a class="nsm-button btn-small d-flex align-items-center btn-quick-add-job-type" href="javascript:void(0);">
+                                                                    <span class="bx bx-plus"></span>Add New Job Type
+                                                                </a>
+                                                            </div>
+                                                            <select id="job_type" name="job_type" class="form-control">
+                                                                <option value="">Select Type</option>
+                                                                <?php if( $defaultJobType ){ ?>
+                                                                    <option  value="<?= $defaultJobType->id; ?>" data-image="<?= $defaultJobType->icon_marker; ?>" selected="selected"><?= $defaultJobType->title; ?></option>
+                                                                <?php } ?>
+                                                            </select>
+                                                            <script>
+                                                                $(document).on('change', '#job_type', function() {
+                                                                    var selectedLabel = $(this).find('option:selected').text();
+                                                                    $('input[name="job_type_label"]').val(selectedLabel);
+                                                                });
+                                                            </script>
+                                                            <input type="hidden" name="job_type_label" value="<?= $defaultJobType->title; ?>">
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <div class="mb-3">
+                                                            <div class="d-flex justify-content-between">
+                                                                <h6>Job Tag</h6>
+                                                                <a class="nsm-button btn-small d-flex align-items-center btn-quick-add-job-tag" href="javascript:void(0);">
+                                                                    <span class="bx bx-plus"></span>Add New Job Tag
+                                                                </a>
+                                                            </div>  
+                                                            <select id="job_tag" name="job_tag" class="form-control">
+                                                                <option value="">Select Tags</option>
+                                                                <?php if(!empty($tags)): ?>
+                                                                    <?php foreach ($tags as $tag): ?>
+                                                                        <option <?php if(isset($jobs_data) && $jobs_data->tags == $tag->name) {echo 'selected'; } ?> value="<?= $tag->id; ?>" data-image="<?= $tag->marker_icon; ?>"><?= $tag->name; ?></option>
+                                                                    <?php endforeach; ?>
+                                                                <?php endif; ?>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <h6>Job Account Number</h6>
+                                                        <input value="<?= $default_job_account_number; ?>" type="text" class="form-control" disabled="" readonly="">
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <h6>Description of Job</h6>
+                                                        <textarea style="height:80px;" name="job_description" class="form-control" required=""><?= isset($jobs_data) ? $jobs_data->job_description : ''; ?></textarea>
+                                                    </div>
+                                                    <div class="col-md-12">
+                                                        <hr>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="col-sm-12">
-                                            <hr />
-                                            <table class="table d-none">
-                                                <tbody>
-                                                    <tr>
-                                                        <td>
-                                                            <small>Job Type</small>
-                                                            <input type="text" id="job_type" name="job_type" value="<?= isset($jobs_data) ? $jobs_data->job_type : ''; ?>" class="form-control" readonly>
-                                                        </td>
-                                                        <td>
-                                                            <small>Job Tags</small>
-                                                            <input type="text" name="job_tag" class="form-control" value="<?= isset($jobs_data) ? $jobs_data->tags : ''; ?>" id="job_tags_right" readonly>
-                                                        </td>
-                                                    </tr>
-                                                </tbody>
-                                            </table>
-                                            <p>Description of Job</p>
-                                            <textarea name="job_description" class="form-control" required><?= isset($jobs_data) ? $jobs_data->job_name : ''; ?></textarea>                                        
-                                            <hr />
-                                        </div>                                        
-                                        <h6 class='card_header'>Job Items Listing</h6>                                        
-                                        <table class="table table-hover">
+                                        <h6 class='card_header'>Job Items Listing</h6>
+                                        <table class="table table-hover job_items_tbl">
                                             <tbody id="jobs_items">
                                             <?php if( !empty($estimate_items) ){ ?>
                                                 <?php $subtotal = 0.00; ?>
@@ -443,14 +904,16 @@
                                                     </tr>
                                                     <?php $subtotal = $subtotal + $total; ?>
                                                 <?php } ?>
-                                            <?php } ?>
+                                            <?php } ?>                                            
                                             </tbody>
                                         </table>
-                                        <button class="nsm-button primary small link-modal-open" type="button" id="add_another_items" data-bs-toggle="modal" data-bs-target="#item_list">
+                                            <button class="nsm-button primary small link-modal-open" type="button" id="add_another_items" data-bs-toggle="modal" data-bs-target="#item_list">
                                                 <i class='bx bx-plus'></i>Add Items
                                             </button>
-                                        <br>
-                                        <br>                                        
+                                            <hr>
+                                            <style type="text/css">
+                                                <?php echo $hideSelectedItems; ?>
+                                            </style>
                                         <div class="col-md-12">
                                             <div class="row">
                                                 <div class="col-md-4">
@@ -459,7 +922,7 @@
                                                             <div class="cont">
                                                                 <div class="tit">
                                                                     <?php 
-                                                                        $THUMBNAIL_SRC = (isset($jobs_data)) ? $jobs_data->attachment : "";
+                                                                        $THUMBNAIL_SRC = (isset($jobs_data)) ? base_url($jobs_data->attachment) : "";
                                                                         if(isset($jobs_data) && $jobs_data->attachment != "") {
                                                                             $IMG_HIDE_STATUS = "";
                                                                             $SPAN_HIDE_STATUS = "d-none";
@@ -493,194 +956,184 @@
                                                         <input type="hidden" name="sub_total" id="sub_total_form_input" value='0'>
                                                         </div>
                                                     </div>
-                                                    <div class="row">
-                                                        <div class="col-sm-6">
+                                                    <div class="row mt-2">
+                                                        <div class="col-12 col-md-6 col-sm-6">
                                                             <div class="d-flex justify-content-between">
                                                                 <h6>Tax Rate</h6>
-                                                                <a class="nsm-link d-flex align-items-center" target="_blank" href="<?= base_url('job/settings'); ?>">
-                                                                    <span class="bx bx-plus"></span>Manage Tax Rates
-                                                                </a>
-                                                            </div>
-                                                            <select id="tax_rate" name="tax_rate" class="form-control">
-                                                                <option value="">None</option>
-                                                                <?php 
-                                                                    $SELECTED_TAX = (isset($jobs_data->tax1_total)) ? $jobs_data->tax1_total : '0.00';
-                                                                    foreach ($tax_rates as $rate) {
-                                                                        if ($SELECTED_TAX == number_format(($rate->percentage / 100) * $subtotal, 2,'.',',') && $SELECTED_TAX != "0.00") {
-                                                                            echo "<option selected value='".($rate->percentage / 100)."'>".$rate->name."</option>";
-                                                                        } else {
-                                                                            echo "<option value='".($rate->percentage / 100)."'>".$rate->name."</option>";
-                                                                        }
-                                                                    } 
-                                                                ?>
-                                                            </select>
-                                                        </div>                                                      
-                                                        <div class="col-sm-6">
+                                                            </div>  
+                                                        </div>
+                                                        <div class="col-12 col-md-6 col-sm-6">
                                                             <label id="invoice_tax_total"><?= isset($jobs_data->tax1_total) ? number_format((float)$jobs_data->tax1_total, 2,'.',',') : '0.00'; ?></label>
                                                             <input type="hidden" name="tax" id="tax_total_form_input" value="<?= isset($jobs_data->tax1_total) ? number_format((float)$jobs_data->tax1_total, 2,'.',',') : '0.00'; ?>">
                                                         </div>
-                                                        <div class="row mt-3">
-                                                            <div class="col-sm-6">
-                                                                <label>Discount</label>
-                                                            </div>
-                                                            <div class="col-sm-6">
-                                                                <label id="invoice_discount_total"><?= isset($jobs_data) ? number_format((float)$jobs_data->bundle_discount,2,'.',',') : '0.00'; ?></label>
-                                                                <input type="hidden" name="sub_discount" id="sub_discount_form_input" value='0'>
-                                                            </div>
-                                                        </div>
                                                     </div>
-                                                    <div class="row">
-                                                        <hr>
-                                                    </div>
-                                                    <div class="row">
-                                                        <?php if($jobs_data && $jobs_data->deposit_amount): ?>
-                                                            <?php
-                                                                $depositAmount = 0;
-                                                                $percentage = null;
-                                                                $isPercentage = in_array(trim($jobs_data->deposit_request), ['2', '%']); // 1 = $, 2 = %
-                                                                $subtotal = $subtotal + $jobs_data->tax1_total;
-                                                                if ($isPercentage) {
-                                                                    $percentage = (float) $jobs_data->deposit_amount;
-                                                                    $depositAmount = ($percentage / 100) * $subtotal;
-                                                                } else {
-                                                                    $depositAmount = (float) $jobs_data->deposit_amount;
-                                                                }
-                                                                $invoiceOverAllTotal =  (float) $subtotal - (float) $depositAmount;
-                                                                $invoiceOverAllTotalFormatted = number_format((float) $invoiceOverAllTotal, 2, '.', ',');
-                                                                $depositAmountFormatted = number_format((float) $depositAmount, 2, '.', ',');
-                                                            ?>
+                                                    <?php $subtotal = $subtotal + $jobs_data->tax1_total; ?>
+                                                    <?php //if( in_array($cid, adi_company_ids()) ){ ?>
+                                                        <?php if( $industrySpecificFields && array_key_exists('installation_cost', $industrySpecificFields) ){ ?>
+                                                            <?php if( !in_array('installation_cost', $disabled_industry_specific_fields) ){ ?>
+                                                            <div class="row mt-3">
+                                                                <div class="col-sm-6">
+                                                                    <label>Installation Cost</label>
+                                                                </div>
+                                                                <div class="col-sm-3">
+                                                                    <input type="number" step="any" min="0" class="form-control" id="adjustment_ic" name="installation_cost" value="<?= isset($jobs_data) ? $jobs_data->installation_cost : '0.00'; ?>" required="" />
+                                                                </div>
+                                                            </div>
+                                                            <?php } ?>
+                                                        <?php } ?>
+
+                                                        <?php if( $industrySpecificFields && array_key_exists('otps', $industrySpecificFields) ){ ?>
+                                                            <?php if( !in_array('otps', $disabled_industry_specific_fields) ){ ?>
+                                                            <div class="row mt-2">
+                                                                <div class="col-sm-6">
+                                                                    <label>One time (Program and Setup)</label>
+                                                                </div>
+                                                                <div class="col-sm-3">
+                                                                    <input type="number" step="any" min="0" class="form-control" id="adjustment_otps" name="otps" value="<?= isset($jobs_data) ? $jobs_data->program_setup : '0.00'; ?>" required="" />
+                                                                </div>
+                                                            </div>
+                                                            <?php } ?>
+                                                        <?php } ?>
+                                                        <?php if( $industrySpecificFields && array_key_exists('monthly_monitoring_rate', $industrySpecificFields) ){ ?>
+                                                            <?php if( !in_array('monthly_monitoring_rate', $disabled_industry_specific_fields) ){ ?>
+                                                            <div class="row mt-2 mb-2">
+                                                                <div class="col-sm-6">
+                                                                    <label>Monthly Monitoring</label>
+                                                                </div>
+                                                                <div class="col-sm-3">
+                                                                    <input type="number" step="any" min="0" class="form-control" id="adjustment_mm" name="monthly_monitoring" value="<?= isset($jobs_data) ? $jobs_data->monthly_monitoring : '0.00'; ?>" required="" />
+                                                                </div>
+                                                            </div>
+                                                            <?php } ?>
+                                                        <?php } ?>
+                                                    <?php //} ?>
+                                                    <div class="mt-2"><hr /></div>                                                    
+                                                    <?php if( $estimate_dp_amount > 0 ){ ?>
+                                                        <div class="row">
                                                             <div class="col-sm-6">
                                                                 <label>Total</label>
                                                             </div>
                                                             <div class="col-sm-6">
-                                                                <label id="invoice_overall_total">$<?= isset($jobs_data) ? number_format((float)$subtotal,2,'.',',') : '0.00'; ?></label>
+                                                                <label id="invoice_overall_total"></label>
+                                                                <!-- <input step="any" type="hidden" name="total_amount" id="total2" value="<?= isset($jobs_data) ? number_format((float)$subtotal,2,'.',',') : '0'; ?>" hidden> -->
+                                                                <input step="any" type="number" name="total_amount" id="total2" hidden>
                                                             </div>
-
+                                                        </div>
+                                                        <div class="row">
                                                             <div class="col-sm-6">
-                                                                <label>Requested Deposit</label>
+                                                                <label>Deposit Paid</label>
                                                             </div>
                                                             <div class="col-sm-6">
-                                                                <label id="invoice_requested_deposit" data-value="<?= $depositAmount; ?>">
-                                                                    $<?= isset($jobs_data) ? $depositAmountFormatted : '0.00'; ?>
-                                                                    <?= $isPercentage ? "($percentage%)" : "" ?>
-                                                                </label>
+                                                                <label id="invoice_requested_deposit" data-value="<?= $estimate_dp_amount; ?>">$<?= number_format((float) $estimate_dp_amount, 2, '.', ','); ?></label>
                                                             </div>
-
+                                                        </div>
+                                                        <div class="row">
                                                             <div class="col-sm-6">
                                                                 <label><strong>Balance Owed</strong></label>
                                                             </div>
                                                             <div class="col-sm-6">
-                                                                <strong><label id="invoice_overall_total_without_deposited_amount">$<?= isset($jobs_data) ? $invoiceOverAllTotalFormatted : '0.00'; ?></label></strong>
-                                                                <input step="any" type="number" name="sub_total" id="sub_total_form_input" value="<?= isset($jobs_data) ? $invoiceOverAllTotalFormatted : '0'; ?>" hidden>
+                                                                <strong><label id="invoice_overall_total_without_deposited_amount"></label></strong>
                                                             </div>
-                                                        <?php else: ?>
+                                                        </div>                                                        
+                                                    <?php }else{ ?>                                                                                            
+                                                        <div class="row">
                                                             <div class="col-sm-6">
                                                                 <label><strong>Total</strong></label>
                                                             </div>
                                                             <div class="col-sm-6">
-                                                                <label id="invoice_overall_total"><strong>$<?= isset($jobs_data) ? number_format((float)$subtotal,2,'.',',') : '0.00'; ?></strong></label>
-                                                                <input step="any" type="number" name="sub_total" id="sub_total_form_input" value="<?= isset($jobs_data) ? number_format((float)$subtotal,2,'.',',') : '0'; ?>" hidden>
+                                                                <label id="invoice_overall_total"></label>
+                                                                <!-- <input step="any" type="number" name="total_amount" id="total2" value="<?= isset($jobs_data) ? number_format((float)$subtotal,2,'.',',') : '0'; ?>" hidden> -->
+                                                                <input step="any" type="number" name="total_amount" id="total2" hidden>
                                                             </div>
-                                                        <?php endif; ?>
-                                                    </div>
+                                                        </div>
+                                                    <?php } ?>
+                                                    <div class="row mt-3 d-none">
+                                                        <div class="col-sm-6 d-none">
+                                                            <label>Commission<br><small class="text-muted COMMISSION_TYPE"></small></label>
+                                                        </div>
+                                                        <div class="col-sm-6 d-none">
+                                                            <label  id="invoice_overall_total">$0</label>
+                                                        </div>
+                                                        <div class="col-sm-6">
+                                                            Commission Type: <input type="number" name="commission_type" value="" readonly>
+                                                            <br>
+                                                            Percentage: <input step="any" type="number" name="commission_percentage" value="" readonly>
+                                                            <br>
+                                                            Total Commission: <input step="any" type="number" name="commission_amount" value="<?php echo $jobs_data->commission; ?>" readonly>
+                                                        </div>
+                                                    </div>                                                    
                                                 </div>
-                                                <!-- <div class="col-md-8 row pr-0">
-                                                    <div class="col-sm-6">
-                                                        <label style="padding: 0 .75rem;">Subtotal</label>
-                                                    </div>
-                                                    <div class="col-sm-6 text-right pr-3">
-                                                        <label id="invoice_sub_total">$<?= isset($jobs_data) ? number_format((float)$subtotal,2,'.',',') : '0.00'; ?></label>
-                                                        <input step="any" type="hidden" name="sub_total" id="sub_total_form_input" value='0'>
-                                                    </div>
-                                                    <div class="col-sm-12">
-                                                        <hr>
-                                                    </div>
-                                                    <div class="col-sm-6">
-                                                        <small>Tax Rate</small>
-                                                        <a href="<?= base_url('job/settings') ?>"><span class="fa fa-plus" style="margin-left:50px;"></span></a>
-                                                        <select id="tax_rate" name="tax_rate" class="form-control">
-                                                            <option value="0">None</option>
-                                                            <?php foreach ($tax_rates as $rate) : ?>
-                                                                <option value="<?= $rate->percentage / 100; ?>"><?= $rate->name; ?></option>
-                                                            <?php endforeach; ?>
-                                                        </select>
-                                                    </div>
-                                                    <div class="col-sm-6 text-right pr-3">
-                                                        <label id="invoice_tax_total"><?= $jobs_data->tax1_total != null ? number_format((float)$jobs_data->tax1_total,2,'.',',') : '0.00' ?></label>
-                                                        <input type="hidden" name="tax" id="tax_total_form_input" value="<?= $jobs_data->tax1_total != null ? number_format((float)$jobs_data->tax1_total,2,'.',',') : '0.00' ?>">
-                                                    </div>
-                                                    <div class="col-sm-12">
-                                                        <hr>
-                                                    </div>
-                                                    <div class="col-sm-6">
-                                                        <label style="padding: 0 .75rem;">Discount</label>
-                                                    </div>
-                                                    <div class="col-sm-6 text-right pr-3">
-                                                        <label id="invoice_discount_total"><?= isset($jobs_data) ? number_format((float)$jobs_data->bundle_discount,2,'.',',') : '0.00'; ?></label>
-                                                        <input type="hidden" name="sub_discount" id="sub_discount_form_input" value='0'>
-                                                    </div>
-                                                    <div class="col-sm-12">
-                                                        <hr>
-                                                    </div>
-                                                    <div class="col-sm-6 text-right pr-3">
-                                                        <a class="link-modal-open pt-1 pl-2" href="javascript:void(0)" id="add_another_invoice">
-                                                            <span class="fa fa-plus-square fa-margin-right"></span>Discount
-                                                        </a>
-                                                    </div>
-                                                    <div class="col-sm-12">
-                                                        <hr>
-                                                    </div>
-                                                    <div class="col-sm-6">
-                                                    </div>
-                                                    <div class="col-sm-6 text-right pr-3">
-                                                        <a class="link-modal-open pt-1 pl-2" href="javascript:void(0)" id="add_another_invoice">
-                                                            <span class="fa fa-plus-square fa-margin-right"></span>Deposit
-                                                        </a>
-                                                    </div>
-                                                    <div class="col-sm-6">
-                                                        <label style="padding: 0 .75rem;">Total</label>
-                                                    </div>
-                                                    <div class="col-sm-6 text-right pr-3">
-                                                        <label id="invoice_overall_total">$<?= isset($jobs_data) ? number_format((float)$subtotal,2,'.',',') : '0.00'; ?></label>
-                                                        <input type="hidden" name="sub_total" id="sub_total_form_input" value='0'>
-                                                    </div>
-                                                </div> -->
                                                 <div class="col-sm-12">
                                                     <hr>
                                                 </div>
                                                 <div class="col-sm-12" id="approval_card_right" style="display: <?= isset($jobs_data) ? 'block' : 'none' ;?>;">
                                                     <div style="float: right;">
                                                         <?php if(isset($jobs_data) && $jobs_data->signature_link != '') : ?>
-                                                            <a href="javascript:void(0);" id="approval_btn_right"><span class="fa fa-columns" style="float: right;padding-right: 20px;"></span></a>
+                                                        <a href="javascript:void(0);" id="approval_btn_right"><span class="fa fa-columns" style="float: right;padding-right: 20px;"></span></a>
 
-                                                            <center>
-                                                                <img width="150" id="customer_signature_right" alt="Customer Signature" src="<?= isset($jobs_data) ? $jobs_data->signature_link : ''; ?>">
-                                                            </center>
+                                                        <center>
+                                                            <img width="150" id="customer_signature_right" alt="Customer Signature" src="<?= isset($jobs_data) ? $jobs_data->signature_link : ''; ?>">
+                                                        </center>
 
-                                                            <center><span id="appoval_name_right"><?= isset($jobs_data->authorize_name) ? $jobs_data->authorize_name : 'Xxxxx Xxxxxx'; ?></span></center><br>
-                                                            <span>-----------------------------</span><br>
-                                                            <center><small>Approved By</small></center><br>
+                                                        <center><span id="appoval_name_right"><?= isset($jobs_data->authorize_name) ? $jobs_data->authorize_name : 'Xxxxx Xxxxxx'; ?></span></center><br>
+                                                        <span>-----------------------------</span><br>
+                                                        <center><small>Approved By</small></center><br>
                                                         <?php endif; ?>
                                                     </div>
                                                 </div>
+                                                <div class="col-md-12"></div>                                                                                                    
                                                 <div class="col-sm-12 mb-4">
                                                     <div class="row">
                                                         <div class="col-sm-12 mb-2">
-                                                            <h5>Message</h5>
+                                                            <h6>Notes</h6>
                                                         </div>
                                                         <div class="col-sm-12">
                                                             <?php 
                                                                 if (isset($jobs_data)) { 
-                                                                    $MESSAGE = "$jobs_data->customer_message"; 
+                                                                    $MESSAGE = "$jobs_data->message"; 
                                                                 } else { 
-                                                                    $MESSAGE = "Thank you for your business, Please call $company_info->business_name at $company_info->business_phone for quality customer service";                                                                
+                                                                    //$MESSAGE = "Thank you for your business, Please call $company_info->business_name at $company_info->business_phone for quality customer service";                                                                
+                                                                    $MESSAGE = '';
                                                                 } 
                                                             ?>
-                                                            <div id="Message_Editor"><?php echo $MESSAGE; ?></div>
+                                                            <div id="Message_Editor">
+                                                                <?php echo $MESSAGE; ?>
+                                                            </div>
                                                             <input class="d-none customer_message_input" name="message" value="<?php echo $MESSAGE; ?>">
                                                         </div>
                                                     </div>
                                                 </div>
+                                                <div class="col-sm-12 mb-4 <?php echo (isset($jobs_data) && $jobs_data->link = NULL) ? '' : 'd-none' ?>">
+                                                    <div class="row">
+                                                        <div class="col-sm-12 mb-2">
+                                                            <h5>Url Link</h5>
+                                                        </div>
+                                                        <div class="col-sm-12">
+                                                            <?php if(isset($jobs_data) && $jobs_data->link = NULL) { ?>
+                                                            <a  target="_blank" href="<?= $jobs_data->link; ?>"><p style="color: darkred;"><?= $jobs_data->link; ?></p></a>
+                                                            <?php } else { ?>
+                                                            <span class="help help-sm help-block">Enter url link or a pdf link </span> 
+                                                            <?php } ?>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <!--<div class="col-sm-12">
+                                                    <div class="card box_right" id="attach_right_card" style="border-color: #e0e0e0;border: 1px solid;display: none;">
+                                                        <div class="row">
+                                                            <div class="col-md-12 ">
+                                                                <div class="card-header">
+                                                                    <a href="javascript:void(0);" id="attach_right_btn_column"><span class="fa fa-columns" style="float: right;padding-right: 20px;"></span></a>
+                                                                    <h5 style="padding-left: 20px;">Photos/Attachments</h5>
+
+                                                                </div>
+                                                                <div class="card-body">
+                                                                    <span class="help help-sm help-block">download pdf,jpg,png</span>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>-->
+                                                <div class="col-sm-12"><hr></div>
                                                 <?php if(isset($jobs_data) && $jobs_data->status == 'Invoiced'): ?>
                                                 <div class="col-sm-12">
                                                     <div class="card box_right" id="pd_right_card" style="display: <?= isset($jobs_data) ? 'block' : 'none' ;?>;">
@@ -721,8 +1174,120 @@
                                                         </div>
                                                     </div>
                                                 </div>
-
                                                 <?php endif; ?>
+
+                                                    <style>
+                                                        .table-bordered td, .table-bordered th {
+                                                            border: 1px solid #dee2e6 !important;
+                                                        }
+                                                    </style>
+                                                <div class="col-sm-12">
+                                                    <div class="row">
+                                                        <div class="col-sm-12 mb-2">
+                                                            <h5>Devices Audit</h5>
+                                                            <label>Record all Items used on Jobs</label>
+                                                        </div>
+                                                        <div class="col-sm-12">
+                                                            <table id="device_audit" class="table-sm table-bordered w-100 device_job_items_tbl">
+                                                                <thead class="bg-light">
+                                                                    <tr>
+                                                                        <!-- <td style="width: 0% !important;"></td> -->
+                                                                        <td><strong>Name</strong></td>
+                                                                        <td><strong>Type</strong></td>
+                                                                        <td><strong>Cost</strong></td>
+                                                                        <td><strong>Price</strong></td>
+                                                                        <td><strong>Qty</strong></td>
+                                                                        <td><strong>Margin</strong></td>
+                                                                        <td><strong>Location</strong></td>
+                                                                    </tr>
+                                                                </thead>
+                                                                <tbody id="device_audit_append">
+                                                                    <?php 
+                                                                        if (isset($jobs_data_items)) { 
+                                                                            $subtotal = 0.00;
+                                                                            foreach ($jobs_data_items as $item) {
+                                                                            $total = $item->price * $item->qty;
+                                                                    ?>
+                                                                    <tr>
+                                                                        <!-- <td style="width: 0% !important;">
+                                                                            <center>
+                                                                                <div class="btn-group">
+                                                                                    <button type="button" class="btn btn-light edit_item_list" data-name='<?= $item->title; ?>' data-price='<?= $item->price; ?>' data-quantity='<?= $item->qty; ?>' id="<?= $item->id; ?>"><i class='bx bxs-edit' ></i></button>
+                                                                                    <button type="button" class="btn btn-light remove_audit_item_row"><i class='bx bxs-trash-alt' ></i></button>
+                                                                                </div>
+                                                                            </center>
+                                                                        </td> -->
+                                                                        <td><?php echo $item->title; ?></td>
+                                                                        <td><?php echo $item->type; ?></td>
+                                                                        <td><?php echo number_format((float)$item->price,2,'.',','); ?></td>
+                                                                        <td><?php echo number_format((float)$item->retail,2,'.',','); ?></td>
+                                                                        <td><?php echo $item->qty; ?></td>
+                                                                        <td><?php echo number_format((float)$item->margin,2,'.',','); ?></td>
+                                                                        <?php if($jobs_data->status == "Scheduled") {?>
+                                                                            <td>
+                                                                                <input type="hidden" name="item_id1[]" value="<?= $item->id ?>">
+                                                                                <input type="hidden" name="location_qty[]" value="<?= $item->qty ?>">
+                                                                                <select id="location" name="location[]" class="form-select form-select-sm location" >
+                                                                                    <?php
+                                                                                        if ($item->location_name == "") {
+                                                                                            echo "<option value hidden disable>Select Location</option>";
+                                                                                            foreach ($getAllLocation as $getAllLocations) {
+                                                                                                echo "<option value='$getAllLocations->loc_id'>$getAllLocations->location_name</option>";
+                                                                                            }
+                                                                                        } else {
+                                                                                            echo "<option selected disabled hidden value='".getLocation($jobs_data->id, $item->location_id)->LOCATION_ID."'>".getLocation($jobs_data->id, $item->location_id)->LOCATION_NAME."</option>";
+                                                                                            foreach ($getAllLocation as $getAllLocations) {
+                                                                                                echo "<option value='$getAllLocations->loc_id'>$getAllLocations->location_name</option>";
+                                                                                            }
+                                                                                        }
+                                                                                    ?>
+                                                                                </select>
+                                                                            </td>
+                                                                        <?php } else { ?>
+                                                                            <td><?php echo getLocation($jobs_data->id, $item->location_id)->LOCATION_NAME; ?></td>
+                                                                        <?php }; ?>
+                                                                    </tr>
+                                                                    <?php } } ?>
+                                                                </tbody>
+                                                            </table>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row mt-4">
+                                                        <div class="col-sm-4 mb-3">
+                                                            <strong>Rep:</strong>&nbsp;&nbsp;<span id="selectedRep">&mdash;</span>
+                                                        </div>
+                                                        <div class="col-sm-4 mb-2">
+                                                            <strong>Rep Commission:</strong>&nbsp;&nbsp;<span id="totalRepCommissionProfit">$0</span>
+                                                        </div>
+                                                        <div class="col-sm-4 mb-2">
+                                                            <strong>Fix Cost:</strong>&nbsp;&nbsp;<span id="totalFixCost"><input type="number" step="any" name="input_totalFixCost" value="<?php echo ($jobs_data) ? $jobs_data->fix_cost : "0.0"; ?>"></span>
+                                                        </div>
+                                                        <div class="col-sm-4 mb-2">
+                                                            <strong>Equipment Margin:</strong>&nbsp;&nbsp;<span id="totalEquipmentMargin">$0</span>
+                                                            <input class="d-none" type="number" step="any" name="input_totalEquipmentMargin" value="<?php echo ($jobs_data) ? $jobs_data->margin : "0.0"; ?>">
+                                                        </div>
+                                                        <div class="col-sm-4 mb-2">
+                                                            <strong>Amount Collected:</strong>&nbsp;&nbsp;<span id="totalAmountCollected">$0</span>
+                                                            <input class="d-none" type="number" step="any" name="input_totalAmountCollected" value="<?php echo ($jobs_data) ? $jobs_data->amount_collected : "0.0"; ?>">
+                                                        </div>
+                                                        <div class="col-sm-4 mb-2">
+                                                            <strong>Job Gross Profit:</strong>&nbsp;&nbsp;<span id="totalJobGrossProfit">$0</span>
+                                                            <input class="d-none" type="number" step="any" name="input_totalJobGrossProfit" value="<?php echo ($jobs_data) ? $jobs_data->gross_profit : "0.0"; ?>">
+                                                        </div>
+                                                        <div class="col-lg-12 d-none">
+                                                            Customer Funded Amount/Purchase Price: <input id="CUSTOMER_FUNDED_AMOUNT" type="number" type="any" value="0"><br>
+                                                            Customer Pass Through Cost: <input id="CUSTOMER_PASS_THROUGH" type="number" type="any" value="0"><br>
+                                                            Sales Rep BS: <input id="SRBS_1" type="number" type="any" value="0"><br>
+                                                            Tech Rep 1 BS: <input id="TRBS_1" type="number" type="any" value="0"><br>
+                                                            Tech Rep 2 BS: <input id="TRBS_2" type="number" type="any" value="0"><br>
+                                                            Tech Rep 3 BS: <input id="TRBS_3" type="number" type="any" value="0"><br>
+                                                            Tech Rep 4 BS: <input id="TRBS_4" type="number" type="any" value="0"><br>
+                                                            Tech Rep 5 BS: <input id="TRBS_5" type="number" type="any" value="0"><br>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row" style="margin-bottom: -20px;"><div class="col-lg-12"><hr></div></div>
+                                                </div>
+                                                <!-- <?php if(isset($jobs_data) && $jobs_data->status != 'Scheduled'): ?>
                                                 <div class="col-sm-12">
                                                     <div class="card box_right">
                                                         <div class="row">
@@ -732,15 +1297,18 @@
                                                                 </div>
                                                                 <div class="card-body">
                                                                     <span class="help help-sm help-block">Record all items used on jobs</span>
-                                                                    <a href="#" id="" data-bs-toggle="modal" data-bs-target="#new_inventory" type="button" class="nsm-button primary float-sm-end"><span class="fa fa-plus" ></span> Add New Item</a>
+                                                                    <a href="#" id="" data-bs-toggle="modal" data-bs-target="#new_inventory" type="button" class="btn btn-sm btn-primary"><span class="fa fa-plus"></span> Add New Item</a>
                                                                     <br>
                                                                     <table style="width: 100%;" id="device_audit" class="table table-hover table-bordered table-striped">
                                                                         <thead>
                                                                             <tr>
                                                                                 <td>Name</td>
                                                                                 <td>Points</td>
+                                                                                <td>Price</td>
                                                                                 <td>Qty</td>
+                                                                                <td>Subtotal</td>
                                                                                 <td>Location</td>
+                                                                                <td>Action</td>
                                                                             </tr>
                                                                         </thead>
                                                                         <tbody id="device_audit_datas">
@@ -753,8 +1321,14 @@
                                                                                 <tr>
                                                                                     <td ><?= $item->title; ?></td>
                                                                                     <td ><?= $item->points; ?></td>
+                                                                                    <td ><?= number_format((float)$item->price,2,'.',',');?></td>
                                                                                     <td id="device_qty<?= $item->id; ?>"><?= $item->qty; ?></td>
+                                                                                    <td ><?= number_format((float)$total,2,'.',',');?></td>
                                                                                     <td ><?= $item->location; ?></td>
+                                                                                    <td ><a href="#" data-name='<?= $item->title; ?>' data-price='<?= $item->price; ?>' data-quantity='<?= $item->qty; ?>' id="<?= $item->id; ?>" class="edit_item_list">
+                                                                                            <span class="fa fa-edit"></span>
+                                                                                        </a>
+                                                                                    </td>
                                                                                 </tr>
                                                                             <?php $subtotal = $subtotal + $total; endforeach; ?>
                                                                         <?php endif; ?>
@@ -771,56 +1345,60 @@
                                                         </div>
                                                     </div>
                                                 </div>
+                                                <?php endif; ?> -->
                                             </div>
                                             <br>
                                         </div>
                                         <div class="row">
-                                            <input id="total_amount" type="hidden" name="total_amount">
+                                            <!-- <input id="total_amount" type="hidden" name="total_amount"> -->
                                             <input id="signature_link" type="hidden" name="signature_link">
                                             <input id="name" type="hidden" name="authorize_name">
                                             <input id="datetime_signed" type="hidden" name="datetime_signed">
                                             <input id="attachment" type="hidden" name="attachment" value="<?php echo $THUMBNAIL_SRC; ?>">
-                                            <input id="created_by" type="hidden" name="created_by" value="<?= $logged_in_user->id; ?>">
+                                            <input id="created_by" type="hidden" name="created_by" value="<?= isset($jobs_data) ? $jobs_data->created_by : ''; ?>">
                                             <input id="employee2_id" type="hidden" name="employee2_id" value="<?= isset($jobs_data) ? $jobs_data->employee2_id : ''; ?>">
                                             <input id="employee3_id" type="hidden" name="employee3_id" value="<?= isset($jobs_data) ? $jobs_data->employee3_id : ''; ?>">
                                             <input id="employee4_id" type="hidden" name="employee4_id" value="<?= isset($jobs_data) ? $jobs_data->employee4_id : ''; ?>">
                                             <input id="employee5_id" type="hidden" name="employee5_id" value="<?= isset($jobs_data) ? $jobs_data->employee5_id : ''; ?>">
                                             <input id="employee6_id" type="hidden" name="employee6_id" value="<?= isset($jobs_data) ? $jobs_data->employee6_id : ''; ?>">
                                             <div class="col-sm-12 text-end">
-                                                
-                                                <button type="submit" class="nsm-button primary"><i class='bx bx-fw bx-calendar-plus'></i> Schedule</button>
-                                                <!-- <?php //if(!isset($jobs_data) || $jobs_data->status == 'Scheduled') : ?>
-                                                    <button type="submit" class="nsm-button primary"><i class='bx bx-fw bx-calendar-plus'></i> Schedule</button>
-                                                    <?php //endif; ?> -->
-                                                <!-- <?php //if(isset($jobs_data)): ?>
-                                                    <a href="<?// base_url('job/job_preview/'.$this->uri->segment(3)) ?>" class="nsm-button primary">
-                                                        <i class='bx bx-bx fa-search-plus'></i> Preview
-                                                    </a>
-                                                <?php //endif; ?> -->
+                                                <?php //if($jobs_data->status == 'Draft' || $jobs_data->status == '0' || $jobs_data->status == '') : ?>
+                                                    <div class="form-check float-start">
+                                                      <input class="form-check-input is_email_jobs" id="SEND_EMAIL_ON_SCHEDULE" name="is_email_jobs" type="checkbox" value="1">
+                                                      <label class="form-check-label" for="SEND_EMAIL_ON_SCHEDULE">
+                                                        Send an email after scheduling this job.
+                                                      </label>
+                                                    </div>                                                                                             
+                                                <?php //endif; ?>                                                
+                                            </div>
+                                            <div class="col-sm-12 text-end mt-4">
+                                                <button type="button" id="btn-cancel-job" class="nsm-button">Cancel</button>                                                
+                                                <button type="submit" class="nsm-button primary" id="btn-schedule-job"><?= isset($jobs_data) ? 'Save' : 'Schedule'; ?></button>           
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
+                          
                     </div>
                 </div>
-             </form>
+                </form>
             </div>
         </div>
     </div>
 </div>
-<!-- end container-fluid -->
-</div>
 
 <!-- Modals -->
-<?php // include viewPath('job/modals/new_customer'); ?>
-<?php include viewPath('job/modals/inventory_location'); ?>
-<?php include viewPath('job/modals/new_inventory'); ?>
+<?php include viewPath('v2/includes/customer/quick_add_customer'); ?>
+<?php include viewPath('v2/includes/customer/other_address'); ?>
+<?php include viewPath('v2/pages/job/modals/inventory_location'); ?>
+<?php include viewPath('v2/pages/job/modals/new_inventory'); ?>
+<?php include viewPath('v2/includes/job/quick_add'); ?>
 
 <!-- Signature Modal -->
 <div class="modal fade" id="updateSignature" role="dialog">
-    <div class="close-modal" data-dismiss="modal">&times;</div>
+    <div class="close-modal" data-bs-dismiss="modal">&times;</div>
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
@@ -832,9 +1410,6 @@
         </div>
     </div>
 </div>
-
-<?php include viewPath('job/modals/fill_esign'); ?>
-
 <!-- Modal -->
 <div class="modal fade" id="item_list" tabindex="-1"  aria-labelledby="newcustomerLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg">
@@ -844,30 +1419,62 @@
                 <button class="border-0 rounded mx-1" data-bs-dismiss="modal" style="cursor: pointer;"><i class="fas fa-times m-0 text-muted"></i></button>
             </div>
             <div class="modal-body">
-                    <div class="row">
+                    <div class="row">                        
                         <div class="col-sm-12">
-                            <table id="items_table" class="table table-hover w-100">
+                            <div class="row">
+                                <div class="col-12 col-md-12 grid-mb">
+                                    <div class="nsm-field-group search">
+                                        <input type="text" class="nsm-field nsm-search form-control mb-2" id="search_field" for="items_table" placeholder="Search List">
+                                    </div>
+                                </div>
+                            </div>
+                            <table id="items_table" class="nsm-table w-100">
                                 <thead class="bg-light">
-                                    <tr>                                        
-                                        <td><strong>Name</strong></td>
-                                        <td><strong>Price</strong></td>
-                                        <td><strong>Type</strong></td>
-                                        <td style="width: 0% !important;"></td>
+                                    <tr>
+                                        <td data-name="Action" style="width: 0% !important;"></td>
+                                        <td data-name="Name"><strong>Name</strong></td>
+                                        <td data-name="Type"><strong>Type</strong></td>
+                                        <td data-name="Stock"><strong>Stock</strong></td>
+                                        <td data-name="Price"><strong>Price</strong></td>       
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <?php if (!empty($items)) { ?>
-                                        <?php foreach ($items as $item) { ?>
-                                            <tr>                                                
-                                                <td><?php echo $item->title; ?></td>                                                
-                                                <td><?php echo $item->price; ?></td>
-                                                <td><?php echo $item->type; ?></td>
-                                                <td style="width: 0% !important;">
-                                                    <button type="button" data-bs-dismiss="modal" class="btn btn-sm btn-light border-1 select_item" id="<?= $item->id; ?>" data-item_type="<?= ucfirst($item->type); ?>" data-quantity="<?= $item->units; ?>" data-itemname="<?= $item->title; ?>" data-price="<?= $item->price; ?>"><i class='bx bx-plus-medical'></i></button>
-                                                </td>
-                                            </tr>
-                                        <?php } ?>
-                                    <?php } ?>
+                                    <?php
+                                        if (!empty($items)) {
+                                            foreach ($items as $item) {
+                                               $item_qty = get_total_item_qty($item->id);
+                                    ?>
+                                    <tr id="<?php echo "ITEMLIST_PRODUCT_$item->id"; ?>">
+                                        <td style="width: 0% !important;">
+                                            <button type="button" data-bs-dismiss="modal" class='nsm-button default select_item' id="<?= $item->id; ?>" data-item_type="<?= ucfirst($item->type); ?>" data-quantity="<?= $item_qty[0]->total_qty; ?>" data-itemname="<?= $item->title; ?>" data-price="<?= $item->price; ?>" data-retail="<?= $item->retail; ?>" data-location_name="<?= $item->location_name; ?>" data-location_id="<?= $item->location_id; ?>"><i class='bx bx-plus-medical'></i></button>
+                                        </td>
+                                        <td class="show nsm-text-primary"><?php echo $item->title; ?></td>
+                                        <td class="nsm-text-primary"><?php echo $item->type; ?></td>
+                                        <td>
+                                            <?php 
+                                            $total_stock = 0;
+                                            foreach($itemsLocation as $itemLoc){
+                                                if($itemLoc->item_id == $item->id){
+                                                    $total_stock += $itemLoc->qty;
+                                                    //echo "<div class='data-block'>";
+                                                    //echo $itemLoc->name. " = " .$itemLoc->qty;
+                                                    //echo "</div>";
+                                                } 
+                                            }
+                                            echo $total_stock;
+                                            ?>
+                                        </td>
+                                        <td>
+                                            <?php 
+                                                if( $item->price > 0 ){
+                                                    echo $item->price;
+                                                }else{
+                                                    echo '0.00';
+                                                }                                                
+                                            ?>                                                
+                                        </td>  
+                                    </tr>
+                                    <?php } } ?>
                                 </tbody>
                             </table>
                         </div>
@@ -876,9 +1483,67 @@
         </div>
     </div>
 </div>
+<!-- Modal -->
+<div class="modal fade nsm-modal" id="estimates_import" tabindex="-1" aria-labelledby="newcustomerLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="newcustomerLabel">Select Estimate To Make a Job</h5>
+                <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-12">
+                        <table id="estimates_table" class="table table-hover" style="width: 100%;">
+                            <thead>
+                            <tr>
+                                <td> Estimate #</td>
+                                <td> Job & Customer</td>
+                                <td> Date</td>
+                                <td> </td>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <?php if(!empty($estimates)): ?>
+                                <?php foreach ($estimates as $estimate): ?>
+                                    <?php if ($estimate->status === 'Accepted'): ?>
+                                        <tr>
+                                            <td><?= $estimate->estimate_number; ?></td>
+                                            <td><?= $estimate->job_name; ?></td>
+                                            <td><?= date('M d, Y', strtotime($estimate->estimate_date)); ?></td>
+                                            <td>
+                                                <a href="<?= base_url('job/estimate_job/'. $estimate->id) ?>" id="<?= $estimate->id; ?>" type="button" class="btn btn-sm btn-default">
+                                                    <span class="fa fa-briefcase"></span> Convert To Job
+                                                </a>
+                                            </td>
+                                        </tr>
+                                    <?php endif; ?>
+                                <?php endforeach; ?>
+                            <?php endif; ?>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer modal-footer-detail">
+                <div class="button-modal-list">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"><span class="fa fa-remove"></span> Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Work Order Modal -->
+<?php include viewPath('v2/pages/job/modals/wordorder_import'); ?>
+
+<!-- Invoice Modal -->
+<?php include viewPath('v2/pages/job/modals/invoice_import'); ?>
 
 <!-- Signature Modal -->
-<div class="modal fade nsm-modal" id="share_job_modal" role="dialog">
+<!-- <div class="modal fade nsm-modal" id="share_job_modal" role="dialog">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
@@ -886,7 +1551,7 @@
                 <button type="button" data-bs-dismiss="modal" aria-label="name-button" name="name-button"><i class="bx bx-fw bx-x m-0"></i></button>
             </div>
             <div class="modal-body">
-                <label>Sales Rep 1</label>
+                <label>Employee 1</label>
                 <select id="employee2" name="employee2_" class="form-control">
                     <option value="">Select Employee</option>
                     <?php if(!empty($employees)): ?>
@@ -896,7 +1561,7 @@
                     <?php endif; ?>
                 </select>
 
-                <label>Sales Rep 2</label>
+                <label>Employee 2</label>
                 <select id="employee3" name="employee3_" class="form-control">
                     <option value="">Select Employee</option>
                     <?php if(!empty($employees)): ?>
@@ -906,7 +1571,7 @@
                     <?php endif; ?>
                 </select>
 
-                <label>Sales Rep 3</label>
+                <label>Employee 3</label>
                 <select id="employee4" name="employee4_" class="form-control">
                     <option value="">Select Employee</option>
                     <?php if(!empty($employees)): ?>
@@ -926,7 +1591,134 @@
             </div>
         </div>
     </div>
+</div> -->
+
+
+<!-- 
+                                                <script type="text/javascript">
+        $(".select_item").click(function () {
+            var TR_ID = this.id;
+            var ITEM_NAME = $(this).data('itemname');
+            var ITEM_TYPE = $(this).data('item_type');
+            var POINTS = "";
+            var PRICE = $(this).data('price');
+            var QUANTITY = $(this).data('quantity');
+            var SUB_TOTAL = parseFloat(PRICE * QUANTITY).toFixed(2);
+            var LOCATION = "";
+
+            var id = this.id;
+            var title = $(this).data('itemname');
+            var price = $(this).data('price');
+            var qty = $(this).data('quantity');
+            var item_type = $(this).data('item_type');
+            var total_ = price * qty;
+            var total = parseFloat(total_).toFixed(2);
+            var withCommas = Number(total).toLocaleString('en');
+            // markup2 = "<tr id=\"sss\">" +
+            //     "<td >"+title+"</td>\n" +
+            //     "<td >0</td>\n" +
+            //     "<td >"+price+"</td>\n" +
+            //     "<td id='device_qty"+idd+"'>"+qty+"</td>\n" +
+            //     "<td id='device_sub_total"+idd+"'>"+total+"</td>\n" +
+            //     "<td ></td>\n" +
+            //     "<td ><a href=\"#\" data-name='"+title+"' data-price='"+price+"' data-quantity='"+qty+"' id='"+idd+"' class=\"edit_item_list\"><span class=\"fa fa-edit\"></span></a> </td>\n" + // <a href="javascript:void(0)" class="remove_audit_item_row"><span class="fa fa-trash"></span></i></a>
+            //     "</tr>";\
+            markup2 = "<tr id='"+TR_ID+"'>" +
+                      "<td>"+ITEM_NAME+"</td>" +
+                      "<td>"+ITEM_TYPE+"</td>" +
+                      "<td>"+POINTS+"</td>" +
+                      "<td>"+PRICE+"</td>" +
+                      "<td>"+QUANTITY+"</td>" +
+                      "<td>"+SUB_TOTAL+"</td>" +
+                      "<td>"+LOCATION+"</td>" +
+                      "</tr>";
+            tableBody2 = $("#device_audit_append");
+            tableBody2.append(markup2);
+            // calculate_subtotal();
+        });
+</script> -->
+<div class="modal fade" id="finish_modal" data-bs-backdrop='static' role="dialog">
+    <div class="modal-dialog FINISH_MODAL_SIZE modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <span class="modal-title content-title FINISH_MODAL_TITLE" style="font-size: 17px;">Finish Job</span>
+                <button class="border-0 rounded mx-1" data-bs-dismiss="modal" style="cursor: pointer;"><i class="fas fa-times m-0 text-muted"></i></button>
+            </div>
+            <div class="modal-body FINISH_MODAL_BODY">
+                <form id="update_status_to_closed">
+                    <div class="row">
+                        <div class="col-sm-12 mt-1 mb-1">
+                            <label>This will stop on job duration tracking and mark the job end time.</label>
+                        </div>
+                        <div class="col-sm-12">
+                            <label class="mb-2">Finish job at:</label>
+                            <div class="input-group">
+                                <input type="date" name="finished_date" id="job_start_date" class="form-control" value="<?php echo date('Y-m-d');?>" required>
+                                <input type="time" name="finished_time" class="form-control" value="<?= date("H:i"); ?>" required />
+                            </div>
+                            <input type="hidden" name="job_id" id="jobid" value="<?php if(isset($jobs_data)){echo $jobs_data->job_unique_id;} ?>"> <br>
+                            <input type="hidden" name="status" id="status" value="Closed">
+                        </div>
+                    </div>
+                    <div class="d-flex justify-content-end">                        
+                        <button type="button" class="nsm-button primary">Save</button>
+                        <button type="button" class="nsm-button" data-bs-dismiss="modal">Cancel</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
 </div>
+
+
+<div class="modal fade" id="approveThisJobModal" role="dialog">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <span class="modal-title content-title" style="font-size: 17px;">Send Esign</span>
+                <button class="border-0 rounded mx-1" data-bs-dismiss="modal" style="cursor: pointer;"><i class="fas fa-times m-0 text-muted"></i></button>
+            </div>
+            <div class="modal-body">
+                <form id="update_job_status_to_approved" method="post">
+                    <input type="hidden" name="job_id" id="jobid" value="<?php if(isset($jobs_data)){echo $jobs_data->job_unique_id;} ?>">
+                    <input type="hidden" name="job_status" id="start_status" value="Approved">
+                    <input id="default-user-docfile-template-id" type="hidden" value="<?= $default_user_docfile_template_id; ?>" />
+                    <div class="row">
+                        <div class="col-sm-12 mt-1 mb-1">
+                            <label>Electronic signatures, or e-signatures, are transforming the ways companies do business. Not only do they eliminate the hassle of manually routing paper agreements, but they also dramatically speed up the signature and approval process.</label>
+                        </div>
+                        <div class="col-sm-12 mb-4">
+                            <div class="nsm-loader" style="height: 100px; min-height: unset;">
+                            <i class="bx bx-loader-alt bx-spin"></i>
+                            </div>
+
+                            <div class="nsm-empty d-none" style="height: auto; padding: 1rem 0;">
+                                <i class="bx bx-meh-blank"></i>
+                                <span>No eSign template found.</span>
+                            </div>
+
+                            <div class="esign-templates d-none mt-1">
+                                <label class="mb-1">Select your template below:</label>
+                                <div class="dropdown">
+                                    <button class="nsm-button dropdown-toggle m-0" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                        Dropdown button
+                                    </button>
+                                    <ul class="dropdown-menu"></ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="d-flex justify-content-end">
+                        <button disabled type="button" class="nsm-button primary approve-and-esign d-flex align-items-center" data-action="approve-and-esign">Send eSign</button>
+                        <button type="submit" class="nsm-button primary" id="btn-approved-status">Approve</button>
+                        <button type="button" class="nsm-button" data-bs-dismiss="modal">Close</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
 
 
 <style>
@@ -942,22 +1734,228 @@ add_footer_js(array(
     'https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/js/bootstrap-datetimepicker.min.js',
     'https://cdn.datatables.net/select/1.3.1/js/dataTables.select.min.js',
     'https://code.jquery.com/ui/1.12.1/jquery-ui.js',
-    'https://cdn.jsdelivr.net/npm/gasparesganga-jquery-loading-overlay@2.1.7/dist/loadingoverlay.min.js'
+    'https://cdn.jsdelivr.net/npm/gasparesganga-jquery-loading-overlay@2.1.7/dist/loadingoverlay.min.js',
+    'assets/textEditor/summernote-bs4.js',
+    'assets/js/esign/docusign/workorder.js',
+    'assets/js/esign/jobs/esign.js',
 ));
 ?>
+<!-- s -->
 <?php include viewPath('v2/includes/footer'); ?>
+<?php include viewPath('v2/pages/job/js/job_estimate_js'); ?>
+<!-- Modals -->
 
-<link href="https://nightly.datatables.net/css/jquery.dataTables.css" rel="stylesheet" type="text/css" />
-<script src="https://nightly.datatables.net/js/jquery.dataTables.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
-<script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
-<script async defer src="https://maps.googleapis.com/maps/api/js?key=<?= google_credentials()['api_key'] ?>&callback=initialize&libraries=&v=weekly"></script>
-<script src="https://momentjs.com/downloads/moment-with-locales.js"></script>
-
-
-<?php include viewPath('v2/pages/job/js/job_new_js'); ?>
 
 <script>
+var employee_id = $("#employee_id").val();
+function getUserInfo(employee_id, type){
+    $.ajax({
+        url: '<?php echo base_url('users/getUserInfo'); ?>',
+        type: 'POST',
+        data: {employee_id: employee_id},
+        success: function (data) {
+            let json = $.parseJSON(data);
+            let commission_type = "";
+            let commission_percentage = 0.0;
+            if (json) {
+            // ========================
+            if (type == "sales_rep") {
+                (json.base_salary) ? $("#SRBS_1").val(json.base_salary).change() : $("#SRBS_1").val(0).change();
+                (json.commission_id == 0) ? commission_type = "Percentage (Gross, Net)" : "" ;
+                (json.commission_id == 1) ? commission_type = "Net + Percentage" : "" ;
+                (json.commission_percentage) ? commission_percentage = json.commission_percentage : commission_percentage = 0;
+
+                $("input[name='commission_type']").val(json.commission_id).change();
+                $("input[name='commission_percentage']").val(commission_percentage).change();
+                $(".COMMISSION_TYPE").text(commission_type).change();
+            }
+            // ========================
+            if (type == "tech_rep_1") {
+                (json.base_salary) ? $("#TRBS_1").val(json.base_salary).change() : $("#TRBS_1").val(0).change()
+            }
+            // ========================
+            if (type == "tech_rep_2") {
+                (json.base_salary) ? $("#TRBS_2").val(json.base_salary).change() : $("#TRBS_2").val(0).change();
+            }
+            // ========================
+            if (type == "tech_rep_3") {
+               (json.base_salary) ? $("#TRBS_3").val(json.base_salary).change() : $("#TRBS_3").val(0).change();
+            }
+            // ========================
+            if (type == "tech_rep_4") {
+                (json.base_salary) ? $("#TRBS_4").val(json.base_salary).change() : $("#TRBS_4").val(0).change();
+            }
+            // ========================
+            if (type == "tech_rep_5") {
+                (json.base_salary) ? $("#TRBS_5").val(json.base_salary).change() : $("#TRBS_5").val(0).change();
+            }
+            // ========================
+        }
+        }
+    });
+}
+
+$("#employee_id").on('change', function(event) { getUserInfo($(this).val(), "sales_rep"); });
+$("#EMPLOYEE_SELECT_2").on('change', function(event) { getUserInfo($(this).val(), "tech_rep_1"); });
+$("#EMPLOYEE_SELECT_3").on('change', function(event) { getUserInfo($(this).val(), "tech_rep_2"); });
+$("#EMPLOYEE_SELECT_4").on('change', function(event) { getUserInfo($(this).val(), "tech_rep_3"); });
+$("#EMPLOYEE_SELECT_5").on('change', function(event) { getUserInfo($(this).val(), "tech_rep_4"); });
+$("#EMPLOYEE_SELECT_6").on('change', function(event) { getUserInfo($(this).val(), "tech_rep_5"); });
+
+
+$('#adjustment_mm, #CUSTOMER_FUNDED_AMOUNT, #CUSTOMER_PASS_THROUGH, #SRBS_1, #TRBS_1, #TRBS_2, #TRBS_3, #TRBS_4, #TRBS_5, input[name="commission_type"], input[name="commission_percentage"], input[name="commission_amount"], input[name="input_totalFixCost"], input[name="input_totalEquipmentMargin"], input[name="input_totalAmountCollected"], input[name="input_totalJobGrossProfit"], select[name="tax_percentage"]').on('change', function(event) {
+    let totalAmountCollected = $('input[name="total_amount"]').val();
+    let funded_amount = parseFloat($("#CUSTOMER_FUNDED_AMOUNT").val());
+    let net_margin = parseFloat($('input[name="input_totalEquipmentMargin"]').val());
+    let rep_pay = parseFloat($("#SRBS_1").val());
+    let tech_pay = parseFloat($("#TRBS_1").val()) + parseFloat($("#TRBS_2").val()) + parseFloat($("#TRBS_3").val()) + parseFloat($("#TRBS_4").val()) + parseFloat($("#TRBS_5").val());
+    let fix_cost = parseFloat($('input[name="input_totalFixCost"]').val());
+    let pass_through = parseFloat($("#CUSTOMER_PASS_THROUGH").val());
+    let monitoring_cost = parseFloat($('input[name="monthly_monitoring"]').val());
+    let JOB_GROSS_PROFIT = (funded_amount + net_margin) - (rep_pay + tech_pay + fix_cost + pass_through + monitoring_cost);
+
+    //console.clear();
+    // console.log("==========");
+    // console.log("funded_amount: "+funded_amount);
+    // console.log("net_margin: "+net_margin);
+    // console.log("rep_pay: "+rep_pay);
+    // console.log("tech_pay: "+tech_pay);
+    // console.log("fix_cost: "+fix_cost);
+    // console.log("pass_through: "+pass_through);
+    // console.log("monitoring_cost: "+monitoring_cost);
+    // console.log("JOB GROSS PROFIT: "+JOB_GROSS_PROFIT);
+    // console.log("==========");
+    $("#totalJobGrossProfit").text(currencyFormatter(JOB_GROSS_PROFIT));
+    $("input[name='input_totalJobGrossProfit']").val(JOB_GROSS_PROFIT);
+    $("#totalAmountCollected").text(currencyFormatter(totalAmountCollected));
+    $("input[name='input_totalAmountCollected']").val(totalAmountCollected);
+});
+
+function currencyFormatter(amount) {
+  if (isNaN(amount)) {
+    return "$0.00";
+  } else {
+    var numberFormatter = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' });
+    return numberFormatter.format(amount);
+  }
+}
+
+$("#employee_id").on('change', function(event) {
+    let salesRep = $("#employee_id option:selected").text();
+    $("#selectedRep").text((salesRep !== "Select All") ? salesRep : "—");
+});
+
+function getTotalCommission(){
+    let totalCommission = 0.0;
+    let totalMargin = 0.0;
+    let salesRep = $("#employee_id option:selected").text();
+    let totalAmountCollected = $('input[name="total_amount"]').val(); 
+    let totalTaxAmount = $("#tax_total_form_input").val();
+    $('.job_items_tbl tr').each(function() {
+      let commissionValue = $(this).find('td:eq(4) input').val();
+      let marginValue = $(this).find('td:eq(5) input').val();
+        totalCommission += parseFloat(commissionValue);
+        totalMargin += parseFloat(marginValue);
+    })
+    $("input[name='commission_amount']").val(totalCommission.toFixed(2));
+    $("#selectedRep").text((salesRep !== "Select All") ? salesRep : "—");
+    $("#totalRepCommissionProfit").text(currencyFormatter(totalCommission));
+    $("#totalEquipmentMargin").text(currencyFormatter(totalMargin));
+    $("#totalAmountCollected").text(currencyFormatter(totalAmountCollected));
+    // $("#totalJobGrossProfit").text(currencyFormatter(totalAmountCollected));
+
+    $("input[name='input_totalEquipmentMargin']").val(totalMargin.toFixed(2)).change();
+    $("input[name='input_totalAmountCollected']").val(totalAmountCollected).change();
+}
+
+const job_items_tbl = $('.job_items_tbl')[0];
+const observer = new MutationObserver(() => getTotalCommission());
+const config = { childList: true, subtree: true, characterData: true };
+observer.observe(job_items_tbl, config);
+
+$('input[name="CC_CREDITCARDNUMBER"], input[name="DC_CREDITCARDNUMBER"], input[name="OCCP_CREDITCARDNUMBER"]').on('keyup', function() {
+  this.value = this.value.replace(/\D/g, '').replace(/(.{4})/g, '$1 ').trim().substr(0, 19);
+});
+
+$('input[name="CC_EXPIRATION"], input[name="DC_EXPIRATION"], input[name="OCCP_EXPIRATION"]').on('keyup', function() {
+  this.value = this.value.replace(/\D/g, '').replace(/^(\d{2})(\d)/, '$1/$2').substr(0, 5);
+});
+
+$('input[name="CC_CVV"], input[name="DC_CVV"], input[name="OCCP_CVV"]').on('keyup', function() {
+  this.value = this.value.replace(/\D/g, '').substr(0, 3);
+});
+
+$('input[name="CHECK_CHECKNUMBER"]').on('input', function() {
+  this.value = this.value.replace(/\D/g, '').substr(0, 6);
+});
+$('input[name="CHECK_ROUTINGNUMBER"], input[name="ACH_ROUTINGNUMBER"]').on('input', function() {
+  this.value = this.value.replace(/\D/g, '').substr(0, 9);
+});
+$('input[name="CHECK_ACCOUNTNUMBER"], input[name="ACH_ACCOUNTNUMBER"]').on('input', function() {
+  this.value = this.value.replace(/\D/g, '').substr(0, 12);
+});
+
+$(document).ready(function() {
+
+    if(employee_id) { getUserInfo(employee_id, "sales_rep"); }
+    if($("#EMPLOYEE_SELECT_2").val()) { getUserInfo($("#EMPLOYEE_SELECT_2").val(), "tech_rep_1"); }
+    if($("#EMPLOYEE_SELECT_3").val()) { getUserInfo($("#EMPLOYEE_SELECT_3").val(), "tech_rep_2"); }
+    if($("#EMPLOYEE_SELECT_4").val()) { getUserInfo($("#EMPLOYEE_SELECT_4").val(), "tech_rep_3"); }
+    if($("#EMPLOYEE_SELECT_5").val()) { getUserInfo($("#EMPLOYEE_SELECT_5").val(), "tech_rep_4"); }
+    if($("#EMPLOYEE_SELECT_6").val()) { getUserInfo($("#EMPLOYEE_SELECT_6").val(), "tech_rep_5"); }
+    $('select[name="BILLING_METHOD"]').val("<?php echo $jobs_data->BILLING_METHOD ?>").change();
+    getTotalCommission();
+
+    ($("#adjustment_ic").val() == 0) ? $("#adjustment_ic").val(0).change() : $("#adjustment_ic").change();
+    ($("#adjustment_otps").val() == 0) ? $("#adjustment_otps").val(0).change() : $("#adjustment_otps").change();
+    ($("#adjustment_mm").val() == 0) ? $("#adjustment_mm").val(0).change() : $("#adjustment_mm").change();
+
+    //Quick Add
+    $('.btn-quick-add-job-type').on('click', function(){
+        $('#quick_add_job_type').modal('show');
+    });
+    $('.btn-quick-add-job-tag').on('click', function(){
+        $('#quick_add_job_tag').modal('show');
+    });
+    $('.btn-quick-add-lead-source').on('click', function(){
+        $('#quick_add_lead_source').modal('show');
+    });
+    $('.btn-quick-add-tax-rate').on('click', function(){
+        $('#quick_add_tax_rate').modal('show');
+    });
+});
+
+$('select[name="BILLING_METHOD"]').change(function(event) {
+    let optionValue = $(this).val();
+    if (optionValue == "CC") { $(".HIDE_ALL_INPUTS").hide(); $(".CC_INPUTS").fadeIn('fast'); }
+    if (optionValue == "DC") { $(".HIDE_ALL_INPUTS").hide(); $(".DC_INPUTS").fadeIn('fast'); }
+    if (optionValue == "CHECK") { $(".HIDE_ALL_INPUTS").hide(); $(".CHECK_INPUTS").fadeIn('fast'); }
+    if (optionValue == "CASH") { $(".HIDE_ALL_INPUTS").hide(); $(".CASH_INPUTS").fadeIn('fast'); }
+    if (optionValue == "ACH") { $(".HIDE_ALL_INPUTS").hide(); $(".ACH_INPUTS").fadeIn('fast'); }
+    if (optionValue == "VENMO") { $(".HIDE_ALL_INPUTS").hide(); $(".VENMO_INPUTS").fadeIn('fast'); }
+    if (optionValue == "PP") { $(".HIDE_ALL_INPUTS").hide(); $(".PP_INPUTS").fadeIn('fast'); }
+    if (optionValue == "SQ") { $(".HIDE_ALL_INPUTS").hide(); $(".SQ_INPUTS").fadeIn('fast'); }
+    if (optionValue == "WW") { $(".HIDE_ALL_INPUTS").hide(); $(".WW_INPUTS").fadeIn('fast'); }
+    if (optionValue == "HOF") { $(".HIDE_ALL_INPUTS").hide(); $(".HOF_INPUTS").fadeIn('fast'); }
+    if (optionValue == "ET") { $(".HIDE_ALL_INPUTS").hide(); $(".ET_INPUTS").fadeIn('fast'); }
+    if (optionValue == "INV") { $(".HIDE_ALL_INPUTS").hide(); $(".INV_INPUTS").fadeIn('fast'); }
+    if (optionValue == "OCCP") { $(".HIDE_ALL_INPUTS").hide(); $(".OCCP_INPUTS").fadeIn('fast'); }
+    if (optionValue == "OPT") { $(".HIDE_ALL_INPUTS").hide(); $(".OPT_INPUTS").fadeIn('fast'); }
+});
+
+CKEDITOR.replace( 'Message_Editor', {
+    toolbarGroups: [
+        { name: 'document',    groups: [ 'mode', 'document' ] },            // Displays document group with its two subgroups.
+        { name: 'clipboard',   groups: [ 'clipboard', 'undo' ] },           // Group's name will be used to create voice label.
+        '/',                                                                // Line break - next group will be placed in new line.
+        { name: 'basicstyles', groups: [ 'basicstyles', 'cleanup' ] },
+        { name: 'links' }
+    ],
+    height: '140px',
+});
+CKEDITOR.editorConfig = function( config ) {
+    config.height = '200px';
+};
 
 $('#EMPLOYEE_SELECT_2').on('change', function(event) {
     $("#emp2_id, #employee2_id").val($("#EMPLOYEE_SELECT_2").val());
@@ -979,7 +1977,7 @@ $('#EMPLOYEE_SELECT_6').on('change', function(event) {
 $(function() {
     // JUST A COUNTER VARIABLE
     var TOTAL = 1;
-
+    
     // HIDDEN INPUTS
     var HIDDEN_1 = $('.ASSIGNED_TO_1 > select');
     var HIDDEN_2 = $('.ASSIGNED_TO_2 > select');
@@ -993,17 +1991,6 @@ $(function() {
     (HIDDEN_4.val() == '') ? $('.ASSIGNED_TO_4').hide(): TOTAL++;
     (HIDDEN_5.val() == '') ? $('.ASSIGNED_TO_5').hide(): TOTAL++;
 
-     $('#items_table').DataTable({
-        "autoWidth" : false,
-        "columnDefs": [
-        { width: 540, targets: 0 },
-        { width: 100, targets: 0 },
-        { width: 100, targets: 0 },
-        { width: 10, targets: 0 },
-        ],
-        "ordering": false,
-    });
-
     $(".ADD_ASSIGN_EMPLOYEE").click(function(event) {
         (TOTAL == 4) ? $(".ADD_ASSIGN_EMPLOYEE").attr('disabled', 'disabled'): '';
         if (TOTAL >= 1 && TOTAL < 5) {
@@ -1014,9 +2001,10 @@ $(function() {
         (TOTAL == 2) ? $(".REMOVE_ASSIGN_EMPLOYEE").removeAttr('disabled'): '';
     });
     $(".REMOVE_ASSIGN_EMPLOYEE").click(function(event) {
+        $("#TRBS_"+TOTAL).val(0);
         if (TOTAL > 1 && TOTAL <= 5) {
-            $('.ASSIGNED_TO_' + TOTAL).hide();
             $(".ASSIGNED_TO_" + TOTAL + "> select").val('').change();
+            $('.ASSIGNED_TO_' + TOTAL).hide();
             TOTAL--;
         }
         (TOTAL <= 4) ? $(".ADD_ASSIGN_EMPLOYEE").removeAttr('disabled'): '';
@@ -1026,46 +2014,58 @@ $(function() {
 });
 // END: ADD AND REMOVE BUTTON IN "ASSIGNED TO"
 
-/*var ITEMS_TABLE = $('#items_table').DataTable({
-            "ordering": false,
+        var class_name = $('.active').attr('class');
+        var class_name = $('.active').attr('class');
+        var step = '';
+        
+        if($('#2').hasClass('active')){
+            step = '2';
+        }else if($('#3').hasClass('active')){
+            step = '3';
+        }else if($('#4').hasClass('active')){
+            step = '4';
+        }else if($('#5').hasClass('active')){
+            step = '5';
+        }else if($('#6').hasClass('active')){
+            step = '6';
+        }else if($('#7').hasClass('active')){
+            step = '7';
+        }else if($('#8').hasClass('active')){
+            step = '8';
+        }
+
+        for(var x=0; x<step; x++){
+            $('#'+x).addClass('active');
+            $('#'+x).addClass('a-bold');
+        }
+    $(document).ready(function(){
+        $('#share_modal_submit').click(function() {
+            //employee 2
+            var emp2 = $('#employee2').val();
+            var empText = $('#employee2 :selected').text();
+            $('#emp2_id').val($('#employee2').val());
+            $('#emp2_txt').val($('#employee2 :selected').text());
+            //employee 3 
+            $('#emp3_id').val($('#employee3').val());
+            $('#emp3_txt').val($('#employee3 :selected').text());
+            //employee 4
+            $('#emp4_id').val($('#employee4').val());
+            $('#emp4_txt').val($('#employee4 :selected').text());
+            //employee 5
+            $('#emp5_id').val($('#employee5').val());
+            $('#emp5_txt').val($('#employee5 :selected').text());
+            //employee 5
+            $('#emp6_id').val($('#employee6').val());
+            $('#emp6_txt').val($('#employee6 :selected').text());
         });
-        $("#ITEM_CUSTOM_SEARCH").keyup(function() {
-            ITEMS_TABLE.search($(this).val()).draw()
+
+        $('#btn-cancel-job').on('click', function(){
+            location.href = base_url + 'job';
         });
-        ITEMS_TABLE_SETTINGS = ITEMS_TABLE.settings();*/
+    });
+    $(function(){
 
-CKEDITOR.replace( 'Message_Editor', {
-    toolbarGroups: [
-        { name: 'document',    groups: [ 'mode', 'document' ] },            // Displays document group with its two subgroups.
-        { name: 'clipboard',   groups: [ 'clipboard', 'undo' ] },           // Group's name will be used to create voice label.
-        '/',                                                                // Line break - next group will be placed in new line.
-        { name: 'basicstyles', groups: [ 'basicstyles', 'cleanup' ] },
-        { name: 'links' }
-    ],
-    height: '140px',
-});
-CKEDITOR.editorConfig = function( config ) {
-    config.height = '200px';
-};
-
-$('#share_modal_submit').click(function() {
-    //employee 2
-    var emp2 = $('#employee2').val();
-    var empText = $('#employee2 :selected').text();
-    $('#emp2_id').val($('#employee2').val());
-    $('#emp2_txt').val($('#employee2 :selected').text());
-    //employee 3 
-    $('#emp3_id').val($('#employee3').val());
-    $('#emp3_txt').val($('#employee3 :selected').text());
-    //employee 4
-    $('#emp4_id').val($('#employee4').val());
-    $('#emp4_txt').val($('#employee4 :selected').text());
-
-})
-
-
-$(function() {
-    $('#customer_id').select2({
+        $('#customer_id').select2({
             ajax: {
                 url: '<?= base_url('autocomplete/_company_customer') ?>',
                 dataType: 'json',
@@ -1098,6 +2098,7 @@ $(function() {
     });
 
         function formatRepoCustomerSelection(repo) {
+
             if( repo.first_name != null ){
                 return repo.first_name + ' ' + repo.last_name;      
             }else{
@@ -1107,207 +2108,163 @@ $(function() {
         }
 
         function formatRepoCustomer(repo) {
+
           if (repo.loading) {
             return repo.text;
           }
 
           var $container = $(
-            '<div>'+repo.first_name + ' ' + repo.last_name +'<br /><small>'+repo.phone_m+' / '+repo.email+'</small></div>'
+            '<div>'+repo.first_name + ' ' + repo.last_name +'<br><small>'+repo.phone_m+' / '+repo.email+'</small></div>'
           );
 
           return $container;
         }
-    $("#sales_rep").select2({
-        placeholder: "Sales Rep"
-    });
-    $("#priority").select2({
-        placeholder: "Choose Priority..."
-    });
 
-    $("#EMPLOYEE_SELECT_2, #EMPLOYEE_SELECT_3, #EMPLOYEE_SELECT_4, #EMPLOYEE_SELECT_5, #EMPLOYEE_SELECT_6").select2({
-        placeholder: "Select Employee to Assign",
-    });
-
-    $("#customer_reminder").select2({
-        placeholder: "Choose Reminder..."
-    });
-
-    $("#inputState").select2({
-        placeholder: "Select Timezone..."
-    });
-
-    // $("#job_type_option").select2({
-    //     placeholder: "Select Job Type..."
-    // });
-
-    // $("#job_tags").select2({
-    //     placeholder: "Select Job Type..."
-    // });
-    $("#employee_id").select2({
-        placeholder: "Select Employee"
-    });
-
-    <?php if( $default_customer_id > 0 ){ ?>
-            $('#customer_id').click();
-            load_customer_data('<?= $default_customer_id; ?>');
-    <?php } ?>
-
-});
-var geocoder;
-
-function initMap(address = null) {
-    if (address == null) {
-        address = '6866 Pine Forest Rd Pensacola FL 32526';
-    }
-    const myLatLng = {
-        lat: -25.363,
-        lng: 131.044
-    };
-    const map = new google.maps.Map(document.getElementById("map"), {
-        zoom: 12,
-        height: 220,
-        center: myLatLng,
-    });
-    new google.maps.Marker({
-        position: myLatLng,
-        map,
-        title: "Hello World!",
-    });
-    geocoder = new google.maps.Geocoder();
-    codeAddress(geocoder, map, address);
-}
-
-function codeAddress(geocoder, map, address) {
-    geocoder.geocode({
-        'address': address
-    }, function(results, status) {
-        if (status === 'OK') {
-            map.setCenter(results[0].geometry.location);
-            var marker = new google.maps.Marker({
-                map: map,
-                position: results[0].geometry.location
+        $("#employee_id").select2({
+            placeholder: "Select Employee"
+        });
+        $("#sales_rep").select2({
+            placeholder: "Sales Rep"
+        });
+            $("#priority").select2({
+                placeholder: "Choose Priority..."
             });
-        } else {
-            console.log('Geocode was not successful for the following reason: ' + status);
-        }
-    });
-}
-$("body").delegate(".color-scheme", "click", function() {
-    var id = this.id;
-    $('[id="job_color_id"]').val(id);
-    $("#" + id).append("<i class=\"bx bx-check calendar_button\" style=\"color:#ffffff\" aria-hidden=\"true\"></i>");
-    remove_others(id);
-});
-
-function remove_others(color_id) {
-    $('.color-scheme').each(function(index) {
-        var idd = this.id;
-        if (idd !== color_id) {
-            $("#" + idd).empty();
-        }
-    });
-}
-
-
-function load_customer_data($id){
-        // $.ajax({
-        //     type: "POST",
-        //     url: "<?= base_url() ?>/job/get_customer_selected",
-        //     data: {id : $id}, // serializes the form's elements.
-        //     success: function(data)
-        //     {
-        //         console.log(data);
-        //         var customer_data = JSON.parse(data);
-        //         $('#cust_fullname').text(customer_data.first_name + ' ' + customer_data.last_name);
-        //         if(customer_data.mail_add !== null){
-        //             $('#cust_address').text(customer_data.mail_add + ' ');
-        //         }
-        //         $("#customer_preview").attr("href", "/customer/preview/"+customer_data.prof_id);
-        //         $('#cust_address2').text(customer_data.city + ',' + ' ' + customer_data.state + ' ' + customer_data.zip_code);
-        //         $('#cust_number').text(customer_data.phone_h);
-        //         $('#cust_email').text(customer_data.email);
-        //         $('#mail_to').attr("href","mailto:"+customer_data.email);
-        //         initMap(customer_data.mail_add + ' ' + customer_data.city + ' ' + ' ' + customer_data.state + ' ' + customer_data.zip_code);
-        //         loadStreetView(customer_data.mail_add + ' ' + customer_data.city + ',' + ' ' + customer_data.state + ' ' + customer_data.zip_code);
-        //     }
-        // });
-        var ADDR_1 = "";
-        var ADDR_2 = "";
-        var postData = new FormData();
-        postData.append('id', $id);
-
-        fetch('<?= base_url('job/get_customer_selected') ?>', {
-            method: 'POST',
-            body: postData
-        }).then(response => response.json()).then(response => {
-            var {success, data} = response;
-
-            if(success){
-                var phone_h = '(xxx) xxx-xxxx';
-                $('#cust_fullname').text(data.first_name + ' ' + data.last_name);
-                // if(data.mail_add !== null){
-                //     $('#cust_address').text(data.mail_add + ' ');
-                // }
-                if(data.cross_street != null){
-                    $('#cust_address').text(data.cross_street + ' ');
-                    ADDR_1 = data.cross_street;
-                } else {
-                    $('#cust_address').text(data.mail_add + ' ');
-                    ADDR_1 = data.mail_add;
-                }
-                if(data.phone_h){
-                    if(data.phone_h.includes('Mobile:')){
-                    phone_h = ((data.phone_h).slice(0,13))
-                }else{
-                    phone_h = data.phone_h;
-                }
-                }
-                if(data.city || data.state || data.zip_code){
-                    $('#cust_address2').text(data.city + ',' + ' ' + data.state + ' ' + data.zip_code);
-                    ADDR_2 = data.city + ',' + ' ' + data.state + ' ' + data.zip_code;
-                }else{
-                    $('#cust_address2').text('-------------');
-                }
-                if(data.email){
-                    $('#cust_email').text(data.email);
-                }else{
-                    $('#cust_email').text('xxxxx@xxxxx.xxx');
-                }
-                $("#customer_preview").attr("href", "/customer/preview/"+data.prof_id);
-                $('#cust_number').text(phone_h);
-                $('#mail_to').attr("href","mailto:"+data.email);
-                $("#TEMPORARY_MAP_VIEW").attr('src', 'http://maps.google.com/maps?q='+ADDR_1+' '+ADDR_2+'&output=embed');
-                $('.MAP_LOADER').fadeIn();
-                $('#TEMPORARY_MAP_VIEW').hide();
-                // console.log(data.cross_street + ' ' + data.city + ' ' + ' ' + data.state + ' ' + data.zip_code);
-                // initMap(data.mail_add + ' ' + data.city + ' ' + ' ' + data.state + ' ' + data.zip_code);
-                // loadStreetView(data.mail_add + ' ' + data.city + ',' + ' ' + data.state + ' ' + data.zip_code);
-            }
-        })
-    }
-
-// $('#TEMPORARY_MAP_VIEW').load(function(){
-//     alert('loaded!');
-// });
-
-$('#TEMPORARY_MAP_VIEW').on("load", function() {
-   $('.MAP_LOADER').hide();
-   $('#TEMPORARY_MAP_VIEW').fadeIn();
-});
-
-$("#customer_id").on('change', function () {
-            
-            var customer_selected = this.value;
-            if(customer_selected !== ""){
-                load_customer_data(customer_selected);
-            }else{
-                $('#cust_fullname').text('xxxxx xxxxx');
-                $('#cust_address').text('-------------');
-                $('#cust_number').text('(xxx) xxx-xxxx');
-                $('#cust_email').text('xxxxx@xxxxx.xxx');
-                initMap();
-            }
+        $(".location").select2({
+            placeholder: "Choose Location"
         });
 
+        $("#EMPLOYEE_SELECT_2, #EMPLOYEE_SELECT_3, #EMPLOYEE_SELECT_4, #EMPLOYEE_SELECT_5, #EMPLOYEE_SELECT_6").select2({
+            placeholder: "Select Employee to Assign",
+        });
+
+        $("#customer_reminder").select2({
+            placeholder: "Choose Reminder..."
+        });
+
+        $("#inputState").select2({
+            placeholder: "Select Timezone..."
+        });
+
+        $("#tax_rate").select2({
+            placeholder: "Select Rate..."
+        });
+
+        // $("#job_type_option").select2({
+        //     placeholder: "Select Job Type..."
+        // });
+
+        // $("#job_tags").select2({
+        //     placeholder: "Select Job Type..."
+        // });
+
+        <?php if( $default_customer_id > 0 ){ ?>
+            $('#customer_id').click();
+            load_customer_data('<?= $default_customer_id; ?>');
+        <?php } ?>
+    });
+
+    var geocoder;
+    function initMap(address=null) {
+        // var location = "http://api.positionstack.com/v1/forward?access_key=a7ac4cf89ebdccfa51b23071899ae056&query="+encodeURIComponent(address);
+        // $.getJSON(location, {})
+        //   .done(function( data ) {
+        //      console.log(data[0].latitude);
+        //      console.log(data[0].longitude);
+        //   }).fail(function( error ) {
+        //      console.log("ERROR");
+        //      console.log(error);
+        //   });
+        if(address == null){
+            address = '6866 Pine Forest Rd Pensacola FL 32526';
+        }
+        const myLatLng = { lat: -25.363, lng: 131.044 };
+        const map = new google.maps.Map(document.getElementById("map"), {
+            zoom: 12,
+            height:220,
+            center: myLatLng,
+        });
+        new google.maps.Marker({
+            position: myLatLng,
+            map,
+            title: "Hello World!",
+        });
+        geocoder = new google.maps.Geocoder();
+        // codeAddress(geocoder, map,address);
+    }
+
+    function codeAddress(geocoder, map,address) {
+        geocoder.geocode({'address': address}, function(results, status) {
+            if (status === 'OK') {
+                map.setCenter(results[0].geometry.location);
+                var marker = new google.maps.Marker({
+                    map: map,
+                    position: results[0].geometry.location
+                });
+            } else {
+                console.log('Geocode was not successful for the following reason: ' + status);
+            }
+        });
+    }
+    // $("#jobs_form").submit(function(e) {
+    //         e.preventDefault(); // avoid to execute the actual submit of the form.
+    //         if($('#job_color_id').val()=== ""){
+    //             error('Sorry!','Event Color is required!','warning');
+    //         }else{
+    //             var form = $(this);
+    //             const $overlay = document.getElementById('overlay');
+ 
+    //             var url = form.attr('action');
+    //             $.ajax({
+    //                 type: "POST",
+    //                 url: "<?= base_url() ?>/job/save_job",
+    //                 data: form.serialize(), // serializes the form's elements.
+    //                 success: function(data) {
+    //                     if ($overlay) $overlay.style.display = "none";
+    //                     sucess_add_job(data);
+    //                 }, beforeSend: function() {
+    //                     if ($overlay) $overlay.style.display = "flex";
+    //                 }
+    //             });
+    //         }
+    //     });
+
+    $("body").delegate(".color-scheme", "click", function(){
+            var id = this.id;
+            $('[id="job_color_id"]').val(id);
+            $( "#"+id ).append( "<i class=\"bx bx-check calendar_button\" aria-hidden=\"true\"></i>" );
+            remove_others(id);
+        });
+        function remove_others (color_id){
+            $('.color-scheme').each(function(index) {
+                var idd = this.id;
+                if(idd !== color_id){
+                    $( "#"+idd ).empty();
+                }
+            });
+        }
 </script>
-<script src="<?=base_url("assets/js/jobs/manage.js")?>"></script>
+<script>
+    window.addEventListener('DOMContentLoaded', async (event) => {
+        const params = new Proxy(new URLSearchParams(window.location.search), {
+            get: (searchParams, prop) => searchParams.get(prop),
+        });
+
+        const jobStatus = "<?= $jobs_data ? $jobs_data->status : ''; ?>";
+        const jobId = "<?= $jobs_data ? $jobs_data->id : ''; ?>";
+
+        if (params.modal && params.modal === 'finish_job' && jobStatus === 'Approved') {
+            const response = await Swal.fire({
+                title: 'Job is finished',
+                icon: 'success',
+                text: 'Invoice is generated and ready to view',
+                confirmButtonText: 'See details',
+            })
+
+            if (response.isConfirmed && jobId) {
+                window.location.href = `/job/viewInvoice/${jobId}`;
+            }
+        }
+    });
+</script>
+
+<script src="<?=base_url("assets/js/jobs/manage_v2.js")?>"></script>

@@ -486,6 +486,7 @@
                     </div>
                 </div>
                 <form method="post" name="myform" id="jobs_form">
+                <input type="hidden" name="estimate_id" value="0">
                 <input type="hidden" id="redirect-calendar" value="<?= $redirect_calendar; ?>">
                 <input type="hidden" name="job_number" id="jobNumber" class="form-control" value="<?= isset($jobs_data->job_number) ? $jobs_data->job_number : ''; ?>">
                 <input type="hidden" name="job_hash" id="johHash" class="form-control" value="<?= isset($jobs_data->hash_id) ? $jobs_data->hash_id : ''; ?>">
@@ -620,7 +621,7 @@
                                         </div> -->
                                         <br>
                                         <div class="form-group">
-                                            <h6>Select Priority</h6>
+                                            <h6>Priority</h6>
                                             <select id="priority" name="priority" class="form-control">
                                                 <option value="Standard">Standard</option>
                                                 <option value="Low">Low</option>
@@ -628,7 +629,7 @@
                                                 <option value="Urgent">Urgent</option>
                                             </select>
                                         </div><br>
-                                        <h6>Sales Rep</h6>
+                                        <h6>Sales Representative</h6>
                                             <?php 
                                                 if( isset($jobs_data) ){
                                                     $default_user = $jobs_data->employee_id;
@@ -638,7 +639,7 @@
                                                 <option value="10001">Select All</option>
                                                 <?php if(!empty($sales_rep)): ?>
                                                     <?php foreach ($sales_rep as $employee): ?>
-                                                        <option <?= $default_user == $employee->id ? 'selected' : '';  ?> value="<?= $employee->id; ?>"><?= $employee->FName.','.$employee->LName; ?></option>
+                                                        <option <?= $default_user == $employee->id ? 'selected' : '';  ?> value="<?= $employee->id; ?>"><?= $employee->FName.' '.$employee->LName; ?></option>
                                                     <?php endforeach; ?>
                                                 <?php endif; ?>
                                             </select><br>
@@ -718,7 +719,7 @@
                                             </select>
                                         </div>
                                         <div>
-                                            <h6>Assigned To</h6>
+                                            <h6>Assigned Users</h6>
                                             <div class="row">
                                                 <div class="col-sm-12 mb-2 ASSIGNED_TO_1">
                                                     <input type="text" id="emp2_id" name="emp2_id" value= "<?php if(isset($jobs_data) && !empty($jobs_data->employee2_id)){ echo $jobs_data->employee2_id; } ?>" hidden>
@@ -726,7 +727,7 @@
                                                         <option value="">Select Employee</option>
                                                         <?php if(!empty($employees)): ?>
                                                             <?php foreach ($employees as $employee): ?>
-                                                                <option <?php if(isset($jobs_data) && $jobs_data->employee2_id == $employee->id) {echo 'selected'; } ?> value="<?= $employee->id; ?>"><?= $employee->LName.','.$employee->FName; ?></option>
+                                                                <option <?php if(isset($jobs_data) && $jobs_data->employee2_id == $employee->id) {echo 'selected'; } ?> value="<?= $employee->id; ?>"><?= $employee->LName.' '.$employee->FName; ?></option>
                                                             <?php endforeach; ?>
                                                         <?php endif; ?>
                                                     </select>
@@ -737,7 +738,7 @@
                                                         <option value="">Select Employee</option>
                                                         <?php if(!empty($employees)): ?>
                                                             <?php foreach ($employees as $employee): ?>
-                                                                <option <?php if(isset($jobs_data) && $jobs_data->employee3_id == $employee->id) {echo 'selected'; } ?> value="<?= $employee->id; ?>"><?= $employee->LName.','.$employee->FName; ?></option>
+                                                                <option <?php if(isset($jobs_data) && $jobs_data->employee3_id == $employee->id) {echo 'selected'; } ?> value="<?= $employee->id; ?>"><?= $employee->LName.' '.$employee->FName; ?></option>
                                                             <?php endforeach; ?>
                                                         <?php endif; ?>
                                                     </select>
@@ -748,7 +749,7 @@
                                                         <option value="">Select Employee</option>
                                                         <?php if(!empty($employees)): ?>
                                                             <?php foreach ($employees as $employee): ?>
-                                                                <option <?php if(isset($jobs_data) && $jobs_data->employee4_id == $employee->id) {echo 'selected'; } ?> value="<?= $employee->id; ?>"><?= $employee->LName.','.$employee->FName; ?></option>
+                                                                <option <?php if(isset($jobs_data) && $jobs_data->employee4_id == $employee->id) {echo 'selected'; } ?> value="<?= $employee->id; ?>"><?= $employee->LName.' '.$employee->FName; ?></option>
                                                             <?php endforeach; ?>
                                                         <?php endif; ?>
                                                     </select>
@@ -759,7 +760,7 @@
                                                         <option value="">Select Employee</option>
                                                         <?php if(!empty($employees)): ?>
                                                             <?php foreach ($employees as $employee): ?>
-                                                                <option <?php if(isset($jobs_data) && $jobs_data->employee5_id == $employee->id) {echo 'selected'; } ?> value="<?= $employee->id; ?>"><?= $employee->LName.','.$employee->FName; ?></option>
+                                                                <option <?php if(isset($jobs_data) && $jobs_data->employee5_id == $employee->id) {echo 'selected'; } ?> value="<?= $employee->id; ?>"><?= $employee->LName.' '.$employee->FName; ?></option>
                                                             <?php endforeach; ?>
                                                         <?php endif; ?>
                                                     </select>
@@ -770,7 +771,7 @@
                                                         <option value="">Select Employee</option>
                                                         <?php if(!empty($employees)): ?>
                                                             <?php foreach ($employees as $employee): ?>
-                                                                <option <?php if(isset($jobs_data) && $jobs_data->employee6_id == $employee->id) {echo 'selected'; } ?> value="<?= $employee->id; ?>"><?= $employee->LName.','.$employee->FName; ?></option>
+                                                                <option <?php if(isset($jobs_data) && $jobs_data->employee6_id == $employee->id) {echo 'selected'; } ?> value="<?= $employee->id; ?>"><?= $employee->LName.' '.$employee->FName; ?></option>
                                                             <?php endforeach; ?>
                                                         <?php endif; ?>
                                                     </select>
@@ -1811,51 +1812,16 @@
                         <div class="col-sm-12">
                             <label class="mb-2">Finish job at:</label>
                             <div class="input-group">
-                                <input type="date" name="job_start_date" id="job_start_date" class="form-control" value="<?php echo date('Y-m-d');?>" required>
-                                <select id="job_start_time" name="job_start_time" class="form-control" required>
-                                    <?php for($x=0;$x<time_availability(0,TRUE);$x++){ ?>
-                                        <option <?= isset($jobs_data) && strtolower($jobs_data->start_time) == time_availability($x) ?  'selected' : '';  ?> value="<?= time_availability($x); ?>"><?= time_availability($x); ?></option>
-                                    <?php } ?>
-                                </select>
+                                <input type="date" name="finished_date" id="job_start_date" class="form-control" value="<?php echo date('Y-m-d');?>" required>
+                                <input type="time" name="finished_time" class="form-control" value="<?= date("H:i"); ?>" required />
                             </div>
-                            <input type="hidden" name="id" id="jobid" value="<?php if(isset($jobs_data)){echo $jobs_data->job_unique_id;} ?>"> <br>
+                            <input type="hidden" name="job_id" id="jobid" value="<?php if(isset($jobs_data)){echo $jobs_data->job_unique_id;} ?>"> <br>
                             <input type="hidden" name="status" id="status" value="Closed">
-                            <div class="col-sm-12 mb-4">
-                                <a href="<?= base_url('job/billing/').$jobs_data->job_unique_id; ?>" class="nsm-button primary" style="margin: 0;">
-                                    <span class="bx bx-fw bx-money"></span> Pay Now
-                                </a>
-                                <a href="#" class="nsm-button primary SEND_INVOICE" style="margin-bottom: 0;">
-                                    <span class="bx bx-fw bx-send"></span> Send Invoice
-                                </a>
-                                <script type="text/javascript">
-                                    $('.SEND_INVOICE').on('click', function(event) {
-                                        event.preventDefault();
-                                        $('.FINISH_MODAL_TITLE').text('Invoice Preview');
-                                        $('.FINISH_MODAL_BODY').text('Loading Invoice...');
-                                        $('.FINISH_MODAL_BODY').load('<?= base_url('invoice/genview/').$INVOICE_ID_PREVIEW; ?> .invoice-print', function(){
-                                            if ($('.FINISH_MODAL_BODY').text().length <= 20) {
-                                                $('.FINISH_MODAL_BODY').html(`Unable to Send and Preview an Invoice. This job doesn't have an invoice yet, <a id="CREATE_INVOICE_1" href="#">Create Initial Invoice.</a>`);
-                                                $('#CREATE_INVOICE_1').click(function(event) {
-                                                    event.preventDefault();
-                                                    window.open('<?php echo base_url('job/createInvoice/').$jobs_data->id; ?>', '_blank','location=yes, height=650, width=1200, scrollbars=yes, status=yes');
-                                                    $('.FINISH_MODAL_BODY').html(`After creating an Invoice, <a href="#" onclick="window.location.reload();">Refresh this page</a> to load invoice preview.`);
-                                                    $('.exit_finish_modal').hide();
-                                                });
-                                            } else {
-                                                $('.FINISH_MODAL_SIZE').addClass('modal-lg modal-dialog-scrollable');
-                                                $.get("<?= base_url('job/send_customer_invoice_email/').$jobs_data->job_unique_id; ?>");
-                                                $('#finish_modal').on('hide.bs.modal', function (e) {
-                                                    window.location.reload();
-                                                });
-                                            }
-                                        });
-                                    });
-                                </script>
-                            </div>
                         </div>
                     </div>
-                    <div class="d-flex justify-content-end">
-                        <button type="button" id="" class="nsm-button" data-bs-dismiss="modal">Cancel</button>
+                    <div class="d-flex justify-content-end">                        
+                        <button type="button" class="nsm-button primary">Save</button>
+                        <button type="button" class="nsm-button" data-bs-dismiss="modal">Cancel</button>
                     </div>
                 </form>
             </div>
@@ -1872,7 +1838,9 @@
                 <button class="border-0 rounded mx-1" data-bs-dismiss="modal" style="cursor: pointer;"><i class="fas fa-times m-0 text-muted"></i></button>
             </div>
             <div class="modal-body">
-                <form id="update_status_to_omw" method="post">
+                <form id="update_job_status_to_approved" method="post">
+                    <input type="hidden" name="job_id" id="jobid" value="<?php if(isset($jobs_data)){echo $jobs_data->job_unique_id;} ?>">
+                    <input type="hidden" name="job_status" id="start_status" value="Approved">
                     <input id="default-user-docfile-template-id" type="hidden" value="<?= $default_user_docfile_template_id; ?>" />
                     <div class="row">
                         <div class="col-sm-12 mt-1 mb-1">
@@ -1900,11 +1868,9 @@
                         </div>
                     </div>
                     <div class="d-flex justify-content-end">
-                        <button disabled type="button" class="nsm-button primary approve-and-esign d-flex align-items-center" data-action="approve-and-esign">
-                        <i class="bx bx-loader-alt bx-spin"></i>
-                        <span>Send eSign</span>
-                        </button>
-                        <button type="button" class="nsm-button" data-action="approve">Approve</button>
+                        <button disabled type="button" class="nsm-button primary approve-and-esign d-flex align-items-center" data-action="approve-and-esign">Send eSign</button>
+                        <button type="submit" class="nsm-button primary" id="btn-approved-status">Approve</button>
+                        <button type="button" class="nsm-button" data-bs-dismiss="modal">Close</button>
                     </div>
                 </form>
             </div>
