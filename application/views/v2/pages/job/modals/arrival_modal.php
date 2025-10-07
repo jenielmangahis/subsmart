@@ -15,18 +15,14 @@
                             <label class="mb-2">Arrive at:</label>
                             <div class="input-group mb-3">
                                 <input type="date" name="omw_date" id="omw_date" class="form-control" value="<?php echo date('Y-m-d');?>" required>
-                                <select id="omw_time" name="omw_time" class="form-control" required>
-                                    <?php for($x=0;$x<time_availability(0,TRUE);$x++){ ?>
-                                        <option <?= isset($jobs_data) && strtolower($jobs_data->start_time) == time_availability($x) ?  'selected' : '';  ?> value="<?= time_availability($x); ?>"><?= time_availability($x); ?></option>
-                                    <?php } ?>
-                                </select>
+                                <input type="time" name="omw_time" class="form-control" value="<?= date("H:i"); ?>" required />
                             </div>
-                            <input type="hidden" name="id" id="jobid" value="<?php if(isset($jobs_data)){echo $jobs_data->job_unique_id;} ?>">
-                            <input type="hidden" name="status" id="status" value="Arrival">
+                            <input type="hidden" name="job_id" id="jobid" value="<?php if(isset($jobs_data)){echo $jobs_data->job_unique_id;} ?>">
+                            <input type="hidden" name="job_status" id="status" value="Arrival">
                         </div>
                     </div>
                     <div class="d-flex justify-content-end">
-                        <button type="submit" class="nsm-button primary"><i class="bx bx-paper-plane"></i> Save</button>
+                        <button type="submit" class="nsm-button primary" id="btn-submit-arrival-status">Save</button>
                         <button type="button" id="" class="nsm-button" data-bs-dismiss="modal">Close</button>
                     </div>
                 </form>

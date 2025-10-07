@@ -1403,10 +1403,16 @@ class Timesheet extends MY_Controller
     }
     public function attendance()
     {
+        $this->load->model('User_notification_model', 'User_notification_model');
         if(!checkRoleCanAccessModule('user-settings-attendance', 'read')){
 			show403Error();
 			return false;
 		}
+
+        //Update notification to read status
+        if($this->input->get('notif_id')) {
+            $this->User_notification_model->readNotificationByIdEntityId($this->input->get('notif_id'), null);
+        }        
 
         $this->load->model('LeaveRequest_model');
 

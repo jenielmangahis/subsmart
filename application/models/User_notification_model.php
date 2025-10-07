@@ -63,6 +63,25 @@ class User_notification_model extends MY_Model
         return $return;
     }
 
+    public function readNotificationByIdEntityId($id, $entity_id) {
+        $return = false;
+        if($id != null) {
+            $update = array(
+                'status' => 0
+            );
+            $this->db->where('id', $id);
+
+            if($entity_id != null) {
+                $this->db->where('entity_id', $entity_id);
+            }
+            
+            $this->db->update('user_notification', $update);
+            $return = true;
+        }
+
+        return $return;        
+    }
+
 }
 
 /* End of file Invoice_model.php */

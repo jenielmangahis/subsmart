@@ -25,6 +25,7 @@ class Job extends MY_Controller
         $this->load->model('Payscale', 'payscale_model');
 
         $this->load->model('Business_model', 'business_model');
+        $this->load->model('User_notification_model', 'User_notification_model');
     }
 
     public function loadStreetView($address = null)
@@ -178,6 +179,11 @@ class Job extends MY_Controller
             show403Error();
             return false;
         }
+
+        //Update notification to read status
+        if($this->input->get('notif_id')) {
+            $this->User_notification_model->readNotificationByIdEntityId($this->input->get('notif_id'), $id);
+        }          
 
         $comp_id = logged('company_id');
         $user_id = logged('id');
@@ -1707,7 +1713,6 @@ class Job extends MY_Controller
     public function update_jobs_status()
     {
         $input = $this->input->post();
-
         // customer_ad_model
         if ($input) {
             
@@ -1719,6 +1724,30 @@ class Job extends MY_Controller
             if ($input['status'] == "Arrival") {
                 $input['omw_date'] = date("Y-m-d");
                 $input['omw_time'] = date("H:i A");
+            }
+
+            $jobs_data = $this->jobs_model->get_specific_job($id);
+            if($jobs_data) {
+                //Add header notification - start
+                $to_notify_users[] = logged('id');
+                $to_notify_users[] = $jobs_data->employee_id;
+                $to_notify_users[] = $jobs_data->customer_id;
+
+                $content_notification = 'Job #' . $jobs_data->job_number . ' has been ' . strtolower($status) . '.';
+                foreach($to_notify_users as $to_notify_user) {
+                    $job_notify = array(
+                        'user_id' => $to_notify_user,
+                        'title' => 'Job Status',
+                        'content' => $content_notification,
+                        'status' => 1,
+                        'date_created' => date("Y-m-d H:i:s"),
+                        'company_id' => $jobs_data->company_id,
+                        'entity_id' => $id
+
+                    );                       
+                    $this->db->insert('user_notification', $job_notify);  
+                }
+                //Add header notification - end                 
             }
 
             $send_sms = 1;
@@ -3158,10 +3187,30 @@ class Job extends MY_Controller
          */
         createAutomationQueueV2('send_email', 'job', 'created', '', $jobs_id);
         createAutomationQueueV2('send_email', 'job', 'has_status', 'Scheduled', $jobs_id);
-
         /**
          * Scheduled job mail sending 
          */
+
+        //Add header notification - start
+        $to_notify_users[] = logged('id');
+        $to_notify_users[] = $input['employee_id'];
+        $to_notify_users[] = $input['customer_id'];
+
+        $content_notification = 'Job #' . $job_number . ' has been scheduled.';
+        foreach($to_notify_users as $to_notify_user) {
+            $job_notify = array(
+                'user_id' => $to_notify_user,
+                'title' => 'Job Status',
+                'content' => $content_notification,
+                'status' => 1,
+                'date_created' => date("Y-m-d H:i:s"),
+                'company_id' => $comp_id,
+                'entity_id' => $jobs_id
+
+            );                       
+            $this->db->insert('user_notification', $job_notify);  
+        }
+        //Add header notification - end
         
         if(isset($input['is_email_jobs']) && $input['is_email_jobs'] == 1) {
             if($is_enable_mail_sending) {
@@ -6850,37 +6899,54 @@ class Job extends MY_Controller
 
     public function ajax_update_job_status()
     {
+        $this->load->model('Invoice_model', 'invoice_model');
+
         $is_success = 0;
+        $invoice_id = 0;
         $msg = 'Cannot find job data';
 
         $company_id = logged('company_id');
         $post       = $this->input->post();
+        $is_valid   = false;
 
         $job = $this->jobs_model->getByIdAndCompanyId($post['job_id'], $company_id);
-        if ($job) {                        
-            
+        $invoice = $this->invoice_model->getByJobId($post['job_id']);
+        if ($job) {      
+
             if( $post['job_status'] == 'Arrival' ){
                 $data = [
                     'omw_date' => date("Y-m-d",strtotime($post['omw_date'])),
-                    'omw_time' => $post['omw_time'],
+                    'omw_time' => date("h:i A",strtotime($post['omw_time'])),
                     'status' => 'Arrival'
                 ];
+                $is_valid = true;
             }elseif( $post['job_status'] == 'Started' ){
                 $data = [
-                    'job_start_time' => date("Y-m-d",strtotime($post['job_start_date'])),
-                    'job_start_date' => $post['job_start_time'],
+                    'job_start_date' => date("Y-m-d",strtotime($post['job_start_date'])),
+                    'job_start_time' => date("h:i A",strtotime($post['job_start_time'])),
                     'status' => 'Started'
                 ];
+                $is_valid = true;
             }elseif( $post['job_status'] == 'Finished' ){
                 $data = [
-                    'job_start_time' => date("Y-m-d",strtotime($post['job_start_date'])),
-                    'job_start_date' => $post['job_start_time'],
+                    'finished_date' => date("Y-m-d",strtotime($post['finished_date'])),
+                    'finished_time' => date("h:i A",strtotime($post['finished_time'])),
                     'status' => 'Started'
                 ];
+                $is_valid = true;
+            }elseif( $post['job_status'] == 'Approved' ){
+                $data = [
+                    'status' => 'Approved'
+                ];
+                $is_valid = true;
             }
 
-            if( $data ){
+            if( $data && $is_valid ){
                 $this->jobs_model->update($job->id, $data);
+
+                if( $invoice ){
+                    $invoice_id = $invoice->id;
+                }
 
                 //Activity Logs
                 $activity_name = 'Jobs : Changed job number ' . $job->job_number . ' status to ' . $post['job_status']; 
@@ -6902,7 +6968,7 @@ class Job extends MY_Controller
             $this->payscale_model->updateCommissionStatus($post['job_id'], $post['job_status']);
         }
 
-        $return = ['is_success' => $is_success, 'msg' => $msg];
+        $return = ['is_success' => $is_success, 'invoice_id' => $invoice_id, 'msg' => $msg];
         echo json_encode($return);
     }
 
