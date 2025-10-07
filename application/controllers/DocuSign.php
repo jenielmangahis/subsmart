@@ -3493,7 +3493,7 @@ SQL;
 
     public function debugGeneratePDF(){    
         //$pdf = $this->debugGeneratePDFMaker(1966);
-        $pdf = $this->generatePDF(1966);
+        $pdf = $this->generatePDF(1980);
         echo 'Finish';
     }
 
@@ -3812,7 +3812,7 @@ SQL;
                     //     $pdf->Write(0, $value->value);
                     // }
 
-                    $custom_fields = ['Name Second Signatory', 'Subscriber Name','City','State','Address','Subscriber Email','ZIP','Primary Contact','Secondary Contact','Access Password','Primary Contact Name','Primary Contact Number','Contact Number','Checking Account Number','Account Number','CS Account Number','ABA','Card Number','Card Holder Name','Card Expiration','Card Security Code','Equipment Cost','Monthly Monitoring Rate','One Time Activation (OTP)','Total Due','Primary Contact First Name','Primary Contact Last Name','Abort Code','County','Secondary Contact Name','Secondary Contact First Name','Secondary Contact Last Name', 'Secondary Contact Number', 'Date of Birth', 'Social Security Number', 'Equipment', 'kW DC', 'System Size', 'Job Account Number', 'Panel Type', 'date_not_later_b'];
+                    $custom_fields = ['Name Second Signatory', 'Subscriber Name','City','State','Address','Subscriber Email','ZIP','Primary Contact','Secondary Contact','Access Password','Primary Contact Name','Primary Contact Number','Contact Number','Checking Account Number','Account Number','CS Account Number','ABA','Card Number','Card Holder Name','Card Expiration','Card Security Code','Equipment Cost','Monthly Monitoring Rate','One Time Activation (OTP)','Total Due','Primary Contact First Name','Primary Contact Last Name','Abort Code','County','Secondary Contact Name','Secondary Contact First Name','Secondary Contact Last Name', 'Secondary Contact Number', 'Date of Birth', 'Social Security Number', 'Equipment', 'kW DC', 'System Size', 'Job Account Number', 'Panel Type', 'date_not_later_b','Job Address','Job City','Job State','Job Zip'];
 
                     if ( in_array($field->field_name, $custom_fields) ) {
                         $top = (int) $coordinates->pageTop;
@@ -4272,7 +4272,7 @@ SQL;
                         $pdf->Write(0, $value->value);
                     }*/
 
-                    $custom_fields = ['Name Second Signatory', 'Subscriber Name','City','State','Address','Subscriber Email','ZIP','Primary Contact','Secondary Contact','Access Password','Primary Contact Name','Primary Contact Number','Contact Number','Checking Account Number','Account Number','CS Account Number','ABA','Card Number','Card Holder Name','Card Expiration','Card Security Code','Equipment Cost','Monthly Monitoring Rate','One Time Activation (OTP)','Total Due','Primary Contact First Name','Primary Contact Last Name','Abort Code','County','Secondary Contact Name','Secondary Contact First Name','Secondary Contact Last Name', 'Secondary Contact Number', 'Date of Birth', 'Social Security Number', 'Equipment', 'kW DC', 'System Size', 'Job Account Number', 'Panel Type', 'date_not_later_b'];
+                    $custom_fields = ['Name Second Signatory', 'Subscriber Name','City','State','Address','Subscriber Email','ZIP','Primary Contact','Secondary Contact','Access Password','Primary Contact Name','Primary Contact Number','Contact Number','Checking Account Number','Account Number','CS Account Number','ABA','Card Number','Card Holder Name','Card Expiration','Card Security Code','Equipment Cost','Monthly Monitoring Rate','One Time Activation (OTP)','Total Due','Primary Contact First Name','Primary Contact Last Name','Abort Code','County','Secondary Contact Name','Secondary Contact First Name','Secondary Contact Last Name', 'Secondary Contact Number', 'Date of Birth', 'Social Security Number', 'Equipment', 'kW DC', 'System Size', 'Job Account Number', 'Panel Type', 'date_not_later_b','Job Address','Job City','Job State','Job Zip'];
 
                     if ( in_array($field->field_name, $custom_fields) ) {
                         $top = (int) $coordinates->pageTop;
