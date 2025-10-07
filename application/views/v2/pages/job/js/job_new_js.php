@@ -28,6 +28,10 @@ if ($jobs_data && $jobs_data->status == "Scheduled" && $ALERT_SESSION == "true")
     });
 <?php } ?>
 
+$(document).on('click', '#btn-job-pay-now', function(){
+    var jobid = $(this).attr('data-id');
+    location.href = base_url + 'job/billing/' + jobid;
+});
 
 $(".REMOVE_THUMBNAIL").click(function(event) {
     event.preventDefault();
@@ -1123,205 +1127,199 @@ $("#attachment-file").change(function() {
     });
 
     $("#update_status_to_omw").submit(function(e) {
-            //alert("asf");
-            e.preventDefault(); // avoid to execute the actual submit of the form.
-            var form = $(this);
-            var job_id = $('#jobid').val();
-            var omw_time = $('#omw_time').val();
-            var status = $('#status').val();
-            var omw_date = $('#omw_date').val();
+        e.preventDefault(); // avoid to execute the actual submit of the form.
 
-            const fd = new FormData();
-            fd.append('id', job_id);
-            fd.append('status', status);
-            fd.append('omw_time', omw_time);
-            fd.append('omw_date', omw_date);
-            
-            fetch('<?= base_url('job/update_jobs_status') ?>',{
-                method: 'POST',
-                body: fd
-            }).then(response => response.json()).then(response => {
-                var { success, message} = response;
-                if(success){
+        $.ajax({
+            type: "POST",
+            url: base_url + "job/_update_job_status",
+            data: $(this).serialize(),
+            dataType:'json',
+            success: function(data)
+            {
+                $('#omw_modal').modal('hide');
+                $('#btn-submit-arrival-status').html('Save');
+                if(data.is_success){
                     $('#omw_modal').modal('hide');
-                    sucess_add(message,1);
-                }else{
-                    warning(message)
+                    Swal.fire({
+                        title: 'Update Job Status',
+                        text: "Job status has been updated successfully",
+                        icon: 'success',
+                        showCancelButton: false,
+                        confirmButtonText: 'Okay'
+                    }).then((result) => {
+                        location.reload();
+                    });
+                }else {
+                    Swal.fire({
+                        title: 'Failed',
+                        text: "Cannot find data",
+                        icon: 'error',
+                        showCancelButton: false,
+                        confirmButtonText: 'Okay'
+                    });
                 }
-            }).catch((error) =>{
-                console.log(error);
-            })
-            //var url = form.attr('action');
-            // $.ajax({
-            //     type: "POST",
-            //     url: "<?= base_url() ?>/job/update_jobs_status",
-            //     data: form.serialize(), // serializes the form's elements.
-            //     success: function(data)
-            //     {
-            //         console.log(data);
-            //         if(data === "Success"){
-            //             //window.location.reload();
-            //             sucess_add('Job Status Updated!',1);
-            //         }else {
-            //             warning('There is an error adding Customer. Contact Administrator!');
-            //         }
-            //     }
-            // });
+            },
+            beforeSend: function() {
+                $('#btn-submit-arrival-status').html('<span class="bx bx-loader bx-spin"></span>');
+            }
         });
+    });
 
-        $("#update_status_to_started").submit(function(e) {
-            //alert("asf");
-            e.preventDefault(); // avoid to execute the actual submit of the form.
-            var form = $(this);
-            var job_id = $('#jobid').val();
-            var job_start_time = $('#job_start_time').val();
-            var status = $('#start_status').val();
-            var job_start_date = $('#job_start_date').val();
+    $("#update_status_to_started").submit(function(e) {
+        e.preventDefault(); 
 
-            const fd1 = new FormData();
-            fd1.append('id', job_id);
-            fd1.append('status', status);
-            fd1.append('job_start_time', job_start_time);
-            fd1.append('job_start_date', job_start_date);
-            
-            fetch('<?= base_url('job/update_jobs_status') ?>',{
-                method: 'POST',
-                body: fd1
-            }).then(response => response.json()).then(response => {
-                var { success, message} = response;
-                if(success){
+        $.ajax({
+            type: "POST",
+            url: base_url + "job/_update_job_status",
+            data: $(this).serialize(),
+            dataType:'json',
+            success: function(data)
+            {
+                $('#start_modal').modal('hide');
+                $('#btn-started-status').html('Save');
+                if(data.is_success){
                     $('#start_modal').modal('hide');
-
-                    // console.log(response);
-                    sucess_add(message, 1);
-                }else{
-                    warning(message);
-                    // console.log(response);
+                    Swal.fire({
+                        title: 'Update Job Status',
+                        text: "Job status has been updated successfully",
+                        icon: 'success',
+                        showCancelButton: false,
+                        confirmButtonText: 'Okay'
+                    }).then((result) => {
+                        location.reload();
+                    });
+                }else {
+                    Swal.fire({
+                        title: 'Failed',
+                        text: "Cannot find data",
+                        icon: 'error',
+                        showCancelButton: false,
+                        confirmButtonText: 'Okay'
+                    });
                 }
-            }).catch((error) =>{
-                console.log(error);
-            })
-            //var url = form.attr('action');
-        //     $.ajax({
-        //         type: "POST",
-        //         url: "<?= base_url() ?>/job/update_jobs_status",
-        //         data: form.serialize(), // serializes the form's elements.
-        //         success: function(data)
-        //         {
-        //             if(data === "Success"){
-        //                 //window.location.reload();
-        //                 sucess_add('Job Status Updated!',1);
-        //             }else {
-        //                 warning('There is an error adding Customer. Contact Administrator!');
-        //             }
-        //         }
-        //     });
+            },
+            beforeSend: function() {
+                $('#btn-started-status').html('<span class="bx bx-loader bx-spin"></span>');
+            }
         });
-    $("#update_status_to_approved").submit(function(e) {
-            //alert("asf");
-            e.preventDefault(); // avoid to execute the actual submit of the form.
-            var job_id = $('#jobid').val();
-            var status = $('#approved_status').val();
+    });
 
-            const fd2 = new FormData();
-            fd2.append('id', job_id);
-            fd2.append('status', status);
-            
-            fetch('<?= base_url('job/update_jobs_status') ?>',{
-                method: 'POST',
-                body: fd2
-            }).then(response => response.json()).then(response => {
-                var { success, message} = response;
-                if(success){
-                    $('#approved_modal').modal('hide');
-                    // console.log(response);
-                    sucess_add(message);
-                }else{
-                    warning(message);
-                    // console.log(response);
+    $("#update_job_status_to_approved").submit(function(e) {
+
+        e.preventDefault(); 
+
+        $.ajax({
+            type: "POST",
+            url: base_url + "job/_update_job_status",
+            data: $(this).serialize(),
+            dataType:'json',
+            success: function(data)
+            {
+                $('#approveThisJobModal').modal('hide');
+                $('#btn-approved-status').html('Save');
+                if(data.is_success){
+                    $('#approveThisJobModal').modal('hide');
+                    if( data.status == 'Approved' && data.invoice_id > 0 ){
+                        Swal.fire({
+                            title: 'Update Job Status',
+                            text: "Job is now approved.",
+                            icon: 'success',
+                            showCancelButton: false,
+                            confirmButtonText: 'View Invoice',
+                        }).then((result) => {
+                            location.href = base_url + 'invoice/genview/' + data.invoice_id;
+                        });
+                    }else{
+                        Swal.fire({
+                            title: 'Update Job Status',
+                            text: "Job status has been updated successfully",
+                            icon: 'success',
+                            showCancelButton: false,
+                            confirmButtonText: 'Okay'
+                        }).then((result) => {
+                            location.reload();
+                        });
+                    }
+                }else {
+                    Swal.fire({
+                        title: 'Failed',
+                        text: "Cannot find data",
+                        icon: 'error',
+                        showCancelButton: false,
+                        confirmButtonText: 'Okay'
+                    });
                 }
-            }).catch((error) =>{
-                console.log(error);
-            })
-            //var url = form.attr('action');
-        //     $.ajax({
-        //         type: "POST",
-        //         url: "<?= base_url() ?>/job/update_jobs_status",
-        //         data: form.serialize(), // serializes the form's elements.
-        //         success: function(data)
-        //         {
-        //             if(data === "Success"){
-        //                 //window.location.reload();
-        //                 sucess_add('Job Status Updated!',1);
-        //             }else {
-        //                 warning('There is an error adding Customer. Contact Administrator!');
-        //             }
-        //         }
-        //     });
+            },
+            beforeSend: function() {
+                $('#btn-approved-status').html('<span class="bx bx-loader bx-spin"></span>');
+            }
         });
-        function sucess_add(message){
+    });
+
+    function sucess_add(message){
+        Swal.fire({
+            title: 'Nice!',
+            text: message,
+            icon: 'success',
+            showCancelButton: false,
+            confirmButtonColor: '#32243d',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Ok'
+        }).then((result) => {
+            //if (result.value) {
+                location.reload();
+            //}
+        });
+    }
+    function sucess_add_job(data) {
+        if( data.is_update == 1 ){ //Update
             Swal.fire({
-                title: 'Nice!',
-                text: message,
+                text: 'Job has been updated',                    
                 icon: 'success',
                 showCancelButton: false,
                 confirmButtonColor: '#32243d',
                 cancelButtonColor: '#d33',
                 confirmButtonText: 'Ok'
             }).then((result) => {
-                if (result.value) {
-                    location.reload();
+                location.href = base_url + 'job';
+            });
+        }else{ //Create
+            Swal.fire({
+                title: 'Job has been added',
+                text: 'An invoice has been created',
+                icon: 'success',
+                confirmButtonText: 'View Invoice',
+                confirmButtonColor: '#32243d',
+            }).then((result) => {
+                var redirect_calendar = $('#redirect-calendar').val();
+                if (redirect_calendar == 1) {
+                    window.location.href = '<?= base_url(); ?>workcalender';
+                } else {
+                    // console.log({ data });
+                    if (data.job_id) {
+                        window.open("<?php echo base_url('job/createInvoice/'); ?>" + data.job_id, '_blank','location=yes,height=650,width=1200,scrollbars=yes,status=yes');
+                        window.location.href = "<?php echo base_url('job/new_job1/'); ?>" + data.job_id;
+                        return;
+                    }
                 }
             });
-        }
-        function sucess_add_job(data) {
-            if( data.is_update == 1 ){ //Update
-                Swal.fire({
-                    text: 'Job has been updated',                    
-                    icon: 'success',
-                    showCancelButton: false,
-                    confirmButtonColor: '#32243d',
-                    cancelButtonColor: '#d33',
-                    confirmButtonText: 'Ok'
-                }).then((result) => {
-                    location.href = base_url + 'job';
-                });
-            }else{ //Create
-                Swal.fire({
-                    title: 'Job has been added',
-                    text: 'An invoice has been created',
-                    icon: 'success',
-                    confirmButtonText: 'View Invoice',
-                    confirmButtonColor: '#32243d',
-                }).then((result) => {
-                    var redirect_calendar = $('#redirect-calendar').val();
-                    if (redirect_calendar == 1) {
-                        window.location.href = '<?= base_url(); ?>workcalender';
-                    } else {
-                        // console.log({ data });
-                        if (data.job_id) {
-                            window.open("<?php echo base_url('job/createInvoice/'); ?>" + data.job_id, '_blank','location=yes,height=650,width=1200,scrollbars=yes,status=yes');
-                            window.location.href = "<?php echo base_url('job/new_job1/'); ?>" + data.job_id;
-                            return;
-                        }
-                    }
-                });
-            }
-            
+        }  
     }
-        function error(title,text,icon){
-            Swal.fire({
-                title: title,
-                text: text,
-                icon: icon,
-                showCancelButton: false,
-                confirmButtonColor: '#32243d',
-                cancelButtonColor: '#d33',
-                confirmButtonText: 'Ok'
-            }).then((result) => {
 
-            });
-        }
+    function error(title,text,icon){
+        Swal.fire({
+            title: title,
+            text: text,
+            icon: icon,
+            showCancelButton: false,
+            confirmButtonColor: '#32243d',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Ok'
+        }).then((result) => {
+
+        });
+    }
+
     <?php if( $default_customer_id > 0 ){ ?>
             $('#customer_id').click();
             load_customer_data('<?= $default_customer_id; ?>');
