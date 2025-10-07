@@ -2567,7 +2567,7 @@ class Job extends MY_Controller
             $estimate_id = 0;
             if ($input['estimate_id'] > 0) {
                 $estimate_id = $input['estimate_id'];
-                $input['tax_percentage'] = 0;
+                $input['tax_percentage'] = '7.5';
             }
 
             $get_customer_info = array(
