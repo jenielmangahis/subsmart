@@ -34,7 +34,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
     font-weight: normal;
   }
   .workorder-box{
-    background-color:#a6a6a6;
+    /*background-color:#a6a6a6;*/
     padding:10px;
     display:block;
     margin-bottom:10px;
