@@ -622,6 +622,7 @@ class Workorder extends MY_Controller
         $company_id = logged('company_id');
 
         $this->page_data['workorder'] = $this->workorder_model->getById($id);
+
         $work =  $this->workorder_model->getById($id);
 
         if( $work && $work->company_id == $company_id ){
@@ -655,7 +656,7 @@ class Workorder extends MY_Controller
             $this->page_data['agree_items'] = $this->workorder_model->get_agree_items($id);
             $this->page_data['lead_source'] = $this->workorder_model->getlead_source($company_id);
             $this->page_data['page']->title = 'Workorder';            
-            $this->page_data['payment'] = $this->workorder_model->getpayment($id);
+            $this->page_data['payment'] = $payments = $this->workorder_model->getpayment($id);
 
             $spt_query = array(
                 'table' => 'ac_system_package_type',
