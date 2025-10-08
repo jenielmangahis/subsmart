@@ -978,7 +978,7 @@
                                                     $subtotal = 0.00;
                                                     foreach ($jobs_data_items as $item):
                                                     $item_price = $item->cost / $item->qty;
-                                                    $total = $item->price * $item->qty;
+                                                    $total = $item->cost * $item->qty;
                                                     $hideSelectedItems .= "#ITEMLIST_PRODUCT_$item->id {display: none;}"; 
                                                 ?>
                                                    <tr id=ss>
@@ -993,7 +993,7 @@
                                                             <input readonly id='cost<?= $item->id ?>' data-id="<?= $item->id; ?>" value='<?= $item->price; ?>'  type="number" name="item_original_price[]" class="form-control item-original-price" placeholder="Cost">
                                                         </td>
                                                         <td><small>Unit Price</small>
-                                                            <input id='price<?= $item->id ?>' data-id="<?= $item->id; ?>" value='<?= $item->price; ?>'  type="number" name="item_price[]" class="form-control item-price" placeholder="Unit Price">
+                                                            <input id='price<?= $item->id ?>' data-id="<?= $item->id; ?>" value='<?= $item->cost; ?>'  type="number" name="item_price[]" class="form-control item-price" placeholder="Unit Price">
                                                         </td>
                                                         <td class="d-none"><small>Commission</small>
                                                             <input readonly step="any" id='commission<?= $item->id ?>' data-id="<?= $item->id; ?>" value='<?= $item->commission; ?>'  type="number" name="item_commission[]" class="form-control item-commission" placeholder="Commission">
