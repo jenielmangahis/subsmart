@@ -20,6 +20,35 @@ class Debug extends MY_Controller {
         exit;
     }
 
+    public function stripeVerify()
+    {
+        $this->load->helper(array('stripe_helper'));
+
+        $stripeHelper = new Stripe;
+        $card_info = [
+            'number' => '4242424242424242',
+            'exp_month' => 12,
+            'exp_year' => 2026,
+            'cvc' => '123',
+        ];
+
+        $response = $stripeHelper->validateCardDetailsV2($card_info);
+        if( $response['token'] ){
+            $amount = '69.99';
+            $stripeHelper->createPaymentIntent($amount);
+        }
+        echo "<pre>";
+        print_r($response);
+    }
+
+    public function jobNumber()
+    {
+        $next_num    = '2280';
+        $job_number = 'JOB-' . str_pad($next_num, 5, '0', STR_PAD_LEFT);
+
+        echo $job_number;
+    }
+
     public function generateEmployeeNumber()
     {   
         $this->load->helper(array('url', 'hashids_helper'));
