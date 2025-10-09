@@ -91,7 +91,7 @@
             </label>
             <div class="p-3">
                 <?php 
-                    if( $appointment->appointment_type_id == 5 ){
+                    if( $appointment->appointment_type_id != 1 && $appointment->appointment_type_id != 2 && $appointment->appointment_type_id != 3 && $appointment->appointment_type_id != 4 ){
                         $customer_name = $appointment->lead_name;
                         $customer_contact_number = $appointment->lead_conctact_number != '' ? $appointment->lead_conctact_number : '---';
                         $customer_email_address  = $appointment->lead_contact_email != '' ? $appointment->lead_contact_email : '---';

@@ -189,19 +189,27 @@
 
                             //$schedule_number = strtoupper(str_replace("APPT", $schedule['data']->appointment_type, $schedule['data']->appointment_number));
 
-                            if( $schedule['data']->appointment_type_id == 4 ){
-                                $is_appointment_event = 1;
-                                $schedule_customer_name  = '';
-                                $schedule_customer_phone = '';
-                                $schedule_event_name = $schedule['data']->event_name;
-                                $schedule_location   = $schedule['data']->event_location;
-                                $schedule_location_b = '';
+                            if( $schedule['data']->appointment_type_id == 1 || $schedule['data']->appointment_type_id == 2 || $schedule['data']->appointment_type_id == 3 || $schedule['data']->appointment_type_id == 4 ){
+                                if( $schedule['data']->appointment_type_id == 4 ){
+                                    $is_appointment_event = 1;
+                                    $schedule_customer_name  = $schedule['data']->appointment_type_id;
+                                    $schedule_customer_phone = '';
+                                    $schedule_event_name = $schedule['data']->event_name;
+                                    $schedule_location   = $schedule['data']->event_location;
+                                    $schedule_location_b = '';
+                                }else{
+                                    $schedule_customer_name  =  $schedule['data']->customer_name;
+                                    $schedule_customer_phone = $schedule['data']->cust_phone != '' ? $schedule['data']->cust_phone : '---';   
+                                    $schedule_event_name     = ''; 
+                                    $schedule_location   = $schedule['data']->mail_add;
+                                    $schedule_location_b = $schedule['data']->cust_city . ', ' . $schedule['data']->cust_state . ' ' . $schedule['data']->cust_zip_code;
+                                }
                             }else{
-                                $schedule_customer_name  = $schedule['data']->customer_name;
-                                $schedule_customer_phone = $schedule['data']->cust_phone != '' ? $schedule['data']->cust_phone : '---';   
+                                $schedule_customer_name  = $schedule['data']->lead_name;
+                                $schedule_customer_phone = $schedule['data']->lead_contact_number != '' ? $schedule['data']->lead_contact_number : '---';   
                                 $schedule_event_name     = ''; 
-                                $schedule_location   = $schedule['data']->mail_add;
-                                $schedule_location_b = $schedule['data']->cust_city . ', ' . $schedule['data']->cust_state . ' ' . $schedule['data']->cust_zip_code;
+                                $schedule_location   = $schedule['data']->lead_address;
+                                $schedule_location_b = $schedule['data']->lead_city . ', ' . $schedule['data']->lead_state . ' ' . $schedule['data']->lead_zip;
                             }
 
                             $schedule_number = $schedule['data']->appointment_number;
@@ -214,10 +222,12 @@
                             } 
 
                             $assigned_employees = array();
-                            $emp_ids = json_decode($schedule['data']->assigned_employee_ids);
-                            foreach($emp_ids as $eid){
-                                $assigned_employees[] = $eid;    
-                            }
+                            if( $schedule['data']->assigned_employee_ids != '' ){
+                                $emp_ids = json_decode($schedule['data']->assigned_employee_ids);
+                                foreach($emp_ids as $eid){
+                                    $assigned_employees[] = $eid;    
+                                }
+                            }                            
 
                             $schedule_invoice_amount = 0;
 
@@ -306,7 +316,7 @@
                             </td>
                             <td class="text-end" style="width:25% !important;">
                                 <?php foreach($assigned_employees as $eid){ ?>
-                                    <div class="nsm-list-icon primary" style="background-color:#ffffff; justify-content:right;">
+                                    <div class="nsm-list-icon primary" style="background-color:transparent; justify-content:right;">
                                         <div class="nsm-profile" style="background-image: url('<?= userProfileImage($eid); ?>');" data-img="<?= userProfileImage($eid); ?>"></div>                            
                                     </div>
                                 <?php } ?>
