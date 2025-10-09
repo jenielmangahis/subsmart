@@ -1613,7 +1613,7 @@ class Workcalender extends MY_Controller
 
             $is_valid = true;
 
-            if( $post['appointment_type_id'] == 4 ){
+            if( $post['appointment_type_id'] != 1 && $post['appointment_type_id'] != 2 && $post['appointment_type_id'] != 3 && $post['appointment_type_id'] != 4 ){
                 if( $post['first_name'] == ''  ){
                     $message = 'Please specify lead first name';
                     $is_valid = false;
@@ -1634,7 +1634,7 @@ class Workcalender extends MY_Controller
                 $message = 'Please specify event name';
             }
 
-            if( $post['appointment_type_id'] == 1 || $post['appointment_type_id'] == 2 || $post['appointment_type_id'] == 3 || $post['appointment_type_id'] == 4){
+            if( $post['appointment_type_id'] == 1 || $post['appointment_type_id'] == 2 || $post['appointment_type_id'] == 3 ){
                  if( $post['appointment_user_id'] == '' ){
                     $message = 'Please select user to assign to this appointment';
                     $is_valid = false;
@@ -1730,6 +1730,10 @@ class Workcalender extends MY_Controller
                     $lead_id = $this->Lead_model->createLead($leads_data);
                 }
 
+                if( $post['appointment_type_id'] == 4 ){
+                    $prof_id = 0;
+                }
+
                 $appointmentType = $this->AppointmentType_model->getById($post['appointment_type_id']);            
                 $data_appointment = [
                     'appointment_date' => date("Y-m-d",strtotime($post['appointment_date'])),
@@ -1789,6 +1793,8 @@ class Workcalender extends MY_Controller
     {
         $this->load->model('Appointment_model');
         $this->load->model('AppointmentType_model');
+        $this->load->model('Lead_model');
+        $this->load->model('AcsProfile_model');
 
         $post       = $this->input->post();
         $user_id    = getLoggedUserID();
@@ -1796,14 +1802,88 @@ class Workcalender extends MY_Controller
         $is_success = false;
         $message    = 'Cannot create appointment';
 
-        if ($post['appointment_date'] != '' && $post['appointment_time_from'] != '' && $post['appointment_customer_id'] != '' && $post['appointment_type_id'] != '') {
+        if ($post['appointment_date'] != '' && $post['appointment_time_from'] != '' && $post['appointment_type_id'] != '') {
 
+            $is_valid = true;
+
+            if( $post['appointment_type_id'] != 1 && $post['appointment_type_id'] != 2 && $post['appointment_type_id'] != 3 && $post['appointment_type_id'] != 4 ){
+                if( $post['first_name'] == ''  ){
+                    $message = 'Please specify lead first name';
+                    $is_valid = false;
+                }
+
+                if( $post['last_name'] == ''  ){
+                    $message = 'Please specify lead last name';
+                    $is_valid = false;
+                }
+
+                if( $post['address'] == '' || $post['city'] == '' || $post['state'] == '' || $post['zip'] == ''  ){
+                    $message = 'Please specify lead complete address';
+                    $is_valid = false;
+                }
+            }
+            if( $is_valid ){
+                if( $post['appointment_type_id'] != 1 && $post['appointment_type_id'] != 2 && $post['appointment_type_id'] != 3 && $post['appointment_type_id'] != 4 ){
+                    $prof_id = 0;
+                    $sales_agent_id = 0;
+                    $assigned_employee_ids = null;
+                    $customer_name = $post['first_name'] . ' ' . $post['last_name'];
+                    $activity_name = 'Appointment : Created appointment wait list for lead ' . $customer_name; 
+
+                    //Create leads
+                    $leads_data = [
+                        'fk_lead_type_id' => 3,
+                        'fk_assign_id' => 0,
+                        'fk_sr_id' => $user_id,
+                        'firstname' => $post['first_name'],
+                        'middlename' => '',
+                        'lastname' => $post['last_name'],
+                        'suffix' => '',
+                        'address' => $post['address'],
+                        'city' => $post['city'],
+                        'state' => $post['state'],
+                        'zip' => $post['zip'],
+                        'county' => '',
+                        'country' => '',
+                        'phone_home' => '',
+                        'phone_cell' => $post['contact_number'],
+                        'email_add' => $post['contact_email'],
+                        'sss_num' => '',
+                        'date_of_birth' => null,
+                        'status' => 'New',
+                        'notes' => '',
+                        'notify_email' => 0,
+                        'notify_sms' => 0,
+                        'source' => 'Online',
+                        'company_id' => $company_id,
+                        'is_archive' => 'No',
+                        'date_created' => date("Y-m-d H:i:s"),
+                        'date_updated' => date("Y-m-d H:i:s"),
+                        'fk_sa_id' => 0,
+                        'prof_id' => 0
+                    ];
+
+                    $lead_id = $this->Lead_model->createLead($leads_data);
+                }else{
+                    $lead_id  = 0;
+                    if( $post['appointment_type_id'] == 4 ){
+                        $prof_id  = 0;
+                        $activity_name = 'Appointment : Created appointment event wait list'; 
+                    }else{
+                        $prof_id  = $post['appointment_customer_id'];
+                        $customer = $this->AcsProfile_model->getByProfId($prof_id);
+                        $customer_name = $customer->first_name . ' ' . $customer->last_name;
+                        $activity_name = 'Appointment : Created appointment wait list for customer ' . $customer_name; 
+                    }
+                }
+            }
             $data_appointment = [
                 'appointment_date' => date("Y-m-d",strtotime($post['appointment_date'])),
                 'appointment_time_from' => date("H:i:s", strtotime($post['appointment_time_from'])),
                 'appointment_time_to' => date("H:i:s", strtotime($post['appointment_time_to'])),
                 'user_id' => $user_id,
-                'prof_id' => $post['appointment_customer_id'],
+                'prof_id' => $prof_id,
+                'lead_id' => $lead_id,
                 'company_id' => $company_id,
                 'tag_ids' => '',
                 'total_item_price' => 0,
@@ -1820,7 +1900,12 @@ class Workcalender extends MY_Controller
             $appointment_number = $this->Appointment_model->generateAppointmentNumber($last_id, $appointmentType->name);
             $this->Appointment_model->update($last_id, ['appointment_number' => $appointment_number]);
 
-            customerAuditLog(logged('id'), $post['appointment_customer_id'], $last_id, 'Appointment', 'Created appointment waitlist');
+            //Activity Logs
+            createActivityLog($activity_name);
+
+            if( $post['appointment_type_id'] == 1 || $post['appointment_type_id'] == 2 || $post['appointment_type_id'] == 3 ){
+                customerAuditLog(logged('id'), $post['appointment_customer_id'], $last_id, 'Appointment', 'Created appointment waitlist');
+            }
 
             $is_success = true;
             $message    = '';
