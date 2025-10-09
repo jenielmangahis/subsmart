@@ -67,7 +67,7 @@
     <div class="col-12 customer-container" style="<?= $default_appointment_type_id == 4 ? 'display: none;' : ''; ?>">
         <div class="row g-3">
             <div class="col-6">
-                <label class="content-subtitle fw-bold d-block mb-2">Which Customer</label>
+                <label class="content-subtitle fw-bold d-block mb-2">Customer Name</label>
             </div>
             <div class="col-6 text-end">
                 <a href="javascript:void(0);" class="content-subtitle d-block mb-2 nsm-link btn-quick-add-customer">Add New Customer</a>
@@ -78,34 +78,31 @@
         </span>
         <div class="customer-address"></div>
     </div>
-    <div class="col-12">
-        <div class="row">  
-            <div class="col-6">
-                <label class="content-subtitle fw-bold d-block mb-2">Status</label>
-                <select name="appointment_status" class="nsm-field form-select appointment-status" required style="display: inline-block;">
-                    <option value="New">New</option>
-                    <option value="Draft">Draft</option>
-                    <option value="Scheduled">Scheduled</option>
-                    <option value="Arrival">Arrival</option>
-                    <option value="Paused">Paused</option>
-                    <option value="Approved">Approved</option>
-                    <option value="Completed">Completed</option>
-                    <option value="Invoiced">Invoiced</option>
-                    <option value="Closed">Closed</option>
-                    <option value="Cancelled">Cancelled</option>
-                </select>                                    
-            </div>                              
-            <div class="col-6">
-                <label class="content-subtitle fw-bold d-block mb-2">Priority</label>
-                <select name="appointment_priority" class="nsm-field form-select add-appointment-priority" required>
-                    <?php foreach($appointmentPriorityEventOptions as $priority){ ?>
-                        <option value="<?= $priority; ?>"><?= $priority; ?></option>
-                    <?php } ?>
-                </select>   
-                <input type="text" value="" name="appointment_priority_others" placeholder="Please specify" class="nsm-field form-select priority-others" style="margin-top:5px;display: none;">
-            </div>
-        </div>
-        
+    <div class="col-12 col-md-6">
+        <div class="col-6">
+            <label class="content-subtitle fw-bold d-block mb-2">Status</label>
+            <select name="appointment_status" class="nsm-field form-select appointment-status" required style="display: inline-block;">
+                <option value="New">New</option>
+                <option value="Draft">Draft</option>
+                <option value="Scheduled">Scheduled</option>
+                <option value="Arrival">Arrival</option>
+                <option value="Paused">Paused</option>
+                <option value="Approved">Approved</option>
+                <option value="Completed">Completed</option>
+                <option value="Invoiced">Invoiced</option>
+                <option value="Closed">Closed</option>
+                <option value="Cancelled">Cancelled</option>
+            </select>                                    
+        </div>   
+    </div>      
+    <div class="col-12 col-md-6">
+        <label class="content-subtitle fw-bold d-block mb-2">Priority</label>
+        <select name="appointment_priority" class="nsm-field form-select add-appointment-priority" required>
+            <?php foreach($appointmentPriorityEventOptions as $priority){ ?>
+                <option value="<?= $priority; ?>"><?= $priority; ?></option>
+            <?php } ?>
+        </select>   
+        <input type="text" value="" name="appointment_priority_others" placeholder="Please specify" class="nsm-field form-select priority-others" style="margin-top:5px;display: none;">
     </div>
     <div class="col-12 invoice-price-container" style="display:none;">
         <div class="row">

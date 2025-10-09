@@ -254,7 +254,7 @@ class Items_model extends MY_Model
     public function getItemsWithFilter($filters = [], $columnName = 'title', $order = 'asc')
     {
         $this->db->where('company_id', getLoggedCompanyID());
-        $this->db->where('is_archived', 'No');
+        $this->db->where('is_archived', 0);
         //$this->db->where_in('is_active', $filters['status']);
         if (isset($filters['category'])) {
             $this->db->where_in('item_categories_id', $filters['category']);
@@ -270,7 +270,7 @@ class Items_model extends MY_Model
     public function getService()
     {
         $this->db->where('company_id', getLoggedCompanyID());
-        $this->db->where('is_active', 1);
+        $this->db->where('is_archived', 0);
         $this->db->where('type', 'Service');
 
         $query = $this->db->get($this->table);

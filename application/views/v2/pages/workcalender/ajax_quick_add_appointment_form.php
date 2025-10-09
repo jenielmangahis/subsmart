@@ -11,17 +11,17 @@
                         <input type="text" name="appointment_date" id="appointment_date" class="nsm-field form-control datepicker" placeholder="Date" required style="padding: 0.375rem 0.75rem;" value="<?= date("l, F d, Y", strtotime($default_start_date)); ?>">                                    
                     </div>
                     <div class="col-12 col-md-3">
-                        <input type="time" name="appointment_time_from" id="appointment_time" class="nsm-field form-control" value="<?= $default_time_to; ?>" placeholder="Time From" required />
+                        <input type="text" name="appointment_time_from" id="appointment_time" class="nsm-field form-control timepicker-from" value="<?= $default_time_to; ?>" placeholder="Time From" required />
                     </div>
                     <div class="col-12 col-md-3">
-                        <input type="time" name="appointment_time_to" id="appointment_time_to" class="nsm-field form-control" placeholder="Time To" value="<?= $default_time_to; ?>" required />
+                        <input type="text" name="appointment_time_to" id="appointment_time_to" class="nsm-field form-control timepicker-to" placeholder="Time To" value="<?= $default_time_to; ?>" required />
                     </div>
                 </div>
             </div>
             <div class="col-12">
                 <label class="content-subtitle fw-bold d-block mb-2">Created By</label>
                 <span id="wait-list-created-by">
-                    <input type="text" value="<?= $userLogged->FName . ' ' . $userLogged->LName; ?>" class="nsm-field" readonly="readonly" disabled="disabled">
+                    <input type="text" value="<?= $userLogged->FName . ' ' . $userLogged->LName; ?>" class="nsm-field form-control" readonly="readonly" disabled="disabled">
                 </span>                                                        
             </div>
             <div class="col-12 event-description-container" style="<?= $default_appointment_type_id != 4 ? 'display: none;' : ''; ?>">
@@ -36,7 +36,7 @@
                     <textarea id="appointment-event-location" name="appointment_event_location" class="nsm-field form-control"></textarea>
                 </span>                                                        
             </div>
-            <div class="col-12">
+            <div class="col-12 attendees-container" style="display:none;">
                 <label class="content-subtitle fw-bold d-block mb-2 quick-add-create-tech-attendees">Attendees</label>
                 <span id="quick-add-employee-popover" data-toggle="popover" data-placement="right"data-container="body">
                     <select class="nsm-field form-select" name="appointment_user_id[]" id="quick-add-appointment-user" multiple="multiple"></select>
@@ -48,13 +48,46 @@
                     <select class="nsm-field form-select" name="appointment_sales_agent_id" id="quick-add-appointment-sales-agent-id"></select>
                 </span>                                                        
             </div>
-            
-            <div class="col-12 customer-container" style="">
+
+            <div class="col-12 lead-container" style="">
                 <div class="row g-3">
-                    <div class="col-6">
-                        <label class="content-subtitle fw-bold d-block mb-2">Which Customer</label>
-                    </div>
+                    <div class="col-12 col-md-6">
+                        <label class="content-subtitle fw-bold d-block mb-2">Appointment with</label>
+                        <input type="text" value="" name="first_name" placeholder="First Name" class="nsm-field form-control" />                          
+                    </div> 
+                    <div class="col-12 col-md-6">
+                        <label class="content-subtitle fw-bold d-block mb-2">&nbsp;</label>
+                        <input type="text" value="" name="last_name" placeholder="Last Name" class="nsm-field form-control" />                          
+                    </div>   
+                    <div class="col-12 col-md-6">
+                        <label class="content-subtitle fw-bold d-block mb-2">Contact Number</label>
+                        <input type="text" value="" name="contact_number" placeholder="xxx-xxx-xxxx" class="nsm-field form-control phone-number-format" />                          
+                    </div>  
+                    <div class="col-12 col-md-6">
+                        <label class="content-subtitle fw-bold d-block mb-2">Email</label>
+                        <input type="email" value="" name="contact_email" placeholder="Email" class="nsm-field form-control" />                          
+                    </div>  
+                    <div class="col-12 col-md-12">
+                        <label class="content-subtitle fw-bold d-block mb-2">Address</label>
+                        <input type="text" value="" name="address" placeholder="Address" class="nsm-field form-control" />   
+                    </div>  
+                    <div class="col-6 col-md-6">
+                        <label class="content-subtitle fw-bold d-block mb-2">City</label>
+                        <input type="text" value="" name="city" placeholder="City" class="nsm-field form-control" />                          
+                    </div>  
+                    <div class="col-6 col-md-4">
+                        <label class="content-subtitle fw-bold d-block mb-2">State</label>
+                        <input type="text" value="" name="state" placeholder="State" class="nsm-field form-control" />                          
+                    </div>  
+                    <div class="col-6 col-md-2">
+                        <label class="content-subtitle fw-bold d-block mb-2">Zip</label>
+                        <input type="text" value="" name="zip" placeholder="zip" class="nsm-field form-control" />                          
+                    </div> 
                 </div>
+            </div>
+            
+            <div class="col-12 customer-container" style="display:none;">
+                <label class="content-subtitle fw-bold d-block mb-2">Which Customer</label>
                 <span id="add-customer-popover" data-toggle="popover" data-placement="right"data-container="body">
                     <select class="nsm-field form-select" name="appointment_customer_id" id="quick-add-appointment-customer"></select>
                 </span>
@@ -68,7 +101,7 @@
                             <option value="0">- Select Appointment Type -</option>
                             <?php foreach ($appointmentTypes as $a) { ?>       
                                 <?php //if( $a->name != 'Job' && $a->name != 'Services' ){ ?>                         
-                                    <option value="<?= $a->id; ?>" <?= $a->name == 'Draft' ? 'selected="selected"' : ''; ?>><?= $a->name; ?></option>
+                                    <option value="<?= $a->id; ?>" <?= $a->name == 'Leads' ? 'selected="selected"' : ''; ?>><?= $a->name; ?></option>
                                 <?php //} ?>
                             <?php } ?>
                         </select>                                
@@ -76,7 +109,7 @@
                     <div class="col-6">
                         <label class="content-subtitle fw-bold d-block mb-2">Priority</label>
                         <select name="appointment_priority" class="nsm-field form-select add-appointment-priority" required>
-                            <?php foreach($appointmentPriorityEventOptions as $priority){ ?>
+                            <?php foreach($appointmentPriorityOptions as $priority){ ?>
                                 <option value="<?= $priority; ?>"><?= $priority; ?></option>
                             <?php } ?>
                         </select>   
@@ -92,48 +125,24 @@
                         <input type="text" id="appointment-invoice-number" name="appointment_invoice_number" class="nsm-field form-control" />
                     </div>
                     <div class="col-6">
-                        <label class="content-subtitle fw-bold d-block mb-2">Price</label>
+                        <label class="content-subtitle fw-bold d-block mb-2">Total Cost</label>
                         <input type="number" id="appointment-price" name="appointment_price" class="nsm-field form-control" />
                     </div>
                 </div>
             </div>
-            <div class="col-12">
-                <div class="row">
-                    <div class="col-12">
-                        <div class="row g-3">
-                            <div class="col-6">
-                                <label class="content-subtitle fw-bold d-block mb-2">Tags</label>
-                            </div>
-                            <div class="col-6 text-end">
-                                <?php 
-                                    if( $default_appointment_type_id == 4 ){ //Events
-                                        $manage_tags_url = base_url('events/event_tags');
-                                    }else{
-                                        $manage_tags_url = base_url('job/job_tags');
-                                    }
-                                ?>
-                            </div>
-                        </div>
-                        
-                        <span id="add-tag-popover" data-toggle="popover" data-placement="right"data-container="body">
-                            <select class="nsm-field form-select" name="appointment_tags[]" id="quick-add-appointment-tags" multiple="multiple"></select>
-                        </span> 
-                    </div>                           
-                </div>
+            <div class="col-6 tags-container" style="display:none;">
+                <label class="content-subtitle fw-bold d-block mb-2">Tags</label>
+                <span id="add-tag-popover" data-toggle="popover" data-placement="right"data-container="body">
+                    <select class="nsm-field form-select" name="appointment_tags[]" id="quick-add-appointment-tags" multiple="multiple"></select>
+                </span> 
             </div>   
-            <div class="col-12">
-                <div class="row">
-                    <div class="col-12">
-                        <label class="content-subtitle fw-bold d-block mb-2">URL Link <small style="color:#ff4d4d;">(Must be public url)</small></label>
-                        <input type="text" name="url_link" id="ulr-link" class="nsm-field form-control" placeholder="URL Link" style="padding: 0.375rem 0.75rem;">
-                    </div>
-                </div>
+            <div class="col-6 url-link-container" style="display:none;">
+                <label class="content-subtitle fw-bold d-block mb-2">URL Link <small style="color:#ff4d4d;">(Must be public url)</small></label>
+                <input type="text" name="url_link" id="ulr-link" class="nsm-field form-control" placeholder="URL Link" style="padding: 0.375rem 0.75rem;">
             </div>            
             <div class="col-12">
-                <div class="col-12">
-                    <label class="content-subtitle fw-bold d-block mb-2">Notes</label>
-                    <textarea id="appointment-notes" name="appointment_notes" class="nsm-field form-control"></textarea>
-                </div>
+                <label class="content-subtitle fw-bold d-block mb-2">Notes</label>
+                <textarea id="appointment-notes" name="appointment_notes" class="nsm-field form-control"></textarea>
             </div>
         </div> 
     </div>
@@ -333,27 +342,73 @@ $(function(){
         }
     }
 
-    $(document).on('click', '.add-appointment-type', function(){
+    $(document).on('change', '.add-appointment-type', function(){
         var appointmentEventPriorityOptions = <?= json_encode($appointmentPriorityEventOptions); ?>;
         var appointmentPriorityOptions      = <?= json_encode($appointmentPriorityOptions); ?>;
         var appointment_type = $(this).val();
 
-        if( appointment_type ==  3 || appointment_type == 1 ){
+        if( appointment_type == 1 || appointment_type == 3  ){ //Job and Services
+            $('.attendees-container').fadeIn(500);
             $('.appointment-add-sales-agent').fadeIn(500);
             $('.invoice-price-container').fadeIn(500);
-        }else if( appointment_type ==  2 ){
+            $('.url-link-container').fadeIn(500);
+            $('.tags-container').fadeIn(500);
+            $('.customer-container').fadeIn(500);
+
+            $('.event-description-container').fadeOut(500);
+            $('.event-location-container').fadeOut(500);
+            $('.lead-container').fadeOut(500);
+        }else if( appointment_type == 2 ){ //Estimates
+            $('.attendees-container').fadeIn(500);
             $('.appointment-add-sales-agent').fadeOut(500);
             $('.invoice-price-container').fadeIn(500);
-        }else{
-            $('.appointment-add-sales-agent').fadeOut(500);
-            $('.invoice-price-container').fadeOut(500);
-        }
+            $('.url-link-container').fadeIn(500);
+            $('.tags-container').fadeIn(500);
+            $('.customer-container').fadeIn(500);
 
-        if( appointment_type == 4 ){ //Event
-            $('.customer-container').fadeOut(500);
+            $('.event-description-container').fadeOut(500);
+            $('.event-location-container').fadeOut(500);
+            $('.lead-container').fadeOut(500);
+        }else if( appointment_type == 4 ){ //Events
+            $('.attendees-container').fadeIn(500);
+            $('.url-link-container').fadeIn(500);
+            $('.tags-container').fadeIn(500);
             $('.event-description-container').fadeIn(500);
             $('.event-location-container').fadeIn(500);
-            $("a.btn-quick-add-manage-tags").attr("href", base_url + 'events/event_tags');
+
+            $('.appointment-add-sales-agent').fadeOut(500);
+            $('.invoice-price-container').fadeOut(500);            
+            $('.customer-container').fadeOut(500);
+            $('.lead-container').fadeOut(500);
+        }else{
+            $('.attendees-container').fadeOut(500);
+            $('.url-link-container').fadeOut(500);
+            $('.tags-container').fadeOut(500);
+            $('.event-description-container').fadeOut(500);
+            $('.event-location-container').fadeOut(500);
+            $('.appointment-add-sales-agent').fadeOut(500);
+            $('.invoice-price-container').fadeOut(500);            
+            $('.customer-container').fadeOut(500);
+
+            $('.lead-container').fadeIn(500);
+        }
+
+        if( appointment_type == 4 ){
+            $('.quick-add-create-tech-attendees').text('Attendees');
+            $('#quick-add-employee-popover').popover('dispose');
+            $('#quick-add-employee-popover').popover({    
+                content:'Who will attend the event',
+                title:'Attendees',        
+                trigger: 'hover'
+            });
+
+            var $el = $(".add-appointment-priority");
+            $el.empty(); // remove old options
+            $.each(appointmentEventPriorityOptions, function(key,value) {
+              $el.append($("<option></option>")
+                 .attr("value", value).text(value));
+            });
+
             $("#quick-add-appointment-tags").empty().trigger('change');
             $('#quick-add-appointment-tags').select2({
                 ajax: {
@@ -381,11 +436,23 @@ $(function(){
                 templateResult: formatRepoTag,
                 templateSelection: formatRepoTagSelection
             });
+
         }else{
-            $('.customer-container').fadeIn(500);
-            $('.event-description-container').fadeOut(500);
-            $('.event-location-container').fadeOut(500);
-            $("a.btn-quick-add-manage-tags").attr("href", base_url + 'job/job_tags');
+            $('.quick-add-create-tech-attendees').text('Assigned Techincian');
+            $('#quick-add-employee-popover').popover('dispose');
+            $('#quick-add-employee-popover').popover({    
+                content:'Assign employee that will handle the appointment',
+                title:'Which Employee',        
+                trigger: 'hover'
+            }); 
+
+            var $el = $(".add-appointment-priority");
+            $el.empty(); // remove old options
+            $.each(appointmentPriorityOptions, function(key,value) {
+              $el.append($("<option></option>")
+                 .attr("value", value).text(value));
+            });   
+            
             $("#quick-add-appointment-tags").empty().trigger('change');
             $('#quick-add-appointment-tags').select2({
                 ajax: {
@@ -413,39 +480,6 @@ $(function(){
                 templateResult: formatRepoTag,
                 templateSelection: formatRepoTagSelection
             });
-        }
-
-        if( appointment_type == 4 ){
-            $('.quick-add-create-tech-attendees').text('Attendees');
-            $('#quick-add-employee-popover').popover('dispose');
-            $('#quick-add-employee-popover').popover({    
-                content:'Who will attend the event',
-                title:'Attendees',        
-                trigger: 'hover'
-            });
-
-            var $el = $(".add-appointment-priority");
-            $el.empty(); // remove old options
-            $.each(appointmentEventPriorityOptions, function(key,value) {
-              $el.append($("<option></option>")
-                 .attr("value", value).text(value));
-            });
-
-        }else{
-            $('.quick-add-create-tech-attendees').text('Assigned Techincian');
-            $('#quick-add-employee-popover').popover('dispose');
-            $('#quick-add-employee-popover').popover({    
-                content:'Assign employee that will handle the appointment',
-                title:'Which Employee',        
-                trigger: 'hover'
-            }); 
-
-            var $el = $(".add-appointment-priority");
-            $el.empty(); // remove old options
-            $.each(appointmentPriorityOptions, function(key,value) {
-              $el.append($("<option></option>")
-                 .attr("value", value).text(value));
-            });           
         }
     });
 });

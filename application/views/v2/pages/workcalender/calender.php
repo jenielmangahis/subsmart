@@ -934,9 +934,6 @@
             e.preventDefault();
 
             var url = "<?php echo base_url('calendar/_update_appointment'); ?>";
-            _this.find("button[type=submit]").html("Saving");
-            _this.find("button[type=submit]").prop("disabled", true);
-
             $.ajax({
                 type: 'POST',
                 url: url,
@@ -966,11 +963,14 @@
                         });
                     }
                     $("#edit_appointment_modal").modal('hide');
-                    _this.trigger("reset");
 
-                    _this.find("button[type=submit]").html("Save");
-                    _this.find("button[type=submit]").prop("disabled", false);
+                    $('#update-appointment-btn').html("Save");
+                    $('#update-appointment-btn').prop("disabled", false);
                 },
+                beforeSend: function() {
+                    $("#update-appointment-btn").html('<span class="bx bx-loader bx-spin"></span>');
+                    $('#update-appointment-btn').prop("disabled", true);
+                }
             });
         });
 
@@ -1552,7 +1552,6 @@
                 $('#ticket-status-finished').attr('data-id', appointment_id);
                 $('#ticket-status-finished').attr('data-ordernum', order_number);
                 // End Ticket Status
-                console.log('esign', esign_id);
                 if( appointment_type == 'job' ){
                     if( esign_id > 0 ){
                         $('#view-esign').css('display', 'inline-block');
@@ -1627,17 +1626,15 @@
 
                 showLoader($(".view-schedule-container")); 
 
-                setTimeout(function () {
-                  $.ajax({
-                     type: "POST",
-                     url: url,
-                     data: {appointment_id:appointment_id},
-                     success: function(o)
-                     {          
-                        $(".view-schedule-container").html(o);
-                     }
-                  });
-                }, 500);       
+                $.ajax({
+                    type: "POST",
+                    url: url,
+                    data: {appointment_id:appointment_id},
+                    success: function(o)
+                    {          
+                    $(".view-schedule-container").html(o);
+                    }
+                });    
             },
             loading: function(isLoading) {
                 if (isLoading) {
@@ -2607,17 +2604,15 @@
 
         showLoader($("#quick-add-appointment-form-container"));        
 
-        setTimeout(function () {
-          $.ajax({
-             type: "GET",
-             url: url,
-             data: {date_selected:date_selected},
-             success: function(o)
-             {          
-                $("#quick-add-appointment-form-container").html(o);
-             }
-          });
-        }, 500);
+        $.ajax({
+            type: "GET",
+            url: url,
+            data: {date_selected:date_selected},
+            success: function(o)
+            {          
+            $("#quick-add-appointment-form-container").html(o);
+            }
+        });
     });
 
     $(document).on('click', '#calendar-quick-add-tc-off', function(){
@@ -2664,7 +2659,7 @@
             var msg = 'Are you sure you want to delete <b>'+ order_number +'</b>?<br /><br /><b>Note : You cannot restore event data once deleted</b>'
         }else{
             var url = base_url + 'calendar/_quick_delete_appointment';
-            var msg = 'Are you sure you want to delete appointment <b>'+ order_number +'</b>?<br /><br /><b>Note : You cannot restore workorder data once deleted</b>';
+            var msg = 'Are you sure you want to delete appointment <b>'+ order_number +'</b>?<br /><br /><b>Note : You cannot restore appointment data once deleted</b>';
         }
 
         Swal.fire({

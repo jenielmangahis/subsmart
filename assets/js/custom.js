@@ -806,7 +806,7 @@ $(".select_item").click(function () {
   if( $('#default-tax').length ){
     tax_rate = parseFloat($('#default-tax').val());
   }
-  
+
   var tax_ = (parseFloat(total_).toFixed(2) * tax_rate) / 100;
   var taxes_t = parseFloat(tax_).toFixed(2);
   var total = parseFloat(total_).toFixed(2);
@@ -1270,7 +1270,7 @@ $(".select_itemnew").click(function () {
     '\'><i class="fa fa-trash" aria-hidden="true"></i></a>\n' +
     "</td>\n" +
     "</tr>";
-  tableBody = $("#jobs_items_table_body");
+  tableBody = $("#jobs_items");
   tableBody.append(markup);
   markup2 =
     '<tr id="sss">' +
