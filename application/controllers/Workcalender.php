@@ -811,18 +811,26 @@ class Workcalender extends MY_Controller
                         $tags = ' - ' . $tags;
                     }
                     
-                }
-                $assigned_technician = json_decode($a->assigned_employee_ids);
+                }                
+                
                 $resourceIds = array();
-                foreach($assigned_technician as $key => $eid){    
-                    $resourceIds[] = "user" . $eid;                                                     
+                if( $a->assigned_employee_ids != '' ){
+                    $assigned_technician = json_decode($a->assigned_employee_ids);
+                    foreach($assigned_technician as $key => $eid){    
+                        $resourceIds[] = "user" . $eid;                                                     
+                    }
                 }
                 
                 if( $a->appointment_type_id == 4 ){ //Events                    
                     $custom_html  .= '<a class="quick-calendar-tile" data-type="appointment" data-id="'.$a->id.'" href="javascript:void(0);"><span>'. $a->appointment_number . ' ' . $tags . ' : ' . $a->event_name . '</span></a>';
                 }else{  
-                    $customer_name = $j->first_name . ' ' . $j->last_name;
-                    $custom_html  .= '<a class="quick-calendar-tile" data-type="appointment" data-id="'.$a->id.'" href="javascript:void(0);"><span>'. $a->appointment_number . ' ' . $tags . ' : ' . $a->customer_name . '</span></a>';
+                    if( $a->appointment_type_id == 5 ){ //Lead
+                        $customer_name = $a->lead_name != '' ? $a->lead_name : '---';
+                    }else{
+                        $customer_name = $a->customer_name != '' ? $a->customer_name : '---';
+                    }
+                    
+                    $custom_html  .= '<a class="quick-calendar-tile" data-type="appointment" data-id="'.$a->id.'" href="javascript:void(0);"><span>'. $a->appointment_number . ' ' . $tags . ' - ' . $customer_name . '</span></a>';
                 }
 
             $custom_html .= '</div>';
@@ -1458,18 +1466,20 @@ class Workcalender extends MY_Controller
             }
             
             $this->general->update_with_key_field($jobs_data, $post['event_id'], 'jobs', 'id');
-        }elseif( $post['event_type'] == 'appointments' ){
+        }elseif( $post['event_type'] == 'appointments' || $post['event_type'] == 'appointment' ){
             $new_appointment_time = date("H:i:s",strtotime($post['start_date']));
             if( $post['user_id'] > 0 ){
                 $appointment_data = [
                     'appointment_date' => $new_start_date,
                     'appointment_time_from' => $new_appointment_time,
+                    'appointment_time_to' => $new_appointment_time,
                     'user_id' => $post['user_id']
                 ];
             }else{
                 $appointment_data = [
                     'appointment_date' => $new_start_date,
-                    'appointment_time_from' => $new_appointment_time
+                    'appointment_time_from' => $new_appointment_time,
+                    'appointment_time_to' => $new_appointment_time,
                 ];
             }
             $this->general->update_with_key_field($appointment_data, $post['event_id'], 'appointments', 'id');
@@ -1590,22 +1600,60 @@ class Workcalender extends MY_Controller
         $this->load->model('Appointment_model');
         $this->load->model('AppointmentType_model');
         $this->load->model('AcsProfile_model');
+        $this->load->model('Lead_model');
 
         $post       = $this->input->post();
         $user_id    = logged('id');
         $company_id = logged('company_id');
+        $lead_id    = 0;
         $is_success = false;
         $message    = 'Cannot create appointment';
 
-        if ($post['appointment_date'] != '' && $post['appointment_time_from'] != '' && $post['appointment_time_to'] != '' && !empty($post['appointment_user_id']) && $post['appointment_type_id'] != '') {
+        if ($post['appointment_date'] != '' && $post['appointment_time_from'] != '' && $post['appointment_time_to'] != '' && $post['appointment_type_id'] != '') {
 
-            if( $post['appointment_type_id'] != 4 && $post['appointment_customer_id'] == '' ){
-                $message = 'Please select customer to assign to this appointment';
-            }elseif( $post['appointment_type_id'] == 4 && $post['appointment_event_name'] == '' ){
+            $is_valid = true;
+
+            if( $post['appointment_type_id'] == 4 ){
+                if( $post['first_name'] == ''  ){
+                    $message = 'Please specify lead first name';
+                    $is_valid = false;
+                }
+
+                if( $post['last_name'] == ''  ){
+                    $message = 'Please specify lead last name';
+                    $is_valid = false;
+                }
+
+                if( $post['address'] == '' || $post['city'] == '' || $post['state'] == '' || $post['zip'] == ''  ){
+                    $message = 'Please specify lead complete address';
+                    $is_valid = false;
+                }
+            }
+
+            if( $post['appointment_type_id'] == 4 && $post['appointment_event_name'] == '' ){
                 $message = 'Please specify event name';
-            }else{
+            }
+
+            if( $post['appointment_type_id'] == 1 || $post['appointment_type_id'] == 2 || $post['appointment_type_id'] == 3 || $post['appointment_type_id'] == 4){
+                 if( $post['appointment_user_id'] == '' ){
+                    $message = 'Please select user to assign to this appointment';
+                    $is_valid = false;
+                }
+                
+                if( $post['appointment_customer_id'] == '' ){
+                    $message = 'Please select customer to assign to this appointment';
+                    $is_valid = false;
+                }
+
+                if( $post['appointment_type_id'] == '' ){
+                    $message = 'Please select appointment type';
+                    $is_valid = false;
+                }
+            }
+
+            if( $is_valid ){
                 if( $post['appointment_tags'] != '' ){
-                    $tags = implode(",", $post['appointment_tags']);
+                    $tags = json_encode($post['appointment_tags']);
                 }else{
                     $tags = '';
                 }
@@ -1631,10 +1679,55 @@ class Workcalender extends MY_Controller
 
                 $event_name = '';
                 $event_location = '';
+                $prof_id        = $post['appointment_customer_id'];
+                
                 if( $post['appointment_type_id'] == 4 ){
                     $event_name = $post['appointment_event_name'];
                     $event_location = $post['appointment_event_location'];
-                    $post['appointment_customer_id'] = 0;
+                    $post['appointment_customer_id'] = 0;                    
+                }
+
+                $assigned_employee_ids = json_encode($post['appointment_user_id']);
+
+                if( $post['appointment_type_id'] == 5 ){
+                    $prof_id = 0;
+                    $sales_agent_id = 0;
+                    $assigned_employee_ids = null;
+
+                    //Create leads
+                    $leads_data = [
+                        'fk_lead_type_id' => 3,
+                        'fk_assign_id' => 0,
+                        'fk_sr_id' => $user_id,
+                        'firstname' => $post['first_name'],
+                        'middlename' => '',
+                        'lastname' => $post['last_name'],
+                        'suffix' => '',
+                        'address' => $post['address'],
+                        'city' => $post['city'],
+                        'state' => $post['state'],
+                        'zip' => $post['zip'],
+                        'county' => '',
+                        'country' => '',
+                        'phone_home' => '',
+                        'phone_cell' => $post['contact_number'],
+                        'email_add' => $post['contact_email'],
+                        'sss_num' => '',
+                        'date_of_birth' => null,
+                        'status' => 'New',
+                        'notes' => '',
+                        'notify_email' => 0,
+                        'notify_sms' => 0,
+                        'source' => 'Online',
+                        'company_id' => $company_id,
+                        'is_archive' => 'No',
+                        'date_created' => date("Y-m-d H:i:s"),
+                        'date_updated' => date("Y-m-d H:i:s"),
+                        'fk_sa_id' => 0,
+                        'prof_id' => 0
+                    ];
+
+                    $lead_id = $this->Lead_model->createLead($leads_data);
                 }
 
                 $appointmentType = $this->AppointmentType_model->getById($post['appointment_type_id']);            
@@ -1643,7 +1736,8 @@ class Workcalender extends MY_Controller
                     'appointment_time_to' => date("H:i:s", strtotime($post['appointment_time_to'])),
                     'appointment_time_from' => date("H:i:s", strtotime($post['appointment_time_from'])),
                     'user_id' => $user_id,
-                    'prof_id' => $post['appointment_customer_id'],
+                    'prof_id' => $prof_id,
+                    'lead_id' => $lead_id,
                     'company_id' => $company_id,
                     'tag_ids' => $tags,
                     'url_link' => $post['url_link'],
@@ -1654,7 +1748,7 @@ class Workcalender extends MY_Controller
                     'is_paid' => 0,
                     'priority' => $appointment_priority,
                     'is_wait_list' => 0,
-                    'assigned_employee_ids' => json_encode($post['appointment_user_id']),
+                    'assigned_employee_ids' => $assigned_employee_ids,
                     'notes' => $post['appointment_notes'],
                     'cost' => $price,
                     'sales_agent_id' => $sales_agent_id,
@@ -1671,31 +1765,16 @@ class Workcalender extends MY_Controller
                 //Google Calendar
                 createSyncToCalendar($last_id, 'appointment', $company_id);
 
-                customerAuditLog(logged('id'), $post['appointment_customer_id'], $last_id, 'Appointment', 'Created an appointment');
-
                 //Activity Logs
-                $customer = $this->AcsProfile_model->getByProfId($post['appointment_customer_id']);
-                $activity_name = 'Created Calendar Appointment Schedule for ' . $customer->first_name . ' ' . $customer->last_name; 
+                $activity_name = 'Appointment : Created appointment number ' . $appointment_number; 
                 createActivityLog($activity_name);
 
                 $is_success = true;
                 $message    = '';
             }
+
         } else {
-
-            $message = 'Required fields cannot be empty';
-            
-            if( $post['appointment_user_id'] == '' ){
-                $message = 'Please select employee to assign to this appointment';
-            }
-            
-            if( $post['appointment_customer_id'] == '' ){
-                $message = 'Please select customer to assign to this appointment';
-            }
-
-            if( $post['appointment_type_id'] == '' ){
-                $message = 'Please select appointment type';
-            }
+            $message = 'Appointment date and time is required'; 
         }
 
         $json_data = [
@@ -1835,27 +1914,30 @@ class Workcalender extends MY_Controller
         $appointmentTypes = $this->AppointmentType_model->getAllByCompany($cid, true);
 
         $a_tags = array();
-        $selected_tags = explode(",", $appointment->tag_ids);
-        foreach($tags as $t){
-            if( in_array($t->id, $selected_tags) ){
-                $a_tags[$t->id] = $t->name;
+        if( $appointment->tag_ids != '' ){
+            $selected_tags = explode(",", $appointment->tag_ids);
+            foreach($tags as $t){
+                if( in_array($t->id, $selected_tags) ){
+                    $a_tags[$t->id] = $t->name;
+                }
             }
         }
 
-        $assigned_employee_ids = json_decode($appointment->assigned_employee_ids);
-        $attendees = array();
-        foreach($assigned_employee_ids as $uid){
-            $user = $this->Users_model->getUser($uid);
-            if( $user ){
-                $attendees[] = [
-                    'id' => $user->id,
-                    'name' => $user->FName . ' ' . $user->LName
-                ];
+        if( $appointment->assigned_employee_ids != '' ){
+            $assigned_employee_ids = json_decode($appointment->assigned_employee_ids);
+            $attendees = array();
+            foreach($assigned_employee_ids as $uid){
+                $user = $this->Users_model->getUser($uid);
+                if( $user ){
+                    $attendees[] = [
+                        'id' => $user->id,
+                        'name' => $user->FName . ' ' . $user->LName
+                    ];
+                }
             }
         }
 
         $salesAgent = $this->Users_model->getUser($appointment->sales_agent_id);
-
         $appointmentPriorityOptions = $this->Appointment_model->priorityOptions();
         $appointmentPriorityEventOptions = $this->Appointment_model->priorityEventOptions();
 
@@ -1874,6 +1956,7 @@ class Workcalender extends MY_Controller
     {
         $this->load->model('Appointment_model');
         $this->load->model('AppointmentType_model');
+        $this->load->model('Lead_model');
 
         $is_success = false;
         $message    = 'Cannot find appointment';
@@ -1884,13 +1967,49 @@ class Workcalender extends MY_Controller
 
         if( $appointment ){
             $old_appointment_type_id = $appointment->appointment_type_id;
-            if ($post['appointment_date'] != '' && $post['appointment_time_from'] != '' && $post['appointment_time_to'] != '' && $post['appointment_user_id'] != '' && $post['appointment_type_id'] > 0) {
+            if ($post['appointment_date'] != '' && $post['appointment_time_from'] != '' && $post['appointment_time_to'] != '' && $post['appointment_type_id'] > 0) {
 
-                if( $post['appointment_type_id'] != 4 && $post['appointment_customer_id'] == '' ){
-                    $message = 'Please select customer to assign to this appointment';
-                }elseif( $post['appointment_type_id'] == 4 && $post['appointment_event_name'] == '' ){
+                $is_valid = true;
+
+                if( $post['appointment_type_id'] == 4 ){
+                    if( $post['first_name'] == ''  ){
+                        $message = 'Please specify lead first name';
+                        $is_valid = false;
+                    }
+
+                    if( $post['last_name'] == ''  ){
+                        $message = 'Please specify lead last name';
+                        $is_valid = false;
+                    }
+
+                    if( $post['address'] == '' || $post['city'] == '' || $post['state'] == '' || $post['zip'] == ''  ){
+                        $message = 'Please specify lead complete address';
+                        $is_valid = false;
+                    }
+                }
+
+                if( $post['appointment_type_id'] == 4 && $post['appointment_event_name'] == '' ){
                     $message = 'Please specify event name';
-                }else{
+                }
+
+                if( $post['appointment_type_id'] == 1 || $post['appointment_type_id'] == 2 || $post['appointment_type_id'] == 3 || $post['appointment_type_id'] == 4){
+                    if( $post['appointment_user_id'] == '' ){
+                        $message = 'Please select user to assign to this appointment';
+                        $is_valid = false;
+                    }
+                    
+                    if( $post['appointment_customer_id'] == '' ){
+                        $message = 'Please select customer to assign to this appointment';
+                        $is_valid = false;
+                    }
+
+                    if( $post['appointment_type_id'] == '' ){
+                        $message = 'Please select appointment type';
+                        $is_valid = false;
+                    }
+                }
+
+                if( $is_valid ){
                     if( $post['appointment_tags'] != '' ){
                         $tags = implode(",", $post['appointment_tags']);
                     }else{
@@ -1923,12 +2042,45 @@ class Workcalender extends MY_Controller
                         $event_location = $post['appointment_event_location'];
                         $post['appointment_customer_id'] = 0;
                     }
+                    
+                    if( $post['appointment_type_id'] == 5 ){
+                        $prof_id = 0;
+                        $lead_id = $appointment->lead_id;
+                        $sales_agent_id = 0;
+                        $assigned_employee_ids = null;
+
+                        $lead = $this->Lead_model->getById($appointment->lead_id);
+                        if( $lead ){
+                            $leads_data = [
+                                'firstname' => $post['first_name'],                                
+                                'lastname' => $post['last_name'],
+                                'address' => $post['address'],
+                                'city' => $post['city'],
+                                'state' => $post['state'],
+                                'zip' => $post['zip'],
+                                'phone_cell' => $post['contact_number'],
+                                'email_add' => $post['contact_email'],
+                                'date_updated' => date("Y-m-d H:i:s"),
+                            ];
+
+                            $this->Lead_model->updateLead($lead->leads_id, $leads_data);
+
+                            //Activity Logs
+                            $activity_name = 'Leads : Updated lead ' . $post['first_name'] . ' ' . $post['last_name']; 
+                            createActivityLog($activity_name);
+                        }
+                    }else{
+                        $assigned_employee_ids = json_encode($post['appointment_user_id']);
+                        $prof_id = $post['appointment_customer_id'];
+                        $lead_id = 0;
+                    }
 
                     $data_appointment = [
                         'appointment_date' => date("Y-m-d",strtotime($post['appointment_date'])),
                         'appointment_time_to' => date("H:i:s", strtotime($post['appointment_time_to'])),
                         'appointment_time_from' => date("H:i:s", strtotime($post['appointment_time_from'])),
-                        'prof_id' => $post['appointment_customer_id'],
+                        'prof_id' => $prof_id,
+                        'lead_id' => $lead_id,
                         'tag_ids' => $tags,
                         'url_link' => $post['url_link'],
                         'total_item_price' => 0,
@@ -1938,7 +2090,7 @@ class Workcalender extends MY_Controller
                         'is_paid' => 0,
                         'priority' => $appointment_priority,
                         'is_wait_list' => 0,
-                        'assigned_employee_ids' => json_encode($post['appointment_user_id']),
+                        'assigned_employee_ids' => $assigned_employee_ids,
                         'notes' => $post['appointment_notes'],
                         'cost' => $price,
                         'sales_agent_id' => $sales_agent_id,
@@ -1949,13 +2101,9 @@ class Workcalender extends MY_Controller
 
                     $this->Appointment_model->update($appointment->id, $data_appointment);
 
-                    if( $old_appointment_type_id != $post['appointment_type_id'] ){
-                        $appointmentType = $this->AppointmentType_model->getById($post['appointment_type_id']);  
-                        $appointment_number = $this->Appointment_model->generateAppointmentNumber($appointment->id, $appointmentType->name);
-                        $this->Appointment_model->update($appointment->id, ['appointment_number' => $appointment_number]);
-                    }
-
-                    customerAuditLog(logged('id'), $post['appointment_customer_id'], $appointment->id, 'Appointment', 'Updated appointment id '.$appointment->id);
+                    //Activity Logs
+                    $activity_name = 'Appointment : Updated appointment number ' . $appointment->appointment_number; 
+                    createActivityLog($activity_name);
 
                     $is_success = true;
                     $message    = '';
@@ -3622,6 +3770,7 @@ class Workcalender extends MY_Controller
 
         //Default created by
         $user_id = logged('id');
+        $company_id = logged('company_id');
         $userLogged = $this->Users_model->getUser($user_id);
         $appointmentPriorityEventOptions = $this->Appointment_model->priorityEventOptions();
         $appointmentPriorityOptions      = $this->Appointment_model->priorityOptions();
