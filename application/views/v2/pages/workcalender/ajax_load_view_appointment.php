@@ -87,13 +87,13 @@
     <?php }else{ ?>
         <div class="col-12 col-md-7">
             <label class="content-subtitle fw-bold d-block mb-2 appointment-view-header">
-                <?= $appointment->appointment_type_id == 5 ? 'Leads' : 'Customer'; ?>
+                <?= $appointment->appointment_type_id == 1 || $appointment->appointment_type_id == 2 || $appointment->appointment_type_id == 3 || $appointment->appointment_type_id == 4 ? 'Customer' : 'Lead'; ?>
             </label>
             <div class="p-3">
                 <?php 
                     if( $appointment->appointment_type_id != 1 && $appointment->appointment_type_id != 2 && $appointment->appointment_type_id != 3 && $appointment->appointment_type_id != 4 ){
                         $customer_name = $appointment->lead_name;
-                        $customer_contact_number = $appointment->lead_conctact_number != '' ? $appointment->lead_conctact_number : '---';
+                        $customer_contact_number = $appointment->lead_contact_number != '' ? $appointment->lead_contact_number : '---';
                         $customer_email_address  = $appointment->lead_contact_email != '' ? $appointment->lead_contact_email : '---';
                         $customer_address = $appointment->lead_address;
                         $customer_city  = $appointment->lead_city;
