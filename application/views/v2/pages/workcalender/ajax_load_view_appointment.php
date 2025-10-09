@@ -41,7 +41,6 @@
 <?php if ($appointment) { ?>
     <?php
     $c_phone = "---";
-    $c_email = "---";
 
     if ($appointment->cust_phone != '') {
         $c_phone = $appointment->cust_phone;
@@ -87,16 +86,38 @@
         </div>
     <?php }else{ ?>
         <div class="col-12 col-md-7">
-            <label class="content-subtitle fw-bold d-block mb-2 appointment-view-header">Customer</label>
+            <label class="content-subtitle fw-bold d-block mb-2 appointment-view-header">
+                <?= $appointment->appointment_type_id == 5 ? 'Leads' : 'Customer'; ?>
+            </label>
             <div class="p-3">
-                <label class="fw-bold mb-4" style="font-size: 21px;"><i class='bx bx-user-circle'></i> <?= $appointment->customer_name; ?></label>
-                <label class="d-block mb-2"><span class="fw-bold"><i class="bx bxs-phone"></i> </span> <?= $c_phone; ?></label>
+                <?php 
+                    if( $appointment->appointment_type_id == 5 ){
+                        $customer_name = $appointment->lead_name;
+                        $customer_contact_number = $appointment->lead_conctact_number != '' ? $appointment->lead_conctact_number : '---';
+                        $customer_email_address  = $appointment->lead_contact_email != '' ? $appointment->lead_contact_email : '---';
+                        $customer_address = $appointment->lead_address;
+                        $customer_city  = $appointment->lead_city;
+                        $customer_state = $appointment->lead_state;
+                        $customer_zip   = $appointment->lead_zip;
+                    }else{
+                        $customer_name = $appointment->customer_name;
+                        $customer_contact_number = $appointment->contact_number != '' ? $appointment->contact_number : '---';
+                        $customer_email_address  = $appointment->contact_email != '' ? $appointment->contact_email : '---';
+                        $customer_address = $appointment->address;
+                        $customer_city  = $appointment->city;
+                        $customer_state = $appointment->state;
+                        $customer_zip   = $appointment->zip;
+                    }
+                ?>
+                <label class="fw-bold mb-4" style="font-size: 21px;"><i class='bx bx-user-circle'></i> <?= $customer_name; ?></label>
+                <label class="d-block mb-2"><span class="fw-bold"><i class="bx bxs-phone"></i> </span> <?= $customer_contact_number; ?></label>
+                <label class="d-block mb-2"><span class="fw-bold"><i class='bx bxs-envelope' ></i> </span> <?= $customer_email_address; ?></label>
                 <label class="d-block mb-2">
                     <ul class="location-list">
                         <li><span class="fw-bold"><i class='bx bxs-map-pin'></i></span></li>
                         <li>
-                            <span><?= $appointment->mail_add; ?></span>
-                            <span style="margin-top:7px;display: block;"><?= $appointment->cust_city . ', ' . $appointment->cust_state . ', '. $appointment->cust_zip_code; 
+                            <span><?= $customer_address; ?></span>
+                            <span style="margin-top:7px;display: block;"><?= $customer_city . ', ' . $customer_state . ', '. $customer_zip; 
                             ?>
                             </span>
                         </li>
@@ -119,7 +140,7 @@
                         ---
                     <?php } ?>
                 </label>
-                <?php if( $appointment->appointment_type_id != 4 && $appointment->appointment_type_id != 14 ){ ?>
+                <?php if( $appointment->appointment_type_id == 1 || $appointment->appointment_type_id == 2 || $appointment->appointment_type_id == 3 || $appointment->appointment_type_id == 3 ){ ?>
                 <label class="d-block mb-2">
                     <span class="fw-bold"><i class='bx bx-dollar-circle' ></i> </span> 
                     <?= $appointment->invoice_number . ' - $' . number_format($appointment->cost,2); ?>
@@ -145,15 +166,15 @@
         <label class="content-subtitle fw-bold d-block mb-2 appointment-view-header" style="margin-top: 8px;">
             <?= $appointment->appointment_type_id == 4 ? 'Attendees' : 'Technician'; ?>            
         </label>
-        <div class="d-flex align-items-center">
-            <?php $assigned_technician = json_decode($appointment->assigned_employee_ids); ?>
-            <?php foreach($assigned_technician as $aid){ ?>
-                <div class="nsm-profile me-3" style="background-image: url('<?= userProfileImage($aid); ?>'); width: 40px;"></div>
-            <?php } ?>            
-        </div>
-        <?php if( $appointment->appointment_type_id == 4 ) { ?>        
-            <small class="small-label"><i class='bx bxs-calendar-event'></i> <?= $appointment->priority; ?></small>
+        <?php if( $appointment->assigned_employee_ids != '' ){ ?>
+            <div class="d-flex align-items-center">
+                <?php $assigned_technician = json_decode($appointment->assigned_employee_ids); ?>
+                <?php foreach($assigned_technician as $aid){ ?>
+                    <div class="nsm-profile me-3" style="background-image: url('<?= userProfileImage($aid); ?>'); width: 40px;"></div>
+                <?php } ?>            
+            </div>
         <?php } ?>
+        <small class="small-label"><i class='bx bxs-calendar-event'></i> <?= $appointment->priority; ?></small>
     </div>
     <hr />
     <!-- <div class="col-12">
@@ -175,14 +196,12 @@
             <?php } ?>
         </div>
     </div> -->
-    <?php if( $appointment->appointment_type_id != 4 ){ ?>
     <div class="col-12">
         <label class="content-subtitle fw-bold d-block mb-2 appointment-view-header" style="margin-top:5px;">Notes</label>
         <div class="d-flex">
             <span class="appointment-notes"><?= $appointment->notes; ?></span>
         </div>
     </div>
-    <?php } ?>
     <?php if ($appointment->is_paid == 1) { ?>
         <div class="col-12">
             <label class="content-subtitle fw-bold d-block mb-2">Payment Status</label>
