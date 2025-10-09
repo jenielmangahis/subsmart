@@ -2837,7 +2837,7 @@ class Workcalender extends MY_Controller
 
                 $tags = implode(",", $e_tags);    
             }  
-            
+
             $appointment->appt_tags = $tags;
             $upcomingSchedules[$date_index][] = [
                 'type' => 'appointment',
