@@ -68,14 +68,14 @@
     </div>
 </div>
 <div class="modal fade nsm-modal fade" id="create_waitlist_modal" tabindex="-1" aria-labelledby="create_waitlist_modal_label" aria-hidden="true">
-    <div class="modal-dialog modal-md">
-        <form id="frm-create-appointment-wait-list" method="POST">
+    <div class="modal-dialog modal-md modal-dialog-centered">        
             <div class="modal-content">
                 <div class="modal-header">
                     <span class="modal-title content-title">Create Wait List</span>
                     <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
                 </div>
                 <div class="modal-body">
+                    <form id="frm-create-appointment-wait-list" method="POST">
                     <div class="row g-3">
                         <div class="col-12">
                             <label class="content-subtitle fw-bold d-block mb-2">Preferred Date</label>
@@ -95,39 +95,72 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-12">
+                        <div class="col-12" id="wait-list-customer-container" style="display:none;">
                             <div class="row g-3">
                                 <div class="col-6">
                                     <label class="content-subtitle fw-bold d-block mb-2">Which Customer</label>
-                                </div>
-                                <div class="col-6 text-end">
-                                    <a href="javascript:void(0);" class="content-subtitle d-block mb-2 nsm-link btn-quick-add-customer">Add New Customer</a>
                                 </div>
                             </div>
                             <span id="waitlist-customer-popover" data-toggle="popover" data-placement="right"data-container="body">
                                 <select class="nsm-field form-select" name="appointment_customer_id" id="wait-list-appointment-customer"></select>
                             </span>
                         </div>
+                        <div class="col-12" id="wait-list-lead-container">
+                            <div class="row g-3">
+                                <div class="col-12 col-md-6">
+                                    <label class="content-subtitle fw-bold d-block mb-2">Appointment with</label>
+                                    <input type="text" value="" name="first_name" placeholder="First Name" class="nsm-field form-control" />                          
+                                </div> 
+                                <div class="col-12 col-md-6">
+                                    <label class="content-subtitle fw-bold d-block mb-2">&nbsp;</label>
+                                    <input type="text" value="" name="last_name" placeholder="Last Name" class="nsm-field form-control" />                          
+                                </div>   
+                                <div class="col-12 col-md-6">
+                                    <label class="content-subtitle fw-bold d-block mb-2">Contact Number</label>
+                                    <input type="text" value="" name="contact_number" placeholder="xxx-xxx-xxxx" class="nsm-field form-control phone-number-format" />                          
+                                </div>  
+                                <div class="col-12 col-md-6">
+                                    <label class="content-subtitle fw-bold d-block mb-2">Email</label>
+                                    <input type="email" value="" name="contact_email" placeholder="Email" class="nsm-field form-control" />                          
+                                </div>  
+                                <div class="col-12 col-md-12">
+                                    <label class="content-subtitle fw-bold d-block mb-2">Address</label>
+                                    <input type="text" value="" name="address" placeholder="Address" class="nsm-field form-control" />   
+                                </div>  
+                                <div class="col-6 col-md-6">
+                                    <label class="content-subtitle fw-bold d-block mb-2">City</label>
+                                    <input type="text" value="" name="city" placeholder="City" class="nsm-field form-control" />                          
+                                </div>  
+                                <div class="col-6 col-md-4">
+                                    <label class="content-subtitle fw-bold d-block mb-2">State</label>
+                                    <input type="text" value="" name="state" placeholder="State" class="nsm-field form-control" />                          
+                                </div>  
+                                <div class="col-6 col-md-2">
+                                    <label class="content-subtitle fw-bold d-block mb-2">Zip</label>
+                                    <input type="text" value="" name="zip" placeholder="zip" class="nsm-field form-control" />                          
+                                </div> 
+                            </div>
+                        </div>
                         <div class="col-12">
                             <label class="content-subtitle fw-bold d-block mb-2">Appointment Type</label>
                             <span id="waitlist-appointment-type-popover" data-toggle="popover" data-placement="right"data-container="body">
                                 <select name="appointment_type_id" id="wait-list-appointment-type" class="nsm-field form-select" required>
-                                    <?php $start = 0; ?>
                                     <?php foreach ($appointmentTypes as $a) { ?>
-                                        <option <?= $start == 0 ? 'selected="selected"' : ''; ?> value="<?= $a->id; ?>"><?= $a->name; ?></option>
-                                    <?php $start++;
-                                    } ?>
+                                        <?php if( $a->id != 4 ){ ?>
+                                            <option <?= $a->name == 'Leads' ? 'selected="selected"' : ''; ?> value="<?= $a->id; ?>"><?= $a->name; ?></option>
+                                        <?php } ?>
+                                    <?php } ?>
                                 </select>
                             </span>
                         </div>
                     </div>
+                    </form>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="nsm-button" data-bs-dismiss="modal">Cancel</button>
-                    <button type="submit" class="nsm-button primary">Schedule</button>
+                    <button type="submit" class="nsm-button primary" id="btn-create-appointment-wait-list" form="frm-create-appointment-wait-list">Save</button>
                 </div>
-            </div>
-        </form>
+            </div>        
     </div>
 </div>
 
@@ -274,7 +307,7 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="nsm-button" data-bs-dismiss="modal">Cancel</button>
-                <button type="submit" class="nsm-button primary" form="frm-update-appointment">Update</button>
+                <button type="submit" class="nsm-button primary" id="update-appointment-btn" form="frm-update-appointment">Save</button>
             </div>
         </div>
     </div>
@@ -1113,3 +1146,19 @@
         </form>
     </div>
 </div>
+<script>
+$(function(){
+    $('#wait-list-appointment-type').on('change', function(){
+        let appointment_type = $(this).val();
+        if( appointment_type == 1 || appointment_type == 2 || appointment_type == 3 || appointment_type == 4 ){
+            $("#wait-list-customer-container").fadeIn(500, function() {
+                $("#wait-list-lead-container").fadeOut(500);
+            });
+        }else{
+            $("#wait-list-lead-container").fadeIn(500, function() {
+                $("#wait-list-customer-container").fadeOut(500);
+            });
+        }
+    });
+});
+</script>
