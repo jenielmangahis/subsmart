@@ -2782,8 +2782,37 @@ class Dashboard extends Widgets
             break;
             case 'weekly_subscription_amount':
                 $graphData = $data;
-                echo json_encode($graphData);
+            
+                $firstDayOfThisWeek = date('Y-m-d', strtotime('monday this week'));
+                $lastDayOfThisWeek  = date('Y-m-d', strtotime('sunday this week'));
+            
+                $totalMMR = 0.00;
+                $newWeeklyCustomers = [];
+            
+                foreach ($graphData as $row) {
+                    $createdDate = date('Y-m-d', strtotime($row->customer_date_created));
+                    if ($createdDate >= $firstDayOfThisWeek && $createdDate <= $lastDayOfThisWeek) {
+                        $newWeeklyCustomers[$row->prof_id] = true;
+                    }
+            
+                    if (!empty($row->bill_date)) {
+                        $billDate = date('Y-m-d', strtotime($row->bill_date));
+                        if ($billDate >= $firstDayOfThisWeek && $billDate <= $lastDayOfThisWeek) {
+                            $totalMMR += (float) $row->total;
+                        }
+                    }
+                }
+            
+                $summary = [[
+                    'company_id' => $company_id,
+                    'category' => 'weekly_subscription_amount',
+                    'total' => number_format($totalMMR, 2, '.', ''),
+                    'weekly_subscribers' => (string) count($newWeeklyCustomers)
+                ]];
+            
+                echo json_encode($summary);
             break;
+            
             case 'scorecard_lookup':
                 $graphData = $data;
                 echo json_encode($graphData);

@@ -899,17 +899,26 @@ class Dashboard_model extends MY_Model
             case 'weekly_subscription_amount':
                 $firstDayOfThisWeek = date('Y-m-d', strtotime('monday this week'));
                 $lastDayOfThisWeek  = date('Y-m-d', strtotime('sunday this week'));
+            
                 $query = $this->db->query("
                     SELECT
+                        acs_profile.prof_id AS prof_id, 
                         acs_profile.company_id AS company_id, 
+                        CONCAT(acs_profile.first_name, ' ', acs_profile.last_name) AS customer,
+                        acs_profile.customer_type AS customer_type,
+                        acs_profile.created_at AS customer_date_created,
                         'weekly_subscription_amount' AS category, 
-                        SUM(acs_billing.mmr) AS total, 
-                        COUNT(acs_profile.prof_id) AS weekly_subscribers
+                        acs_billing.bill_start_date AS bill_date,
+                        acs_billing.mmr AS total, 
+                        acs_profile.prof_id AS weekly_subscribers
                     FROM acs_profile
                     LEFT JOIN acs_billing ON acs_billing.fk_prof_id = acs_profile.prof_id
                     WHERE acs_profile.company_id = '{$company_id}' 
                         AND acs_profile.status IN ('Active w/RAR', 'Active w/RQR','Active w/RMR', 'Active w/RYR', 'Inactive w/RMM')
-                        AND DATE(acs_billing.bill_start_date) BETWEEN '{$firstDayOfThisWeek}' AND '{$lastDayOfThisWeek}'
+                        AND (
+                            DATE(acs_billing.bill_start_date) BETWEEN '{$firstDayOfThisWeek}' AND '{$lastDayOfThisWeek}'
+                            OR DATE(acs_profile.created_at) BETWEEN '{$firstDayOfThisWeek}' AND '{$lastDayOfThisWeek}'
+                        )
                 ");
                 $data = $query->result();
                 return $data;
@@ -988,18 +997,6 @@ class Dashboard_model extends MY_Model
                 $data = $query->result();
                 return $data;
             break;
-            
-
-            
-            
-            
-            
-            
-            
-            
-
-
-            
             case 'payment_methods':
                 $this->db->select('payment_records.id AS id,payment_records.company_id AS company_id,payment_records.payment_method AS payment_method,COUNT(payment_records.payment_method) AS total,payment_records.payment_date AS date');
                 $this->db->from('payment_records');
