@@ -824,7 +824,7 @@ class Workcalender extends MY_Controller
                 if( $a->appointment_type_id == 4 ){ //Events                    
                     $custom_html  .= '<a class="quick-calendar-tile" data-type="appointment" data-id="'.$a->id.'" href="javascript:void(0);"><span>'. $a->appointment_number . ' ' . $tags . ' : ' . $a->event_name . '</span></a>';
                 }else{  
-                    if( $a->appointment_type_id == 5 ){ //Lead
+                    if( $a->appointment_type_id != 1 && $a->appointment_type_id != 2 && $a->appointment_type_id != 3 && $a->appointment_type_id != 4 ){ //Lead
                         $customer_name = $a->lead_name != '' ? $a->lead_name : '---';
                     }else{
                         $customer_name = $a->customer_name != '' ? $a->customer_name : '---';
@@ -1689,7 +1689,7 @@ class Workcalender extends MY_Controller
 
                 $assigned_employee_ids = json_encode($post['appointment_user_id']);
 
-                if( $post['appointment_type_id'] == 5 ){
+                if( $post['appointment_type_id'] != 1 && $post['appointment_type_id'] != 2 && $post['appointment_type_id'] != 3 && $post['appointment_type_id'] != 4 ){
                     $prof_id = 0;
                     $sales_agent_id = 0;
                     $assigned_employee_ids = null;
