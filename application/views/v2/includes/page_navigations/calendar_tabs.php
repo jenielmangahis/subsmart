@@ -36,12 +36,6 @@
                 <span>Event Types</span>
             </a>
         </li> -->
-        <li class="<?php if($page->title == 'Appointment Types'): echo 'active'; endif; ?>">
-            <a class="nsm-page-link" href="<?php echo base_url('appointment_types/index') ?>">
-                <i class='bx bx-fw bx-book-add'></i>
-                <span>Appointment Types</span>
-            </a>
-        </li>
         <!-- <li class="<?php if($page->title == 'Color Settings'): echo 'active'; endif; ?>">
             <a class="nsm-page-link" href="<?php echo base_url('color_settings/index') ?>">
                 <i class='bx bx-fw bx-brush'></i>
@@ -49,10 +43,18 @@
             </a>
         </li> -->
         <li class="<?php if($page->title == 'Calendar Settings'): echo 'active'; endif; ?>">
-            <a class="nsm-page-link" href="<?php echo base_url('settings/schedule') ?>">
-                <i class='bx bx-fw bx-calendar-edit'></i>
-                <span>Calendar Settings</span>
-            </a>
+            <div class="dropdown" id="test_dropdown">
+                <a class="nsm-page-link dropdown-toggle" role="button" href="javascript:void(0);">
+                    <i class='bx bx-fw bx-cog'></i>
+                    <span>Settings</span>
+                    <!-- <span><?= $page->title ?></span> -->
+                    <i class='bx bx-fw bx-chevron-down dropdown-icon'></i>
+                </a>
+                <ul class="dropdown-menu">
+                    <li><a class="dropdown-item" href="<?php echo base_url('appointment_types/index'); ?>">Appointment Types</a></li>    
+                    <li><a class="dropdown-item" href="<?php echo base_url('settings/schedule'); ?>">Calendar Settings</a></li>
+                </ul>
+            </div>
         </li>
         <!-- Do not remove the last li -->
         <li><label></label></li>
