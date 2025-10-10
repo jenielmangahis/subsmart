@@ -489,8 +489,6 @@
             e.preventDefault();
 
             var url = "<?php echo base_url('calendar/_create_appointment_wait_list'); ?>";
-            _this.find("button[type=submit]").html("Scheduling");
-            _this.find("button[type=submit]").prop("disabled", true);
 
             $.ajax({
                 type: 'POST',
@@ -505,16 +503,16 @@
                         $("#wait-list-appointment-customer").empty().trigger('change');
                         $("#create_waitlist_modal").modal('hide');
                         Swal.fire({
-                            title: 'Save Successful!',
+                            title: 'Create Appointment Wait List',
                             text: "Appointment wait list was successfully created.",
                             icon: 'success',
                             showCancelButton: false,
                             confirmButtonText: 'Okay'
                         }).then((result) => {
-                            if (result.value) {
+                            //if (result.value) {
                                 reloadCalendar();
                                 loadWaitList();
-                            }
+                            //}
                         });
                     } else {
                         Swal.fire({
@@ -526,9 +524,13 @@
                         });
                     }
 
-                    _this.find("button[type=submit]").html("Schedule");
-                    _this.find("button[type=submit]").prop("disabled", false);
+                    $("#btn-create-appointment-wait-list").html("Save");
+                    $("#btn-create-appointment-wait-list").prop("disabled", false);
                 },
+                beforeSend: function(){
+                    $("#btn-create-appointment-wait-list").html('<span class="bx bx-loader bx-spin"></span>');
+                    $('#btn-create-appointment-wait-list').prop("disabled", true);
+                }
             });
         });
 

@@ -188,9 +188,10 @@ class Appointment_model extends MY_Model
             'appointments.appointment_date' => $date            
           );
 
-        $this->db->select('appointments.*, CONCAT(acs_profile.first_name, " ",acs_profile.last_name)AS customer_name, CONCAT(users.FName, " ", users.LName)AS employee_name, acs_profile.mail_add,acs_profile.city AS cust_city, acs_profile.state AS cust_state,acs_profile.zip_code AS cust_zip_code, acs_profile.phone_m AS cust_phone, appointment_types.name AS appointment_type');
+        $this->db->select('appointments.*, CONCAT(acs_profile.first_name, " ",acs_profile.last_name)AS customer_name, CONCAT(ac_leads.firstname, " ",ac_leads.lastname)AS lead_name, CONCAT(users.FName, " ", users.LName)AS employee_name, acs_profile.mail_add,acs_profile.city AS cust_city, acs_profile.state AS cust_state,acs_profile.zip_code AS cust_zip_code, acs_profile.phone_m AS cust_phone, appointment_types.name AS appointment_type, ac_leads.address AS lead_address, ac_leads.city AS lead_city, ac_leads.state AS lead_state, ac_leads.zip AS lead_zip, ac_leads.phone_cell AS lead_contact_number, ac_leads.firstname AS lead_first_name, ac_leads.lastname AS lead_last_name, ac_leads.email_add as lead_contact_email');
         $this->db->from($this->table);
         $this->db->join('acs_profile', 'appointments.prof_id = acs_profile.prof_id','left');     
+        $this->db->join('ac_leads', 'appointments.lead_id = ac_leads.leads_id','left');     
         $this->db->join('appointment_types', 'appointments.appointment_type_id = appointment_types.id','left');     
         $this->db->join('users', 'appointments.user_id = users.id','left');     
         $this->db->where($where);
