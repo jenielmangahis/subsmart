@@ -213,25 +213,24 @@
 </div>
 
 <div class="modal fade nsm-modal fade" id="update_waitlist_modal" tabindex="-1" aria-labelledby="update_waitlist_modal_label" aria-hidden="true">
-    <div class="modal-dialog">
-        <form id="frm-update-appointment-wait-list" method="POST">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <span class="modal-title content-title">Update Wait List</span>
-                    <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
-                </div>
-                <div class="modal-body">
-                    <input type="hidden" name="wid" value="" id="wid">
-                    <div class="row g-3" id="update_waitlist_container">
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="nsm-button error" id="btn_delete_waitlist">Delete</button>
-                    <button type="button" class="nsm-button" data-bs-dismiss="modal">Cancel</button>
-                    <button type="submit" class="nsm-button primary">Schedule</button>
-                </div>
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <span class="modal-title content-title">Update Wait List</span>
+                <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
             </div>
-        </form>
+            <div class="modal-body">
+                <form id="frm-update-appointment-wait-list" method="POST">
+                    <input type="hidden" name="wid" value="" id="wid">
+                    <div class="row g-3" id="update_waitlist_container"></div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="nsm-button error" id="btn_delete_waitlist">Delete</button>
+                <button type="button" class="nsm-button" data-bs-dismiss="modal">Cancel</button>
+                <button type="submit" class="nsm-button primary" form="frm-update-appointment-wait-list">Schedule</button>
+            </div>
+        </div>
     </div>
 </div>
 
