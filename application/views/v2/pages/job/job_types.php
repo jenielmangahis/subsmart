@@ -424,7 +424,7 @@
                 }
             });
         });
-        <?php }_ ?>
+        <?php } ?>
     });
 </script>
 <?php include viewPath('v2/includes/footer'); ?>

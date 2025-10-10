@@ -82,6 +82,8 @@
                                                             echo '<a href="'.site_url("timesheet/attendance").'">' . $notification->title . ' | ' . $notification->content . '</a>';
                                                         } elseif(is_string($notification->title) && (strtolower($notification->title) == 'invoice overdue' || strtolower($notification->title) == 'invoice late fee')) {
                                                             echo '<a href="'.site_url("invoice").'">' . $notification->title . ' | ' . $notification->content . '</a>';
+                                                        } elseif(is_string($notification->title) && strtolower($notification->title) == 'job status'){
+                                                            echo '<a href="'.site_url("job/edit/".$notification->entity_id . '?notif_id=1').'">' . $notification->title . ' | ' . $notification->content . '</a>';
                                                         } else {
                                                             echo $notification->title . ' | ' . $notification->content;
                                                         }   

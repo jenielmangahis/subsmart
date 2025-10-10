@@ -1336,7 +1336,6 @@ $route['job/edit_job_item/(:num)'] = 'Job/edit_job_item/$1';
 $route['job/_create_job'] = 'Job/ajax_create_job';
 $route['job/add'] = 'Job/new_job_v2';
 $route['job/edit/(:num)'] = 'Job/edit_job_v2/$1';
-$route['job/_update_job_status'] = 'Job/ajax_update_job_status';
 $route['job/_send_esign_form'] = 'Job/ajax_send_esign_form';
 $route['job/create_invoice/(:num)'] = 'Job/createInvoice/$1';
 $route['job/_update_job'] = 'Job/ajax_update_job';
