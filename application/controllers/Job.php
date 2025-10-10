@@ -2530,7 +2530,7 @@ class Job extends MY_Controller
                     'hash_id' => $input['job_hash']
                 ),
                 'table' => 'jobs',
-                'select' => 'job_number, id, work_order_id'
+                'select' => 'job_number, id, work_order_id, status'
             );
             $isJob = $this->general->get_data_with_param($check_job, false);
 
@@ -2852,11 +2852,17 @@ class Job extends MY_Controller
                 }
             }
             // End of Commission Feature for Tech Rep
-            $job_type = '';
+            /*$job_type = '';
             $jobType = $this->JobType_model->getById($input['job_type']);
             if( $jobType ){
                 $job_type = $jobType->title;
+            }*/
+
+            $status = 'Scheduled';
+            if( $isJob ){
+                $status = $isJob->status;
             }
+
             $jobs_data = array(
                 'job_number' => $job_number,
                 'estimate_id' => $estimate_id,
@@ -2883,14 +2889,14 @@ class Job extends MY_Controller
                 'customer_reminder_notification' => $input['customer_reminder_notification'],
                 'priority' => $input['priority'], 
                 'tags' => $jobTag->name, 
-                'status' => 'Scheduled', 
+                'status' => $status, 
                 'company_id' => $comp_id,
                 'date_created' => date('Y-m-d H:i:s'),
                 'created_by' => logged('id'),
                 'attachment' => $input['attachment'],
                 'tax_percentage' => $input['tax_percentage'],
                 'tax_rate' => $input['tax'],
-                'job_type' => $job_type,
+                'job_type' => $input['job_type'],
                 'date_issued' => $input['start_date'],
                 'work_order_id' => $job_workorder_id,
                 'commission' => $input['commission_amount'],
