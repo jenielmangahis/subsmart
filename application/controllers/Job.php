@@ -1767,6 +1767,10 @@ class Job extends MY_Controller
                 $to_notify_users[] = $jobs_data->employee_id;
                 $to_notify_users[] = $jobs_data->customer_id;
 
+                if($jobs_data->employee2_id && $jobs_data->employee2_id > 0) {
+                    $to_notify_users[] = $job->employee2_id;
+                }
+
                 $unique_notify_users =  array_unique($to_notify_users);
 
                 $content_notification = 'Job #' . $jobs_data->job_number . ' has been ' . strtolower($status) . '.';
@@ -3233,6 +3237,10 @@ class Job extends MY_Controller
         $to_notify_users[] = logged('id');
         $to_notify_users[] = $input['employee_id'];
         $to_notify_users[] = $input['customer_id'];
+
+        if($input['employee2_id'] && $input['employee2_id'] > 0) {
+            $to_notify_users[] = $input['employee2_id'];
+        }        
 
         $unique_notify_users =  array_unique($to_notify_users);
 
@@ -6947,6 +6955,7 @@ class Job extends MY_Controller
 
         $company_id = logged('company_id');
         $post       = $this->input->post();
+
         $is_valid   = false;
 
         $job = $this->jobs_model->getByIdAndCompanyId($post['job_id'], $company_id);
@@ -6970,7 +6979,7 @@ class Job extends MY_Controller
                 $data = [
                     'finished_date' => date("Y-m-d",strtotime($post['finished_date'])),
                     'finished_time' => date("h:i A",strtotime($post['finished_time'])),
-                    'status' => 'Started'
+                    'status' => 'Finished'
                 ];
                 $is_valid = true;
             }elseif( $post['job_status'] == 'Approved' ){
