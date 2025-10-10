@@ -48,7 +48,7 @@
                     </select>
                 </span>                                                        
             </div>
-            <div class="col-12 col-md-12 mb-2 edit-customer-container" style="<?= $appointment->appointment_type_id == 4 || $appointment->appointment_type_id == 1 || $appointment->appointment_type_id == 2 || $appointment->appointment_type_id == 3 ? '' : 'display:none'; ?>">
+            <div class="col-12 col-md-12 mb-2 edit-customer-container" style="<?= $appointment->appointment_type_id == 1 || $appointment->appointment_type_id == 2 || $appointment->appointment_type_id == 3 ? '' : 'display:none'; ?>">
                 <div class="row g-3">
                     <div class="col-6">
                         <label class="content-subtitle fw-bold d-block mb-2">Which Customer</label>
@@ -132,7 +132,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-12 col-md-12 mb-2 edit-tags-container" <?= ( $appointment->appointment_type_id == 1 || $appointment->appointment_type_id == 2 || $appointment->appointment_type_id == 3 || $appointment->appointment_type_id == 4 ) ? '' : 'style="display:none;"'; ?>>
+            <div class="col-12 col-md-6 mb-2 edit-tags-container" <?= ( $appointment->appointment_type_id == 1 || $appointment->appointment_type_id == 2 || $appointment->appointment_type_id == 3 || $appointment->appointment_type_id == 4 ) ? '' : 'style="display:none;"'; ?>>
                 <label class="content-subtitle fw-bold d-block mb-2">Tags</label>
                 <span id="edit-tag-popover" data-toggle="popover" data-placement="right"data-container="body">
                     <select class="nsm-field form-select" name="appointment_tags[]" id="quick-edit-appointment-tags" multiple="multiple">
@@ -142,7 +142,7 @@
                     </select>
                 </span>
             </div>  
-            <div class="col-12 mb-2 edit-url-link-container" style="<?= $appointment->appointment_type_id == 1 || $appointment->appointment_type_id == 2 || $appointment->appointment_type_id == 3 || $appointment->appointment_type_id == 4 ? '' : 'display:none'; ?>">
+            <div class="col-12 col-md-6 mb-2 edit-url-link-container" style="<?= $appointment->appointment_type_id == 1 || $appointment->appointment_type_id == 2 || $appointment->appointment_type_id == 3 || $appointment->appointment_type_id == 4 ? '' : 'display:none'; ?>">
                 <label class="content-subtitle fw-bold d-block mb-2">URL Link</label>
                 <input type="text" name="url_link" id="ulr-link" class="nsm-field form-control" value="<?= $appointment->url_link; ?>" placeholder="URL Link" style="padding: 0.375rem 0.75rem;">
             </div>                      
@@ -390,7 +390,7 @@ $(function(){
         trigger: 'hover'
     });
 
-    $('#edit-appointment-tags').select2({
+    $('#quick-edit-appointment-tags').select2({
         ajax: {
             url: "<?= base_url('autocomplete/_company_job_tags') ?>",
             dataType: 'json',
