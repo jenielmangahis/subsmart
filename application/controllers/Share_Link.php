@@ -319,6 +319,36 @@ class Share_Link extends MY_P_Controller
         $this->load->view('workorder/public_view', $this->page_data);
     }
 
+    public function public_view_v2($company_slug, $id)
+    {
+        $this->load->model('Business_model');
+
+        $company = $this->Business_model->getByProfileSlug($company_slug);
+        $work    = $this->workorder_model->getById($id);
+
+        if( ($company && $work) && ($work->company_id == $company->id) ){
+
+            add_footer_js('assets/js/esign/docusign/workorder.js');
+            $contacts = $this->workorder_model->get_contacts($work->customer_id);
+            
+            $this->page_data['workorder'] = $work;
+            $this->page_data['company']   = $this->workorder_model->getCompanyCompanyId($work->company_id);
+            $this->page_data['contacts']  = $contacts;
+            $this->page_data['customer']  = $this->workorder_model->getcustomerCompanyId($id);
+            $this->page_data['items'] = $this->workorder_model->getItems($id);
+            $this->page_data['itemsA'] = $this->workorder_model->getItemsAlarm($id);
+            $this->page_data['custom_fields'] = $this->workorder_model->getCustomFields($id);
+            $this->page_data['workorder_items'] = $this->workorder_model->getworkorderItems($id);
+            $this->page_data['first'] = $this->workorder_model->getuserfirst($work->company_representative_name);
+            $this->page_data['second'] = $this->workorder_model->getusersecond($work->primary_account_holder_name);
+            $this->page_data['third'] = $this->workorder_model->getuserthird($work->secondary_account_holder_name);            
+            $this->page_data['lead'] = $this->workorder_model->getleadSource($work->lead_source_id);
+            $this->load->view('workorder/public_view', $this->page_data);
+        }else{
+            redirect('/');
+        }
+    }
+
     public function public_view_agreement($id)
     {
         $company_id = logged('company_id');

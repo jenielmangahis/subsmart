@@ -613,17 +613,15 @@ class Workorder extends MY_Controller
     {   
         $this->load->model('Invoice_model');
         $this->load->model('Invoice_items_model');
+        $this->load->model('Business_model');
 
         if(!checkRoleCanAccessModule('work-orders', 'read')){
 			show403Error();
 			return false;
 		}
 
-        $company_id = logged('company_id');
-
-        $this->page_data['workorder'] = $this->workorder_model->getById($id);
-
-        $work =  $this->workorder_model->getById($id);
+        $company_id = logged('company_id');  
+        $work       =  $this->workorder_model->getById($id);
 
         if( $work && $work->company_id == $company_id ){
             add_footer_js('assets/js/esign/docusign/workorder.js');
@@ -635,6 +633,11 @@ class Workorder extends MY_Controller
                 $invoiceItems = $this->Invoice_items_model->getAllByInvoiceId($work->invoice_id);
             }
 
+            $company = $this->Business_model->getByCompanyId($company_id);
+            $public_view_url = base_url('work_order_view/'.$company->profile_slug.'/'.$work->id);
+
+            $this->page_data['workorder'] = $work;
+            $this->page_data['public_view_url'] = $public_view_url;
             $this->page_data['invoice'] = $invoice;
             $this->page_data['invoiceItems'] = $invoiceItems;
             $this->page_data['company'] = $this->workorder_model->getCompanyCompanyId($work->company_id);
