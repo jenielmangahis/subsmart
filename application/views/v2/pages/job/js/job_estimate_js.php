@@ -406,6 +406,7 @@ $("#attachment-file").change(function() {
         function calculate_subtotal(tax=0, def=false, discount=0){
             //console.log("Calculating subtotal...");
             var subtotal = 0 ;
+            var tax = 7.5;
             $('.total_per_item').each(function(index) {
                 var idd = $(this).data('subtotal');
                 // var idd = this.id;
@@ -415,12 +416,27 @@ $("#attachment-file").change(function() {
             var total = parseFloat(subtotal).toFixed(2);
             var tax_total= parseFloat($('#tax_total_form_input').val()).toFixed(2);
             
+            // if( tax_total > 0 ){
+            //     total = Number(total) + Number(tax_total) - Number(discount);
+            //     total = parseFloat(total).toFixed(2);
+            // }else if((tax !== 0 || tax !== '') && def == true){
+            //     total = parseFloat(total).toFixed(2);
+            //     var tax_with_comma = Number(tax_total).toLocaleString('en');
+            // }
+            
             if( tax_total > 0 ){
+                tax_total = (Number(tax) / 100) * Number(total);
                 total = Number(total) + Number(tax_total) - Number(discount);
                 total = parseFloat(total).toFixed(2);
-            }else if((tax !== 0 || tax !== '') && def == true){
-                total = parseFloat(total).toFixed(2);
+                tax_total =  parseFloat(tax_total).toFixed(2);
                 var tax_with_comma = Number(tax_total).toLocaleString('en');
+                $('#invoice_tax_total').html('$' + tax_with_comma);
+                $('#tax_total_form_input').val(tax_with_comma);
+            }else{
+                total = parseFloat(total).toFixed(2);
+                tax_total = (Number(tax) / 100) * Number(total);
+                var tax_with_comma = Number(tax_total).toLocaleString('en');
+                $('#invoice_tax_total').html('$' + tax_total);
             }
                         
             const $requestedDeposit = document.getElementById("invoice_requested_deposit");
