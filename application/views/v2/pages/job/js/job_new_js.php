@@ -1205,7 +1205,6 @@ $("#attachment-file").change(function() {
     });
 
     $("#update_job_status_to_approved").submit(function(e) {
-
         e.preventDefault(); 
 
         $.ajax({
@@ -1252,6 +1251,45 @@ $("#attachment-file").change(function() {
             },
             beforeSend: function() {
                 $('#btn-approved-status').html('<span class="bx bx-loader bx-spin"></span>');
+            }
+        });
+    });
+
+    //
+    $("#update_status_to_closed").submit(function(e) {
+        e.preventDefault(); 
+
+        $.ajax({
+            type: "POST",
+            url: base_url + "job/_update_job_status",
+            data: $(this).serialize(),
+            dataType:'json',
+            success: function(data)
+            {
+                $('#btn-submit-finished-status').html('Save');
+                if(data.is_success){
+                    $('#finish_modal').modal('hide');
+                    Swal.fire({
+                        title: 'Update Job Status',
+                        text: "Job status has been updated successfully",
+                        icon: 'success',
+                        showCancelButton: false,
+                        confirmButtonText: 'Okay'
+                    }).then((result) => {
+                        location.reload();
+                    });
+                }else {
+                    Swal.fire({
+                        title: 'Failed',
+                        text: "Cannot find data",
+                        icon: 'error',
+                        showCancelButton: false,
+                        confirmButtonText: 'Okay'
+                    });
+                }
+            },
+            beforeSend: function() {
+                $('#btn-submit-finished-status').html('<span class="bx bx-loader bx-spin"></span>');
             }
         });
     });

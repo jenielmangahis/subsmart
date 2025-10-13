@@ -14,33 +14,18 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
         href="<?php echo $url->assets ?>plugins/switchery/switchery.min.css">
     <link rel="stylesheet"
         href="<?php echo $url->assets ?>plugins/select2/dist/css/select2.min.css" />
-    <link rel="stylesheet"
-        href="<?php echo $url->assets ?>plugins/bootstrap-datepicker/dist/css/bootstrap-datepicker.min.css" />
-    <link rel="stylesheet"
-        href="<?php echo $url->assets ?>css/jquery.signaturepad.css">
+    <link rel="stylesheet" href="<?php echo $url->assets ?>plugins/bootstrap-datepicker/dist/css/bootstrap-datepicker.min.css" />
+	<link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <link rel="stylesheet" href="<?php echo $url->assets ?>css/jquery.signaturepad.css">
     <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/timepicker/1.3.5/jquery.timepicker.min.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
     <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@400;500;700&display=swap" rel="stylesheet">
-    <!--<script src="//cdn.tiny.cloud/1/s4us18xf53yysd7r07a6wxqkmlmkl3byiw6c9wl6z42n0egg/tinymce/5/tinymce.min.js" referrerpolicy="origin"></script>-->
-    <!-- <link href="<?php echo $url->assets ?>libs/jcanvas/global.css"
-    rel="stylesheet"> -->
-
-    <!--<script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>-->
-    <link
-        href="<?php echo $url->assets ?>css/jquery.dataTables.min.css"
-        rel="stylesheet" type="text/css">
-
     <script src="<?php echo $url->assets ?>push_notification/push.js"></script>
-    <script
-        src="<?php echo $url->assets ?>push_notification/serviceWorker.min.js">
-    </script>
+    <script src="<?php echo $url->assets ?>push_notification/serviceWorker.min.js"></script>
 
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Material+Icons" type="text/css">
     <!--    ICONS CSS-->
-    <link href="<?php echo $url->assets ?>css/icons/icon.navbar.css"
-        rel="stylesheet" type="text/css">
-
-
+    <link href="<?php echo $url->assets ?>css/icons/icon.navbar.css" rel="stylesheet" type="text/css">
     <script src="<?php echo $url->assets ?>dashboard/js/jquery.min.js"></script>
     <script src="https://js.pusher.com/7.0/pusher.min.js"></script>
 <style>
@@ -469,22 +454,28 @@ body
 {
     color: black;
 }
+.table td, .table th {
+    padding: .5rem .5rem !important;
+}
+.contacts-list{
+	margin:0px;
+	padding:0px;
+}
+.contacts-list li{
+	margin:10px;
+}
+.contacts-list li .contact-name{
+	font-size:14px;
+	font-weight:bold;
+}
 </style>
     <!-- page wrapper start -->
     <input type="hidden" value="<?= $workorder->id; ?>" id="workorderId"/>
-	<div class="wrapper" role="wrapper" style="margin:1% 10% 0 10%; background-color:white;">
+	<div class="wrapper" role="wrapper" style="margin:0 auto; background-color:white;width:70%;">
     <div wrapper__section>
-				<!-- <div class="order-heading">
-					<h3>Work Order # <?php //echo $workorder->work_order_number ?></h3>
-				</div> -->
-
 				<div class="order-menu">
 					<div class="row">
-						<div class="col-md-4">
-										<!-- <div class="user-return">
-											<a href="<?php echo base_url('workorder'); ?>"><i class="fa fa-angle-left" aria-hidden="true"></i> Return to Work Orders</a>
-										</div> -->
-						</div>
+						<div class="col-md-4"></div>
 						<div class="col-md-8">
 								<div class="order-right text-right">
 									<!-- <div class="user-menu">
@@ -519,171 +510,119 @@ body
 							<hr style="border: 2px solid gray;">
 								<div clas="row">
 										<div class="col-sm-12 col-sm-push-12 text-right-sm ">
-										<div class="row">
-											<div class="col-md-3"  style="float:left;">
-												<div style="margin-bottom: 20px;margin-left: 0px !important;">
-													<!-- <img class="presenter-print-logo" style="max-width: 230px; max-height: 200px;" src="http://nsmartrac.com/assets/dashboard/images/logo.png"> -->
-													<img src="<?= getCompanyBusinessProfileImage(); ?>"  style="max-width: 230px; max-height: 200px;" />
+											<div class="row">
+												<div class="col-md-3"  style="float:left;">
+													<div style="margin-bottom: 20px;margin-left: 0px !important;">
+														<img src="<?= getCompanyBusinessProfileImage(); ?>"  style="max-width: 230px; max-height: 200px;" />
+													</div>
+												</div>
+												<div class="col-md-9">
+													<div class="workorder-text" style="">											    
+														<!-- </div>	-->
+														<div align="right" class="mobile_size"> 
+															<table class="table table-borderless" style="width:50%;">
+																<tbody>
+																<tr>
+																	<td align="right">Date:</td>
+																	<td align="right"><?php $wDate = $workorder->date_created; echo date("m/d/Y", strtotime($wDate) ); ?></td>
+																</tr>
+																<tr>
+																	<td align="right">Type:</td>
+																	<td align="right"><?php echo $workorder->job_type ?></td>
+																</tr>
+																	<td align="right">Priority:</td>
+																	<td align="right"><?php echo $workorder->priority ?></td>
+																</tr>
+																</tr>
+																	<td align="right">Password:</td>
+																	<td align="right"><?php echo $workorder->password ?></td>
+																</tr>
+																</tr>
+																	<td align="right">Security Number:</td>
+																	<td align="right">
+																		<?php 
+																			if( $customer->ssn != 'Not Specified' ){
+																				$ssn = strMask($customer->ssn);
+																			}else{
+																				$ssn = '---';
+																			}
+																		?>
+																		<?php echo $workorder->security_number ?>
+																	</td>
+																</tr>
+																</tr>
+																	<td align="right">Source:</td>
+																	<td align="right"><?php echo $lead->ls_name ?></td>
+																</tr>
+																</tr>
+																	<td align="right">Agent:</td>
+																	<td align="right"><?php echo $first->FName.' '.$first->LName; ?></td>
+																</tr>
+																</tbody>
+															</table>
+														</div>
+													</div>
 												</div>
 											</div>
-											<div class="col-md-9">
-											<div class="workorder-text" style="margin-top: 10px; margin-bottom: 20px;">											    
-												<!-- </div>	-->
-												<div align="right" class="mobile_size"> 
-													<table>
-														<tbody>
-														<tr>
-															<!-- <td colspan="2"><span># <?php// echo $workorder->work_order_number ?></span></td> -->
-														</tr>
-														<tr>
-															<td align="left"><div style="">Date: </div></td>
-															<td align="right"><?php $wDate = $workorder->date_created; echo date("m-d-Y", strtotime($wDate) ); ?></td>
-														</tr>
-														<tr>
-															<td align="left"><div style="">Type: </div></td>
-															<td align="right"><?php echo $workorder->job_type ?></td>
-														</tr>
-															<td align="left"><div style="">Priority: </div></td>
-															<td align="right"><?php echo $workorder->priority ?></td>
-														</tr>
-														</tr>
-															<td align="left"><div style="">Password: </div></td>
-															<td align="right"><?php echo $workorder->password ?></td>
-														</tr>
-														</tr>
-															<td align="left"><div style="">Security Number: </div></td>
-															<td align="right"> <?php echo $workorder->security_number ?></td>
-														</tr>
-														</tr>
-															<td align="left"><div style="">Source: </div></td>
-															<td align="right"><?php echo $lead->ls_name ?></td>
-														</tr>
-														</tr>
-															<td align="left"><div style="">Agent: </div></td>
-															<td align="right"><?php echo $first->FName.' '.$first->LName; ?></td>
-														</tr>
-														
-														</tbody>
-													</table>
-												</div>
-											</div>
-											</div>
+										</div>
+										<div class="col-sm-12 col-sm-pull-12">
+		         							   	<div class="user-info">
+													<div class="row mt-4">
+														<div class="col-12 col-md-6">
+															<div class="ul-info">
+																<ul>
+																	<li><b>FROM:</b></li>
+																	<hr style="border: 1px solid gray;">
+																	<li><b><?php echo $company->business_name ?></b></li>
+																	<li><?php echo $company->address; ?></li>
+																	<li><?php echo $company->city . ', ' . $company->state . ' ' . $company->zip; ?></li>
+																	<li><i class='bx bx-envelope'></i> Email: <?php echo $company->email_address ?></li>
+																	<li><i class='bx bx-phone'></i> Phone: <?php echo $company->phone_number ?> </li>			   			
+																</ul>
+															</div>
+														</div>
+														<div class="col-12 col-md-6">
+															<div class="ul-info">
+																<ul>
+																	<li><b>TO:</b></li>
+																	<hr style="border: 1px solid gray;">
+																	<li><b><?php echo $customer->first_name .' '. $customer->last_name ?></b></li>
+																	<li><?php echo $customer->mail_add; ?></li>
+																	<li><?php echo $customer->city .', '. $customer->state .' '. $customer->zip_code ?></li>
+																	<li><i class='bx bx-envelope'></i> Email: <?php echo $customer->email ?></li>
+																	<li><i class='bx bx-phone'></i> Phone: <?php echo $customer->phone_h ?></li>
+																</ul>
+															</div><br>
+														</div>
+													</div>
 
-											
-										</div>
-											
-										</div>
-									<!-- <div class="row">
-										<div class="col-md-6">
-											<div style="margin-bottom: 20px;">
-												<img class="presenter-print-logo" style="max-width: 230px; max-height: 200px;" src="http://nsmartrac.com/assets/dashboard/images/logo.png">
-											</div>
-										</div>
-										<div class="col-md-6">
-											
-										</div>
-									</div> -->
-									<!-- <br><br><br> -->
-									<div class="col-sm-12 col-sm-pull-12">
-
-		         							   <div class="user-info">
-		         							   		<div class="ul-info">
-		         							   			<ul>
-		         							   				<li><b>FROM:</b></li>
-															<!-- <hr style="border: 1px solid gray;"> -->
-		         							   				<li><?php echo $company->business_name ?></li>
-		         							   				<li>License: EF, AL, MS</li>
-		         							   				<li><?php echo $company->business_address ?></li>
-		         							   				<!-- <li><a href="" class="ul-text">Pensacola, FL, 32526</a></li> -->
-		         							   				<li>Email: <?php echo $company->email_address ?></li>
-		         							   				<li>Phone: <?php echo $company->phone_number ?> </li>			   			
-		         							   			</ul>
-		         							   		</div><br>
-		         							   		<div class="ul-info">
-		         							   			<ul>
-		         							   				<li><b>TO:</b></li>
-															<!-- <hr style="border: 1px solid gray;"> -->
-		         							   				<li><span class="ul-head line"><?php echo $customer->contact_name .''. $customer->first_name .' '. $customer->middle_name .' '. $customer->last_name ?></span>
-																<!-- <a href="" class="line ul-btns-text" style="color:green;">view</a> -->
+													<?php //if($workorder->work_order_type_id == 2){ ?>
+														<hr>
+														<div class="ul-info">
+															<b class="ul-head">Additional Contacts</b><br><br>
+															<ul class="contacts-list">
+															<?php if($contacts) { ?>
+																<?php foreach($contacts as $cont){ ?>
+																<?php 
+																	$contact_name = "---";
+																	if($cont->first_name != null && $cont->last_name != null) {
+																	$contact_name = $cont->first_name . " " . $cont->last_name;
+																	} else {
+																	$contact_name = $cont->name != null ? $cont->name : $cont->first_name;
+																	}
+																?>
+																<li>
+																	<span class="contact-name"><i class='bx bx-user-circle'></i> <?= $contact_name; ?></span><br />
+																	<span><small><i class="bx bx-phone"></i> <?= formatPhoneNumber($cont->phone); ?></small></span>
 																</li>
-															<li><?php echo $customer->mail_add .' '. $customer->city .' '. $customer->state .', '. $customer->country .', '. $customer->zip_code ?></li>
-															<li>Phone: <?php echo $customer->phone_h ?></li>
-															<li>Email: <?php echo $customer->email ?></li>
-		         							   			
-		         							   			</ul>
-		         							   		</div><br>
-
-		         							   		<div class="ul-info">
-		         							   			<ul>
-		         							   				<li><b>JOB:</b></li>
-															<li>Job Name: <?php echo $workorder->job_name ?></li>
-		         							   				<!-- <li><a href="" class="ul-text">Job for Estimate #EST-000010</a></li> -->
-		         							   				<!-- <li><a href="" class="ul-text">Estimate #EST-000010 </a></li>	 -->
-		         							   			<br>
-		         							   			</ul>
-		         							   		</div>
-
-														<br>
-
-													<?php if($workorder->work_order_type_id == 1){ ?>
-														<div class="ul-info">
-															<ul>
-																<li><b>CUSTOM FIELDS</b></li>
-																	<li class="show_mobile_view"><hr></li>
-																<?php foreach($custom_fields as $custom){ ?>
-																	<?php if(empty($custom->value)){ }else{ ?>
-																		<li><?php echo $custom->name; ?>&emsp; <?php echo $custom->value; ?></li>
-																	<?php } ?>
-																<?php } ?>
-															
-															</ul>
-															<br>
-														</div>
-														<br>
-													<?php }else{ } ?>
-
-													<?php if($workorder->work_order_type_id == 2){ ?>
-														<div class="ul-info">
-															<ul>
-																<li><b>Contacts</b></li>
-																<li class="show_mobile_view"><hr></li>
-																<?php if(!empty($customer->first_verification_name)){ ?>
-																<li><?php echo $customer->first_verification_name ?> <br> <?php echo $customer->first_number ?> <br> <?php echo $customer->first_relation ?></li>
-																<?php } ?>
-																<?php if(!empty($customer->second_verification_name)){ ?>
-																<li><?php echo $customer->second_verification_name ?> <br> <?php echo $customer->second_number ?> <br> <?php echo $customer->second_relation ?></li>
-																<?php } ?>
-																<?php if(!empty($customer->third_verification_name)){ ?>
-																<li> <?php echo $customer->third_verification_name ?> <br> <?php echo $customer->third_number ?> <br> <?php echo $customer->third_relation ?></li>
-																<?php } ?>
 																
-															
+																<?php } ?>
+															<?php } else { ?>
+																<li><?= 'None'; ?></li>
+															<?php } ?>
 															</ul>
 														</div>
-														<br><br>
-													<?php }else{ } ?>
-														
-
-		         							   		<!-- <div class="ul-info">
-		         							   			<ul>
-		         							   				<li><a href="" class="ul-head">Appointment:</a></li>
-		         							   		
-		         							   				<li><a href="" class="ul-text">Not set </a></li>	
-		         							   			
-		         							   			</ul>
-		         							   		</div> -->
-		         							   			<div class="ul-info">
-			         							   			<ul>
-			         							   				<li><b>Job Location </b></li>
-																<li class="show_mobile_view"><hr></li>
-																<li><?php echo $workorder->job_location .' '. $workorder->city .' '. $workorder->state .', '. $workorder->zip_code .', '. $workorder->cross_street  ?> &emsp; 
-																<!-- <a href="#" style="color:green;">Show Map</a> -->
-																</li>	
-			         							   				<!-- <li></li>	 -->
-			         							   			
-			         							   			</ul>
-		         							   			</div>
-
+													<?php //} ?>
 														<hr>
 														<div class="ul-info">
 			         							   			<b class="ul-head">Terms and Conditions </b><br><br>
@@ -704,172 +643,123 @@ body
 											                    <th style="background: #f4f4f4; text-align: left; padding: 5px 0;font-weight:bold;">Description</th>
 											                    <th style="background: #f4f4f4; text-align: right; padding: 5px 0;font-weight:bold;">Qty</th>
 											                    <th style="background: #f4f4f4; text-align: right; padding: 5px 0;font-weight:bold;">Price</th>
-											                    <th class="hidden_mobile_view" style="background: #f4f4f4; text-align: right; padding: 5px 0;font-weight:bold;">Discount</th>
 											                    <th class="hidden_mobile_view" style="background: #f4f4f4; text-align: right; padding: 5px 0;font-weight:bold;">Tax (%)</th>
 											                    <th style="background: #f4f4f4; text-align: right; padding: 5px 8px 5px 0;font-weight:bold;" class="text-right">Total</th>
 											                </tr>
 											            </thead>
-													            <tbody>
-																<?php foreach($workorder_items as $item){ ?>
-													                <tr class="table-items__tr">
-													                    <td style="width: 30px; text-align: center;" valign="top">  # </td>
-													                    <td valign="top"> <?php echo $item->title; ?>   </td>
-													                    <td style="width: 50px; text-align: right;" valign="top"> <?php echo $item->qty ?>  </td>
-													                    <td style="width: 80px; text-align: right;" valign="top">$<?php echo $item->costing ?></td>
-													                    <td class="hidden_mobile_view" style="width: 80px; text-align: right;" valign="top">
-																			$ 0<?php //echo $item->discount ?>
-																			</td>
-													                    <td class="hidden_mobile_view" style="width: 80px; text-align: right;" valign="top">
-																			$<?php echo $item->tax ?>
-																			</td>
-													                    <td style="width: 90px; text-align: right;" valign="top">$<?php $a = $item->qty * $item->costing; $b = $a + $item->tax; echo $b; ?></td>
-													                </tr>
-																	<?php } ?>
-																<?php // if($workorder->work_order_type_id == 1){ ?>
-																<?php //foreach($items as $item){ ?>
-													                <!-- <tr class="table-items__tr">
-													                    <td style="width: 30px; text-align: center;" valign="top">  # </td>
-													                    <td valign="top"> <?php //echo $item->item ?>   </td>
-													                    <td style="width: 50px; text-align: right;" valign="top"> <?php //echo $item->qty ?>  </td>
-													                    <td style="width: 80px; text-align: right;" valign="top">$<?php //echo $item->cost ?></td>
-													                    <td class="hidden_mobile_view" style="width: 80px; text-align: right;" valign="top">
-																			$<?php //echo $item->discount ?>
-																			</td>
-													                    <td class="hidden_mobile_view" style="width: 80px; text-align: right;" valign="top">
-																			$<?php //echo $item->tax ?>
-																			</td>
-													                    <td style="width: 90px; text-align: right;" valign="top">$<?php //echo $item->total ?></td>
-													                </tr> -->
-																	<?php //} ?>
-																<?php // }else{ ?>
-																	<?php //foreach($itemsA as $itemA){ ?>
-													                <!-- <tr class="table-items__tr">
-													                    <td style="width: 30px; text-align: center;" valign="top">  # </td>
-													                    <td valign="top"> <?php //echo $itemA->item ?>   </td>
-													                    <td style="width: 50px; text-align: right;" valign="top"> <?php //echo $itemA->qty ?>  </td>
-													                    <td style="width: 80px; text-align: right;" valign="top">$<?php //echo $itemA->cost ?></td>
-													                    <td class="hidden_mobile_view" style="width: 80px; text-align: right;" valign="top">
-																			$<?php //echo $itemA->discount ?>
-																			</td>
-													                    <td class="hidden_mobile_view" style="width: 80px; text-align: right;" valign="top">
-																			$<?php //echo $itemA->tax ?>
-																			</td>
-													                    <td style="width: 90px; text-align: right;" valign="top">$<?php //echo $itemA->total ?></td>
-													                </tr> -->
-																	<?php //} ?>
-																<?php // } ?>
-													                <tr class="table-items__tr-last">
-													                    <td></td>
-													                    <td colspan="6"></td>
-													                </tr>
-													              </tbody>
-     													   </table>
-
+														<tbody>
+														<?php foreach($workorder_items as $item){ ?>
+															<tr class="table-items__tr">
+																<td style="width: 30px; text-align: center;" valign="top">  # </td>
+																<td valign="top"> <?php echo $item->title; ?>   </td>
+																<td style="width: 50px; text-align: right;" valign="top"> <?php echo $item->qty ?>  </td>
+																<td style="width: 80px; text-align: right;" valign="top">$<?php echo $item->costing ?></td>
+																<td class="hidden_mobile_view" style="width: 80px; text-align: right;" valign="top">
+																	$<?php echo $item->tax ?>
+																	</td>
+																<td style="width: 90px; text-align: right;" valign="top">$<?php $a = $item->qty * $item->costing; $b = $a + $item->tax; echo $b; ?></td>
+															</tr>
+															<?php } ?>
+															<tr class="table-items__tr-last">
+																<td></td>
+																<td colspan="6"></td>
+															</tr>
+															</tbody>
+													</table>
 		         							   </div>
-
 		         							   <!--  table container end  -->
-
 		         							     <!--  table print start -->
 
 		         							     <div class="table-inner">
 		         							     	<table class="table-print" style="width: 100%; margin-top: 10px;">
-													        <!-- <tbody>
-													            <tr>
-													                <td style="width: 50%; text-align: right;"></td>
-													                <td>
-													                    <table style="width: 100%; border-collapse: collapse;"> -->
-													                        <tbody>
-													                            <tr>
-																					<td colspan="5"></td>
-													                                <td style="padding: 8px 0; text-align: right; border-bottom: 1px solid #eaeaea;" class="">Subtotal</td>
-													                                <td style="padding: 8px 8px 8px 0; text-align: right; border-bottom: 1px solid #eaeaea;" class="text-right">$<?php echo $workorder->subtotal ?></td>
-													                            </tr>
-																				<tr>
-																					<td colspan="5"></td>
-													                                <td style="padding: 8px 0; text-align: right; border-bottom: 1px solid #eaeaea;" class="">Taxes</td>
-													                                <td style="padding: 8px 8px 8px 0; text-align: right; border-bottom: 1px solid #eaeaea;" class="text-right">$<?php echo $workorder->taxes ?></td>
-													                            </tr>
-																				<?php if($workorder->work_order_type_id == 1){ ?>
-																				<tr>
-																					<td colspan="5"></td>
-													                                <td style="padding: 8px 0; text-align: right; border-bottom: 1px solid #eaeaea;" class=""><?php echo $workorder->adjustment_name ?></td>
-													                                <td style="padding: 8px 8px 8px 0; text-align: right; border-bottom: 1px solid #eaeaea;" class="text-right">$<?php echo $workorder->adjustment_value ?></td>
-													                            </tr>
-																				<tr>
-																					<td colspan="5"></td>
-													                                <td style="padding: 8px 0; text-align: right; border-bottom: 1px solid #eaeaea;" class="">Voucher</td>
-													                                <td style="padding: 8px 8px 8px 0; text-align: right; border-bottom: 1px solid #eaeaea;" class="text-right">$<?php echo $workorder->voucher_value ?></td>
-													                            </tr>
-																				<?php }else{ ?>
-																				<tr>
-																					<td colspan="5"></td>
-													                                <td style="padding: 8px 0; text-align: right; border-bottom: 1px solid #eaeaea;" class="">One Time Program and Setup</td>
-													                                <td style="padding: 8px 8px 8px 0; text-align: right; border-bottom: 1px solid #eaeaea;" class="text-right">$<?php echo $workorder->otp_setup ?></td>
-													                            </tr>
-																				<tr>
-																					<td colspan="5"></td>
-													                                <td style="padding: 8px 0; text-align: right; border-bottom: 1px solid #eaeaea;" class="">Monthly Monitoring</td>
-													                                <td style="padding: 8px 8px 8px 0; text-align: right; border-bottom: 1px solid #eaeaea;" class="text-right">$<?php echo $workorder->monthly_monitoring ?></td>
-													                            </tr>
-																				<?php } ?>
-													                            <tr>
-																					<td colspan="5"></td>
-													                                <td style="padding: 8px 0; text-align: right; background: #f4f4f4;" class="mobile_size"><b>Grand Total ($)</b></td>
-													                                <td style="width: 90px; padding: 8px 8px 8px 0; text-align: right; background: #f4f4f4;" class="text-right"><b>$<?php echo $workorder->grand_total ?></b></td>
-													                            </tr>
-													                          </tbody>
-													                    <!-- </table>
-													                </td>
-													            </tr>
-													        </tbody> -->
-													    </table>
-
+														<tbody>
+															<tr>
+																<td colspan="4"></td>
+																<td style="padding: 8px 0; text-align: right; border-bottom: 1px solid #eaeaea;" class="">Subtotal</td>
+																<td style="padding: 8px 8px 8px 0; text-align: right; border-bottom: 1px solid #eaeaea;" class="text-right">$<?php echo $workorder->subtotal ?></td>
+															</tr>
+															<tr>
+																<td colspan="4"></td>
+																<td style="padding: 8px 0; text-align: right; border-bottom: 1px solid #eaeaea;" class="">Taxes</td>
+																<td style="padding: 8px 8px 8px 0; text-align: right; border-bottom: 1px solid #eaeaea;" class="text-right">$<?php echo $workorder->taxes ?></td>
+															</tr>
+															<?php if($workorder->work_order_type_id == 1){ ?>
+															<tr>
+																<td colspan="4"></td>
+																<td style="padding: 8px 0; text-align: right; border-bottom: 1px solid #eaeaea;" class=""><?php echo $workorder->adjustment_name ?></td>
+																<td style="padding: 8px 8px 8px 0; text-align: right; border-bottom: 1px solid #eaeaea;" class="text-right">$<?php echo $workorder->adjustment_value ?></td>
+															</tr>
+															<?php }else{ ?>
+															<tr>
+																<td colspan="4"></td>
+																<td style="padding: 8px 0; text-align: right; border-bottom: 1px solid #eaeaea;" class="">One Time Program and Setup</td>
+																<td style="padding: 8px 8px 8px 0; text-align: right; border-bottom: 1px solid #eaeaea;" class="text-right">$<?php echo $workorder->otp_setup ?></td>
+															</tr>
+															<tr>
+																<td colspan="4"></td>
+																<td style="padding: 8px 0; text-align: right; border-bottom: 1px solid #eaeaea;" class="">Monthly Monitoring</td>
+																<td style="padding: 8px 8px 8px 0; text-align: right; border-bottom: 1px solid #eaeaea;" class="text-right">$<?php echo $workorder->monthly_monitoring ?></td>
+															</tr>
+															<?php } ?>
+															<tr>
+																<td colspan="4"></td>
+																<td style="padding: 8px 0; text-align: right; background: #f4f4f4;" class="mobile_size"><b>Grand Total</b></td>
+																<td style="width: 90px; padding: 8px 8px 8px 0; text-align: right; background: #f4f4f4;" class="text-right"><b>$<?php echo $workorder->grand_total ?></b></td>
+															</tr>
+														</tbody>
+													</table>
 		         							     </div>
 		         							        <!--  table print end -->
-
-												
 													<hr>
-														<div class="ul-info">
-			         							   			<b class="ul-head">Terms of Use </b><br><br>
-															<div style="height:; overflow:auto; background:#FFFFFF; padding-left:10px;">
-																<?php echo $workorder->terms_of_use; ?>
+													<div class="ul-info">
+														<b class="ul-head">Terms of Use </b><br><br>
+														<div style="height:; overflow:auto; background:#FFFFFF; padding-left:10px;">
+															<?php echo $workorder->terms_of_use; ?>
+														</div>
+													</div>
+													<hr>
+													<div class="ul-info">
+														<b class="ul-head">Job Description</b><br><br>
+														<div style="height:120px; overflow:auto; background:#FFFFFF; padding-left:10px;">
+															<?php echo $workorder->job_description; ?>
+														</div>
+													</div>
+													<hr>
+													<div class="ul-info">
+														<b class="ul-head">Instructions</b><br><br>
+														<div style="height:120px; overflow:auto; background:#FFFFFF; padding-left:10px;">
+															<?php echo $workorder->instructions; ?>
+														</div>
+													</div>
+													<hr>
+													<div class="ul-info">
+														<b class="ul-head">Accepted Payment Method :</b><br><br>
+														<div style="background:#FFFFFF; padding-left:10px;">
+															Credit Card, Check, Cash, Direct Deposit <br />Accepting Mobile Payments
+														</div>
+													</div>
+													<hr>
+													<div class="ul-info">
+														<b class="ul-head">Sales Representative :</b><br><br>
+														<div style="background:#FFFFFF; padding-left:10px;">
+															<?= $agreements->sales_re_name ?? "None"; ?>
+														</div>
+													</div>
+													<hr>
+													<div class="ul-info">
+														<div class="row">
+															<div class="col-12 col-md-6">
+																<img src="<?php echo base_url('uploads/workorders/signatures/'.$workorder->company_id.'/'.$workorder->company_representative_signature); ?>" style="height: 150px;">
+																<hr>
+																<center><?php echo $first->FName.' '.$first->LName; ?></center>
 															</div>
-		         							   			</div>
-													<hr>
-														<div class="ul-info">
-			         							   			<b class="ul-head">Job Description</b><br><br>
-															<div style="height:120px; overflow:auto; background:#FFFFFF; padding-left:10px;">
-																<?php echo $workorder->job_description; ?>
+															<div class="col-12 col-md-6">
+																<img src="<?php echo base_url('uploads/workorders/signatures/'.$workorder->company_id.'/'.$workorder->primary_account_holder_signature); ?>" style="height: 150px;">
+																<hr>
+																<center><?php echo $workorder->primary_account_holder_name; ?></center>
 															</div>
-		         							   			</div>
-													<hr>
-														<div class="ul-info">
-			         							   			<b class="ul-head">Instructions</b><br><br>
-															<div style="height:120px; overflow:auto; background:#FFFFFF; padding-left:10px;">
-																<?php echo $workorder->instructions; ?>
-															</div>
-		         							   			</div>
-													<hr>
-														<div class="ul-info">
-			         							   			<b class="ul-head">ASSIGNED TO</b><br><br>
-																<div class="row">
-																	<div class="col-md-4">
-																		<img src="<?php echo base_url($workorder->company_representative_signature); ?>" style="height: 150px;">
-																		<hr>
-																		<center><?php echo $first->FName.' '.$first->LName; ?></center>
-																	</div>
-																	<div class="col-md-4">
-																		<img src="<?php echo base_url($workorder->primary_account_holder_signature); ?>" style="height: 150px;">
-																		<hr>
-																		<center><?php echo $workorder->primary_account_holder_name; ?></center>
-																	</div>
-																	<div class="col-md-4">
-																		<img src="<?php echo base_url($workorder->secondary_account_holder_signature); ?>" style="height: 150px;">
-																		<hr>
-																		<center><?php echo $workorder->secondary_account_holder_name; ?></center>
-																	</div>
-																</div>
-		         							   			</div>
+														</div>
+													</div>
 
 
 									</div>

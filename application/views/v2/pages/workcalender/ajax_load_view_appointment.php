@@ -78,11 +78,7 @@
                 <?php }else{ ?>
                     ---
                 <?php } ?>
-            </label>            
-            <label class="content-subtitle fw-bold d-block mb-2 appointment-view-header mt-5">Notes</label>
-                <div class="d-flex">
-                <span class="appointment-notes"><?= $appointment->notes; ?></span>
-            </div>
+            </label>    
         </div>
     <?php }else{ ?>
         <div class="col-12 col-md-7">
@@ -101,12 +97,12 @@
                         $customer_zip   = $appointment->lead_zip;
                     }else{
                         $customer_name = $appointment->customer_name;
-                        $customer_contact_number = $appointment->contact_number != '' ? $appointment->contact_number : '---';
+                        $customer_contact_number = $appointment->cust_phone != '' ? $appointment->cust_phone : '---';
                         $customer_email_address  = $appointment->contact_email != '' ? $appointment->contact_email : '---';
-                        $customer_address = $appointment->address;
-                        $customer_city  = $appointment->city;
-                        $customer_state = $appointment->state;
-                        $customer_zip   = $appointment->zip;
+                        $customer_address = $appointment->mail_add;
+                        $customer_city  = $appointment->cust_city;
+                        $customer_state = $appointment->cust_state;
+                        $customer_zip   = $appointment->cust_zip_code;
                     }
                 ?>
                 <label class="fw-bold mb-4" style="font-size: 21px;"><i class='bx bx-user-circle'></i> <?= $customer_name; ?></label>
@@ -199,7 +195,7 @@
     <div class="col-12">
         <label class="content-subtitle fw-bold d-block mb-2 appointment-view-header" style="margin-top:5px;">Notes</label>
         <div class="d-flex">
-            <span class="appointment-notes"><?= $appointment->notes; ?></span>
+            <span class="appointment-notes"><?= $appointment->notes != '' ? $appointment->notes : 'None'; ?></span>
         </div>
     </div>
     <?php if ($appointment->is_paid == 1) { ?>

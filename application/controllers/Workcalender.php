@@ -2056,7 +2056,7 @@ class Workcalender extends MY_Controller
 
                 $is_valid = true;
 
-                if( $post['appointment_type_id'] == 4 ){
+                if( $post['appointment_type_id'] != 1 && $post['appointment_type_id'] != 2 && $post['appointment_type_id'] != 3 && $post['appointment_type_id'] != 4 ){
                     if( $post['first_name'] == ''  ){
                         $message = 'Please specify lead first name';
                         $is_valid = false;
@@ -2073,11 +2073,19 @@ class Workcalender extends MY_Controller
                     }
                 }
 
-                if( $post['appointment_type_id'] == 4 && $post['appointment_event_name'] == '' ){
-                    $message = 'Please specify event name';
+                if( $post['appointment_type_id'] == 4 ){
+                    if( $post['appointment_event_name'] == '' ){
+                        $message = 'Please specify event name';
+                        $is_valid = false;
+                    }       
+                    
+                    if( $post['appointment_user_id'] == '' ){
+                        $message = 'Please select user to assign to this appointment';
+                        $is_valid = false;
+                    }
                 }
 
-                if( $post['appointment_type_id'] == 1 || $post['appointment_type_id'] == 2 || $post['appointment_type_id'] == 3 || $post['appointment_type_id'] == 4){
+                if( $post['appointment_type_id'] == 1 || $post['appointment_type_id'] == 2 || $post['appointment_type_id'] == 3 ){
                     if( $post['appointment_user_id'] == '' ){
                         $message = 'Please select user to assign to this appointment';
                         $is_valid = false;
@@ -2085,11 +2093,6 @@ class Workcalender extends MY_Controller
                     
                     if( $post['appointment_customer_id'] == '' ){
                         $message = 'Please select customer to assign to this appointment';
-                        $is_valid = false;
-                    }
-
-                    if( $post['appointment_type_id'] == '' ){
-                        $message = 'Please select appointment type';
                         $is_valid = false;
                     }
                 }

@@ -445,6 +445,11 @@
     .address-info{
         width:90%;
     }
+    @media screen and (max-width: 767px) {
+        .progressbar a{
+            font-size: 8px !important;
+        }
+    }
 </style>
 <?php if(isset($jobs_data)): ?>
     <input type="hidden" value="<?= $jobs_data->id ?>" id="esignJobId" />
@@ -522,12 +527,12 @@
                                                     <li class="<?= isset($jobs_data) && $jobs_data->status == 'Approved'  ? 'active' : ''; ?>" id="5" <?php if(isset($jobs_data) && $jobs_data->status == 'Started'): ?>data-bs-toggle="modal" data-bs-target="#approveThisJobModal" data-backdrop="static" data-keyboard="false" <?php endif; ?>>
                                                         <a href="#" id="approveThisJob" data-status="<?= isset($jobs_data) ? $jobs_data->status : "" ?>" > Approved </a>
                                                     </li>
-                                                    <li id="6" class="<?= isset($jobs_data) && $jobs_data->status == 'Finish'  ? 'active' : ''; ?>" <?php if(isset($jobs_data) && $jobs_data->status == 'Approved'): ?>data-bs-toggle="modal"data-bs-target="#finish_modal"<?php endif; ?>>
+                                                    <li id="6" class="<?= isset($jobs_data) && $jobs_data->status == 'Finished'  ? 'active' : ''; ?>" <?php if(isset($jobs_data) && $jobs_data->status == 'Approved'): ?>data-bs-toggle="modal"data-bs-target="#finish_modal"<?php endif; ?>>
                                                         <a href="#">Finished</a>
                                                     <li id="7" class="<?= isset($jobs_data) && $jobs_data->status == 'Invoiced'  ? 'active' : ''; ?>">
                                                         <a href="#">Invoiced</a>
                                                     </li>
-                                                    <li id="8" class="<?= isset($jobs_data) && in_array($jobs_data->status, ['Completed', 'Finished'])  ? 'active' : ''; ?>">
+                                                    <li id="8" class="<?= isset($jobs_data) && in_array($jobs_data->status, ['Completed'])  ? 'active' : ''; ?>">
                                                         <a href="#">Completed</a>
                                                     </li>
                                                 </ul>
@@ -1816,11 +1821,11 @@
                                 <input type="time" name="finished_time" class="form-control" value="<?= date("H:i"); ?>" required />
                             </div>
                             <input type="hidden" name="job_id" id="jobid" value="<?php if(isset($jobs_data)){echo $jobs_data->job_unique_id;} ?>"> <br>
-                            <input type="hidden" name="status" id="status" value="Closed">
+                            <input type="hidden" name="job_status" id="job_status" value="Finished">
                         </div>
                     </div>
                     <div class="d-flex justify-content-end">                        
-                        <button type="button" class="nsm-button primary">Save</button>
+                        <button type="submit" class="nsm-button primary" id="btn-submit-finished-status">Save</button>
                         <button type="button" class="nsm-button" data-bs-dismiss="modal">Cancel</button>
                     </div>
                 </form>

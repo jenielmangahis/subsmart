@@ -223,6 +223,7 @@
 
                             $schedule_number = $schedule['data']->appointment_number;
                             $schedule_type   = $schedule['data']->appointment_type;
+                            $schedule_invoice_amount = 0;
 
                             if( $schedule['data']->appointment_type_id == 1 || $schedule['data']->appointment_type_id == 2 || $schedule['data']->appointment_type_id == 3 || $schedule['data']->appointment_type_id == 4 ){
                                 if( $schedule['data']->appointment_type_id == 4 ){
@@ -233,6 +234,7 @@
                                     $schedule_location   = $schedule['data']->event_location;
                                     $schedule_location_b = '';
                                 }else{
+                                    $schedule_invoice_amount = $schedule['data']->cost;
                                     $schedule_customer_name  =  $schedule['data']->customer_name;
                                     $schedule_customer_phone = $schedule['data']->cust_phone != '' ? $schedule['data']->cust_phone : '---';   
                                     $schedule_event_name     = ''; 
@@ -250,8 +252,7 @@
                             
                             $schedule_expiry_date = '';
                             //$schedule_description = $schedule['data']->service_description;
-                            $schedule_description = '';
-                            $schedule_invoice_amount = 0;
+                            $schedule_description = '';                            
                             /*if( $schedule['data']->notes != '' ){
                                 $schedule_description = $schedule['data']->notes;
                             }*/                            
@@ -346,7 +347,7 @@
                                 <?php } ?>
                                 <?php if( $schedule_invoice_amount > 0 ){ ?>                             
                                     <label class="content-title" style="cursor: pointer;margin-bottom: 4px; margin-top: 10px;">
-                                        <i class='bx bxs-receipt' ></i> Invoice Amount :  $<?= number_format($schedule_invoice_amount,2); ?>
+                                        <i class='bx bx-dollar-circle'></i> Amount :  $<?= number_format($schedule_invoice_amount,2); ?>
                                     </label>
                                 <?php } ?>
                                 <?php if( $schedule_expiry_date != '' ){ ?>

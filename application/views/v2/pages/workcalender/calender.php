@@ -943,6 +943,7 @@
                 data: _this.serialize(),
                 success: function(result) {
                     if (result.is_success) {
+                        $("#edit_appointment_modal").modal('hide');
                         Swal.fire({
                             title: 'Save Successful!',
                             text: "Appointment was successfully updated.",
@@ -964,7 +965,6 @@
                             confirmButtonText: 'Okay'
                         });
                     }
-                    $("#edit_appointment_modal").modal('hide');
 
                     $('#update-appointment-btn').html("Save");
                     $('#update-appointment-btn').prop("disabled", false);

@@ -1767,8 +1767,14 @@ class Job extends MY_Controller
                 $to_notify_users[] = $jobs_data->employee_id;
                 $to_notify_users[] = $jobs_data->customer_id;
 
+                if($jobs_data->employee2_id && $jobs_data->employee2_id > 0) {
+                    $to_notify_users[] = $job->employee2_id;
+                }
+
+                $unique_notify_users =  array_unique($to_notify_users);
+
                 $content_notification = 'Job #' . $jobs_data->job_number . ' has been ' . strtolower($status) . '.';
-                foreach($to_notify_users as $to_notify_user) {
+                foreach($unique_notify_users as $to_notify_user) {
                     $job_notify = array(
                         'user_id' => $to_notify_user,
                         'title' => 'Job Status',
@@ -2524,7 +2530,7 @@ class Job extends MY_Controller
                     'hash_id' => $input['job_hash']
                 ),
                 'table' => 'jobs',
-                'select' => 'job_number, id, work_order_id'
+                'select' => 'job_number, id, work_order_id, status'
             );
             $isJob = $this->general->get_data_with_param($check_job, false);
 
@@ -2846,11 +2852,17 @@ class Job extends MY_Controller
                 }
             }
             // End of Commission Feature for Tech Rep
-            $job_type = '';
+            /*$job_type = '';
             $jobType = $this->JobType_model->getById($input['job_type']);
             if( $jobType ){
                 $job_type = $jobType->title;
+            }*/
+
+            $status = 'Scheduled';
+            if( $isJob ){
+                $status = $isJob->status;
             }
+
             $jobs_data = array(
                 'job_number' => $job_number,
                 'estimate_id' => $estimate_id,
@@ -2877,14 +2889,14 @@ class Job extends MY_Controller
                 'customer_reminder_notification' => $input['customer_reminder_notification'],
                 'priority' => $input['priority'], 
                 'tags' => $jobTag->name, 
-                'status' => 'Scheduled', 
+                'status' => $status, 
                 'company_id' => $comp_id,
                 'date_created' => date('Y-m-d H:i:s'),
                 'created_by' => logged('id'),
                 'attachment' => $input['attachment'],
                 'tax_percentage' => $input['tax_percentage'],
                 'tax_rate' => $input['tax'],
-                'job_type' => $job_type,
+                'job_type' => $input['job_type'],
                 'date_issued' => $input['start_date'],
                 'work_order_id' => $job_workorder_id,
                 'commission' => $input['commission_amount'],
@@ -3227,12 +3239,19 @@ class Job extends MY_Controller
          */
 
         //Add header notification - start
+
         $to_notify_users[] = logged('id');
         $to_notify_users[] = $input['employee_id'];
         $to_notify_users[] = $input['customer_id'];
 
+        if($input['employee2_id'] && $input['employee2_id'] > 0) {
+            $to_notify_users[] = $input['employee2_id'];
+        }        
+
+        $unique_notify_users =  array_unique($to_notify_users);
+
         $content_notification = 'Job #' . $job_number . ' has been scheduled.';
-        foreach($to_notify_users as $to_notify_user) {
+        foreach($unique_notify_users as $to_notify_user) {
             $job_notify = array(
                 'user_id' => $to_notify_user,
                 'title' => 'Job Status',
@@ -6942,12 +6961,12 @@ class Job extends MY_Controller
 
         $company_id = logged('company_id');
         $post       = $this->input->post();
+
         $is_valid   = false;
 
         $job = $this->jobs_model->getByIdAndCompanyId($post['job_id'], $company_id);
         $invoice = $this->invoice_model->getByJobId($post['job_id']);
-        if ($job) {      
-
+        if ($job) {  
             if( $post['job_status'] == 'Arrival' ){
                 $data = [
                     'omw_date' => date("Y-m-d",strtotime($post['omw_date'])),
@@ -6966,7 +6985,7 @@ class Job extends MY_Controller
                 $data = [
                     'finished_date' => date("Y-m-d",strtotime($post['finished_date'])),
                     'finished_time' => date("h:i A",strtotime($post['finished_time'])),
-                    'status' => 'Started'
+                    'status' => 'Finished'
                 ];
                 $is_valid = true;
             }elseif( $post['job_status'] == 'Approved' ){
@@ -6998,6 +7017,33 @@ class Job extends MY_Controller
 
                 $is_success = 1;
                 $msg = '';
+
+                //Add/update header notification - start
+
+                $to_notify_users[] = logged('id');
+                $to_notify_users[] = $job->employee_id;
+                $to_notify_users[] = $job->customer_id;
+                if($job->employee2_id && $job->employee2_id > 0) {
+                    $to_notify_users[] = $job->employee2_id;
+                }
+                $unique_notify_users =  array_unique($to_notify_users);                   
+
+                $content_notification = 'Job #' . $job->job_number . ' has been ' . strtolower($post['job_status']) . '.';
+                foreach($unique_notify_users as $to_notify_user) {
+                    $job_notify = array(
+                        'user_id' => $to_notify_user,
+                        'title' => 'Job Status',
+                        'content' => $content_notification,
+                        'status' => 1,
+                        'date_created' => date("Y-m-d H:i:s"),
+                        'company_id' => $job->company_id,
+                        'entity_id' => $job->id
+
+                    );                       
+                    $this->db->insert('user_notification', $job_notify);  
+                }  
+                //Add/update header notification - end
+                                
             }
 
             $this->payscale_model->updateCommissionStatus($post['job_id'], $post['job_status']);

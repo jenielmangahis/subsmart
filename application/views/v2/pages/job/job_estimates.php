@@ -959,7 +959,7 @@
                                                     <div class="row mt-2">
                                                         <div class="col-12 col-md-6 col-sm-6">
                                                             <div class="d-flex justify-content-between">
-                                                                <h6>Tax Rate</h6>
+                                                                <h6>Total Tax</h6>
                                                             </div>  
                                                         </div>
                                                         <div class="col-12 col-md-6 col-sm-6">

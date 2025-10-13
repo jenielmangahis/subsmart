@@ -666,6 +666,7 @@ $route['accounting/products-and-services/get-item-locations/(:any)'] = 'accounti
 $route['accounting/products-and-services/get-import-data']['post'] = 'accounting_controllers/products_and_services/get_import_data';
 $route['accounting/products-and-services/import-items-data']['post'] = 'accounting_controllers/products_and_services/import_items_data';
 $route['accounting/products-and-services/_archive_selected_items']['post'] = 'accounting_controllers/products_and_services/ajax_archive_selected_items';
+$route['accounting/products-and-services/export-list'] = 'accounting_controllers/products_and_services/product_services_export_list';
 
 // Accounting product categories
 $route['accounting/product-categories'] = 'accounting_controllers/product_categories/index';
@@ -1217,6 +1218,11 @@ $route['workorders/_restore_selected_workorders'] = 'Workorder/ajax_restore_sele
 $route['workorders/_permanently_delete_selected_workorders'] = 'Workorder/ajax_permanently_delete_selected_workorders';
 $route['workorders/_delete_all_archived_workorders'] = 'Workorder/ajax_delete_all_archived_workorders';
 $route['workorders/_delete_archived_workorder'] = 'Workorder/ajax_delete_archived_workorder';
+$route['workorder/_delete_archived_workorder'] = 'Workorder/ajax_delete_archived_workorder';
+$route['workorder/view/(:num)'] = 'Workorder/view/$1';
+
+//Public view 
+$route['work_order_view/(:any)/(:num)'] = 'Share_Link/public_view_v2/$1/$2';
 
 $route['customer/_get_customer_data'] = 'Customer/ajax_get_customer_data';
 $route['customer/_get_lead_data'] = 'Customer/ajax_get_lead_data';
@@ -1335,7 +1341,6 @@ $route['job/edit_job_item/(:num)'] = 'Job/edit_job_item/$1';
 $route['job/_create_job'] = 'Job/ajax_create_job';
 $route['job/add'] = 'Job/new_job_v2';
 $route['job/edit/(:num)'] = 'Job/edit_job_v2/$1';
-$route['job/_update_job_status'] = 'Job/ajax_update_job_status';
 $route['job/_send_esign_form'] = 'Job/ajax_send_esign_form';
 $route['job/create_invoice/(:num)'] = 'Job/createInvoice/$1';
 $route['job/_update_job'] = 'Job/ajax_update_job';
