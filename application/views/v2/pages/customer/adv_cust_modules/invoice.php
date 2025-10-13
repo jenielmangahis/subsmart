@@ -39,6 +39,7 @@
                     <table class="nsm-table" id="invoice-items-table">
                         <thead>
                             <tr>
+                                <td class="table-icon text-center sorting_disabled"></td>
                                 <td data-name="Invoice Number">Invoice Number</td>
                                 <td data-name="Date Issued">Date Issued</td>
                                 <td data-name="Status">Status</td>
@@ -81,8 +82,11 @@
                                     endswitch;
                             ?>
                                     <tr>
+                                        <td>
+                                            <div class="table-row-icon"><i class='bx bx-receipt'></i></div>
+                                        </td>
                                         <td class="fw-bold nsm-text-primary nsm-link default" onclick="location.href='<?php echo base_url('invoice/genview/' . $invoice->id) ?>'"><?php echo $invoice->invoice_number ?></td>
-                                        <td><?php echo get_format_date($invoice->date_issued) ?></td>
+                                        <td class="nsm-text-primary show"><?php echo get_format_date($invoice->date_issued) ?></td>
                                         <td><span class="nsm-badge <?= $badge ?>"><?php echo $invoice->INV_status ?></span></td>
                                         <td>$<?php echo ($invoice->grand_total); ?></td>
                                         <td class="text-end">
