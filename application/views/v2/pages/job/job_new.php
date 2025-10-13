@@ -445,6 +445,11 @@
     .address-info{
         width:90%;
     }
+    @media screen and (max-width: 767px) {
+        .progressbar a{
+            font-size: 8px !important;
+        }
+    }
 </style>
 <?php if(isset($jobs_data)): ?>
     <input type="hidden" value="<?= $jobs_data->id ?>" id="esignJobId" />
