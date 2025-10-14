@@ -52,17 +52,15 @@
                                         <div class="nsm-card-title">
                                             <span>Invoice Number</span>
                                         </div>
-                                        <label class="nsm-subtitle">Set the prefix and the next auto-generated number.</label>
+                                        <label class="nsm-subtitle">Prefix and the next auto-generated number.</label>
                                     </div>
                                     <div class="nsm-card-content">
                                         <div class="row g-2">
                                             <div class="col-12 col-md-3">
-                                                <input type="text" placeholder="Prefix" name="prefix" class="nsm-field form-control" value="<?php echo ($setting) ? $setting->invoice_num_prefix : 'INV-' ?>" autocomplete="off" />
-                                                <span class="validation-error-field hide" data-formerrors-for-name="next_custom_number_prefix" data-formerrors-message="true"></span>
+                                                <input type="text" placeholder="Prefix" name="prefix" class="nsm-field form-control" value="<?php echo ($setting) ? $setting->invoice_num_prefix : 'INV-' ?>" disabled autocomplete="off" />
                                             </div>
                                             <div class="col-12 col-md-9">
-                                                <input type="text" placeholder="Next Number" name="base" class="nsm-field form-control" value="<?php echo ($setting) ? $setting->invoice_num_next : 1  ?>" autocomplete="off" />
-                                                <span class="validation-error-field hide" data-formerrors-for-name="next_custom_number_base" data-formerrors-message="true"></span>
+                                                <input type="number" placeholder="Next Number" name="base" class="nsm-field form-control" value="<?php echo ($setting) ? $setting->invoice_num_next : 1  ?>" disabled autocomplete="off" />
                                             </div>
                                         </div>
                                     </div>
@@ -475,7 +473,7 @@
                             <?php } ?>
                             <div class="col-12 text-end">
                                 <button type="submit" data-action="save" id="btn-save-invoice-settings" class="nsm-button primary">
-                                    Save Changes
+                                    Save
                                 </button>
                             </div>
                         </div>
@@ -546,7 +544,7 @@
                             html: result.msg
                         });
                     }
-                    $('#btn-save-invoice-settings').html('Save Changes');
+                    $('#btn-save-invoice-settings').html('Save');
                 }, beforeSend: function() {
                     $('#btn-save-invoice-settings').html('<span class="bx bx-loader bx-spin"></span>');
                 },
