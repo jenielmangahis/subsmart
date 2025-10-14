@@ -53,14 +53,16 @@
                         <div class="col-12 col-md-6">
                             <span class="content-subtitle">
                                 <?php 
-                                if(isset($billing_info)){ 
-                                if($billing_info->acct_num){
-                                    echo "$billing_info->acct_num"; 
-                                }else{
-                                    echo "&mdash;";
-                                }
-                            }
-                                 ?>
+                                    $acct_num = '&mdash;';
+                                    if( $billing_info && $billing_info->acct_num != '' ){
+                                        if (logged('user_type') == 7) {
+                                            $acct_num = $billing_info->acct_num;
+                                        }else{
+                                            $acct_num = maskString($billing_info->acct_num);
+                                        }
+                                    }
+                                ?>
+                                <?= $acct_num; ?>
                             </span>
                         </div>
                         <div class="col-12 col-md-6">
@@ -84,14 +86,17 @@
                         </div>
                         <div class="col-12 col-md-6">
                             <span class="content-subtitle">
-                                <?php if(isset($billing_info)){ 
-                                    if($billing_info->credit_card_num){
-                                    echo $billing_info->credit_card_num; 
-                                    }else{
-                                        echo "&mdash;";
-                                    }
+                                <?php 
+                                    $credit_card_num = '&mdash;';
+                                    if( $billing_info && $billing_info->credit_card_num != '' ){
+                                        if (logged('user_type') == 7) {
+                                            $credit_card_num = $billing_info->credit_card_num;
+                                        }else{
+                                            $credit_card_num = maskString($billing_info->credit_card_num);
+                                        }
                                     }
                                 ?>
+                                <?= $credit_card_num; ?>
                             </span>
                         </div>
                         <div class="col-12 col-md-6">
@@ -110,18 +115,21 @@
                             </span>
                         </div>
                         <div class="col-12 col-md-6">
-                            <label class="content-title">CCN CCV</label>
+                            <label class="content-title">CCV</label>
                         </div>
                         <div class="col-12 col-md-6">
                             <span class="content-subtitle">
-                                <?php if(isset($billing_info)){ 
-                                    if($billing_info->credit_card_exp_mm_yyyy){
-                                        echo $billing_info->credit_card_exp_mm_yyyy; 
-                                    }else{
-                                        echo "&mdash;";
+                                <?php 
+                                    $ccv = '&mdash;';
+                                    if( $billing_info && $billing_info->credit_card_exp_mm_yyyy != '' ){
+                                        if (logged('user_type') == 7) {
+                                            $ccv = $billing_info->credit_card_exp_mm_yyyy;
+                                        }else{
+                                            $ccv = '***';
+                                        }
                                     }
-                                    }
-                                  ?>
+                                ?>
+                                <?= $ccv; ?>
                             </span>
                         </div>
                     </div>
@@ -181,7 +189,15 @@
                         </div>
                         <div class="col-12 col-md-6">
                             <span class="content-subtitle">
-                                <?php if(isset($billing_info)){ echo (!empty($billing_info->bill_start_date)) ? date("m/d/Y",strtotime($billing_info->bill_start_date)) : $office_info->install_date; } ?>
+                                <?php 
+                                    $start_date = '&mdash;';
+                                    if( $billing_info && strtotime($billing_info->bill_start_date) > 0 ){
+                                        $start_date = date("m/d/Y",strtotime($billing_info->bill_start_date));
+                                    }elseif( $office_info && strtotime($office_info->install_date) > 0 ){
+                                        $start_date = date("m/d/Y",strtotime($office_info->install_date));
+                                    }
+                                ?>
+                                <?= $start_date; ?>
                             </span>
                         </div>
                         <div class="col-12 col-md-6">
@@ -189,7 +205,13 @@
                         </div>
                         <div class="col-12 col-md-6">
                             <span class="content-subtitle">
-                                <?php if(isset($billing_info)){ echo date("m/d/Y",strtotime($billing_info->bill_end_date)); }; ?>                                
+                                <?php 
+                                    $end_date = '&mdash;';
+                                    if( $billing_info && strtotime($billing_info->bill_end_date) > 0 ){
+                                        $end_date = date("m/d/Y",strtotime($billing_info->bill_end_date));
+                                    }
+                                ?>
+                                <?= $end_date; ?>                            
                             </span>
                         </div>
                     </div>
