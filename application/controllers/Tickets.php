@@ -3474,8 +3474,8 @@ class Tickets extends MY_Controller
         }else{
             $data = [
                 'company_id' => $cid,
-                'ticket_num_prefix' => $post['ticket_settings_prefix'],
-                'ticket_num_next' => $post['ticket_settings_next_number']
+                'ticket_num_prefix' => 'SERVICE-',
+                'ticket_num_next' => 1
             ];
 
             $this->TicketSettings_model->create($data);
