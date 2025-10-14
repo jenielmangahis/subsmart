@@ -3446,8 +3446,9 @@ class Tickets extends MY_Controller
 
         $cid = logged('company_id');
         $settings = $this->TicketSettings_model->getByCompanyId($cid);
-
+        
         $this->page_data['settings'] = $settings;
+        $this->page_data['page']->parent = 'Sales';
         $this->page_data['page']->title = 'Service Ticket Settings';
         $this->load->view('v2/pages/tickets/settings/index', $this->page_data);
     }
