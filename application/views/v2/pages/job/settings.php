@@ -58,7 +58,7 @@ table.dataTable.no-footer {
                                             <div class="nsm-card-title">
                                                 <span>Job Order Number</span>
                                             </div>
-                                            <label class="nsm-subtitle">Set the prefix and the next auto-generated number.</label>
+                                            <label class="nsm-subtitle">Prefix and the next auto-generated number.</label>
                                         </div>
                                         <div class="nsm-card-content">
                                             <div class="row g-2">
@@ -77,7 +77,7 @@ table.dataTable.no-footer {
                                             <div class="nsm-card-title">
                                                 <span>Job Account Number</span>
                                             </div>
-                                            <label class="nsm-subtitle">Set the next auto-generated number.</label>
+                                            <label class="nsm-subtitle">Next auto-generated number.</label>
                                         </div>
                                         <div class="nsm-card-content">
                                             <div class="row g-2">
