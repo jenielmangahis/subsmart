@@ -44,10 +44,10 @@
                                             <div class="nsm-card-content">
                                                 <div class="row g-2">
                                                     <div class="col-12 col-md-3">
-                                                        <input type="text" placeholder="Prefix" name="next_custom_number_prefix" id="number-prefix" class="nsm-field form-control" value="<?php echo $prefix ?>" autocomplete="off" <?= $input_disabled; ?> />
+                                                        <input type="text" placeholder="Prefix" name="next_custom_number_prefix" id="number-prefix" class="nsm-field form-control" value="<?php echo $prefix ?>" autocomplete="off" disabled />
                                                     </div>
                                                     <div class="col-12 col-md-9">
-                                                        <input type="text" placeholder="Next Number" name="next_custom_number_base" id="number-base" class="nsm-field form-control" value="<?php echo $order_num_next; ?>" autocomplete="off" <?= $input_disabled; ?> />
+                                                        <input type="number" placeholder="Next Number" name="next_custom_number_base" id="number-base" class="nsm-field form-control" value="<?php echo $order_num_next; ?>" autocomplete="off" disabled />
                                                     </div>
                                                 </div>
                                             </div>
@@ -81,7 +81,7 @@
                             <?php if(checkRoleCanAccessModule('work-order-settings', 'write')){ ?>
                             <div class="col-12 text-end">
                                 <button type="button" class="nsm-button work-order-notification">Manage work order notifications</button>
-                                <button type="button" class="nsm-button primary btn-update-workorder-settings">Save Changes</button>
+                                <button type="button" class="nsm-button primary btn-update-workorder-settings">Save</button>
                             </div>
                             <?php } ?>
                             <?php echo form_close(); ?>
@@ -446,7 +446,7 @@
         $(".btn-update-workorder-settings").on("click", function(e) {
             let _this = $(this);
             let url = "<?php echo base_url(); ?>/workorder/_update_workorder_settings";
-            _this.html('Saving...').prop("disabled", true);
+            
 
             if ($("#number-prefix").val() == '') {
                 Swal.fire({
@@ -456,7 +456,6 @@
                     showCancelButton: false,
                     confirmButtonText: 'Okay'
                 });
-                _this.html('Save Changes').prop("disabled", false);
                 return false;
             }
 
@@ -468,7 +467,6 @@
                     showCancelButton: false,
                     confirmButtonText: 'Okay'
                 });
-                _this.html('Save Changes').prop("disabled", false);
                 return false;
             }
 
@@ -480,11 +478,13 @@
                 success: function(result) {
                     if (result.is_success == 1) {
                         Swal.fire({
-                            title: 'Success',
-                            text: result.msg,
                             icon: 'success',
+                            title: 'Work Order Settings',
+                            text: 'Settings was successfully updated',            
                             showCancelButton: false,
                             confirmButtonText: 'Okay'
+                        }).then((result) => {
+                            
                         });
                     } else {
                         Swal.fire({
@@ -496,8 +496,11 @@
                         });
                     }
 
-                    _this.html('Save Changes').prop("disabled", false);
+                    _this.html('Save');
                 },
+                beforeSend: function(){
+                    _this.html('<div class="col"><span class="bx bx-loader bx-spin"></span></div>');
+                }
             });
         });
 
