@@ -32,7 +32,7 @@
                                                 <div class="nsm-card-title">
                                                     <span>Event Number</span>
                                                 </div>
-                                                <label class="nsm-subtitle">Set the prefix and the next auto-generated number.</label>
+                                                <label class="nsm-subtitle">Prefix and the next auto-generated number.</label>
                                             </div>
                                             <div class="nsm-card-content">
                                                 <div class="row g-2">
