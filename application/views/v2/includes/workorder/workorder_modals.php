@@ -225,7 +225,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="nsm-button" data-bs-dismiss="modal">Cancel</button>
-                    <button type="submit" class="nsm-button primary">Save</button>
+                    <button type="button" id="save_update_header" class="nsm-button primary save_update_header">Save</button>
                 </div>
             </div>
         </form>

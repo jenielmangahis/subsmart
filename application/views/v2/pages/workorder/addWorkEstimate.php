@@ -163,7 +163,7 @@
                     <div class="col-12">
                         <div class="nsm-callout primary">
                             <button><i class='bx bx-x'></i></button>
-                            Create your workorder.
+                            Convert estimate to workorder.
                         </div>
                     </div>
                 </div>
@@ -178,16 +178,17 @@
                                 <div class="col-12">
                                     <div class="nsm-card-header">
                                         <div class="nsm-card-title">
-                                            <span class="d-block">Header</span>
+                                            <span class="d-block">Header
+                                            <a role="button" class="nsm-button btn-sm m-0 me-2" style="float: right;" href="javascript:void(0);" data-bs-toggle="modal" data-bs-target="#update_header_modal">
+                                                Update Header
+                                            </a>                                                
+                                            </span>
                                             <label class="nsm-subtitle">
-                                                <?php echo $headers->content; ?>
+                                                <?php $headerWithTagsContent = str_replace("{curr_date}", date('m/d/Y'), $headers->content); ?>
+                                                <?php echo $headerWithTagsContent; ?>
                                             </label>
                                         </div>
-                                        <div class="nsm-card-controls align-items-start">
-                                            <a role="button" class="nsm-button btn-sm m-0 me-2" href="javascript:void(0);" data-bs-toggle="modal" data-bs-target="#update_header_modal">
-                                                Update Header
-                                            </a>
-                                        </div>
+                                        <br />
                                         <?php
                                         $dt = new DateTime();
                                         $timestamp = time();
@@ -482,7 +483,9 @@
                                                         <td width="10%" class="hidden_mobile_view"><input type="hidden" class="form-control " name="total[]"
                                                                 data-counter="0" id="item_total_<?php echo $i; ?>" min="0" value="<?php echo ($items_d->qty * $items_d->iCost) + $items_d->itax; ?>">
                                                                 $<span id="span_total_<?php echo $i; ?>"><?php echo ($items_d->qty * $items_d->iCost) + $items_d->itax; ?></span></td>
-                                                        <td><a href="#" class="remove btn btn-sm btn-danger" id="0"><i class="fa fa-trash" aria-hidden="true"></i>Remove</a></td>
+                                                        <td>
+                                                            <a href="#" class="remove nsm-button danger" id="0"><i class="fa fa-trash" aria-hidden="true" style="margin-top:9px;"></i></a>
+                                                        </td>
                                                     </tr>
                                                     <?php 
                                                     $i++;
@@ -1340,7 +1343,6 @@ $(document).on('click touchstart','.edit_third_signature',function(){
 });
 
 $(document).on('click','.btn-edit-header',function(){
-    //    alert('yeah');
     $('#update_header_modal').modal('show');
 });
 </script>
@@ -2458,32 +2460,26 @@ $("#content_input").val(function() {
 
 <script>
 $(document).on('click','#headerContent',function(){
-    //    alert('yeah');
     $('#update_header_modal').modal('show');
 });
 
 $(document).on('click','.save_update_header',function(){
-    //    alert('yeah');
     var id = $('#update_h_id').val();
     // var content = $('.editor1_tc').val();
     var content = CKEDITOR.instances['editor3'].getData();
-    // alert(content);
-      $.ajax({
-            url:"<?php echo base_url(); ?>workorder/save_update_header",
-            type: "POST",
-            data: {id : id, content : content },
-            success: function(dataResult){
-                // $('#table').html(dataResult); 
-                // alert('success')
-                console.log(dataResult);
-                $("#update_header_modal").modal('hide')
-                $('#header_area').load(window.location.href +  ' #header_area');
-            },
-                error: function(response){
-                alert('Error'+response);
-       
-                }
-	    });
+    $.ajax({
+        url:"<?php echo base_url(); ?>workorder/save_update_header",
+        type: "POST",
+        data: {id : id, content : content },
+        success: function(dataResult){
+            $("#update_header_modal").modal('hide')
+            $('#header_area').load(window.location.href +  ' #header_area');
+        },
+            error: function(response){
+            alert('Error'+response);
+    
+        }
+    });
 });
 
 </script>
