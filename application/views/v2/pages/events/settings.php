@@ -20,9 +20,9 @@
                         <form id="frm-update-event-settings">
                             <?php 
                                 $disabled = '';
-                                if(!checkRoleCanAccessModule('events-settings', 'write')){
+                                /*if(!checkRoleCanAccessModule('events-settings', 'write')){
                                     $disabled = 'disabled="disabled"';
-                                }
+                                }*/
                             ?>
                             <div class="col-6">
                                 <div class="nsm-card primary">
@@ -37,10 +37,10 @@
                                             <div class="nsm-card-content">
                                                 <div class="row g-2">
                                                     <div class="col-12 col-md-3">
-                                                        <input type="text" placeholder="Prefix" name="event_settings_prefix" id="number-prefix" class="nsm-field form-control" value="<?= $eventSettings ? $eventSettings->event_prefix : 'EVENT-'; ?>" required="" autocomplete="off" <?= $disabled; ?> />
+                                                        <input type="text" placeholder="Prefix" name="event_settings_prefix" id="number-prefix" class="nsm-field form-control" value="<?= $eventSettings ? $eventSettings->event_prefix : 'EVENT-'; ?>" required="" autocomplete="off" disabled />
                                                     </div>
                                                     <div class="col-12 col-md-5">
-                                                        <input type="number" step="1" placeholder="Next Number" name="event_settings_next_number" id="number-base" class="nsm-field form-control" value="<?= $eventSettings ? $eventSettings->event_next_num : $default_next_num; ?>" required="" autocomplete="off" <?= $disabled; ?> />
+                                                        <input type="number" step="1" placeholder="Next Number" name="event_settings_next_number" id="number-base" class="nsm-field form-control" value="<?= $eventSettings ? $eventSettings->event_next_num : $default_next_num; ?>" required="" autocomplete="off" disabled />
                                                     </div>
                                                 </div>
                                             </div>
