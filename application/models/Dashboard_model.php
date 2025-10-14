@@ -388,7 +388,7 @@ class Dashboard_model extends MY_Model
             case 'open_estimates_list':
                 $this->db->select('estimates.id AS id, estimates.company_id AS company_id, estimates.estimate_number AS number, CONCAT(acs_profile.first_name, " ", acs_profile.last_name) AS customer, estimates.status AS status, estimates.created_at AS date, estimates.grand_total AS total');
                 $this->db->from('estimates');
-                $this->db->where('estimates.status !=', "Draft");
+                $this->db->where('estimates.status !=', "Accepted");
                 $this->db->where('estimates.status !=', "Invoiced");
                 $this->db->where('estimates.status !=', "Lost");
                 $this->db->where('estimates.status !=', "Declined by Customer");
@@ -635,8 +635,8 @@ class Dashboard_model extends MY_Model
                     LEFT JOIN acs_billing ON acs_billing.fk_prof_id = acs_profile.prof_id
                     WHERE acs_profile.company_id = '{$company_id}' 
                         AND acs_profile.status IN ('Active w/RAR', 'Active w/RQR','Active w/RMR', 'Active w/RYR', 'Inactive w/RMM')
-                        AND DATE_FORMAT(acs_billing.bill_start_date, '%Y-%m-%d') >= '{$dateFrom}'
-                        AND DATE_FORMAT(acs_billing.bill_start_date, '%Y-%m-%d') <= '{$dateTo}'
+                    --    AND DATE_FORMAT(acs_billing.bill_start_date, '%Y-%m-%d') >= '{$dateFrom}'
+                    --    AND DATE_FORMAT(acs_billing.bill_start_date, '%Y-%m-%d') <= '{$dateTo}'
                 ");
                 $data = $query->result();
                 return $data;
@@ -1012,6 +1012,7 @@ class Dashboard_model extends MY_Model
                 $this->db->from('acs_profile');
                 $this->db->where('acs_profile.company_id', $company_id);
                 $this->db->where('acs_profile.state !=', "");
+                $this->db->where_in('acs_profile.status', ['Active w/RAR', 'Active w/RMR', 'Active w/RQR', 'Active w/RYR', 'Inactive w/RMM']);
                 $this->db->where("DATE_FORMAT(acs_profile.created_at, '%Y-%m-%d') >=", $dateFrom);
                 $this->db->where("DATE_FORMAT(acs_profile.created_at, '%Y-%m-%d') <=", $dateTo);
                 $this->db->group_by('acs_profile.state');

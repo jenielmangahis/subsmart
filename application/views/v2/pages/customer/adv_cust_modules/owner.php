@@ -139,11 +139,20 @@ div#controls div#call-controls div#volume-indicators > div {
                         <div class="col-12 col-md-6">
                             <span class="content-subtitle">
                                 <?php 
-                                    if ($profile_info->ssn) {
-                                        echo $profile_info->ssn; 
-                                    } else {
-                                        echo "&mdash;";
+                                    if (logged('user_type') == 7) {
+                                        if ($profile_info->ssn) {
+                                            $ssn = $profile_info->ssn; 
+                                        } else {
+                                            $ssn = "&mdash;";
+                                        }
+                                    }else{
+                                        if ($profile_info->ssn) {
+                                            $ssn = maskString($profile_info->ssn); 
+                                        } else {
+                                            $ssn = "---";
+                                        }
                                     }
+                                    echo $ssn;
                                 ?>
                             </span>
                         </div>
@@ -156,7 +165,7 @@ div#controls div#call-controls div#volume-indicators > div {
                                     if ($profile_info->first_name) {
                                         echo $profile_info->first_name; 
                                     } else {
-                                        echo "&mdash;";
+                                        echo "---";
                                     }
                                 ?>
                             </span>
@@ -170,7 +179,7 @@ div#controls div#call-controls div#volume-indicators > div {
                                     if ($profile_info->last_name) {
                                         echo $profile_info->last_name; 
                                     } else {
-                                        echo "&mdash;";
+                                        echo "---";
                                     }
                                 ?>
                             </span>
@@ -184,7 +193,7 @@ div#controls div#call-controls div#volume-indicators > div {
                                     if ($profile_info->mail_add) {
                                         echo $profile_info->mail_add; 
                                     } else {
-                                        echo "&mdash;";
+                                        echo "---";
                                     }
                                 ?>
                             </span>
@@ -198,7 +207,7 @@ div#controls div#call-controls div#volume-indicators > div {
                                     if ($profile_info->state) {
                                         echo $profile_info->state; 
                                     } else {
-                                        echo "&mdash;";
+                                        echo "---";
                                     }
                                 ?>
                             </span>
@@ -216,21 +225,21 @@ div#controls div#call-controls div#volume-indicators > div {
                                         if ($office_info->pay_history == "4") { echo "Poor"; }
                                         if ($office_info->pay_history == "5") { echo "Very Poor"; }
                                     } else {
-                                        echo "&mdash;";
+                                        echo "---";
                                     }
                                 ?>
                             </span>
                         </div>
                         <div class="col-12 col-md-6">
-                            <label class="content-title">DOB</label>
+                            <label class="content-title">Date of Birth</label>
                         </div>
                         <div class="col-12 col-md-6">
                             <span class="content-subtitle">
                                 <?php 
-                                    if ($profile_info->date_of_birth) {
+                                    if ($profile_info->date_of_birth && (strtotime($profile_info->date_of_birth) > 0)) {
                                         echo date_format(date_create($profile_info->date_of_birth),"m/d/Y");
                                     } else {
-                                        echo "&mdash;";
+                                        echo "---";
                                     }
                                 ?>
                             </span>

@@ -59,6 +59,13 @@ table.dataTable.no-footer {
     text-align: center;
     font-size: 12px;
 }
+@media screen and (max-width: 600px) {
+    .nsm-page-nav > ul > li:last-child {
+        width:20px !important;
+        min-width:70px !important;
+    }
+}
+
 </style>
 <div class="nsm-fab-container">
     <div class="nsm-fab nsm-fab-icon nsm-bxshadow" onclick="location.href='<?= base_url('job/new_job1') ?>'">
@@ -73,24 +80,24 @@ table.dataTable.no-footer {
         </div>
     <?php endif; ?>
     <div class="col-12 mb-3">        
-        <div class="nsm-page-nav mb-3">
+        <div class="nsm-page-nav">
         <ul>
             <li class="tabitem">
               <a class="nsm-page-link" href="<?=base_url('esign_v2/Files')?>">
               <!-- <a class="nsm-page-link" href="#" id="send-envelope"> -->
-                <span><i class='bx bx-mail-send' ></i> Send envelope</span>
+                <i class='bx bx-mail-send' ></i> <span>Send envelope</span>
               </a>
             </li>
 
             <li class="tabitem">
               <a class="nsm-page-link" href="#" id="signadocument">
-                <span><i class='bx bxs-pen' ></i> Sign a document</span>
+                <i class='bx bxs-pen' ></i> <span>Sign a document</span>
               </a>
             </li>
 
             <li class="tabitem">
               <a class="nsm-page-link" href="<?=base_url('eSign_v2/manage?view=inbox')?>">
-                <span><i class='bx bxs-inbox'></i> Inbox</span>
+                <i class='bx bxs-inbox'></i> <span>Inbox</span>
               </a>
             </li>
 
@@ -102,33 +109,28 @@ table.dataTable.no-footer {
 
             <li class="tabitem">
               <a class="nsm-page-link" href="<?=base_url('eSign_v2/manage?view=drafts')?>">
-                <span><i class='bx bxs-detail' ></i> Draft</span>
+                <i class='bx bxs-detail' ></i> <span>Draft</span>
               </a>
             </li>
 
             <li class="tabitem">
               <a class="nsm-page-link" href="<?=base_url('eSign_v2/manage?view=deleted')?>">
-                <span><i class='bx bxs-trash-alt' ></i> Deleted</span>
+                <i class='bx bxs-trash-alt' ></i> <span>Deleted</span>
               </a>
             </li>
 
             <li class="tabitem">
               <a class="nsm-page-link" href="<?=base_url('eSign_v2/manage?view=action_required')?>">
-                <span><i class='bx bxs-alarm-exclamation' ></i> Action Required</span>
+                <i class='bx bxs-alarm-exclamation' ></i> <span>Action Required</span>
               </a>
             </li>
 
             <li class="tabitem">
               <a class="nsm-page-link" href="<?=base_url('eSign_v2/manage?view=completed')?>">
-                <span><i class='bx bxs-check-circle' ></i> Completed</span>
+                <i class='bx bxs-check-circle' ></i> <span>Completed</span>
               </a>
             </li>
-
-            <li class="tabitem">
-              <a class="nsm-page-link" href="#">
-                <span></span>
-              </a>
-            </li>
+            <li><label></label></li>
           </ul>
         </div>
     </div>

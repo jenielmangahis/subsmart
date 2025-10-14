@@ -27,7 +27,7 @@
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col-4 grid-mb">
+                    <div class="col-md-4 col-12 grid-mb">
                         <button type="button" id="btn-statement-of-claims" class="nsm-button primary" data-bs-toggle="modal" data-bs-target="#statement_claim_modal">
                             <i class='bx bx-fw bx-spreadsheet'></i> Statement of Claim
                         </button>
