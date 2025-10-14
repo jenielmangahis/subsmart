@@ -12504,8 +12504,12 @@ class Workorder extends MY_Controller
             );
 
             $customer = $this->AcsProfile_model->getByProfId($estimate->customer_id);
+            $acsAccess = $this->AcsAccess_model->getByProfId($estimate->customer_id);
 
-            $this->page_data['customer'] = $customer;
+            $this->page_data['customer']   = $customer;
+            $this->page_data['acsAccess']  = $acsAccess;
+            $this->page_data['estimate']   = $estimate;
+            $this->page_data['items_data'] = $items_data = $this->estimate_model->getEstimatesItems($id);
 
             $this->page_data['system_package_type'] = $this->general->get_data_with_param($spt_query);
             $this->page_data['prefix'] = $prefix;

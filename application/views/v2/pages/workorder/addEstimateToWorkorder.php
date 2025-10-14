@@ -335,1076 +335,28 @@ tr {
                                 </div>
                             </div>
                             <div class="nsm-card-content">
-                                <!-- <div class="row g-3 mb-3 d-none d-md-flex">
-                                    <div class="col-12 col-md-6"><label class="content-title text-muted">Items</label></div>
-                                    <div class="col-12 col-md-2"><label class="content-title text-muted">Quantity</label></div>
-                                    <div class="col-12 col-md-2"><label class="content-title text-muted">Location</label></div>
-                                    <div class="col-12 col-md-2"><label class="content-title text-muted">Price</label></div>
-                                </div>
-                                <div class="row g-3">
-                                    <div class="col-12 col-md-6">
-                                        <div class="row g-2">
-                                            <div class="col">
-                                                <input type="text" class="nsm-field form-control fw-bold" name="item[]" value="Type of Install">
-                                            </div>
-                                            <div class="col-auto d-flex align-items-center">
-                                                <div class="form-check d-inline-block me-2 mb-0">
-                                                    <input class="form-check-input check-one-field" type="checkbox" name="checkOneOne" id="toi_1" value="New">
-                                                    <label class="form-check-label" for="toi_1">New</label>
-                                                </div>
-                                                <div class="form-check d-inline-block mb-0">
-                                                    <input class="form-check-input check-one-field" type="checkbox" name="checkOneOne" id="toi_2" value="Takeover">
-                                                    <label class="form-check-label" for="toi_2">Takeover</label>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <input type="hidden" class="checkedDataOne" name="dataValue[]">
-                                    </div>
-                                    <div class="col-12 col-md-2">
-                                        <input type="text" class="nsm-field form-control" name="qty[]" placeholder="Quantity">
-                                    </div>
-                                    <div class="col-12 col-md-2">
-                                        <input type="text" class="nsm-field form-control" name="location[]" placeholder="Location">
-                                    </div>
-                                    <div class="col-12 col-md-2">
-                                        <input type="text" class="nsm-field form-control all-price-field" name="price[]" placeholder="Price">
-                                    </div>
-                                    <div class="col-12 d-md-none">
-                                        <hr>
-                                    </div>
-                                </div>
-                                <div class="row g-3 mt-1">
-                                    <div class="col-12 col-md-6">
-                                        <input type="text" class="nsm-field form-control" name="item[]" value="LTE - Communicator">
-                                        <input type="hidden" name="dataValue[]">
-                                    </div>
-                                    <div class="col-12 col-md-2">
-                                        <input type="text" class="nsm-field form-control" name="qty[]" placeholder="Quantity">
-                                    </div>
-                                    <div class="col-12 col-md-2">
-                                        <input type="text" class="nsm-field form-control" name="location[]" placeholder="Location">
-                                    </div>
-                                    <div class="col-12 col-md-2">
-                                        <input type="text" class="nsm-field form-control all-price-field" name="price[]" placeholder="Price">
-                                    </div>
-                                    <div class="col-12 d-md-none">
-                                        <hr>
-                                    </div>
-                                </div>
-                                <div class="row g-3 mt-1">
-                                    <div class="col-12 col-md-6">
-                                        <input type="text" class="nsm-field form-control" name="item[]" value="Recessed Door Contact">
-                                        <input type="hidden" name="dataValue[]">
-                                    </div>
-                                    <div class="col-12 col-md-2">
-                                        <input type="text" class="nsm-field form-control" name="qty[]" placeholder="Quantity">
-                                    </div>
-                                    <div class="col-12 col-md-2">
-                                        <input type="text" class="nsm-field form-control" name="location[]" placeholder="Location">
-                                    </div>
-                                    <div class="col-12 col-md-2">
-                                        <input type="text" class="nsm-field form-control all-price-field" name="price[]" placeholder="Price">
-                                    </div>
-                                    <div class="col-12 d-md-none">
-                                        <hr>
-                                    </div>
-                                </div>
-                                <div class="row g-3 mt-1">
-                                    <div class="col-12 col-md-6">
-                                        <input type="text" class="nsm-field form-control" name="item[]" value="Surface Contact">
-                                        <input type="hidden" name="dataValue[]">
-                                    </div>
-                                    <div class="col-12 col-md-2">
-                                        <input type="text" class="nsm-field form-control" name="qty[]" placeholder="Quantity">
-                                    </div>
-                                    <div class="col-12 col-md-2">
-                                        <input type="text" class="nsm-field form-control" name="location[]" placeholder="Location">
-                                    </div>
-                                    <div class="col-12 col-md-2">
-                                        <input type="text" class="nsm-field form-control all-price-field" name="price[]" placeholder="Price">
-                                    </div>
-                                    <div class="col-12 d-md-none">
-                                        <hr>
-                                    </div>
-                                </div>
-                                <div class="row g-3 mt-1">
-                                    <div class="col-12 col-md-6">
-                                        <input type="text" class="nsm-field form-control" name="item[]" value="Keyless Remote">
-                                        <input type="hidden" name="dataValue[]">
-                                    </div>
-                                    <div class="col-12 col-md-2">
-                                        <input type="text" class="nsm-field form-control" name="qty[]" placeholder="Quantity">
-                                    </div>
-                                    <div class="col-12 col-md-2">
-                                        <input type="text" class="nsm-field form-control" name="location[]" placeholder="Location">
-                                    </div>
-                                    <div class="col-12 col-md-2">
-                                        <input type="text" class="nsm-field form-control all-price-field" name="price[]" placeholder="Price">
-                                    </div>
-                                    <div class="col-12 d-md-none">
-                                        <hr>
-                                    </div>
-                                </div>
-                                <div class="row g-3 mt-1">
-                                    <div class="col-12 col-md-6">
-                                        <input type="text" class="nsm-field form-control" name="item[]" value="Motion Detector">
-                                        <input type="hidden" name="dataValue[]">
-                                    </div>
-                                    <div class="col-12 col-md-2">
-                                        <input type="text" class="nsm-field form-control" name="qty[]" placeholder="Quantity">
-                                    </div>
-                                    <div class="col-12 col-md-2">
-                                        <input type="text" class="nsm-field form-control" name="location[]" placeholder="Location">
-                                    </div>
-                                    <div class="col-12 col-md-2">
-                                        <input type="text" class="nsm-field form-control all-price-field" name="price[]" placeholder="Price">
-                                    </div>
-                                    <div class="col-12 d-md-none">
-                                        <hr>
-                                    </div>
-                                </div>
-                                <div class="row g-3 mt-1">
-                                    <div class="col-12 col-md-6">
-                                        <input type="text" class="nsm-field form-control" name="item[]" value="Smoke Communicator">
-                                        <input type="hidden" name="dataValue[]">
-                                    </div>
-                                    <div class="col-12 col-md-2">
-                                        <input type="text" class="nsm-field form-control" name="qty[]" placeholder="Quantity">
-                                    </div>
-                                    <div class="col-12 col-md-2">
-                                        <input type="text" class="nsm-field form-control" name="location[]" placeholder="Location">
-                                    </div>
-                                    <div class="col-12 col-md-2">
-                                        <input type="text" class="nsm-field form-control all-price-field" name="price[]" placeholder="Price">
-                                    </div>
-                                    <div class="col-12 d-md-none">
-                                        <hr>
-                                    </div>
-                                </div>
-                                <div class="row g-3 mt-1">
-                                    <div class="col-12 col-md-6">
-                                        <input type="text" class="nsm-field form-control" name="item[]" value="Glass Break Detector">
-                                        <input type="hidden" name="dataValue[]">
-                                    </div>
-                                    <div class="col-12 col-md-2">
-                                        <input type="text" class="nsm-field form-control" name="qty[]" placeholder="Quantity">
-                                    </div>
-                                    <div class="col-12 col-md-2">
-                                        <input type="text" class="nsm-field form-control" name="location[]" placeholder="Location">
-                                    </div>
-                                    <div class="col-12 col-md-2">
-                                        <input type="text" class="nsm-field form-control all-price-field" name="price[]" placeholder="Price">
-                                    </div>
-                                    <div class="col-12 d-md-none">
-                                        <hr>
-                                    </div>
-                                </div>
-                                <div class="row g-3 mt-1">
-                                    <div class="col-12 col-md-6">
-                                        <input type="text" class="nsm-field form-control" name="item[]" value="Carbon Monoxide">
-                                        <input type="hidden" name="dataValue[]">
-                                    </div>
-                                    <div class="col-12 col-md-2">
-                                        <input type="text" class="nsm-field form-control" name="qty[]" placeholder="Quantity">
-                                    </div>
-                                    <div class="col-12 col-md-2">
-                                        <input type="text" class="nsm-field form-control" name="location[]" placeholder="Location">
-                                    </div>
-                                    <div class="col-12 col-md-2">
-                                        <input type="text" class="nsm-field form-control all-price-field" name="price[]" placeholder="Price">
-                                    </div>
-                                    <div class="col-12 d-md-none">
-                                        <hr>
-                                    </div>
-                                </div>
-                                <div class="row g-3 mt-1">
-                                    <div class="col-12 col-md-6">
-                                        <input type="text" class="nsm-field form-control" name="item[]" value="Medical Pendant">
-                                        <input type="hidden" name="dataValue[]">
-                                    </div>
-                                    <div class="col-12 col-md-2">
-                                        <input type="text" class="nsm-field form-control" name="qty[]" placeholder="Quantity">
-                                    </div>
-                                    <div class="col-12 col-md-2">
-                                        <input type="text" class="nsm-field form-control" name="location[]" placeholder="Location">
-                                    </div>
-                                    <div class="col-12 col-md-2">
-                                        <input type="text" class="nsm-field form-control all-price-field" name="price[]" placeholder="Price">
-                                    </div>
-                                    <div class="col-12 d-md-none">
-                                        <hr>
-                                    </div>
-                                </div>
-                                <div class="row g-3 mt-1">
-                                    <div class="col-12 col-md-6">
-                                        <input type="text" class="nsm-field form-control" name="item[]" value="Door Bell Camera">
-                                        <input type="hidden" name="dataValue[]">
-                                    </div>
-                                    <div class="col-12 col-md-2">
-                                        <input type="text" class="nsm-field form-control" name="qty[]" placeholder="Quantity">
-                                    </div>
-                                    <div class="col-12 col-md-2">
-                                        <input type="text" class="nsm-field form-control" name="location[]" placeholder="Location">
-                                    </div>
-                                    <div class="col-12 col-md-2">
-                                        <input type="text" class="nsm-field form-control all-price-field" name="price[]" placeholder="Price">
-                                    </div>
-                                    <div class="col-12 d-md-none">
-                                        <hr>
-                                    </div>
-                                </div>
-                                <div class="row g-3 mt-1">
-                                    <div class="col-12 col-md-6">
-                                        <input type="text" class="nsm-field form-control" name="item[]" value="Z-Thermostat">
-                                        <input type="hidden" name="dataValue[]">
-                                    </div>
-                                    <div class="col-12 col-md-2">
-                                        <input type="text" class="nsm-field form-control" name="qty[]" placeholder="Quantity">
-                                    </div>
-                                    <div class="col-12 col-md-2">
-                                        <input type="text" class="nsm-field form-control" name="location[]" placeholder="Location">
-                                    </div>
-                                    <div class="col-12 col-md-2">
-                                        <input type="text" class="nsm-field form-control all-price-field" name="price[]" placeholder="Price">
-                                    </div>
-                                    <div class="col-12 d-md-none">
-                                        <hr>
-                                    </div>
-                                </div>
-                                <div class="row g-3 mt-1">
-                                    <div class="col-12 col-md-6">
-                                        <input type="text" class="nsm-field form-control" name="item[]" value="Wifi-Card">
-                                        <input type="hidden" name="dataValue[]">
-                                    </div>
-                                    <div class="col-12 col-md-2">
-                                        <input type="text" class="nsm-field form-control" name="qty[]" placeholder="Quantity">
-                                    </div>
-                                    <div class="col-12 col-md-2">
-                                        <input type="text" class="nsm-field form-control" name="location[]" placeholder="Location">
-                                    </div>
-                                    <div class="col-12 col-md-2">
-                                        <input type="text" class="nsm-field form-control all-price-field" name="price[]" placeholder="Price">
-                                    </div>
-                                    <div class="col-12 d-md-none">
-                                        <hr>
-                                    </div>
-                                </div>
-                                <div class="row g-3 mt-1">
-                                    <div class="col-12 col-md-6">
-                                        <input type="text" class="nsm-field form-control" name="item[]" value="Z-Card">
-                                        <input type="hidden" name="dataValue[]">
-                                    </div>
-                                    <div class="col-12 col-md-2">
-                                        <input type="text" class="nsm-field form-control" name="qty[]" placeholder="Quantity">
-                                    </div>
-                                    <div class="col-12 col-md-2">
-                                        <input type="text" class="nsm-field form-control" name="location[]" placeholder="Location">
-                                    </div>
-                                    <div class="col-12 col-md-2">
-                                        <input type="text" class="nsm-field form-control all-price-field" name="price[]" placeholder="Price">
-                                    </div>
-                                    <div class="col-12 d-md-none">
-                                        <hr>
-                                    </div>
-                                </div>
-                                <div class="row g-3 mt-1">
-                                    <div class="col-12 col-md-6">
-                                        <div class="row g-2">
-                                            <div class="col">
-                                                <input type="text" class="nsm-field form-control fw-bold" name="item[]" value="Z-Lock">
-                                            </div>
-                                            <div class="col-auto d-flex align-items-center">
-                                                <div class="form-check d-inline-block me-2 mb-0">
-                                                    <input class="form-check-input check-two-field" type="checkbox" name="checkOneTwo" id="zlock_1" value="BZ">
-                                                    <label class="form-check-label" for="zlock_1">BZ</label>
-                                                </div>
-                                                <div class="form-check d-inline-block me-2 mb-0">
-                                                    <input class="form-check-input check-two-field" type="checkbox" name="checkOneTwo" id="zlock_2" value="BS">
-                                                    <label class="form-check-label" for="zlock_2">BS</label>
-                                                </div>
-                                                <div class="form-check d-inline-block me-2 mb-0">
-                                                    <input class="form-check-input check-two-field" type="checkbox" name="checkOneTwo" id="zlock_3" value="CS">
-                                                    <label class="form-check-label" for="zlock_3">CS</label>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <input type="hidden" class="checkedDataTwo" name="dataValue[]">
-                                    </div>
-                                    <div class="col-12 col-md-2">
-                                        <input type="text" class="nsm-field form-control" name="qty[]" placeholder="Quantity">
-                                    </div>
-                                    <div class="col-12 col-md-2">
-                                        <input type="text" class="nsm-field form-control" name="location[]" placeholder="Location">
-                                    </div>
-                                    <div class="col-12 col-md-2">
-                                        <input type="text" class="nsm-field form-control all-price-field" name="price[]" placeholder="Price">
-                                    </div>
-                                    <div class="col-12 d-md-none">
-                                        <hr>
-                                    </div>
-                                </div>
-                                <div class="row g-3 mt-1">
-                                    <div class="col-12 col-md-6">
-                                        <input type="text" class="nsm-field form-control" name="item[]" value="WAP">
-                                        <input type="hidden" name="dataValue[]">
-                                    </div>
-                                    <div class="col-12 col-md-2">
-                                        <input type="text" class="nsm-field form-control" name="qty[]" placeholder="Quantity">
-                                    </div>
-                                    <div class="col-12 col-md-2">
-                                        <input type="text" class="nsm-field form-control" name="location[]" placeholder="Location">
-                                    </div>
-                                    <div class="col-12 col-md-2">
-                                        <input type="text" class="nsm-field form-control all-price-field" name="price[]" placeholder="Price">
-                                    </div>
-                                    <div class="col-12 d-md-none">
-                                        <hr>
-                                    </div>
-                                </div>
-                                <div class="row g-3 mt-1">
-                                    <div class="col-12 col-md-6">
-                                        <input type="text" class="nsm-field form-control" name="item[]" value="IP-CAM (Indoor)">
-                                        <input type="hidden" name="dataValue[]">
-                                    </div>
-                                    <div class="col-12 col-md-2">
-                                        <input type="text" class="nsm-field form-control" name="qty[]" placeholder="Quantity">
-                                    </div>
-                                    <div class="col-12 col-md-2">
-                                        <input type="text" class="nsm-field form-control" name="location[]" placeholder="Location">
-                                    </div>
-                                    <div class="col-12 col-md-2">
-                                        <input type="text" class="nsm-field form-control all-price-field" name="price[]" placeholder="Price">
-                                    </div>
-                                    <div class="col-12 d-md-none">
-                                        <hr>
-                                    </div>
-                                </div>
-                                <div class="row g-3 mt-1">
-                                    <div class="col-12 col-md-6">
-                                        <input type="text" class="nsm-field form-control" name="item[]" value="IP-CAM (Outdoor)">
-                                        <input type="hidden" name="dataValue[]">
-                                    </div>
-                                    <div class="col-12 col-md-2">
-                                        <input type="text" class="nsm-field form-control" name="qty[]" placeholder="Quantity">
-                                    </div>
-                                    <div class="col-12 col-md-2">
-                                        <input type="text" class="nsm-field form-control" name="location[]" placeholder="Location">
-                                    </div>
-                                    <div class="col-12 col-md-2">
-                                        <input type="text" class="nsm-field form-control all-price-field" name="price[]" placeholder="Price">
-                                    </div>
-                                    <div class="col-12 d-md-none">
-                                        <hr>
-                                    </div>
-                                </div>
-                                <div class="row g-3 mt-1">
-                                    <div class="col-12 col-md-6">
-                                        <input type="text" class="nsm-field form-control" name="item[]" value="Warranty ePaperwork">
-                                        <input type="hidden" name="dataValue[]">
-                                    </div>
-                                    <div class="col-12 col-md-2">
-                                        <input type="text" class="nsm-field form-control" name="qty[]" placeholder="Quantity">
-                                    </div>
-                                    <div class="col-12 col-md-2">
-                                        <input type="text" class="nsm-field form-control" name="location[]" placeholder="Location">
-                                    </div>
-                                    <div class="col-12 col-md-2">
-                                        <input type="text" class="nsm-field form-control all-price-field" name="price[]" placeholder="Price">
-                                    </div>
-                                    <div class="col-12 d-md-none">
-                                        <hr>
-                                    </div>
-                                </div>
-                                <div class="row g-3 mt-1">
-                                    <div class="col-12 col-md-6">
-                                        <input type="text" class="nsm-field form-control" name="item[]" value="Advertising Kit">
-                                        <input type="hidden" name="dataValue[]">
-                                    </div>
-                                    <div class="col-12 col-md-2">
-                                        <input type="text" class="nsm-field form-control" name="qty[]" placeholder="Quantity">
-                                    </div>
-                                    <div class="col-12 col-md-2">
-                                        <input type="text" class="nsm-field form-control" name="location[]" placeholder="Location">
-                                    </div>
-                                    <div class="col-12 col-md-2">
-                                        <input type="text" class="nsm-field form-control all-price-field" name="price[]" placeholder="Price">
-                                    </div>
-                                    <div class="col-12 d-md-none">
-                                        <hr>
-                                    </div>
-                                </div>
-                                <div class="row g-3 mt-1">
-                                    <div class="col-12 col-md-6">
-                                        <input type="text" class="nsm-field form-control" name="item[]" value="Certificate of Insurance">
-                                        <input type="hidden" name="dataValue[]">
-                                    </div>
-                                    <div class="col-12 col-md-2">
-                                        <input type="text" class="nsm-field form-control" name="qty[]" placeholder="Quantity">
-                                    </div>
-                                    <div class="col-12 col-md-2">
-                                        <input type="text" class="nsm-field form-control" name="location[]" placeholder="Location">
-                                    </div>
-                                    <div class="col-12 col-md-2">
-                                        <input type="text" class="nsm-field form-control all-price-field" name="price[]" placeholder="Price">
-                                    </div>
-                                    <div class="col-12 d-md-none">
-                                        <hr>
-                                    </div>
-                                </div>
-                                <div class="row g-3 mt-1">
-                                    <div class="col-12 col-md-6">
-                                        <div class="row g-2">
-                                            <div class="col">
-                                                <input type="text" class="nsm-field form-control fw-bold" name="item[]" value="Translater">
-                                            </div>
-                                            <div class="col-auto d-flex align-items-center">
-                                                <div class="form-check d-inline-block me-2 mb-0">
-                                                    <input class="form-check-input check-three-field" type="checkbox" name="checkOneThree" id="trans_1" value="GE">
-                                                    <label class="form-check-label" for="trans_1">GE</label>
-                                                </div>
-                                                <div class="form-check d-inline-block me-2 mb-0">
-                                                    <input class="form-check-input check-three-field" type="checkbox" name="checkOneThree" id="trans_2" value="HW">
-                                                    <label class="form-check-label" for="trans_2">HW</label>
-                                                </div>
-                                                <div class="form-check d-inline-block me-2 mb-0">
-                                                    <input class="form-check-input check-three-field" type="checkbox" name="checkOneThree" id="trans_3" value="DSC">
-                                                    <label class="form-check-label" for="trans_3">DSC</label>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <input type="hidden" class="checkedDataThree" name="dataValue[]">
-                                    </div>
-                                    <div class="col-12 col-md-2">
-                                        <input type="text" class="nsm-field form-control" name="qty[]" placeholder="Quantity">
-                                    </div>
-                                    <div class="col-12 col-md-2">
-                                        <input type="text" class="nsm-field form-control" name="location[]" placeholder="Location">
-                                    </div>
-                                    <div class="col-12 col-md-2">
-                                        <input type="text" class="nsm-field form-control all-price-field" name="price[]" placeholder="Price">
-                                    </div>
-                                    <div class="col-12 d-md-none">
-                                        <hr>
-                                    </div>
-                                </div>
-                                <?php for ($i = 1; $i <= 2; $i++) { ?>
-                                    <div class="row g-3 mt-1">
-                                        <div class="col-12 col-md-6">
-                                            <input type="text" class="nsm-field form-control" name="item[]">
-                                            <input type="hidden" name="dataValue[]">
-                                        </div>
-                                        <div class="col-12 col-md-2">
-                                            <input type="text" class="nsm-field form-control" name="qty[]" placeholder="Quantity">
-                                        </div>
-                                        <div class="col-12 col-md-2">
-                                            <input type="text" class="nsm-field form-control" name="location[]" placeholder="Location">
-                                        </div>
-                                        <div class="col-12 col-md-2">
-                                            <input type="text" class="nsm-field form-control all-price-field" name="price[]" placeholder="Price">
-                                        </div>
-                                        <div class="col-12 d-md-none">
-                                            <hr>
-                                        </div>
-                                    </div>
-                                <?php } ?>
-                                <div class="row g-3 mt-1">
-                                    <div class="col-12 text-center">
-                                        <label class="content-title">ENHANCED SERVICES</label>
-                                    </div>
-                                </div>
-                                <div class="row g-3 mt-1">
-                                    <div class="col-12 col-md-6">
-                                        <input type="text" class="nsm-field form-control fw-bold" name="item[]" value="DVR">
-                                        <input type="hidden" class="dtrans_check" name="dataValue[]">
-                                    </div>
-                                    <div class="col-12 col-md-4">
-                                        <div class="d-flex align-items-center h-100">
-                                            <div class="form-check me-2">
-                                                <input class="form-check-input check-ctrans" type="checkbox" name="trans_check" id="trans_check_1" value="4ch">
-                                                <label class="form-check-label" for="trans_check_1">4ch</label>
-                                            </div>
-                                            <div class="form-check me-2">
-                                                <input class="form-check-input check-ctrans" type="checkbox" name="trans_check" id="trans_check_2" value="8ch">
-                                                <label class="form-check-label" for="trans_check_2">8ch</label>
-                                            </div>
-                                            <div class="form-check me-2">
-                                                <input class="form-check-input check-ctrans" type="checkbox" name="trans_check" id="trans_check_3" value="16ch">
-                                                <label class="form-check-label" for="trans_check_3">16ch</label>
-                                            </div>
-                                            <div class="form-check">
-                                                <input class="form-check-input check-ctrans" type="checkbox" name="trans_check" id="trans_check_4" value="32ch">
-                                                <label class="form-check-label" for="trans_check_4">32ch</label>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-12 col-md-2">
-                                        <input type="text" class="nsm-field form-control all-price-field" name="price[]" placeholder="Price">
-                                    </div>
-                                    <div class="col-12 d-md-none">
-                                        <hr>
-                                    </div>
-                                </div>
-                                <div class="row g-3 mt-1">
-                                    <div class="col-12 col-md-6">
-                                        <input type="text" class="nsm-field form-control fw-bold" name="item[]" value="DVR">
-                                        <input type="hidden" class="dtrans_check" name="dataValue[]">
-                                    </div>
-                                    <div class="col-12 col-md-4">
-                                        <div class="row g-2 align-items-center">
-                                            <div class="col-12">
-                                                <div class="form-check d-inline-block me-2">
-                                                    <input class="form-check-input check-ccam" type="checkbox" name="cam_check" id="cam_check_1" value="2">
-                                                    <label class="form-check-label" for="cam_check_1">2</label>
-                                                </div>
-                                                <div class="form-check d-inline-block me-2">
-                                                    <input class="form-check-input check-ccam" type="checkbox" name="cam_check" id="cam_check_2" value="3">
-                                                    <label class="form-check-label" for="cam_check_2">3</label>
-                                                </div>
-                                                <div class="form-check d-inline-block me-2">
-                                                    <input class="form-check-input check-ccam" type="checkbox" name="cam_check" id="cam_check_3" value="4">
-                                                    <label class="form-check-label" for="cam_check_3">4</label>
-                                                </div>
-                                                <div class="form-check d-inline-block me-2">
-                                                    <input class="form-check-input check-ccam" type="checkbox" name="cam_check" id="cam_check_4" value="5">
-                                                    <label class="form-check-label" for="cam_check_4">5</label>
-                                                </div>
-                                                <div class="form-check d-inline-block me-2">
-                                                    <input class="form-check-input check-ccam" type="checkbox" name="cam_check" id="cam_check_5" value="6">
-                                                    <label class="form-check-label" for="cam_check_5">6</label>
-                                                </div>
-                                                <div class="form-check d-inline-block me-2">
-                                                    <input class="form-check-input check-ccam" type="checkbox" name="cam_check" id="cam_check_6" value="7">
-                                                    <label class="form-check-label" for="cam_check_6">7</label>
-                                                </div>
-                                                <div class="form-check d-inline-block me-2">
-                                                    <input class="form-check-input check-ccam" type="checkbox" name="cam_check" id="cam_check_7" value="8">
-                                                    <label class="form-check-label" for="cam_check_7">8</label>
-                                                </div>
-                                                <div class="form-check d-inline-block me-2">
-                                                    <input class="form-check-input check-ccam" type="checkbox" name="cam_check" id="cam_check_8" value="9">
-                                                    <label class="form-check-label" for="cam_check_8">9</label>
-                                                </div>
-                                                <div class="form-check d-inline-block me-2">
-                                                    <input class="form-check-inputcheck-ccam" type="checkbox" name="cam_check" id="cam_check_9" value="10">
-                                                    <label class="form-check-label" for="cam_check_9">10</label>
-                                                </div>
-                                                <div class="form-check d-inline-block me-2">
-                                                    <input class="form-check-input check-ccam" type="checkbox" name="cam_check" id="cam_check_10" value="11">
-                                                    <label class="form-check-label" for="cam_check_10">11</label>
-                                                </div>
-                                                <div class="form-check d-inline-block me-2">
-                                                    <input class="form-check-input check-ccam" type="checkbox" name="cam_check" id="cam_check_11" value="12">
-                                                    <label class="form-check-label" for="cam_check_11">12</label>
-                                                </div>
-                                                <div class="form-check d-inline-block me-2">
-                                                    <input class="form-check-input check-ccam" type="checkbox" name="cam_check" id="cam_check_12" value="13">
-                                                    <label class="form-check-label" for="cam_check_12">13</label>
-                                                </div>
-                                                <div class="form-check d-inline-block me-2">
-                                                    <input class="form-check-input check-ccam" type="checkbox" name="cam_check" id="cam_check_13" value="14">
-                                                    <label class="form-check-label" for="cam_check_13">14</label>
-                                                </div>
-                                                <div class="form-check d-inline-block me-2">
-                                                    <input class="form-check-input check-ccam" type="checkbox" name="cam_check" id="cam_check_14" value="15">
-                                                    <label class="form-check-label" for="cam_check_14">15</label>
-                                                </div>
-                                                <div class="form-check d-inline-block me-2">
-                                                    <input class="form-check-input check-ccam" type="checkbox" name="cam_check" id="cam_check_15" value="16">
-                                                    <label class="form-check-label" for="cam_check_15">16</label>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-12 col-md-2">
-                                        <input type="text" class="nsm-field form-control all-price-field" name="price[]" placeholder="Price">
-                                    </div>
-                                    <div class="col-12 d-md-none">
-                                        <hr>
-                                    </div>
-                                </div>
-                                <div class="row g-3 mt-1">
-                                    <div class="col-12 col-md-6">
-                                        <div class="row g-2">
-                                            <div class="col">
-                                                <input type="text" class="nsm-field form-control fw-bold" name="item[]">
-                                            </div>
-                                            <div class="col-auto d-flex align-items-center">
-                                                <div class="form-check d-inline-block me-2 mb-0">
-                                                    <input class="form-check-input check-pers" type="checkbox" name="checkPers" id="check_pers_1" value="PERS">
-                                                    <label class="form-check-label" for="check_pers_1">PERS</label>
-                                                </div>
-                                                <div class="form-check d-inline-block me-2 mb-0">
-                                                    <input class="form-check-input check-pers" type="checkbox" name="checkPers" id="check_pers_2" value="PERS w/Fall Detect">
-                                                    <label class="form-check-label" for="check_pers_2">PERS w/Fall Detect</label>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <input type="hidden" class="pers_check" name="dataValue[]">
-                                    </div>
-                                    <div class="col-12 col-md-2">
-                                        <input type="text" class="nsm-field form-control" name="qty[]" placeholder="Quantity">
-                                    </div>
-                                    <div class="col-12 col-md-2">
-                                        <input type="text" class="nsm-field form-control" name="location[]" placeholder="Location">
-                                    </div>
-                                    <div class="col-12 col-md-2">
-                                        <input type="text" class="nsm-field form-control all-price-field" name="price[]" placeholder="Price">
-                                    </div>
-                                    <div class="col-12 d-md-none">
-                                        <hr>
-                                    </div>
-                                </div>
-                                <?php for ($i = 1; $i <= 2; $i++) { ?>
-                                    <div class="row g-3 mt-1">
-                                        <div class="col-12 col-md-6">
-                                            <input type="text" class="nsm-field form-control" name="item[]">
-                                            <input type="hidden" name="dataValue[]">
-                                        </div>
-                                        <div class="col-12 col-md-2">
-                                            <input type="text" class="nsm-field form-control" name="qty[]" placeholder="Quantity">
-                                        </div>
-                                        <div class="col-12 col-md-2">
-                                            <input type="text" class="nsm-field form-control" name="location[]" placeholder="Location">
-                                        </div>
-                                        <div class="col-12 col-md-2">
-                                            <input type="text" class="nsm-field form-control all-price-field" name="price[]" placeholder="Price">
-                                        </div>
-                                        <div class="col-12 d-md-none">
-                                            <hr>
-                                        </div>
-                                    </div>
-                                <?php } ?> -->
-
                                 <table class="nsm-table_ itemTable">
                                     <thead>
-                                        <!-- <tr> -->
-                                            <th style="text-align:center;" data-name="Items">Items</th>
-                                            <th style="text-align:center;" data-name="Quantity">QTY</th>
-                                            <th style="text-align:center;" data-name="Existing">Existing Devices</th>
-                                            <th style="text-align:center;" data-name="Location">Location</th>
-                                            <th style="text-align:center;" data-name="Price">Price</th>
-                                        <!-- </tr> -->
+                                        <th style="text-align:center;" data-name="Items">Items</th>
+                                        <th style="text-align:center;" data-name="Quantity">QTY</th>
+                                        <th style="text-align:center;" data-name="Existing">Existing Devices</th>
+                                        <th style="text-align:center;" data-name="Location">Location</th>
+                                        <th style="text-align:center;" data-name="Price">Price</th>
                                     </thead>
                                     <tbody>
-                                        <tr>
-                                            <td>
-                                                <div class="row g-2">
-                                                    <div class="col">
-                                                        <input type="text" class="nsm-field form-control fw-bold" name="item[]" value="Type of Install">
-                                                    </div>
-                                                    <div class="col-auto d-flex align-items-center">
-                                                        <div class="form-check d-inline-block me-2 mb-0">
-                                                            <input class="form-check-input check-one-field" type="checkbox" name="checkOneOne" id="toi_1" value="New">
-                                                            <label class="form-check-label" for="toi_1">New</label>
-                                                        </div>
-                                                        <div class="form-check d-inline-block mb-0">
-                                                            <input class="form-check-input check-one-field" type="checkbox" name="checkOneOne" id="toi_2" value="Takeover">
-                                                            <label class="form-check-label" for="toi_2">Takeover</label>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <input type="hidden" class="checkedDataOne" name="dataValue[]">
-                                            </td>
-                                            <td style="vertical-align: top"><input type="text" class="nsm-field form-control" name="qty[]"></td>
-                                            <td style="vertical-align: top"><input type="text" class="nsm-field form-control" name="existing[]"></td>
-                                            <td style="vertical-align: top"><input type="text" class="nsm-field form-control" name="location[]"></td>
-                                            <td style="vertical-align: top"><input type="text" class="nsm-field form-control all-price-field allprices" name="price[]"></td>
-                                        </tr>
-                                        <tr>
-                                            <td>
-                                                <input type="text" class="nsm-field form-control" name="item[]" value="LTE - Communicator">
-                                                <input type="hidden" name="dataValue[]">
-                                            </td>
-                                            <td><input type="text" class="nsm-field form-control" name="qty[]"></td>
-                                            <td><input type="text" class="nsm-field form-control" name="existing[]"></td>
-                                            <td><input type="text" class="nsm-field form-control" name="location[]"></td>
-                                            <td><input type="text" class="nsm-field form-control all-price-field allprices" name="price[]"></td>
-                                        </tr>
-                                        <tr>
-                                            <td>
-                                                <input type="text" class="nsm-field form-control" name="item[]" value="Recessed Door Contact">
-                                                <input type="hidden" name="dataValue[]">
-                                            </td>
-                                            <td><input type="text" class="nsm-field form-control" name="qty[]"></td>
-                                            <td><input type="text" class="nsm-field form-control" name="existing[]"></td>
-                                            <td><input type="text" class="nsm-field form-control" name="location[]"></td>
-                                            <td><input type="text" class="nsm-field form-control all-price-field allprices" name="price[]"></td>
-                                        </tr>
-                                        <tr>
-                                            <td>
-                                                <input type="text" class="nsm-field form-control" name="item[]" value="Surface Contact">
-                                                <input type="hidden" name="dataValue[]">
-                                            </td>
-                                            <td><input type="text" class="nsm-field form-control" name="qty[]"></td>
-                                            <td><input type="text" class="nsm-field form-control" name="existing[]"></td>
-                                            <td><input type="text" class="nsm-field form-control" name="location[]"></td>
-                                            <td><input type="text" class="nsm-field form-control all-price-field allprices" name="price[]"></td>
-                                        </tr>
-                                        <tr>
-                                            <td>
-                                                <input type="text" class="nsm-field form-control" name="item[]" value="Keyless Remote">
-                                                <input type="hidden" name="dataValue[]">
-                                            </td>
-                                            <td><input type="text" class="nsm-field form-control" name="qty[]"></td>
-                                            <td><input type="text" class="nsm-field form-control" name="existing[]"></td>
-                                            <td><input type="text" class="nsm-field form-control" name="location[]"></td>
-                                            <td><input type="text" class="nsm-field form-control all-price-field allprices" name="price[]"></td>
-                                        </tr>
-                                        <tr>
-                                            <td>
-                                                <input type="text" class="nsm-field form-control" name="item[]" value="Motion Detector">
-                                                <input type="hidden" name="dataValue[]">
-                                            </td>
-                                            <td><input type="text" class="nsm-field form-control" name="qty[]"></td>
-                                            <td><input type="text" class="nsm-field form-control" name="existing[]"></td>
-                                            <td><input type="text" class="nsm-field form-control" name="location[]"></td>
-                                            <td><input type="text" class="nsm-field form-control all-price-field allprices" name="price[]"></td>
-                                        </tr>
-                                        <tr>
-                                            <td>
-                                                <input type="text" class="nsm-field form-control" name="item[]" value="Smoke Communicator">
-                                                <input type="hidden" name="dataValue[]">
-                                            </td>
-                                            <td><input type="text" class="nsm-field form-control" name="qty[]"></td>
-                                            <td><input type="text" class="nsm-field form-control" name="existing[]"></td>
-                                            <td><input type="text" class="nsm-field form-control" name="location[]"></td>
-                                            <td><input type="text" class="nsm-field form-control all-price-field allprices" name="price[]"></td>
-                                        </tr>
-                                        <tr>
-                                            <td>
-                                                <input type="text" class="nsm-field form-control" name="item[]" value="Glass Break Detector">
-                                                <input type="hidden" name="dataValue[]">
-                                            </td>
-                                            <td><input type="text" class="nsm-field form-control" name="qty[]"></td>
-                                            <td><input type="text" class="nsm-field form-control" name="existing[]"></td>
-                                            <td><input type="text" class="nsm-field form-control" name="location[]"></td>
-                                            <td><input type="text" class="nsm-field form-control all-price-field allprices" name="price[]"></td>
-                                        </tr>
-                                        <tr>
-                                            <td>
-                                                <input type="text" class="nsm-field form-control" name="item[]" value="Carbon Monoxide">
-                                                <input type="hidden" name="dataValue[]">
-                                            </td>
-                                            <td><input type="text" class="nsm-field form-control" name="qty[]"></td>
-                                            <td><input type="text" class="nsm-field form-control" name="existing[]"></td>
-                                            <td><input type="text" class="nsm-field form-control" name="location[]"></td>
-                                            <td><input type="text" class="nsm-field form-control all-price-field allprices" name="price[]"></td>
-                                        </tr>
-                                        <tr>
-                                            <td>
-                                                <input type="text" class="nsm-field form-control" name="item[]" value="Medical Pendant">
-                                                <input type="hidden" name="dataValue[]">
-                                            </td>
-                                            <td><input type="text" class="nsm-field form-control" name="qty[]"></td>
-                                            <td><input type="text" class="nsm-field form-control" name="existing[]"></td>
-                                            <td><input type="text" class="nsm-field form-control" name="location[]"></td>
-                                            <td><input type="text" class="nsm-field form-control all-price-field allprices" name="price[]"></td>
-                                        </tr>
-                                        <tr>
-                                            <td>
-                                                <input type="text" class="nsm-field form-control" name="item[]" value="Door Bell Camera">
-                                                <input type="hidden" name="dataValue[]">
-                                            </td>
-                                            <td><input type="text" class="nsm-field form-control" name="qty[]"></td>
-                                            <td><input type="text" class="nsm-field form-control" name="existing[]"></td>
-                                            <td><input type="text" class="nsm-field form-control" name="location[]"></td>
-                                            <td><input type="text" class="nsm-field form-control all-price-field allprices" name="price[]"></td>
-                                        </tr>
-                                        <tr>
-                                            <td>
-                                                <input type="text" class="nsm-field form-control" name="item[]" value="Z-Thermostat">
-                                                <input type="hidden" name="dataValue[]">
-                                            </td>
-                                            <td><input type="text" class="nsm-field form-control" name="qty[]"></td>
-                                            <td><input type="text" class="nsm-field form-control" name="existing[]"></td>
-                                            <td><input type="text" class="nsm-field form-control" name="location[]"></td>
-                                            <td><input type="text" class="nsm-field form-control all-price-field allprices" name="price[]"></td>
-                                        </tr>
-                                        <tr>
-                                            <td>
-                                                <input type="text" class="nsm-field form-control" name="item[]" value="Wifi-Card">
-                                                <input type="hidden" name="dataValue[]">
-                                            </td>
-                                            <td><input type="text" class="nsm-field form-control" name="qty[]"></td>
-                                            <td><input type="text" class="nsm-field form-control" name="existing[]"></td>
-                                            <td><input type="text" class="nsm-field form-control" name="location[]"></td>
-                                            <td><input type="text" class="nsm-field form-control all-price-field allprices" name="price[]"></td>
-                                        </tr>
-                                        <tr>
-                                            <td>
-                                                <input type="text" class="nsm-field form-control" name="item[]" value="Z-Card">
-                                                <input type="hidden" name="dataValue[]">
-                                            </td>
-                                            <td><input type="text" class="nsm-field form-control" name="qty[]"></td>
-                                            <td><input type="text" class="nsm-field form-control" name="existing[]"></td>
-                                            <td><input type="text" class="nsm-field form-control" name="location[]"></td>
-                                            <td><input type="text" class="nsm-field form-control all-price-field allprices" name="price[]"></td>
-                                        </tr>
-                                        <tr>
-                                            <td>
-                                                <div class="row g-2">
-                                                    <div class="col">
-                                                        <input type="text" class="nsm-field form-control fw-bold" name="item[]" value="Z-Lock">
-                                                    </div>
-                                                    <div class="col-auto d-flex align-items-center">
-                                                        <div class="form-check d-inline-block me-2 mb-0">
-                                                            <input class="form-check-input check-two-field" type="checkbox" name="checkOneTwo" id="zlock_1" value="BZ">
-                                                            <label class="form-check-label" for="zlock_1">BZ</label>
-                                                        </div>
-                                                        <div class="form-check d-inline-block me-2 mb-0">
-                                                            <input class="form-check-input check-two-field" type="checkbox" name="checkOneTwo" id="zlock_2" value="BS">
-                                                            <label class="form-check-label" for="zlock_2">BS</label>
-                                                        </div>
-                                                        <div class="form-check d-inline-block me-2 mb-0">
-                                                            <input class="form-check-input check-two-field" type="checkbox" name="checkOneTwo" id="zlock_3" value="CS">
-                                                            <label class="form-check-label" for="zlock_3">CS</label>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <input type="hidden" class="checkedDataTwo" name="dataValue[]">
-                                            </td>
-                                            <td style="vertical-align: top"><input type="text" class="nsm-field form-control" name="qty[]"></td>
-                                            <td style="vertical-align: top"><input type="text" class="nsm-field form-control" name="existing[]"></td>
-                                            <td style="vertical-align: top"><input type="text" class="nsm-field form-control" name="location[]"></td>
-                                            <td style="vertical-align: top"><input type="text" class="nsm-field form-control all-price-field allprices" name="price[]"></td>
-                                        </tr>
-                                        <tr>
-                                            <td>
-                                                <input type="text" class="nsm-field form-control" name="item[]" value="WAP">
-                                                <input type="hidden" name="dataValue[]">
-                                            </td>
-                                            <td><input type="text" class="nsm-field form-control" name="qty[]"></td>
-                                            <td><input type="text" class="nsm-field form-control" name="existing[]"></td>
-                                            <td><input type="text" class="nsm-field form-control" name="location[]"></td>
-                                            <td><input type="text" class="nsm-field form-control all-price-field allprices" name="price[]"></td>
-                                        </tr>
-                                        <tr>
-                                            <td>
-                                                <input type="text" class="nsm-field form-control" name="item[]" value="IP-CAM (Indoor)">
-                                                <input type="hidden" name="dataValue[]">
-                                            </td>
-                                            <td><input type="text" class="nsm-field form-control" name="qty[]"></td>
-                                            <td><input type="text" class="nsm-field form-control" name="existing[]"></td>
-                                            <td><input type="text" class="nsm-field form-control" name="location[]"></td>
-                                            <td><input type="text" class="nsm-field form-control all-price-field allprices" name="price[]"></td>
-                                        </tr>
-                                        <tr>
-                                            <td>
-                                                <input type="text" class="nsm-field form-control" name="item[]" value="IP-CAM (Outdoor)">
-                                                <input type="hidden" name="dataValue[]">
-                                            </td>
-                                            <td><input type="text" class="nsm-field form-control" name="qty[]"></td>
-                                            <td><input type="text" class="nsm-field form-control" name="existing[]"></td>
-                                            <td><input type="text" class="nsm-field form-control" name="location[]"></td>
-                                            <td><input type="text" class="nsm-field form-control all-price-field allprices" name="price[]"></td>
-                                        </tr>
-                                        <tr>
-                                            <td>
-                                                <input type="text" class="nsm-field form-control" name="item[]" value="Warranty ePaperwork">
-                                                <input type="hidden" name="dataValue[]">
-                                            </td>
-                                            <td><input type="text" class="nsm-field form-control" name="qty[]"></td>
-                                            <td><input type="text" class="nsm-field form-control" name="existing[]"></td>
-                                            <td><input type="text" class="nsm-field form-control" name="location[]"></td>
-                                            <td><input type="text" class="nsm-field form-control all-price-field allprices" name="price[]"></td>
-                                        </tr>
-                                        <tr>
-                                            <td>
-                                                <input type="text" class="nsm-field form-control" name="item[]" value="Advertising Kit">
-                                                <input type="hidden" name="dataValue[]">
-                                            </td>
-                                            <td><input type="text" class="nsm-field form-control" name="qty[]"></td>
-                                            <td><input type="text" class="nsm-field form-control" name="existing[]"></td>
-                                            <td><input type="text" class="nsm-field form-control" name="location[]"></td>
-                                            <td><input type="text" class="nsm-field form-control all-price-field allprices" name="price[]"></td>
-                                        </tr>
-                                        <tr>
-                                            <td>
-                                                <input type="text" class="nsm-field form-control" name="item[]" value="Certificate of Insurance">
-                                                <input type="hidden" name="dataValue[]">
-                                            </td>
-                                            <td><input type="text" class="nsm-field form-control" name="qty[]"></td>
-                                            <td><input type="text" class="nsm-field form-control" name="existing[]"></td>
-                                            <td><input type="text" class="nsm-field form-control" name="location[]"></td>
-                                            <td><input type="text" class="nsm-field form-control all-price-field allprices" name="price[]"></td>
-                                        </tr>
-                                        <tr>
-                                            <td>
-                                                <div class="row g-2">
-                                                    <div class="col">
-                                                        <input type="text" class="nsm-field form-control fw-bold" name="item[]" value="Translater">
-                                                    </div>
-                                                    <div class="col-auto d-flex align-items-center">
-                                                        <div class="form-check d-inline-block me-2 mb-0">
-                                                            <input class="form-check-input check-three-field" type="checkbox" name="checkOneThree" id="trans_1" value="GE">
-                                                            <label class="form-check-label" for="trans_1">GE</label>
-                                                        </div>
-                                                        <div class="form-check d-inline-block me-2 mb-0">
-                                                            <input class="form-check-input check-three-field" type="checkbox" name="checkOneThree" id="trans_2" value="HW">
-                                                            <label class="form-check-label" for="trans_2">HW</label>
-                                                        </div>
-                                                        <div class="form-check d-inline-block me-2 mb-0">
-                                                            <input class="form-check-input check-three-field" type="checkbox" name="checkOneThree" id="trans_3" value="DSC">
-                                                            <label class="form-check-label" for="trans_3">DSC</label>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <input type="hidden" class="checkedDataThree" name="dataValue[]">
-                                            </td>
-                                            <td style="vertical-align: top"><input type="text" class="nsm-field form-control" name="qty[]"></td>
-                                            <td style="vertical-align: top"><input type="text" class="nsm-field form-control" name="existing[]"></td>
-                                            <td style="vertical-align: top"><input type="text" class="nsm-field form-control" name="location[]"></td>
-                                            <td style="vertical-align: top"><input type="text" class="nsm-field form-control all-price-field allprices" name="price[]"></td>
-                                        </tr>
-                                        <?php for ($i = 1; $i <= 2; $i++) { ?>
+                                        <?php foreach($items_data as $item) { ?>
+                                            <?php 
+                                                $i_total_amount = $item->price * $item->qty;
+                                            ?>
                                             <tr>
                                                 <td>
-                                                    <input type="text" class="nsm-field form-control" name="item[]">
+                                                    <input type="text" class="nsm-field form-control" name="item[]" value="<?php echo $item->title; ?>">
                                                     <input type="hidden" name="dataValue[]">
                                                 </td>
-                                                <td><input type="text" class="nsm-field form-control" name="qty[]"></td>
-                                            <td><input type="text" class="nsm-field form-control" name="existing[]"></td>
-                                                <td><input type="text" class="nsm-field form-control" name="location[]"></td>
-                                                <td><input type="text" class="nsm-field form-control all-price-field allprices" name="price[]"></td>
-                                            </tr>
-                                        <?php } ?>
-                                    </table>
-                                    <table class="nsm-table_ itemTable">
-                                        <tr>
-                                            <td colspan="5" class="text-center"><label class="content-title">ENHANCED SERVICES</label></td>
-                                        </tr>
-                                        <tr>
-                                            <td style="vertical-align: top;width:10%;">
-                                                <input type="text" class="nsm-field form-control fw-bold" name="item[]" value="DVR">
-                                                <input type="hidden" class="dtrans_check" name="dataValue[]">
-                                            </td>
-                                            <td colspan="3">
-                                                <div class="form-check d-inline-block  mb-0">
-                                                    <input class="form-check-input check-ctrans" type="checkbox" name="trans_check" id="trans_check_1" value="4ch">
-                                                    <label class="form-check-label" for="trans_check_1">4ch</label>
-                                                </div>
-                                                <div class="form-check d-inline-block  mb-0">
-                                                    <input class="form-check-input check-ctrans" type="checkbox" name="trans_check" id="trans_check_2" value="8ch">
-                                                    <label class="form-check-label" for="trans_check_2">8ch</label>
-                                                </div>
-                                                <div class="form-check d-inline-block  mb-0">
-                                                    <input class="form-check-input check-ctrans" type="checkbox" name="trans_check" id="trans_check_3" value="16ch">
-                                                    <label class="form-check-label" for="trans_check_3">16ch</label>
-                                                </div>
-                                                <div class="form-check d-inline-block mb-0">
-                                                    <input class="form-check-input check-ctrans" type="checkbox" name="trans_check" id="trans_check_4" value="32ch">
-                                                    <label class="form-check-label" for="trans_check_4">32ch</label>
-                                                </div>
-                                            </td>
-                                            <td style="width:10%;"><input type="text" class="nsm-field form-control all-price-field allprices" name="price[]"></td>
-                                        </tr>
-                                        <tr>
-                                            <td  style="vertical-align: top;width:10%;">
-                                                <input type="text" class="nsm-field form-control fw-bold" name="item[]" value="Cameras">
-                                                <input type="hidden" class="dcam_check" name="dataValue[]">
-                                            </td>
-                                            <td colspan="3" style="vertical-align: top">
-                                                <div class="row">
-                                                    <div class="col-12">
-                                                        <div class="form-check d-inline-block mb-0">
-                                                            <input class="form-check-input check-ccam" type="checkbox" name="cam_check" id="cam_check_1" value="2">
-                                                            <label class="form-check-label" for="cam_check_1">2</label>
-                                                        </div>
-                                                        <div class="form-check d-inline-block mb-0">
-                                                            <input class="form-check-input check-ccam" type="checkbox" name="cam_check" id="cam_check_2" value="3">
-                                                            <label class="form-check-label" for="cam_check_2">3</label>
-                                                        </div>
-                                                        <div class="form-check d-inline-block mb-0">
-                                                            <input class="form-check-input check-ccam" type="checkbox" name="cam_check" id="cam_check_3" value="4">
-                                                            <label class="form-check-label" for="cam_check_3">4</label>
-                                                        </div>
-                                                        <div class="form-check d-inline-block mb-0">
-                                                            <input class="form-check-input check-ccam" type="checkbox" name="cam_check" id="cam_check_4" value="5">
-                                                            <label class="form-check-label" for="cam_check_4">5</label>
-                                                        </div>
-                                                        <div class="form-check d-inline-block mb-0">
-                                                            <input class="form-check-input check-ccam" type="checkbox" name="cam_check" id="cam_check_5" value="6">
-                                                            <label class="form-check-label" for="cam_check_5">6</label>
-                                                        </div>
-                                                        <div class="form-check d-inline-block mb-0">
-                                                            <input class="form-check-input check-ccam" type="checkbox" name="cam_check" id="cam_check_6" value="7">
-                                                            <label class="form-check-label" for="cam_check_6">7</label>
-                                                        </div>
-                                                        <div class="form-check d-inline-block mb-0">
-                                                            <input class="form-check-input check-ccam" type="checkbox" name="cam_check" id="cam_check_7" value="8">
-                                                            <label class="form-check-label" for="cam_check_7">8</label>
-                                                        </div>
-                                                        <div class="form-check d-inline-block mb-0">
-                                                            <input class="form-check-input check-ccam" type="checkbox" name="cam_check" id="cam_check_8" value="9">
-                                                            <label class="form-check-label" for="cam_check_8">9</label>
-                                                        </div>
-                                                        <div class="form-check d-inline-block mb-0">
-                                                            <input class="form-check-input check-ccam" type="checkbox" name="cam_check" id="cam_check_9" value="10">
-                                                            <label class="form-check-label" for="cam_check_9">10</label>
-                                                        </div>
-                                                        <div class="form-check d-inline-block mb-0">
-                                                            <input class="form-check-input check-ccam" type="checkbox" name="cam_check" id="cam_check_10" value="11">
-                                                            <label class="form-check-label" for="cam_check_10">11</label>
-                                                        </div>
-                                                        <div class="form-check d-inline-block mb-0">
-                                                            <input class="form-check-input check-ccam" type="checkbox" name="cam_check" id="cam_check_11" value="12">
-                                                            <label class="form-check-label" for="cam_check_11">12</label>
-                                                        </div>
-                                                        <div class="form-check d-inline-block mb-0">
-                                                            <input class="form-check-input check-ccam" type="checkbox" name="cam_check" id="cam_check_12" value="13">
-                                                            <label class="form-check-label" for="cam_check_12">13</label>
-                                                        </div>
-                                                        <div class="form-check d-inline-block mb-0">
-                                                            <input class="form-check-input check-ccam" type="checkbox" name="cam_check" id="cam_check_13" value="14">
-                                                            <label class="form-check-label" for="cam_check_13">14</label>
-                                                        </div>
-                                                        <div class="form-check d-inline-block mb-0">
-                                                            <input class="form-check-input check-ccam" type="checkbox" name="cam_check" id="cam_check_14" value="15">
-                                                            <label class="form-check-label" for="cam_check_14">15</label>
-                                                        </div>
-                                                        <div class="form-check d-inline-block mb-0">
-                                                            <input class="form-check-input check-ccam" type="checkbox" name="cam_check" id="cam_check_15" value="16">
-                                                            <label class="form-check-label" for="cam_check_15">16</label>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </td>
-                                            <td style="width:10%;"><input type="text" class="nsm-field form-control all-price-field allprices" name="price[]"></td>
-                                        </tr>
-                                        <tr>
-                                            <td colspan="4">
-                                                <div class="">
-                                                    <!-- <div class="col">
-                                                        <input type="text" class="nsm-field form-control fw-bold" name="item[]">
-                                                    </div> -->
-                                                    <div class="col-auto d-flex align-items-center">
-                                                        <div class="form-check d-inline-block me-2 mb-0">
-                                                            <input class="form-check-input check-pers" type="checkbox" name="checkPers" id="check_pers_1" value="PERS">
-                                                            <label class="form-check-label" for="check_pers_1">PERS</label>
-                                                        </div>
-                                                        <div class="form-check d-inline-block me-2 mb-0">
-                                                            <input class="form-check-input check-pers" type="checkbox" name="checkPers" id="check_pers_2" value="PERS w/Fall Detect">
-                                                            <label class="form-check-label" for="check_pers_2">PERS w/Fall Detect</label>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <input type="hidden" class="pers_check" name="dataValue[]">
-                                            </td>
-                                            <!-- <td><input type="text" class="nsm-field form-control" name="qty[]"></td>
-                                            <td><input type="text" class="nsm-field form-control" name="existing[]"></td>
-                                            <td><input type="text" class="nsm-field form-control" name="location[]"></td>-->
-                                            <td style="width:10%;"><input type="text" class="nsm-field form-control all-price-field allprices" name="price[]"></td> 
-                                        </tr>
-                                        <?php for ($i = 1; $i <= 2; $i++) { ?>
-                                            <tr>
-                                                <td>
-                                                    <input type="text" class="nsm-field form-control" name="item[]">
-                                                    <input type="hidden" name="dataValue[]">
-                                                </td>
-                                                <td><input type="text" class="nsm-field form-control" name="qty[]"></td>
-                                                <td><input type="text" class="nsm-field form-control" name="existing[]"></td>
-                                                <td><input type="text" class="nsm-field form-control" name="location[]"></td>
-                                                <td><input type="text" class="nsm-field form-control all-price-field allprices" name="price[]"></td>
+                                                <td><input style="text-align:center;" type="text" class="nsm-field form-control" name="qty[]" value="<?php echo $item->qty; ?>"></td>
+                                                <td><input style="text-align:center;" type="text" class="nsm-field form-control" name="existing[]"></td>
+                                                <td><input style="text-align:center;" type="text" class="nsm-field form-control" name="location[]"></td>
+                                                <td><input style="text-align:center;" type="text" class="nsm-field form-control all-price-field allprices" name="price[]" value="<?php echo number_format($i_total_amount,2); ?>"></td>
                                             </tr>
                                         <?php } ?>
                                     </tbody>
@@ -1412,6 +364,69 @@ tr {
                             </div>
                         </div>
                     </div>
+
+                    <?php 
+                        $customer_id = 0;
+                        $customer_firstname = "";
+                        $customer_lastname = "";
+                        $business_name = "";
+
+                        $cust_lead_name = '';
+                        $cust_lead_id   = '';
+                        $ssn            = '';
+                        $job_location   = '';
+                        $email          = '';
+                        $phone_m        = '';
+                        $phone_h        = '';
+                        $password       = '';
+                        $cust_lead      = '';
+
+                        $c_city     = "";
+                        $c_state    = "";
+                        $c_postcode = "";
+                        $c_county   = "";                        
+
+                        if($customer) {
+                            $customer_id = $customer->prof_id;
+                            $customer_firstname = $customer->first_name;
+                            $customer_lastname = $customer->last_name;
+                        }
+
+                        if( $estimate->customer_id > 0 ){
+                            $cust_lead_name = $customer->first_name . ' ' . $customer->last_name;
+                            $cust_lead_id = $estimate->customer_id;
+                            $ssn = $customer->ssn;
+                            $business_name = $customer->business_name;
+                            $email = $customer->email;
+                            $phone_m = $customer->phone_m;
+                            $phone_h = $customer->phone_h;
+                            $password = $acsAccess ? $acsAccess->access_password : '';
+
+                            $job_location = $customer->mail_add . ', ' . $customer->city . ', ' . $customer->state . ' ' . $customer->zip_code;
+                            $c_city = $customer->city;
+                            $c_state = $customer->state;
+                            $c_postcode = $customer->zip_code;
+                            $c_county = $customer->county;
+
+                            $cust_lead = 'Customer';
+                        }elseif( $estimate->lead_id > 0 ){
+                            $cust_lead_name = $lead->firstname . ' ' . $lead->lastname;
+                            $cust_lead_id = $estimate->lead_id;
+                            $ssn = $lead->ssn_num;
+                            $email = $lead->email_add;
+                            $phone_m = $lead->phone_cell;
+                            $phone_h = $lead->phone_home;
+
+                            $job_location = $lead->address . ', ' . $lead->city . ', ' . $lead->state . ' ' . $custleadomer->zip;
+                            $c_city = $lead->city;
+                            $c_state = $lead->state;
+                            $c_postcode = $lead->zip;
+                            $c_county = $lead->county;                            
+
+                            $cust_lead = 'Lead';
+                        }                        
+                    ?>                    
+
                     <div class="col-12 col-md-6">
                         <div class="row g-3">
                             <div class="col-12">
@@ -1420,11 +435,11 @@ tr {
                                         <div class="row g-3">
                                             <div class="col-12 col-md-6">
                                                 <label class="content-subtitle fw-bold d-block mb-2">Password <span class="nsm-text-error">*</span></label>
-                                                <input type="text" name="password" class="nsm-field form-control" required>
+                                                <input type="text" name="password" class="nsm-field form-control" value="<?php echo $password; ?>" required>
                                             </div>
                                             <div class="col-12 col-md-6">
                                                 <label class="content-subtitle fw-bold d-block mb-2">SSN (Optional)</label>
-                                                <input type="text" name="ssn" class="nsm-field form-control number-field_two" placeholder="XXX-XX-XXXX">
+                                                <input type="text" name="ssn" class="nsm-field form-control number-field_two" value="<?php echo $ssn; ?>" placeholder="XXX-XX-XXXX">
                                             </div>
                                         </div>
                                     </div>
@@ -1438,18 +453,6 @@ tr {
                                         </div>
                                     </div>
                                     <div class="nsm-card-content">
-                                        <?php 
-              
-
-                                            $customer_id = 0;
-                                            $customer_firstname = "";
-                                            $customer_lastname = "";
-                                            if($customer) {
-                                                $customer_id = $customer->prof_id;
-                                                $customer_firstname = $customer->first_name;
-                                                $customer_lastname = $customer->last_name;
-                                            }
-                                        ?>
                                         <div class="row g-3">
                                             <div class="col-12">
                                                 <label class="content-subtitle fw-bold d-block mb-2" style="float:left;">Customer</label>
@@ -1473,7 +476,7 @@ tr {
                                             </div>
                                             <div class="col-12 col-md-12" id="commercial_account">
                                                 <label class="content-subtitle fw-bold d-block mb-2">Business Name</label>
-                                                <input type="text" name="businessname"  id="businessname" class="nsm-field form-control">
+                                                <input type="text" name="businessname" value="<?php echo $business_name; ?>" id="businessname" class="nsm-field form-control">
                                             </div>
                                             <div class="col-12 col-md-6">
                                                 <label class="content-subtitle fw-bold d-block mb-2">First name (Spouse)</label>
@@ -1489,31 +492,31 @@ tr {
                                             </div>
                                             <div class="col-12 col-md-6">
                                                 <label class="content-subtitle fw-bold d-block mb-2">City</label>
-                                                <input type="text" name="city_form" class="nsm-field form-control">
+                                                <input type="text" name="city_form" value="<?php echo $c_city; ?>" class="nsm-field form-control">
                                             </div>
                                             <div class="col-12 col-md-6">
                                                 <label class="content-subtitle fw-bold d-block mb-2">State</label>
-                                                <input type="text" name="state_form" class="nsm-field form-control">
+                                                <input type="text" name="state_form" value="<?php echo $c_state; ?>" class="nsm-field form-control">
                                             </div>
                                             <div class="col-12 col-md-6">
                                                 <label class="content-subtitle fw-bold d-block mb-2">Postcode</label>
-                                                <input type="text" name="postcode_form" class="nsm-field form-control">
+                                                <input type="text" name="postcode_form" value="<?php echo $c_postcode; ?>" class="nsm-field form-control">
                                             </div>
                                             <div class="col-12 col-md-6">
                                                 <label class="content-subtitle fw-bold d-block mb-2">County</label>
-                                                <input type="text" name="county" class="nsm-field form-control">
+                                                <input type="text" name="county" value="<?php echo $c_county; ?>" class="nsm-field form-control">
                                             </div>
                                             <div class="col-12 col-md-6">
                                                 <label class="content-subtitle fw-bold d-block mb-2">Phone</label>
-                                                <input type="text" name="phone" class="nsm-field form-control number-field">
+                                                <input type="text" name="phone" value="<?php echo $phone_h; ?>" class="nsm-field form-control number-field">
                                             </div>
                                             <div class="col-12 col-md-6">
                                                 <label class="content-subtitle fw-bold d-block mb-2">Mobile</label>
-                                                <input type="text" name="mobile" class="nsm-field form-control number-field">
+                                                <input type="text" name="mobile" value="<?php echo $phone_m; ?>" class="nsm-field form-control number-field">
                                             </div>
                                             <div class="col-12">
                                                 <label class="content-subtitle fw-bold d-block mb-2">Email</label>
-                                                <input type="email" name="email" class="nsm-field form-control">
+                                                <input type="email" name="email" value="<?php echo $email; ?>" class="nsm-field form-control">
                                             </div>
                                             <div class="col-12">
                                                 <label class="content-subtitle fw-bold d-block mb-2">Emergency Contact</label>
@@ -1899,6 +902,52 @@ tr {
                             </div>
                         </div>
                     </div>
+
+                    <div class="col-12 col-md-6">
+                        <div class="nsm-card">
+                            <div class="nsm-card-header">
+                                <div class="nsm-card-title d-block">
+                                    <div class="row">
+                                        <div class="col-12 col-md-4">
+                                            <span class="d-block"><strong>Documents (10)</strong></span>
+                                        </div>
+                                        <div class="col-12 col-md-8">
+                                            <a class="nsm-button btn-small" style="float:right;" id="btn-add-file" href="javascript:void(0);"><strong>+ Add File</strong></a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="nsm-card-content">
+                                <div class="row">
+                                    <div class="col-12 col-md-12">
+                                         <table class="nsm-table attached-file">
+                                            <tr>
+                                                <td><input class="form-control" type="file" id="formFile"></td>
+                                                <td><a href="#" class="remove nsm-button danger" id="1"><i class="fa fa-trash" style=""></i></a></td>
+                                            </tr>
+                                            <tr>
+                                                <td><input class="form-control" type="file" id="formFile"></td>
+                                                <td><a href="#" class="remove nsm-button danger" id="1"><i class="fa fa-trash" style=""></i></a></td>
+                                            </tr>
+                                            <tr>
+                                                <td><button type="submit" class="btn btn-primary">Upload</button></td>
+                                                <td>&nbsp;</td>
+                                            </tr>
+                                            
+                                        </table>
+                                    </div>   
+                                    <hr />                                     
+                                </div>
+                                
+                                <div class="row">
+                                    <?php for ($i = 1; $i <= 5; $i++) { ?>
+                                        <div class="col-12 col-md-3"><i style="font-size: 90px;" class='bx bxs-file-doc'></i></div>
+                                    <?php } ?>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
                     <div class="col-12">
                         <div class="nsm-card">
                             <div class="row g-3">
