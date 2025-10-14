@@ -1981,8 +1981,8 @@ class Events extends MY_Controller
         $eventSettings = $this->EventSettings_model->getByCompanyId($cid);
         if( $eventSettings ){
             $event_settings_data = [
-                'event_prefix' => $post['event_settings_prefix'],
-                'event_next_num' => $post['event_settings_next_number'],
+                //'event_prefix' => $post['event_settings_prefix'],
+                //'event_next_num' => $post['event_settings_next_number'],
                 'timezone' => $post['event_settings_timezone'],
                 'customer_reminder_notification' => $post['event_settings_customer_reminder_notification']
             ];
@@ -1990,8 +1990,8 @@ class Events extends MY_Controller
         }else{
             $event_settings_data = [
                 'company_id' => $cid,
-                'event_prefix' => $post['event_settings_prefix'],
-                'event_next_num' => $post['event_settings_next_number'],
+                'event_prefix' => 'EVENT',
+                'event_next_num' => 1,
                 'timezone' => $post['event_settings_timezone'],
                 'customer_reminder_notification' => $post['event_settings_customer_reminder_notification'],
                 'auto_sync_icloud_cal' => 0,
