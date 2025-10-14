@@ -2776,12 +2776,7 @@ class Estimate extends MY_Controller
         $post = $this->input->post();
         $company_id = logged('company_id');
         $is_valid = 1;
-
-        if ($post['prefix'] == '' || $post['base'] == '') {
-            $is_valid = 0;
-            $msg = 'Please specify estimate number prefix and next number';
-        }
-
+        
         if ($is_valid == 1) {
             $is_residential_message_default = 0;
             if (isset($post['is_residential_default'])) {
@@ -2791,8 +2786,8 @@ class Estimate extends MY_Controller
             $settings = $this->EstimateSettings_model->getEstimateSettingByCompanyId($company_id);
             if ($settings) {
                 $data = [
-                        'estimate_num_prefix' => $post['prefix'],
-                        'estimate_num_next' => $post['base'],
+                        //'estimate_num_prefix' => $post['prefix'],
+                        //'estimate_num_next' => $post['base'],
                         'residential_message' => $post['residential_message'],
                         'residential_terms_and_conditions' => $post['residential_terms'],
                         'commercial_message' => $post['message_commercial'],
@@ -2804,8 +2799,8 @@ class Estimate extends MY_Controller
             } else {
                 $data = [
                     'company_id' => $company_id,
-                    'estimate_num_prefix' => $post['prefix'],
-                    'estimate_num_next' => $post['base'],
+                    'estimate_num_prefix' => 'EST',
+                    'estimate_num_next' => 1,
                     'residential_message' => $post['residential_message'],
                     'residential_terms_and_conditions' => $post['residential_terms'],
                     'commercial_message' => $post['message_commercial'],
