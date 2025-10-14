@@ -181,7 +181,7 @@
                         </div>
                         <div class="col-12 col-md-6">
                             <span class="content-subtitle">
-                                <?php if(isset($billing_info)){ echo (!empty($billing_info->bill_start_date)) ? $billing_info->bill_start_date : $office_info->install_date; } ?>
+                                <?php if(isset($billing_info)){ echo (!empty($billing_info->bill_start_date)) ? date("m/d/Y",strtotime($billing_info->bill_start_date)) : $office_info->install_date; } ?>
                             </span>
                         </div>
                         <div class="col-12 col-md-6">
@@ -189,8 +189,7 @@
                         </div>
                         <div class="col-12 col-md-6">
                             <span class="content-subtitle">
-                                <?php if(isset($billing_info)){ echo $billing_info->bill_end_date; }; ?>
-                                <?= date("m/d/Y", strtotime("$office_info->install_date +60 months")); ?>
+                                <?php if(isset($billing_info)){ echo date("m/d/Y",strtotime($billing_info->bill_end_date)); }; ?>                                
                             </span>
                         </div>
                     </div>

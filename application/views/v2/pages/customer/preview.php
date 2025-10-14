@@ -174,25 +174,23 @@
                         </div>
                     </div>
                 </div>
-                <table class="table">
-                    <tr>
-                        <td>
-                            <?php include viewPath('v2/pages/customer/advance_customer_forms/preview_customer_info'); ?>
-                            <?php include viewPath('v2/pages/customer/advance_customer_forms/preview_property_info'); ?>
-                        </td>
-                        <td>
-                            <?php include viewPath('v2/pages/customer/advance_customer_forms/preview_office_info'); ?>
-                        </td>
-                        <td>
-                            <?php include viewPath('v2/pages/customer/advance_customer_forms/preview_alarm_info'); ?>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td colspan="3">
-                            <?php include viewPath('v2/pages/customer/advance_customer_forms/preview_notes_info'); ?>
-                        </td>
-                    </tr>
-                </table>
+                <div class="row">
+                    <div class="col-12 col-md-4 mb-2">
+                        <?php include viewPath('v2/pages/customer/advance_customer_forms/preview_customer_info'); ?>
+                    </div>                    
+                    <div class="col-12 col-md-4 mb-2">
+                        <?php include viewPath('v2/pages/customer/advance_customer_forms/preview_office_info'); ?>
+                    </div>
+                    <div class="col-12 col-md-4 mb-2">
+                       <?php include viewPath('v2/pages/customer/advance_customer_forms/preview_alarm_info'); ?>
+                    </div>
+                    <div class="col-12 col-md-4 mb-2">
+                        <?php include viewPath('v2/pages/customer/advance_customer_forms/preview_property_info'); ?>
+                    </div>
+                    <div class="col-12 col-md-4 mb-2">
+                       <?php include viewPath('v2/pages/customer/advance_customer_forms/preview_notes_info'); ?>
+                    </div>
+                </div>
                 <!-- end of div to print  -->
                 </div>
                 <!-- end of div to print  -->
