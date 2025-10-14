@@ -944,6 +944,9 @@
                 },
                 success: function(result) {
                     $('#edit_appointment_container').html(result);
+                },
+                beforeSend: function(){
+                    $('#edit_appointment_container').html('<span class="bx bx-loader bx-spin"></span>');
                 }
             });
         });
@@ -2747,6 +2750,9 @@
             },
             success: function(result) {
                 $('#edit_appointment_container').html(result);
+            },
+            beforeSend: function(){
+                $('#edit_appointment_container').html('<span class="bx bx-loader bx-spin"></span>');
             }
         });
     }
