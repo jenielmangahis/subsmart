@@ -7,20 +7,20 @@
         </div>
         <div class="nsm-card-content">
             <div class="row g-3">
-                <div class="col-12 col-md-7">
+                <div class="col-12 col-md-12">
                     <div class="row g-2">
-                        <div class="col-12 col-md-4">
-                            <img class="w-100" src="https://app.creditrepaircloud.com/application/images/equifax.png">
+                        <div class="col-4 col-md-4" style="margin:auto;">
+                            <img class="w-100" src="<?= $url->assets . 'img/accounting/credit_card_bureaus/equifax.png'; ?>">
                         </div>
-                        <div class="col-12 col-md-4">
-                            <img class="w-100" src="https://app.creditrepaircloud.com/application/images/experian.png">
+                        <div class="col-4 col-md-4" style="margin:auto;">
+                            <img class="w-100" src="<?= $url->assets . 'img/accounting/credit_card_bureaus/experian.png'; ?>">
                         </div>
-                        <div class="col-12 col-md-4">
-                            <img class="w-100" src="https://app.creditrepaircloud.com/application/images/trans_union.png">
+                        <div class="col-4 col-md-4" style="margin:auto;">
+                            <img class="w-100" src="<?= $url->assets . 'img/accounting/credit_card_bureaus/transunion.png'; ?>">
                         </div>
                     </div>
                 </div>
-                <div class="col-12 col-md-5">
+                <div class="col-12 col-md-12">
                     <canvas id="score_chart" class="nsm-chart"></canvas>
                 </div>
                 <div class="col-12">
