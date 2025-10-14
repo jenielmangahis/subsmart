@@ -79,7 +79,6 @@
                                 <option value="Missing">Missing</option>
                             </select>
                         </div>
-
                         <!-- <div class="d-inline-block me-2">
                             <button type="button" class="dropdown-toggle nsm-button" data-bs-toggle="dropdown">
                                 <span>More actions</span> <i class='bx bx-fw bx-chevron-down'></i>

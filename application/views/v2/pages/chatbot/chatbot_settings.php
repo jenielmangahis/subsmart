@@ -1,6 +1,7 @@
 <?php include viewPath('v2/includes/header'); ?>
-<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/datatables.net-bs5/1.13.1/dataTables.bootstrap5.min.css">
-<script src="https://cdn.datatables.net/2.0.6/js/dataTables.js"></script>
+<!-- ✅ DataTables -->
+<link rel="stylesheet" href="<?php echo base_url('assets/datatables/datatables.min.css') ?>">
+<script src="<?php echo base_url('assets/datatables/datatables.min.js') ?>"></script>
 <script src="https://cdn.ckeditor.com/4.22.1/standard/ckeditor.js"></script>
 <style>
     .cke_notification {

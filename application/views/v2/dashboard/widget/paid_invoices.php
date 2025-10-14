@@ -6,7 +6,6 @@
     $type = trim($thumbnailsWidgetCard->type);
     $category = trim($thumbnailsWidgetCard->category);
 ?>
-
 <div class='card shadow widgetBorder <?php echo "card_$category$id "; ?>'>
     <div class="card-body">
         <div class="row">
@@ -21,7 +20,7 @@
                         </a>
                         <ul class="dropdown-menu dropdown-menu-end">
                             <li><a class="dropdown-item removeDashboardCard" data-id='<?php echo $id; ?>' href="javascript:void(0)">Remove</a></li>
-                            <!-- <li>
+                            <li>
                                 <hr class="dropdown-divider">
                             </li>
                             <li class="px-3 showGraphButton">
@@ -29,7 +28,7 @@
                                     <input class="form-check-input <?php echo "showHideGraphCheckbox_$id"; ?> graphCheckbox" type="checkbox" <?php echo ($graphState == 'block') ? 'checked' : ''; ?>>
                                     <label class="form-check-label text-muted graphCheckboxLabel">Show Graph</label>
                                 </div>
-                            </li> -->
+                            </li>
                         </ul>
                     </div>
                 </h5>

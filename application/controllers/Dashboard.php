@@ -2222,6 +2222,10 @@ class Dashboard extends Widgets
             case 'subscription_revenue':
                 $graphData = ['GRAPH' => [], 'TOTAL_SUBSCRIPTION_REVENUE' => 0, 'TOTAL_SUBSCRIBERS' => count($data) ];
     
+                usort($data, function($a, $b) {
+                    return strtotime($a->date) - strtotime($b->date);
+                });
+
                 $accumulativeValue = 0.0;
                 foreach ($data as $datas) {
                     $accumulativeValue += $datas->mmr;
@@ -2235,6 +2239,10 @@ class Dashboard extends Widgets
             case 'sales':
                 $graphData = ['GRAPH' => [], 'TOTAL_AMOUNT' => 0, 'TOTAL_COUNT' => count($data) ];
     
+                usort($data, function($a, $b) {
+                    return strtotime($a->date) - strtotime($b->date);
+                });
+
                 $accumulativeValue = 0.0;
                 foreach ($data as $datas) {
                     $accumulativeValue += $datas->total;
@@ -2248,6 +2256,10 @@ class Dashboard extends Widgets
             case 'unpaid_invoices':
                 $graphData = ['GRAPH' => [], 'TOTAL_AMOUNT' => 0, 'TOTAL_COUNT' => count($data) ];
     
+                usort($data, function($a, $b) {
+                    return strtotime($a->date) - strtotime($b->date);
+                });
+
                 $accumulativeValue = 0.0;
                 foreach ($data as $datas) {
                     $accumulativeValue += $datas->total;
@@ -2261,6 +2273,10 @@ class Dashboard extends Widgets
             case 'past_due_invoices':
                 $graphData = ['GRAPH' => [], 'TOTAL_AMOUNT' => 0, 'TOTAL_COUNT' => count($data) ];
     
+                usort($data, function($a, $b) {
+                    return strtotime($a->date) - strtotime($b->date);
+                });
+
                 $accumulativeValue = 0.0;
                 foreach ($data as $datas) {
                     $accumulativeValue += $datas->total;
@@ -2274,6 +2290,10 @@ class Dashboard extends Widgets
             case 'open_invoices':
                 $graphData = ['GRAPH' => [], 'TOTAL_AMOUNT' => 0, 'TOTAL_COUNT' => count($data) ];
     
+                usort($data, function($a, $b) {
+                    return strtotime($a->date) - strtotime($b->date);
+                });
+
                 $accumulativeValue = 0.0;
                 foreach ($data as $datas) {
                     $accumulativeValue += $datas->total;
@@ -2287,11 +2307,13 @@ class Dashboard extends Widgets
             case 'job':
                 $graphData = ['GRAPH' => [], 'TOTAL_JOBS' => 0, 'TOTAL_COUNT' => count($data) ];
     
-                $accumulativeValue = 0;
+                usort($data, function($a, $b) {
+                    return strtotime($a->date) - strtotime($b->date);
+                });
+
                 foreach ($data as $datas) {
-                    $accumulativeValue += 1;
                     $month = strtoupper(date('Y M', strtotime($datas->date)));
-                    $graphData['GRAPH'][$month] = $accumulativeValue;
+                    $graphData['GRAPH'][$month] += 1;
                 }
     
                 $graphData['TOTAL_JOBS'] = $accumulativeValue;
@@ -2300,6 +2322,10 @@ class Dashboard extends Widgets
             case 'income':
                 $graphData = ['GRAPH' => [], 'TOTAL_AMOUNT' => 0, 'TOTAL_COUNT' => count($data) ];
     
+                usort($data, function($a, $b) {
+                    return strtotime($a->date) - strtotime($b->date);
+                });
+
                 $accumulativeValue = 0.0;
                 foreach ($data as $datas) {
                     $accumulativeValue += $datas->total;
@@ -2313,6 +2339,10 @@ class Dashboard extends Widgets
             case 'collections':
                 $graphData = ['GRAPH' => [], 'TOTAL_AMOUNT' => 0, 'TOTAL_COUNT' => count($data) ];
     
+                usort($data, function($a, $b) {
+                    return strtotime($a->date) - strtotime($b->date);
+                });
+
                 $accumulativeValue = 0.0;
                 foreach ($data as $datas) {
                     $accumulativeValue += $datas->total;
@@ -2345,6 +2375,10 @@ class Dashboard extends Widgets
             case 'leads':
                 $graphData = ['GRAPH' => [], 'TOTAL_LEADS' => 0, 'TOTAL_COUNT' => count($data) ];
     
+                usort($data, function($a, $b) {
+                    return strtotime($a->date) - strtotime($b->date);
+                });
+
                 $accumulativeValue = 0;
                 foreach ($data as $datas) {
                     $accumulativeValue += 1;
@@ -2358,6 +2392,10 @@ class Dashboard extends Widgets
             case 'contact':
                 $graphData = ['GRAPH' => [], 'TOTAL_COUNT' => count($data) ];
     
+                usort($data, function($a, $b) {
+                    return strtotime($a->date) - strtotime($b->date);
+                });
+
                 $accumulativeValue = 0;
                 foreach ($data as $datas) {
                     $accumulativeValue += 1;
@@ -2421,6 +2459,10 @@ class Dashboard extends Widgets
             case 'service_tickets':
                 $graphData = ['GRAPH' => [], 'TOTAL_AMOUNT' => 0, 'TOTAL_COUNT' => count($data)];
             
+                usort($data, function($a, $b) {
+                    return strtotime($a->date) - strtotime($b->date);
+                });
+
                 $accumulativeValue = 0.0;
                 $accumulativeCount = 0;
                 $lastMonth = ''; 
@@ -2512,6 +2554,10 @@ class Dashboard extends Widgets
             case 'paid_invoices':
                 $graphData = ['GRAPH' => [], 'TOTAL_AMOUNT' => 0, 'TOTAL_COUNT' => count($data) ];
     
+                usort($data, function($a, $b) {
+                    return strtotime($a->date) - strtotime($b->date);
+                });
+
                 $accumulativeValue = 0.0;
                 foreach ($data as $datas) {
                     $accumulativeValue += $datas->total;
@@ -2859,6 +2905,10 @@ class Dashboard extends Widgets
             case 'job_install':
                 $graphData = ['GRAPH' => [], 'TOTAL_COUNT' => count($data)];
             
+                usort($data, function($a, $b) {
+                    return strtotime($a->date) - strtotime($b->date);
+                });
+
                 $accumulativeCount = 0;
                 $lastMonth = ''; 
                 

@@ -409,7 +409,7 @@
     </div>
 </div>
 <script>
-<?php //if ($userType != 7) { echo "$('.pointerCursor, .employee_image_profile_edit , .edit-deductions-and-contributions').remove();"; } ?>
+<?php if ($userType != 7) { echo "$('.pointerCursor, .employee_image_profile_edit , .edit-deductions-and-contributions').remove();"; } ?>
 $('a[data-bs-target="#edit-tax-withholdings-modal"]').click(function (e) { 
     const formType = "<?php echo "$taxWithholdingData->withholding_certificate" ?>";
     if (formType == "form_2020") {
@@ -428,7 +428,5 @@ $('a[data-bs-target="#edit-tax-withholdings-modal"]').click(function (e) {
         $('.form_2019_input > input').show().removeAttr('disabled');
     }
 });
-
-
 </script>
 <?php include viewPath('v2/includes/footer'); ?>
