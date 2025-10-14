@@ -6,14 +6,6 @@
     $type = trim($thumbnailsWidgetCard->type);
     $category = trim($thumbnailsWidgetCard->category);
 ?>
-
-<style>
-    .widget-default-arrow {
-        cursor: default !important;
-        background: #00000008 !important;
-    }
-</style>
-
 <div class='card shadow widgetBorder <?php echo "card_$category$id "; ?>'>
     <div class="card-body">
         <div class="row">
@@ -57,7 +49,7 @@
         </div> -->
         <div class="row <?php echo "textDatas_$id"; ?>">
             <div class="col text-nowrap <?php echo "textDataContainer_$id"; ?>">
-                <div class="text-center textData widget-default-arrow">
+                <div class="text-center textData">
                     
                 </div>
             </div>
@@ -151,7 +143,7 @@
 
                         $('.<?php echo "textDatas_$id"; ?>').append(`
                             <div class='col-6 col-md-6 text-nowrap <?php echo "textDataContainer_$id"; ?>'>
-                                <div class='text-center textData widget-default-arrow'>
+                                <div class='text-center textData'>
                                     <small class='text-muted text-uppercase fw-bold'>${key}</small>
                                     <h4>${displayValue}</h4>
                                 </div>

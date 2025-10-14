@@ -98,14 +98,22 @@ if ($this->session->userdata('usertimezone') == null) {
         var surveyBaseUrl = '<?php echo base_url(); ?>';
     </script>    
 
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/izitoast/1.4.0/css/iziToast.css" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.9.0/css/all.min.css" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.15.2/css/selectize.bootstrap5.min.css"/>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.15.2/js/selectize.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/izitoast/1.4.0/js/iziToast.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
-    <script src="https://cdn.jsdelivr.net/npm/masonry-layout@4.2.2/dist/masonry.pkgd.min.js"></script>
+    <!-- ✅ iziToast -->
+    <link rel="stylesheet" href="<?php echo base_url('assets/izitoast/izitoast.min.css') ?>">
+    <script src="<?php echo base_url('assets/izitoast/izitoast.min.js') ?>"></script>
 
+    <!-- ✅ font awesome 5 -->
+    <link rel="stylesheet" href="<?php echo base_url('assets/fa-5/css/all.min.css') ?>">
+
+    <!-- ✅ Selectize -->
+    <link rel="stylesheet" href="<?php echo base_url('assets/selectize/selectize.min.css') ?>">
+    <script src="<?php echo base_url('assets/selectize/selectize.min.js') ?>"></script>
+
+    <!-- ✅ apexchats-->
+    <script src="<?php echo base_url('assets/apexcharts/apexcharts.min.js') ?>"></script>
+
+    <!-- ✅ bootstrap 5 masonry -->
+    <script src="<?php echo base_url('assets/bootstrap5masonry/bootstrap5masonry.min.js') ?>"></script>
     <style>
         .nsm-nav-items #clockOut i {
             color: "green";

@@ -6,24 +6,12 @@
     $type = trim($thumbnailsWidgetCard->type);
     $category = trim($thumbnailsWidgetCard->category);
 ?>
-
-<style>
-    .widget-default-arrow {
-        cursor: default !important;
-        background: #00000008 !important;
-    }
-
-    .thumb-header-widget-default-arrow {
-        cursor: default !important;
-    } 
-</style>
-
 <div class='card shadow <?php echo "card_$category$id "; ?>'>
     <div class="card-body">
         <div class="row">
             <div class="col-md-12">
                 <h5 class="mt-0 fw-bold">
-                    <a role="button" class="text-decoration-none thumb-header-widget-default-arrow" href="javascript:void(0)" style="color:#6a4a86 !important">
+                    <a role="button" class="text-decoration-none" href="javascript:void(0)" style="color:#6a4a86 !important">
                         <?php echo "<i class='$icon'></i>&nbsp;&nbsp;$title"; ?> <span class="badge bg-secondary position-absolute opacity-25"><?php echo ucfirst($type); ?></span>
                     </a>
                     <div class="dropdown float-end thumbnailDropdownMenu display_none">
@@ -174,7 +162,7 @@
                         } else {
                             $('.<?php echo "textDatas_$id"; ?>').append(`
                                 <div class='col text-nowrap <?php echo "textDataContainer_$id"; ?>'>
-                                    <div class='text-center textData widget-default-arrow'>
+                                    <div class='text-center textData'>
                                         <small class='text-muted text-uppercase fw-bold'>${key}</small>
                                         <h4>${value}</h4>
                                     </div>

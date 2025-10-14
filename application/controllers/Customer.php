@@ -288,7 +288,7 @@ class Customer extends MY_Controller
                         $customer_email = $customer->email;
                     }
                     $name = "
-                        <label class='nsm-link default d-block fw-bold' onclick='location.href=\"".base_url('customer/module/'.$customer->prof_id.'')."\"'>".$labelName."</label><small class='text-muted content-subtitle d-block mt-1'>$customer->customer_no</small><small class='text-muted'>".$customer_email.'</small>';
+                        <label class='nsm-link default d-block fw-bold' onclick='location.href=\"".base_url('customer/module/'.$customer->prof_id.'')."\"'>".$labelName."</label><small style='font-size: 12px;' class='text-muted content-subtitle d-block mt-1'>CS: $customer->customer_no</small><small class='text-muted'>".$customer_email.'</small>';
                     if ($customer->adt_sales_project_id > 0) {
                         $name .= '<span class="badge badge-primary">ADT SALES PORTAL DATA</label>';
                     }
@@ -573,7 +573,7 @@ class Customer extends MY_Controller
                         $customer_email = $customer->email;
                     }
                     $name = "
-                        <label class='nsm-link default d-block fw-bold' onclick='location.href=\"".base_url('customer/module/'.$customer->prof_id.'')."\"'>".$labelName."</label><small class='text-muted content-subtitle d-block mt-1'>$customer->customer_no</small><small class='text-muted'>".$customer_email.'</small>';
+                        <label class='nsm-link default d-block fw-bold' onclick='location.href=\"".base_url('customer/module/'.$customer->prof_id.'')."\"'>".$labelName."</label><small style='font-size: 12px;' class='text-muted content-subtitle d-block mt-1'>CS: $customer->customer_no</small><small class='text-muted'>".$customer_email.'</small>';
                     if ($customer->adt_sales_project_id > 0) {
                         $name .= '<span class="badge badge-primary">ADT SALES PORTAL DATA</label>';
                     }
@@ -1011,7 +1011,7 @@ class Customer extends MY_Controller
                         $customer_email = $customer->email;
                     }
                     $name = "
-                        <label class='nsm-link default d-block fw-bold' onclick='location.href=\"".base_url('customer/module/'.$customer->prof_id.'')."\"'>".$labelName."</label><small class='text-muted content-subtitle d-block mt-1'>$customer->customer_no</small><small class='text-muted'>".$customer_email.'</small>';
+                        <label class='nsm-link default d-block fw-bold' onclick='location.href=\"".base_url('customer/module/'.$customer->prof_id.'')."\"'>".$labelName."</label><small style='font-size: 12px;' class='text-muted content-subtitle d-block mt-1'>CS: $customer->customer_no</small><small class='text-muted'>".$customer_email.'</small>';
                     if ($customer->adt_sales_project_id > 0) {
                         $name .= '<span class="badge badge-primary">ADT SALES PORTAL DATA</label>';
                     }

@@ -6,7 +6,6 @@
     $type = trim($thumbnailsWidgetCard->type);
     $category = trim($thumbnailsWidgetCard->category);
 ?>
-
 <div class='card shadow widgetBorder <?php echo "card_$category$id "; ?>'>
     <div class="card-body">
         <div class="row">
