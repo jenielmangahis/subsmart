@@ -16,6 +16,29 @@
                     </div>
                 </div>
             </div>
+            <div class="col-12 col-md-6 mb-2">
+                <label class="content-subtitle fw-bold d-block mb-2">Appointment Type</label>
+                <select name="appointment_type_id" class="nsm-field form-select edit-appointment-type" required>
+                    <?php foreach ($appointmentTypes as $a) { ?>
+                        <option <?= $appointment->appointment_type_id == $a->id ? 'selected="selected"' : ''; ?> value="<?= $a->id; ?>"><?= $a->name; ?></option>
+                    <?php } ?>
+                </select>
+            </div>
+            <div class="col-12 col-md-6 mb-2">
+                <label class="content-subtitle fw-bold d-block mb-2">Priority</label>
+                <select name="appointment_priority" class="nsm-field form-select edit-appointment-priority" required>
+                    <?php if( $appointment->appointment_type_id == 4 ){ ?>
+                        <?php foreach($appointmentPriorityEventOptions as $priority){ ?>
+                            <option value="<?= $priority; ?>"><?= $priority; ?></option>
+                        <?php } ?>
+                    <?php }else{ ?>
+                        <?php foreach($appointmentPriorityOptions as $priority){ ?>
+                            <option value="<?= $priority; ?>"><?= $priority; ?></option>
+                        <?php } ?>
+                    <?php } ?>                
+                </select>   
+                <input type="text" value="" name="appointment_priority_others" placeholder="Please specify" class="nsm-field form-select priority-others" style="margin-top:5px;display: none;">   
+            </div>
             <div class="col-12 mb-2 edit-event-description-container" style="<?= $appointment->appointment_type_id != 4 ? 'display: none;' : ''; ?>">
                 <label class="content-subtitle fw-bold d-block mb-2">Event Name</label>
                 <span id="wait-list-created-by">
@@ -73,7 +96,7 @@
                     </div>   
                     <div class="col-12 col-md-6 mb-2">
                         <label class="content-subtitle fw-bold d-block mb-2">Contact Number</label>
-                        <input type="text" value="<?= $appointment->lead_contact_number; ?>" name="contact_number" placeholder="xxx-xxx-xxxx" class="nsm-field form-control phone-number-format" />                          
+                        <input type="text" value="<?= $appointment->lead_contact_number; ?>" name="contact_number" placeholder="xxx-xxx-xxxx" class="nsm-field form-control edit-phone-number-format" />                          
                     </div>  
                     <div class="col-12 col-md-6 mb-2">
                         <label class="content-subtitle fw-bold d-block mb-2">Email</label>
@@ -96,30 +119,7 @@
                         <input type="text" value="<?= $appointment->lead_zip; ?>" name="zip" placeholder="zip" class="nsm-field form-control" />                          
                     </div> 
                 </div>
-            </div>
-            <div class="col-12 col-md-6 mb-2">
-                <label class="content-subtitle fw-bold d-block mb-2">Appointment Type</label>
-                <select name="appointment_type_id" class="nsm-field form-select edit-appointment-type" required>
-                    <?php foreach ($appointmentTypes as $a) { ?>
-                        <option <?= $appointment->appointment_type_id == $a->id ? 'selected="selected"' : ''; ?> value="<?= $a->id; ?>"><?= $a->name; ?></option>
-                    <?php } ?>
-                </select>
-            </div>
-            <div class="col-12 col-md-6 mb-2">
-                <label class="content-subtitle fw-bold d-block mb-2">Priority</label>
-                <select name="appointment_priority" class="nsm-field form-select edit-appointment-priority" required>
-                    <?php if( $appointment->appointment_type_id == 4 ){ ?>
-                        <?php foreach($appointmentPriorityEventOptions as $priority){ ?>
-                            <option value="<?= $priority; ?>"><?= $priority; ?></option>
-                        <?php } ?>
-                    <?php }else{ ?>
-                        <?php foreach($appointmentPriorityOptions as $priority){ ?>
-                            <option value="<?= $priority; ?>"><?= $priority; ?></option>
-                        <?php } ?>
-                    <?php } ?>                
-                </select>   
-                <input type="text" value="" name="appointment_priority_others" placeholder="Please specify" class="nsm-field form-select priority-others" style="margin-top:5px;display: none;">   
-            </div>
+            </div>            
             <div class="col-12 col-md-12 mb-2 edit-invoice-price-container" <?= ( $appointment->appointment_type_id == 1 || $appointment->appointment_type_id == 2 || $appointment->appointment_type_id == 3 ) ? '' : 'style="display:none;"'; ?>>
                 <div class="row">
                     <div class="col-6">
@@ -163,6 +163,20 @@ $(function(){
         //format: 'yyyy-mm-dd',
         format: 'DD, MM dd, yyyy',
         autoclose: true,
+    });
+
+    $('.edit-phone-number-format').keydown(function(e) {
+        var key = e.charCode || e.keyCode || 0;
+        $text = $(this);
+        if (key !== 8 && key !== 9) {
+            if ($text.val().length === 3) {
+                $text.val($text.val() + '-');
+            }
+            if ($text.val().length === 7) {
+                $text.val($text.val() + '-');
+            }
+        }
+        return (key == 8 || key == 9 || key == 46 || (key >= 48 && key <= 57) || (key >= 96 && key <= 105));
     });
 
     $('#edit-appointment-user').select2({

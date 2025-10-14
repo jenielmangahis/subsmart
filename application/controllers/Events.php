@@ -1785,7 +1785,6 @@ class Events extends MY_Controller
         $cid = logged('company_id');
         $uid = logged('id');
 
-        // get all job tags
         $get_login_user = array(
             'where' => array(
                 'id' => $uid
@@ -1798,6 +1797,9 @@ class Events extends MY_Controller
         // get all job tags
         $get_job_tags = array(
             'table' => 'event_tags',
+            'where' => array(
+                'company_id' => $cid
+            ),
             'select' => 'id,name,marker_icon',
         );
         $this->page_data['job_tags'] = $this->general->get_data_with_param($get_job_tags);

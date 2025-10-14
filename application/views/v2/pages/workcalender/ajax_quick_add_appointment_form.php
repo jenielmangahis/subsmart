@@ -11,19 +11,33 @@
                         <input type="text" name="appointment_date" id="appointment_date" class="nsm-field form-control datepicker" placeholder="Date" required style="padding: 0.375rem 0.75rem;" value="<?= date("l, F d, Y", strtotime($default_start_date)); ?>">                                    
                     </div>
                     <div class="col-12 col-md-3">
-                        <input type="text" name="appointment_time_from" id="appointment_time" class="nsm-field form-control timepicker-from" value="<?= $default_time_to; ?>" placeholder="Time From" required />
+                        <input type="time" name="appointment_time_from" id="appointment_time" class="nsm-field form-control" value="<?= $default_time_to; ?>" placeholder="Time From" required />
                     </div>
                     <div class="col-12 col-md-3">
-                        <input type="text" name="appointment_time_to" id="appointment_time_to" class="nsm-field form-control timepicker-to" placeholder="Time To" value="<?= $default_time_to; ?>" required />
+                        <input type="time" name="appointment_time_to" id="appointment_time_to" class="nsm-field form-control" placeholder="Time To" value="<?= $default_time_to; ?>" required />
                     </div>
                 </div>
             </div>
-            <div class="col-12">
-                <label class="content-subtitle fw-bold d-block mb-2">Created By</label>
-                <span id="wait-list-created-by">
-                    <input type="text" value="<?= $userLogged->FName . ' ' . $userLogged->LName; ?>" class="nsm-field form-control" readonly="readonly" disabled="disabled">
-                </span>                                                        
-            </div>
+            <div class="col-6">
+                <label class="content-subtitle fw-bold d-block mb-2">Appointment Type</label>
+                <select name="appointment_type_id" class="nsm-field form-select add-appointment-type" required>
+                    <option value="0">- Select Appointment Type -</option>
+                    <?php foreach ($appointmentTypes as $a) { ?>       
+                        <?php //if( $a->name != 'Job' && $a->name != 'Services' ){ ?>                         
+                            <option value="<?= $a->id; ?>" <?= $a->name == 'Leads' ? 'selected="selected"' : ''; ?>><?= $a->name; ?></option>
+                        <?php //} ?>
+                    <?php } ?>
+                </select>                                
+            </div>     
+            <div class="col-6">
+                <label class="content-subtitle fw-bold d-block mb-2">Priority</label>
+                <select name="appointment_priority" class="nsm-field form-select add-appointment-priority" required>
+                    <?php foreach($appointmentPriorityOptions as $priority){ ?>
+                        <option value="<?= $priority; ?>"><?= $priority; ?></option>
+                    <?php } ?>
+                </select>   
+                <input type="text" value="" name="appointment_priority_others" placeholder="Please specify" class="nsm-field form-select priority-others" style="margin-top:5px;display: none;">
+            </div>            
             <div class="col-12 event-description-container" style="<?= $default_appointment_type_id != 4 ? 'display: none;' : ''; ?>">
                 <label class="content-subtitle fw-bold d-block mb-2">Event Name</label>
                 <span id="wait-list-created-by">
@@ -92,32 +106,7 @@
                     <select class="nsm-field form-select" name="appointment_customer_id" id="quick-add-appointment-customer"></select>
                 </span>
                 <div class="customer-address"></div>
-            </div>
-            <div class="col-12">
-                <div class="row">  
-                    <div class="col-6">
-                        <label class="content-subtitle fw-bold d-block mb-2">Appointment Type</label>
-                        <select name="appointment_type_id" class="nsm-field form-select add-appointment-type" required>
-                            <option value="0">- Select Appointment Type -</option>
-                            <?php foreach ($appointmentTypes as $a) { ?>       
-                                <?php //if( $a->name != 'Job' && $a->name != 'Services' ){ ?>                         
-                                    <option value="<?= $a->id; ?>" <?= $a->name == 'Leads' ? 'selected="selected"' : ''; ?>><?= $a->name; ?></option>
-                                <?php //} ?>
-                            <?php } ?>
-                        </select>                                
-                    </div>                              
-                    <div class="col-6">
-                        <label class="content-subtitle fw-bold d-block mb-2">Priority</label>
-                        <select name="appointment_priority" class="nsm-field form-select add-appointment-priority" required>
-                            <?php foreach($appointmentPriorityOptions as $priority){ ?>
-                                <option value="<?= $priority; ?>"><?= $priority; ?></option>
-                            <?php } ?>
-                        </select>   
-                        <input type="text" value="" name="appointment_priority_others" placeholder="Please specify" class="nsm-field form-select priority-others" style="margin-top:5px;display: none;">
-                    </div>
-                </div>
-                
-            </div>
+            </div>            
             <div class="col-12 invoice-price-container" style="display:none;">
                 <div class="row">
                     <div class="col-6">
@@ -139,11 +128,11 @@
             <div class="col-6 url-link-container" style="display:none;">
                 <label class="content-subtitle fw-bold d-block mb-2">URL Link <small style="color:#ff4d4d;">(Must be public url)</small></label>
                 <input type="text" name="url_link" id="ulr-link" class="nsm-field form-control" placeholder="URL Link" style="padding: 0.375rem 0.75rem;">
-            </div>            
+            </div>  
             <div class="col-12">
                 <label class="content-subtitle fw-bold d-block mb-2">Notes</label>
                 <textarea id="appointment-notes" name="appointment_notes" class="nsm-field form-control"></textarea>
-            </div>
+            </div>                      
         </div> 
     </div>
 </div>
@@ -154,11 +143,27 @@ $(function(){
         content: "Assign Sales Agent that will handle the service or job",
         trigger: 'hover'
     });
+
     $('#quick-add-employee-popover').popover({    
         content:'Who will attend the event',
         title:'Attendees',        
         trigger: 'hover'
     });  
+
+    $('.phone-number-format').keydown(function(e) {
+        var key = e.charCode || e.keyCode || 0;
+        $text = $(this);
+        if (key !== 8 && key !== 9) {
+            if ($text.val().length === 3) {
+                $text.val($text.val() + '-');
+            }
+            if ($text.val().length === 7) {
+                $text.val($text.val() + '-');
+            }
+        }
+        return (key == 8 || key == 9 || key == 46 || (key >= 48 && key <= 57) || (key >= 96 && key <= 105));
+    });
+
     $('#quick-add-appointment-sales-agent-id').select2({
         ajax: {
             url: base_url + 'autocomplete/_company_users',
@@ -185,6 +190,7 @@ $(function(){
         templateResult: formatRepoUser,
         templateSelection: formatRepoSelectionUser
     });
+
     $('#quick-add-appointment-tags').select2({
         ajax: {
             url: base_url + 'autocomplete/_company_job_tags',
