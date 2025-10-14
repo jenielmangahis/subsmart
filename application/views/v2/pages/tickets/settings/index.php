@@ -10,8 +10,7 @@
         <div class="nsm-page">
             <div class="nsm-page-content">                
                 <div class="row g-3 align-items-start">
-                    <div class="col-12 col-md-3">                        
-                        <form id="frm-update-ticket-settings">
+                    <div class="col-12 col-md-3">    
                             <div class="nsm-card primary">
                                 <div class="row g-3">
                                     <div class="col-12">
@@ -19,7 +18,7 @@
                                             <div class="nsm-card-title">
                                                 <span>Service Ticket Number</span>
                                             </div>
-                                            <label class="nsm-subtitle">Set the prefix and the next auto-generated number.</label>
+                                            <label class="nsm-subtitle">Prefix and the next auto-generated number.</label>
                                         </div>
                                         <div class="nsm-card-content">
                                             <?php 
@@ -30,23 +29,16 @@
                                             ?>
                                             <div class="row g-2">
                                                 <div class="col-12 col-md-3">
-                                                    <input type="text" placeholder="Prefix" name="ticket_settings_prefix" id="number-prefix" class="nsm-field form-control" value="<?= $settings && $settings->ticket_num_prefix != '' ? $settings->ticket_num_prefix : 'SERVICE-';  ?>" autocomplete="off" required="" <?= $is_disabled; ?> />
+                                                    <input type="text" placeholder="Prefix" name="ticket_settings_prefix" id="number-prefix" class="nsm-field form-control" value="<?= $settings && $settings->ticket_num_prefix != '' ? $settings->ticket_num_prefix : 'SERVICE-';  ?>" autocomplete="off" disabled />
                                                 </div>
                                                 <div class="col-12 col-md-9">
-                                                    <input type="number" step="1" min="1" placeholder="Next Number" name="ticket_settings_next_number" id="number-base" class="nsm-field form-control" value="<?= $settings && $settings->ticket_num_next > 0 ? $settings->ticket_num_next : 1;  ?>" autocomplete="off" required="" <?= $is_disabled; ?> />
+                                                    <input type="number" step="1" min="1" placeholder="Next Number" name="ticket_settings_next_number" id="number-base" class="nsm-field form-control" value="<?= $settings && $settings->ticket_num_next > 0 ? $settings->ticket_num_next : 1;  ?>" autocomplete="off" disabled />
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
-                                    <?php if(checkRoleCanAccessModule('service-ticket-settings', 'write')){ ?>
-                                    <div class="col-12 text-end">
-                                        <hr>
-                                        <button type="submit" class="nsm-button primary">Save Changes</button>
-                                    </div>                                        
-                                    <?php } ?>
                                 </div>
                             </div>
-                        </form> 
                     </div>                    
                 </div>                
             </div>
