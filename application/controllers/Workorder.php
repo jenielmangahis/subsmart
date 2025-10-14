@@ -3519,7 +3519,6 @@ class Workorder extends MY_Controller
 
     public function ajax_update_workoder_settings()
     {
-        postAllowed();
         $post = $this->input->post();
         $hide_from_email = 0;
         if( isset($post['hide_from_email']) ){
@@ -3538,8 +3537,8 @@ class Workorder extends MY_Controller
 
         if( $workorderSettings ){
             $data = [
-                'work_order_num_prefix' => $post['next_custom_number_prefix'],
-                'work_order_num_next' => $post['next_custom_number_base'],
+                //'work_order_num_prefix' => $post['next_custom_number_prefix'],
+                //'work_order_num_next' => $post['next_custom_number_base'],
                 'capture_customer_signature' => $hide_from_email,
             ];
 
@@ -3552,8 +3551,8 @@ class Workorder extends MY_Controller
 
         }else{
             $data = [
-                'work_order_num_prefix' => $post['next_custom_number_prefix'],
-                'work_order_num_next' => $post['next_custom_number_base'],
+                'work_order_num_prefix' => 'WO',
+                'work_order_num_next' => 1,
                 'capture_customer_signature' => $hide_from_email,
                 'company_id' => $company_id
             ];
@@ -3567,7 +3566,7 @@ class Workorder extends MY_Controller
         }
 
         //Activity Logs
-        $activity_name = 'Updated Workorder Settings'; 
+        $activity_name = 'Work Order Settings : Updated Settings'; 
         createActivityLog($activity_name);
 
         echo json_encode($json_data);

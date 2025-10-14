@@ -2008,7 +2008,7 @@ class Events extends MY_Controller
         }
 
         //Activity Logs
-        $activity_name = 'Events Settings : Updated settings'; 
+        $activity_name = 'Events Settings : Updated Settings'; 
         createActivityLog($activity_name);
 
         $is_success = 1;

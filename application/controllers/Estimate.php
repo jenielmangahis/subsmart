@@ -2776,7 +2776,7 @@ class Estimate extends MY_Controller
         $post = $this->input->post();
         $company_id = logged('company_id');
         $is_valid = 1;
-        
+
         if ($is_valid == 1) {
             $is_residential_message_default = 0;
             if (isset($post['is_residential_default'])) {
@@ -2820,7 +2820,7 @@ class Estimate extends MY_Controller
             }
 
             //Activity Logs
-            $activity_name = 'Updated Estimate Settings'; 
+            $activity_name = 'Estimate Settings : Updated Settings'; 
             createActivityLog($activity_name);
 
             $is_success = 1;
