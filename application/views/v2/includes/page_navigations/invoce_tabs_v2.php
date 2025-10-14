@@ -11,11 +11,11 @@
             <div class="dropdown" id="test_dropdown">
                 <a class="nsm-page-link dropdown-toggle" role="button" href="javascript:void(0);">
                     <i class='bx bx-fw bx-cog'></i>
-                    <span>Invoice Settings</span>
+                    <span>Settings</span>
                     <i class='bx bx-fw bx-chevron-down dropdown-icon'></i>
                 </a>
                 <ul class="dropdown-menu">
-                    <li><a class="dropdown-item" href="<?= base_url('invoice/settings') ?>">General Settings</a></li>
+                    <li><a class="dropdown-item" href="<?= base_url('invoice/settings') ?>">Invoice</a></li>
                     <li><a class="dropdown-item" href="<?php echo base_url('settings/tax_rates') ?>">Tax Rates</a></li>
                     <li><a class="dropdown-item" href="<?php echo base_url('accounting/terms') ?>">Payment Terms</a></li>                                        
                 </ul>
