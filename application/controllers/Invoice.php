@@ -2444,8 +2444,8 @@ class Invoice extends MY_Controller
                 $this->invoice_settings_model->create([
                     'company_id' => $comp_id,
                     'logo' => $logo,
-                    'invoice_num_prefix' => post('prefix'),
-                    'invoice_num_next' => post('base'),
+                    'invoice_num_prefix' => 'INV-',
+                    'invoice_num_next' => 1,
                     'check_payable_to' => post('payment_to'),
                     'due_terms' => post('due_terms'),
                     //'payment_fee_amount' => serialize($payment_fee),
@@ -2487,8 +2487,8 @@ class Invoice extends MY_Controller
             } else {
                 $this->invoice_settings_model->update($invoiceSetting->id, [
                     'logo' => $logo,
-                    'invoice_num_prefix' => post('prefix'),
-                    'invoice_num_next' => post('base'),
+                    //'invoice_num_prefix' => post('prefix'),
+                    //'invoice_num_next' => post('base'),
                     'check_payable_to' => post('payment_to'),
                     'due_terms' => post('due_terms'),
                     'payment_fee_amount' => serialize($payment_fee),
@@ -2527,6 +2527,10 @@ class Invoice extends MY_Controller
     
                 $this->activity_model->add('Updated Invoice Settings ' . $user->id . ' Updated by User:' . logged('name'), logged('id'));
             }
+
+            //Activity Logs
+            $activity_name = 'Invoice Settings : Updated Settings'; 
+            createActivityLog($activity_name);
 
             $msg = '';
         }
