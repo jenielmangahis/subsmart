@@ -1221,6 +1221,8 @@ $route['workorders/_delete_archived_workorder'] = 'Workorder/ajax_delete_archive
 $route['workorder/_delete_archived_workorder'] = 'Workorder/ajax_delete_archived_workorder';
 $route['workorder/view/(:num)'] = 'Workorder/view/$1';
 
+$route['workorder/estimate_convert_to_workorder/(:num)'] = 'Workorder/estimateConversionWorkorderV2/$1';
+
 //Public view 
 $route['work_order_view/(:any)/(:num)'] = 'Share_Link/public_view_v2/$1/$2';
 

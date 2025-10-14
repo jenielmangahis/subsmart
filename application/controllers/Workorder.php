@@ -12403,9 +12403,146 @@ class Workorder extends MY_Controller
         }
     }
 
+    public function estimateConversionWorkorderV2($id)
+    {
+        if(!checkRoleCanAccessModule('work-orders', 'write')){
+			show403Error();
+			return false;
+		}
+
+        $user_id    = logged('id');
+        $company_id = logged('company_id');        
+
+        $this->load->model('AcsProfile_model');
+        $this->load->model('EstimateItem_model');
+        $this->load->model('Customer_advance_model');
+        $this->load->model('Clients_model');
+        $this->load->model('Checklist_model');
+        $this->load->model('AcsAccess_model');
+        $this->load->helper('functions');    
+        
+        add_footer_js([
+			'https://cdnjs.cloudflare.com/ajax/libs/signature_pad/1.5.3/signature_pad.min.js',
+			'assets/js/jquery.signaturepad.js'
+        ]);
+
+        $this->page_data['page']->parent = 'Workorder';
+        $this->page_data['page']->title  = 'Convert Estimate to Workorder';
+
+        $estimate = $this->estimate_model->getById($id);
+        if ($estimate) {
+            $query_autoincrment = $this->db->query("SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE table_name = 'customer_groups'");
+            $result_autoincrement = $query_autoincrment->result_array();
+
+            if(count( $result_autoincrement )) {
+                if($result_autoincrement[0]['AUTO_INCREMENT']) {
+                    $this->page_data['auto_increment_estimate_id'] = 1;
+                } else {
+                    $this->page_data['auto_increment_estimate_id'] = $result_autoincrement[0]['AUTO_INCREMENT'];
+                }
+            } else {
+                $this->page_data['auto_increment_estimate_id'] = 0;
+            }
+
+            $this->load->library('session');
+
+            $users_data = $this->session->all_userdata();
+            $role       = logged('role');
+            $type       = $this->input->get('type');
+
+            $this->page_data['customers'] = $this->AcsProfile_model->getAllByCompanyId($company_id);
+            $this->page_data['type'] = $type;
+            $this->page_data['items'] = $this->items_model->getItemlist();
+            $this->page_data['plans'] = $this->plans_model->getByWhere(['company_id' => $company_id]);
+
+            $termsCondi = $this->workorder_model->getWOTerms($company_id);
+            if($termsCondi){
+                $this->page_data['terms_conditions'] = $this->workorder_model->getWOtermsByIDAgree();
+            }else{
+                $this->page_data['terms_conditions'] = $this->workorder_model->getTermsDefault();
+            }
+
+            $termsUse = $this->workorder_model->getTermsUse($company_id);
+            if($termsUse){
+                $this->page_data['terms_uses'] = $this->workorder_model->getTermsUsebyID();
+            }else{
+                $this->page_data['terms_uses'] = $this->workorder_model->getTermsUseDefault();
+            }
+
+            $checkListsHeader = $this->workorder_model->getchecklistHeaderByCompanyId($company_id);
+
+            $checkLists = array();
+            foreach( $checkListsHeader as $h ){
+                $checklistItems = $this->workorder_model->getchecklistHeaderItems($h->id);
+                $checklists[] = ['header' => $h, 'items' => $checklistItems];
+            }
+
+            //Settings
+            $this->load->model('WorkorderSettings_model');
+            $workorderSettings = $this->WorkorderSettings_model->getByCompanyId($company_id);
+            if( $workorderSettings ){
+                $prefix = $workorderSettings->work_order_num_prefix;
+                $next_num = $workorderSettings->work_order_num_next;
+            }else{
+                $prefix = 'WO-';
+                $lastInserted = $this->workorder_model->getlastInsert($company_id);
+                if( $lastInserted ){
+                    $next_num = $lastInserted->id + 1;
+                }else{
+                    $next_num = 1;
+                }
+            }
+
+            $spt_query = array(
+                'table' => 'ac_system_package_type',
+                'order' => array(
+                    'order_by' => 'id',
+                ),
+                'where' => array(
+                    'company_id' => $company_id,
+                ),
+                'select' => '*',
+            );
+
+            $customer = $this->AcsProfile_model->getByProfId($estimate->customer_id);
+
+            $this->page_data['customer'] = $customer;
+
+            $this->page_data['system_package_type'] = $this->general->get_data_with_param($spt_query);
+            $this->page_data['prefix'] = $prefix;
+            $this->page_data['next_num'] = $next_num;
+            $this->page_data['fields'] = $this->workorder_model->getCustomByID();
+            $this->page_data['headers'] = $this->workorder_model->getheaderInstallationByID();
+            $this->page_data['checklists'] = $checklists;
+            $this->page_data['job_types'] = $this->workorder_model->getjob_types();
+            $this->page_data['job_tags'] = $this->workorder_model->getjob_tagsById();
+            $this->page_data['clients'] = $this->workorder_model->getclientsById();
+            $this->page_data['lead_source'] = $this->workorder_model->getlead_source($company_id);
+            $this->page_data['packages'] = $this->workorder_model->getPackagelist($company_id);
+            $this->page_data['users'] = $this->users_model->getUser(logged('id'));
+            $this->page_data['users_lists'] = $this->users_model->getAllUsersByCompanyID($company_id);
+            $this->page_data['companyDet'] = $this->workorder_model->companyDet($company_id);
+
+            $this->page_data['itemPackages'] = $this->workorder_model->getPackageDetailsByCompany($company_id);
+            $this->page_data['getSettings'] = $this->workorder_model->getSettings($company_id);
+
+            $org_id = array('58','31');
+            $this->page_data['number'] = $this->workorder_model->getlastInsert($company_id);
+            
+            $this->page_data['ids'] = $this->workorder_model->getlastInsertID();
+            
+            $this->page_data['checklists'] = [];
+            $this->load->view('v2/pages/workorder/addEstimateToWorkorder', $this->page_data);            
+            
+        } else {
+            $this->session->set_flashdata('message', 'Record not found.');
+            $this->session->set_flashdata('alert_class', 'alert-danger');
+            redirect('estimate');            
+        }
+    }
+
     public function getTaxRate()
     {
-
         $company_id = logged('company_id');
         $get_settings  =  array(
             'where' => array(
