@@ -12839,6 +12839,7 @@ class Workorder extends MY_Controller
                 'program_setup' => $post['otps'],      
                 'monthly_monitoring' => $post['monthly_monitoring'],
                 'installation_cost' => $post['installation_cost'],
+                'is_archived' => 0,
             );
 
             $job_id = $this->Jobs_model->createJob($jobs_data);
