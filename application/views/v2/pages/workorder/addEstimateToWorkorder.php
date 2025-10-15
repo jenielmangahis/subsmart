@@ -939,7 +939,7 @@
                                             <tbody>
                                             <tr>
                                                 <td><input class="form-control" type="file" name="attachments[]" /></td>
-                                                <td><a href="#" class="remove nsm-button danger" style="line-height:35px;"><i class='bx bx-trash'></i></a></td>
+                                                <td>&nbsp;</td>
                                             </tr>
                                             </tbody>
                                         </table>
@@ -1682,6 +1682,10 @@ $(document).ready(function() {
     $(".dob_customer_form").datepicker({
         format: 'mm/dd/yyyy',
         autoclose: true
+    });
+
+    $(document).on('click', '.btn-remove-row-attachment', function(){
+        $(this).closest('tr').remove();
     });
 
     $('#btn-add-attachment').on('click', function(){
