@@ -896,12 +896,18 @@
                         </div>
                     </div>
                     <div class="col-12 col-md-6">
+                        
                         <div class="nsm-card" style="height:auto;">
                             <div class="nsm-card-header">
                                 <div class="nsm-card-title d-block">
+                                    <span class="d-block">Attachments</span>
+                                </div>
+                            </div>
+                            <div class="nsm-card-header mt-2">
+                                <div class="nsm-card-title d-block">
                                     <div class="row">
                                         <div class="col-12 col-md-4">
-                                            <span class="d-block"><strong>ID</strong></span>
+                                            <i class='bx bx-id-card' style="font-size:17px;position:relative;top:3px;"></i> <small><strong>ID</strong></small>
                                         </div>
                                     </div>
                                 </div>
@@ -918,7 +924,7 @@
                                 <div class="nsm-card-title d-block">
                                     <div class="row">
                                         <div class="col-12 col-md-4">
-                                            <span class="d-block"><strong>Documents</strong></span>
+                                            <i class='bx bx-file' style="font-size:17px;position:relative;top:3px;"></i> <small><strong>Documents</strong></small>
                                         </div>
                                         <div class="col-12 col-md-8">
                                             <a class="nsm-button btn-small" style="float:right;" id="btn-add-attachment" href="javascript:void(0);"><strong>+ Add File</strong></a>
