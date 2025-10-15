@@ -14,63 +14,67 @@
     min-height: 20px; 
     padding: 1rem;
 }
+
+#tbl-attachments td{
+    padding:7px 10px 2px 0px;
+}
+
 @media only screen and (max-width: 480px) {
     table {
     display: flex;
     flex-flow: column;
     width: 100%;
-}
+    }
 
-thead {
-    flex: 0 0 auto;
-}
+    thead {
+        flex: 0 0 auto;
+    }
 
-tbody {
-    flex: 1 1 auto;
-    display: block;
-    overflow-y: auto;
-    overflow-x: hidden;
-}
+    tbody {
+        flex: 1 1 auto;
+        display: block;
+        overflow-y: auto;
+        overflow-x: hidden;
+    }
 
-tr {
-    width: 100%;
-    display: table;
-    table-layout: fixed;
-}
+    tr {
+        width: 100%;
+        display: table;
+        table-layout: fixed;
+    }
 
-.itemTable td:nth-of-type(1) {width:30%;font-size:10px;}
-.itemTable  td:nth-of-type(2) {width: 15%;}
-.itemTable  td:nth-of-type(3) {width:15%;}
-.itemTable  td:nth-of-type(4) {width:20%;}
+    .itemTable td:nth-of-type(1) {width:30%;font-size:10px;}
+    .itemTable  td:nth-of-type(2) {width: 15%;}
+    .itemTable  td:nth-of-type(3) {width:15%;}
+    .itemTable  td:nth-of-type(4) {width:20%;}
 
-.itemTable2 td:nth-of-type(1) {max-width:80px;}
-.itemTable2  td:nth-of-type(2) {
-    white-space:nowrap;
-   /* border: 1px solid black; */
-   max-width: 100px;
-   overflow-y:hidden;
-}
-.itemTable th:nth-of-type(1) {width:30%;}
-.itemTable  th:nth-of-type(2) {width: 15%;}
-.itemTable  th:nth-of-type(3) {width: 15%;}
-.itemTable  th:nth-of-type(4) {width:20%;}
-.itemTable  th:nth-of-type(5) {width:20%;}
+    .itemTable2 td:nth-of-type(1) {max-width:80px;}
+    .itemTable2  td:nth-of-type(2) {
+        white-space:nowrap;
+    /* border: 1px solid black; */
+    max-width: 100px;
+    overflow-y:hidden;
+    }
+    .itemTable th:nth-of-type(1) {width:30%;}
+    .itemTable  th:nth-of-type(2) {width: 15%;}
+    .itemTable  th:nth-of-type(3) {width: 15%;}
+    .itemTable  th:nth-of-type(4) {width:20%;}
+    .itemTable  th:nth-of-type(5) {width:20%;}
 
 
-.itemTable input[type=text],
-    input[type=email],
-    input[type=number],
-    input[type=url],
-    /* input[type=checkbox], */
-    input[type=password] {
-    width: 100%;
-    font-size:9px !important;
-}
+    .itemTable input[type=text],
+        input[type=email],
+        input[type=number],
+        input[type=url],
+        /* input[type=checkbox], */
+        input[type=password] {
+        width: 100%;
+        font-size:9px !important;
+    }
 
-.itemTable th {
-    font-size:9px !important;
-}
-
+    .itemTable th {
+        font-size:9px !important;
+    }
 }
 </style>
 
@@ -92,19 +96,12 @@ tr {
                     <div class="col-12">
                         <div class="nsm-card primary">
                             <div class="nsm-card-header">
-                                <div class="nsm-card-title">
+                                <div class="nsm-card-title d-block">
                                     <span class="d-block">Header</span>
-                                    <div class="row">
-                                        <div class="col-12 col-md-10">
-                                            <label class="nsm-subtitle">
-                                                <?php echo $headers->content; ?>
-                                            </label>
-                                        </div>
-                                        <div class="col-12 col-md-2 text-md-end">
-                                            <img style="width: 100%; max-width: 100px;" src="<?php echo base_url() . 'assets/img/alarm_logo.jpeg' ?>" />
-                                        </div>
-                                    </div>
                                 </div>
+                                <div class="nsm-card-controls">
+                                    <button type="button" id="" data-bs-toggle="modal" data-bs-target="#update_header_modal" class="nsm-button primary small text-end"><strong>Edit</strong></button>  
+                                </div>                                
                                 <?php
                                 $dt = new DateTime();
                                 $timestamp = time();
@@ -122,21 +119,17 @@ tr {
                                 <input type="hidden" id="content_input" class="form-control" name="header2" value="<?php echo $headers->content; ?>">
                             </div>
                             <div class="nsm-card-content">
-                                <div class="row g-2">
-                                    <div class="col-12 col-md-2 d-none">
-                                        <label class="content-subtitle fw-bold d-block mb-2">Work Order Number</label>
-                                        <input type="text" name="workorder_number" id="workorder_number" class="nsm-field form-control" value="<?php echo "WO-";
-                                                                                                                                                foreach ($number as $num) :
-                                                                                                                                                    $next = $num->work_order_number;
-                                                                                                                                                    $arr = explode("-", $next);
-                                                                                                                                                    $date_start = $arr[0];
-                                                                                                                                                    $nextNum = $arr[1];
-                                                                                                                                                //    echo $number;
-                                                                                                                                                endforeach;
-                                                                                                                                                $val = $nextNum + 1;
-                                                                                                                                                echo str_pad($val, 7, "0", STR_PAD_LEFT);
-                                                                                                                                                ?>" readonly required />
+                                <div class="row">
+                                    <div class="col-12 col-md-10">
+                                        <div id="header_text">
+                                            <?php echo $headers->content; ?>
+                                        </div>
                                     </div>
+                                    <div class="col-12 col-md-2 text-md-end">
+                                        <img style="width: 100%; max-width: 130px;" src="<?= businessProfileImage(logged('company_id')); ?>" />
+                                    </div>
+                                </div>
+                                <div class="row g-2 mt-4">
                                     <div class="col-12 col-md-2">
                                         <label class="content-subtitle fw-bold d-block mb-2">Lead Source</label>
                                         <select class="nsm-field form-select" name="lead_source" id="lead_source">
@@ -902,17 +895,33 @@ tr {
                             </div>
                         </div>
                     </div>
-
                     <div class="col-12 col-md-6">
-                        <div class="nsm-card">
+                        <div class="nsm-card" style="height:auto;">
                             <div class="nsm-card-header">
                                 <div class="nsm-card-title d-block">
                                     <div class="row">
                                         <div class="col-12 col-md-4">
-                                            <span class="d-block"><strong>Documents (10)</strong></span>
+                                            <span class="d-block"><strong>ID</strong></span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="nsm-card-content">
+                                <div class="row">
+                                    <div class="col-12 col-md-11">
+                                         <input class="form-control" type="file" name="attachment_id" accept="image/*" />
+                                    </div>                                    
+                                </div>
+                            </div>
+                            <hr />
+                            <div class="nsm-card-header mt-2">
+                                <div class="nsm-card-title d-block">
+                                    <div class="row">
+                                        <div class="col-12 col-md-4">
+                                            <span class="d-block"><strong>Documents</strong></span>
                                         </div>
                                         <div class="col-12 col-md-8">
-                                            <a class="nsm-button btn-small" style="float:right;" id="btn-add-file" href="javascript:void(0);"><strong>+ Add File</strong></a>
+                                            <a class="nsm-button btn-small" style="float:right;" id="btn-add-attachment" href="javascript:void(0);"><strong>+ Add File</strong></a>
                                         </div>
                                     </div>
                                 </div>
@@ -920,34 +929,20 @@ tr {
                             <div class="nsm-card-content">
                                 <div class="row">
                                     <div class="col-12 col-md-12">
-                                         <table class="nsm-table attached-file">
+                                         <table class="table table-borderless" id="tbl-attachments">
+                                            <tbody>
                                             <tr>
-                                                <td><input class="form-control" type="file" id="formFile"></td>
-                                                <td><a href="#" class="remove nsm-button danger" id="1"><i class="fa fa-trash" style=""></i></a></td>
+                                                <td><input class="form-control" type="file" name="attachments[]" /></td>
+                                                <td><a href="#" class="remove nsm-button danger" style="line-height:35px;"><i class='bx bx-trash'></i></a></td>
                                             </tr>
-                                            <tr>
-                                                <td><input class="form-control" type="file" id="formFile"></td>
-                                                <td><a href="#" class="remove nsm-button danger" id="1"><i class="fa fa-trash" style=""></i></a></td>
-                                            </tr>
-                                            <tr>
-                                                <td><button type="submit" class="btn btn-primary">Upload</button></td>
-                                                <td>&nbsp;</td>
-                                            </tr>
-                                            
+                                            </tbody>
                                         </table>
-                                    </div>   
-                                    <hr />                                     
-                                </div>
-                                
-                                <div class="row">
-                                    <?php for ($i = 1; $i <= 5; $i++) { ?>
-                                        <div class="col-12 col-md-3"><i style="font-size: 90px;" class='bx bxs-file-doc'></i></div>
-                                    <?php } ?>
+                                    </div>                                    
                                 </div>
                             </div>
+
                         </div>
                     </div>
-
                     <div class="col-12">
                         <div class="nsm-card">
                             <div class="row g-3">
@@ -956,9 +951,17 @@ tr {
                                         <div class="nsm-card-title d-block">
                                             <span class="d-block">Agreement</span>
                                         </div>
+                                        <div class="nsm-card-controls">
+                                            <button type="button" id="" data-bs-toggle="modal" data-bs-target="#update_termscon_modal" class="nsm-button primary small text-end"><strong>Edit</strong></button>  
+                                        </div>
                                     </div>
                                     <div class="nsm-card-content">
-                                        <?php echo $terms_conditions->content; ?></p>
+                                        <input type="hidden" class="form-control" name="terms_conditions" id="terms_conditions" value="<?php echo $terms_conditions->content; ?>" />
+                                        <div class="row g-3">
+                                            <div class="col-12" id="terms_and_condition_text">
+                                                <?php echo $terms_conditions->content; ?>
+                                            </div>                                            
+                                        </div>
                                     </div>
                                 </div>
                                 <div class="col-12">
@@ -1067,470 +1070,456 @@ $(".nsm-subtitle").html(function() {
 
 });
 });
-    $(document).ready(function() {
-        const numInputs = document.querySelectorAll('input[type=number]')
+$(document).ready(function() {
+    const numInputs = document.querySelectorAll('input[type=number]')
 
-        numInputs.forEach(function(input) {
-            input.addEventListener('change', function(e) {
-                if (e.target.value == '') {
-                e.target.value = 0
-                }
-            })
-        });
-
-        $(".name-field").on("keyup", function() {
-            var one = $('#firstname').val();
-            var two = $('#lastname').val();
-            $('#primary_account_holder_name').val(one + ' ' + two);
-        });
-
-        $("#account_type").on("change", function() {
-            let _this = $(this);
-
-            if (_this.val() == "Commercial") {
-                $("#commercial_account").removeClass("d-none");
-            } else {
-                $("#commercial_account").addClass("d-none");
+    numInputs.forEach(function(input) {
+        input.addEventListener('change', function(e) {
+            if (e.target.value == '') {
+            e.target.value = 0
             }
-        });
-
-        $(".total-price").on("blur", function() {
-            getTotalPrice();
-        });
-
-        $('#btn-add-new-customer').on('click', function(){
-            $('#target-id-dropdown').val('customer_id');
-        });
-
-        //$('#customer_id').val(27714);
-        $('#customer_id').select2({
-            ajax: {
-                url: '<?= base_url('autocomplete/_company_customer') ?>',
-                dataType: 'json',
-                delay: 250,
-                data: function (params) {
-                  return {
-                    q: params.term, // search term
-                    page: params.page
-                  };
-                },
-                processResults: function (data, params) {
-                  params.page = params.page || 1;
-
-                  return {
-                    results: data
-                  };
-                },
-                cache: true
-              },
-              placeholder: 'Select Customer',
-              minimumInputLength: 0,
-              templateResult: formatRepoCustomer,
-              templateSelection: formatRepoCustomerSelection
-        });
-
-        function formatRepoCustomerSelection(repo) {
-            if( repo.first_name != null ){
-                return repo.first_name + ' ' + repo.last_name;      
-            }else{
-                return repo.text;
-            }
-        }
-
-        function formatRepoCustomer(repo) {
-            if (repo.loading) {
-                return repo.text;
-            }
-            var $container = $(
-                '<div class="contact-info"><i class="bx bx-user-pin"></i> '+repo.first_name + ' ' + repo.last_name+'<br><small><i class="bx bx-mobile"></i> '+repo.phone_m+' / <i class="bx bx-envelope"></i> '+repo.email+'</div>'
-            );
-            return $container;
-        }
-
-        $(document).on('keyup', '.number', function() {
-        var a = $(this).val();
-        $(this).val(numeral(a).format('0,0[.]00'));
-        });
-
-        $(".all-price-field").on("keyup", function() {
-            getTotalPrice();
-        });
-
-        $('.check-one-field').on('change', function() {
-            $('input[name="' + this.name + '"]').not(this).prop('checked', false);
-            $('.checkedDataOne').val(this.value);
-        });
-
-        $('.check-two-field').on('change', function() {
-            $('input[name="' + this.name + '"]').not(this).prop('checked', false);
-            $('.checkedDataTwo').val(this.value);
-        });
-
-        $('.check-three-field').on('change', function() {
-            $('input[name="' + this.name + '"]').not(this).prop('checked', false);
-            $('.checkedDataThree').val(this.value);
-        });
-
-        $('.check-ctrans').on('change', function() {
-            $('input[name="' + this.name + '"]').not(this).prop('checked', false);
-            $('.dtrans_check').val(this.value);
-        });
-
-        $('.check-pers').on('change', function() {
-            $('input[name="' + this.name + '"]').not(this).prop('checked', false);
-            $('.pers_check').val(this.value);
-        });
-
-        $('.check-ccam').on('change', function() {
-            $('input[name="' + this.name + '"]').not(this).prop('checked', false);
-            $('.dcam_check').val(this.value);
-        });
-
-        $("#form_new_adi_workorder").on("submit", function(e) {            
-            e.preventDefault();
-            var url = "<?php echo base_url('workorder/savenewWorkorderAgreement'); ?>";            
-
-            let _this        = $(this);
-            let form_valid   = 1;
-            let form_err_msg = '';
-            let total_amount = $('#payment_amount_grand').val();
-            let customer_id  = $('#customer_id').val();
-
-            if( parseFloat(total_amount) <= 0 ){
-                form_valid = 0;
-                form_err_msg = 'Cannot accept 0 total amount due';
-            }
-
-            /*if( parseFloat(customer_id) <= 0 ){
-                form_valid = 0;
-                form_err_msg = 'Please select customer';
-            }*/
-
-            if( form_valid == 1 ){
-                _this.find("button[type=submit]").html("Submitting");
-                _this.find("button[type=submit]").prop("disabled", true);
-
-                $.ajax({
-                    type: 'POST',
-                    url: url,
-                    data: _this.serialize(),                
-                    success: function(result) {
-                        Swal.fire({
-                            title: 'Save Successful!',
-                            text: "Workorder has been saved successfully.",
-                            icon: 'success',
-                            showCancelButton: false,
-                            confirmButtonText: 'Okay'
-                        }).then((result) => {
-                            //if (result.value) {
-                                location.reload();
-                            //}
-                        });
-
-                        _this.trigger("reset");
-
-                        _this.find("button[type=submit]").html("Submit");
-                        _this.find("button[type=submit]").prop("disabled", false);
-                    },
-                });
-            }else{
-                Swal.fire({
-                icon: 'error',
-                    title: 'Error!',
-                    html: form_err_msg
-                });
-            }
-        });
-
-        $(".datepicker").datepicker({
-            format: 'mm/dd/yyyy',
-            autoclose: true
-        });
-
-        $('.number-field').keyup(function() {
-            var val = this.value.replace(/\D/g, '');
-            val = val.replace(/^(\d{3})/, '$1-');
-            val = val.replace(/-(\d{3})/, '-$1-');
-            val = val.replace(/(\d)-(\d{4}).*/, '$1-$2');
-            this.value = val;
-        });
-
-        $('.number-field_two').keyup(function() {
-            var val = this.value.replace(/\D/g, '');
-            val = val.replace(/^(\d{3})/, '$1-');
-            val = val.replace(/-(\d{2})/, '-$1-');
-            val = val.replace(/(\d)-(\d{4}).*/, '$1-$2');
-            this.value = val;
-        });
-
-        $("#payment_method").on("change", function() {
-            let paymentMethod = $(this).val();
-
-            hideAllPaymentMethods();
-            switch (paymentMethod) {
-                case "Cash":
-                    $("#cash_area").removeClass("d-none");
-                    break;
-                case "Invoicing":
-                    $("#invoicing").removeClass("d-none");
-                    break;
-                case "Check":
-                    $("#check_area").removeClass("d-none");
-                    break;
-                case "Credit Card":
-                    $("#credit_card").removeClass("d-none");
-                    break;
-                case "Debit Card":
-                    $("#debit_card").removeClass("d-none");
-                    break;
-                case "ACH":
-                    $("#ach_area").removeClass("d-none");
-                    break;
-                case "Venmo":
-                    $("#venmo_area").removeClass("d-none");
-                    break;
-                case "Paypal":
-                    $("#paypal_area").removeClass("d-none");
-                    break;
-                case "Square":
-                    $("#square_area").removeClass("d-none");
-                    break;
-                case "Warranty Work":
-                    $("#warranty_area").removeClass("d-none");
-                    break;
-                case "Home Owner Financing":
-                    $("#home_area").removeClass("d-none");
-                    break;
-                case "e-Transfer":
-                    $("#e_area").removeClass("d-none");
-                    break;
-                case "Other Credit Card Professor":
-                    $("#other_credit_card").removeClass("d-none");
-                    break;
-                case "Other Payment Type":
-                    $("#other_payment_area").removeClass("d-none");
-                    break;
-            }
-        });
-
-        // var signaturePad;
-        // jQuery(document).ready(function() {
-        //     var signaturePadCanvas = document.querySelector('#canvasb');
-        //     signaturePad = new SignaturePad(signaturePadCanvas);
-        //     signaturePadCanvas.height = 300;
-        //     signaturePadCanvas.width = 680;
-        // });
-
-        // $(document).on('click touchstart', '#canvasb', function() {
-        //     var canvas_web = document.getElementById("canvasb");
-        //     var dataURL = canvas_web.toDataURL("image/png");
-        //     $("#saveCompanySignatureDB1a").val(dataURL);
-        // });
-
-        // $("#btn_save_cra_signature").on("click", function() {
-        //     $("#companyrep").attr("src", $("#saveCompanySignatureDB1a").val());
-        //     $("#companyrep").removeClass("d-none");
-        //     $("#cra_sign_container").find("span").addClass("d-none");
-        //     $("#add_cra_sign_modal").modal("hide");
-        // });
-
-        // $('#btn_clear_cra_signature').click(function() {
-        //     $('#cra_sign_area').signaturePad().clearCanvas();
-        // });
-
-        // var signaturePad;
-        // jQuery(document).ready(function() {
-        //     var signaturePadCanvas = document.querySelector('#canvas2b');
-        //     signaturePad = new SignaturePad(signaturePadCanvas);
-        //     signaturePadCanvas.height = 300;
-        //     signaturePadCanvas.width = 680;
-        // });
-
-        // $(document).on('click touchstart', '#canvas2b', function() {
-        //     var canvas_web = document.getElementById("canvas2b");
-        //     var dataURL = canvas_web.toDataURL("image/png");
-        //     $("#savePrimaryAccountSignatureDB2a").val(dataURL);
-        // });
-
-        // $("#btn_save_pah_signature").on("click", function() {
-        //     $("#primaryrep").attr("src", $("#savePrimaryAccountSignatureDB2a").val());
-        //     $("#primaryrep").removeClass("d-none");
-        //     $("#pah_sign_container").find("span").addClass("d-none");
-        //     $("#add_pah_sign_modal").modal("hide");
-        // });
-
-        // $('#btn_clear_pah_signature').click(function() {
-        //     $('#pah_sign_area').signaturePad().clearCanvas();
-        // });
-
-        // var signaturePad;
-        // jQuery(document).ready(function() {
-        //     var signaturePadCanvas = document.querySelector('#canvas3b');
-        //     signaturePad = new SignaturePad(signaturePadCanvas);
-        //     signaturePadCanvas.height = 300;
-        //     signaturePadCanvas.width = 680;
-        // });
-
-        // $(document).on('click touchstart', '#canvas3b', function() {
-        //     var canvas_web = document.getElementById("canvas3b");
-        //     var dataURL = canvas_web.toDataURL("image/png");
-        //     $("#saveSecondaryAccountSignatureDB3a").val(dataURL);
-        // });
-
-        // $("#btn_save_sah_signature").on("click", function() {
-        //     $("#secondaryrep").attr("src", $("#saveSecondaryAccountSignatureDB3a").val());
-        //     $("#secondaryrep").removeClass("d-none");
-        //     $("#sah_sign_container").find("span").addClass("d-none");
-        //     $("#add_sah_sign_modal").modal("hide");
-        // });
-
-        // $('#btn_clear_sah_signature').click(function() {
-        //     $('#sah_sign_area').signaturePad().clearCanvas();
-        // });
-
-        $("#payment_method").on("change", function() {
-            let paymentMethod = $(this).val();
-
-            hideAllPaymentMethods();
-            switch (paymentMethod) {
-                case "Cash":
-                    $("#cash_area").removeClass("d-none");
-                    break;
-                case "Invoicing":
-                    $("#invoicing").removeClass("d-none");
-                    break;
-                case "Check":
-                    $("#check_area").removeClass("d-none");
-                    break;
-                case "Credit Card":
-                    $("#credit_card").removeClass("d-none");
-                    break;
-                case "Debit Card":
-                    $("#debit_card").removeClass("d-none");
-                    break;
-                case "ACH":
-                    $("#ach_area").removeClass("d-none");
-                    break;
-                case "Venmo":
-                    $("#venmo_area").removeClass("d-none");
-                    break;
-                case "Paypal":
-                    $("#paypal_area").removeClass("d-none");
-                    break;
-                case "Square":
-                    $("#square_area").removeClass("d-none");
-                    break;
-                case "Warranty Work":
-                    $("#warranty_area").removeClass("d-none");
-                    break;
-                case "Home Owner Financing":
-                    $("#home_area").removeClass("d-none");
-                    break;
-                case "e-Transfer":
-                    $("#e_area").removeClass("d-none");
-                    break;
-                case "Other Credit Card Professor":
-                    $("#other_credit_card").removeClass("d-none");
-                    break;
-                case "Other Payment Type":
-                    $("#other_payment_area").removeClass("d-none");
-                    break;
-            }
-        });
+        })
     });
 
-    function hideAllPaymentMethods() {
-        $("#cash_area").addClass("d-none");
-        $("#invoicing").addClass("d-none");
-        $("#check_area").addClass("d-none");
-        $("#credit_card").addClass("d-none");
-        $("#debit_card").addClass("d-none");
-        $("#ach_area").addClass("d-none");
-        $("#venmo_area").addClass("d-none");
-        $("#paypal_area").addClass("d-none");
-        $("#square_area").addClass("d-none");
-        $("#warranty_area").addClass("d-none");
-        $("#home_area").addClass("d-none");
-        $("#e_area").addClass("d-none");
-        $("#other_credit_card").addClass("d-none");
-        $("#other_payment_area").addClass("d-none");
+    $(".name-field").on("keyup", function() {
+        var one = $('#firstname').val();
+        var two = $('#lastname').val();
+        $('#primary_account_holder_name').val(one + ' ' + two);
+    });
+
+    $("#account_type").on("change", function() {
+        let _this = $(this);
+
+        if (_this.val() == "Commercial") {
+            $("#commercial_account").removeClass("d-none");
+        } else {
+            $("#commercial_account").addClass("d-none");
+        }
+    });
+
+    $(".total-price").on("blur", function() {
+        getTotalPrice();
+    });
+
+    $('#btn-add-new-customer').on('click', function(){
+        $('#target-id-dropdown').val('customer_id');
+    });
+
+    //$('#customer_id').val(27714);
+    $('#customer_id').select2({
+        ajax: {
+            url: '<?= base_url('autocomplete/_company_customer') ?>',
+            dataType: 'json',
+            delay: 250,
+            data: function (params) {
+                return {
+                q: params.term, // search term
+                page: params.page
+                };
+            },
+            processResults: function (data, params) {
+                params.page = params.page || 1;
+
+                return {
+                results: data
+                };
+            },
+            cache: true
+            },
+            placeholder: 'Select Customer',
+            minimumInputLength: 0,
+            templateResult: formatRepoCustomer,
+            templateSelection: formatRepoCustomerSelection
+    });
+
+    function formatRepoCustomerSelection(repo) {
+        if( repo.first_name != null ){
+            return repo.first_name + ' ' + repo.last_name;      
+        }else{
+            return repo.text;
+        }
     }
 
-    function getTotalPrice() {
-        // alert('test');
-        let val2 = 0;
-        $('.allprices').each(function() {
+    function formatRepoCustomer(repo) {
+        if (repo.loading) {
+            return repo.text;
+        }
+        var $container = $(
+            '<div class="contact-info"><i class="bx bx-user-pin"></i> '+repo.first_name + ' ' + repo.last_name+'<br><small><i class="bx bx-mobile"></i> '+repo.phone_m+' / <i class="bx bx-envelope"></i> '+repo.email+'</div>'
+        );
+        return $container;
+    }
 
-            let a = $(this).val();
+    $(document).on('keyup', '.number', function() {
+        var a = $(this).val();
+        $(this).val(numeral(a).format('0,0[.]00'));
+    });
 
-            let c = $(this).val(numeral(a).format('0,0[.]00'));
-            let am = $(this).val(a.replaceAll(",", ""));
-            val2 += (parseFloat(c.val()) || 0);
-        });
+    $(".all-price-field").on("keyup", function() {
+        getTotalPrice();
+    });
 
-        let installationCost = $('#installationCost').val();
-        let otps = $('#otps').val();
-        let monthlyMonitoring = $('#monthlyMonitoring').val();
+    $('.check-one-field').on('change', function() {
+        $('input[name="' + this.name + '"]').not(this).prop('checked', false);
+        $('.checkedDataOne').val(this.value);
+    });
 
-        let eq = val2;
-        $('#equipmentCost').val(eq.toFixed(2));
-        $('.equipment_cost').html(eq.toFixed(2));
+    $('.check-two-field').on('change', function() {
+        $('input[name="' + this.name + '"]').not(this).prop('checked', false);
+        $('.checkedDataTwo').val(this.value);
+    });
 
-        let ec = $('#equipmentCost').val();
+    $('.check-three-field').on('change', function() {
+        $('input[name="' + this.name + '"]').not(this).prop('checked', false);
+        $('.checkedDataThree').val(this.value);
+    });
 
-        let grandtaxes = (parseFloat(ec) * (7.5 / 100));
-        $('#salesTax').val(grandtaxes)
-        let salesTax = $('#salesTax').val();
-        $('.sales_tax_total').html(grandtaxes.toFixed(2));
+    $('.check-ctrans').on('change', function() {
+        $('input[name="' + this.name + '"]').not(this).prop('checked', false);
+        $('.dtrans_check').val(this.value);
+    });
 
-        let overAllTotal = parseFloat(val2) + parseFloat(salesTax) + parseFloat(installationCost) + parseFloat(otps) + parseFloat(monthlyMonitoring);
+    $('.check-pers').on('change', function() {
+        $('input[name="' + this.name + '"]').not(this).prop('checked', false);
+        $('.pers_check').val(this.value);
+    });
 
-        let val3 = overAllTotal;
-        if( isNaN(val3) ){
-            val3 = 0;
+    $('.check-ccam').on('change', function() {
+        $('input[name="' + this.name + '"]').not(this).prop('checked', false);
+        $('.dcam_check').val(this.value);
+    });
+
+    $("#form_new_adi_workorder").on("submit", function(e) {            
+        e.preventDefault();
+        var url = "<?php echo base_url('workorder/savenewWorkorderAgreement'); ?>";            
+
+        let _this        = $(this);
+        let form_valid   = 1;
+        let form_err_msg = '';
+        let total_amount = $('#payment_amount_grand').val();
+        let customer_id  = $('#customer_id').val();
+
+        if( parseFloat(total_amount) <= 0 ){
+            form_valid = 0;
+            form_err_msg = 'Cannot accept 0 total amount due';
         }
 
-        let val4 = $('#totalDue').html(val3.toFixed(2));
+        /*if( parseFloat(customer_id) <= 0 ){
+            form_valid = 0;
+            form_err_msg = 'Please select customer';
+        }*/
 
-        $('.totalDue').val(val3.toFixed(2));
-        $('#payment_amount_grand').val(val3.toFixed(2));
-        $('#payment_amount').val(val3.toFixed(2));
-    }
-</script>
-<script>
-    window.addEventListener('DOMContentLoaded', (event) => {
-        $("#customer_id").on( 'change', function () {
-            if(this.value !== ""){
-                autoFillCustomer(this.value);
-            }
-        });
+        if( form_valid == 1 ){
+            _this.find("button[type=submit]").html("Submitting");
+            _this.find("button[type=submit]").prop("disabled", true);
 
-        function autoFillCustomer(customerId){
             $.ajax({
-                type: "POST",
-                url: "<?= base_url() ?>/job/get_customer_selected",
-                data: { id : customerId },
-                success: function(data) {
-                    const {data: customer} = JSON.parse(data);
-                    $("[name=firstname]").val(customer.first_name);
-                    $("[name=lastname]").val(customer.last_name);
-                    $("[name=address]").val(customer.mail_add);
-                    $("[name=city_form]").val(customer.city);
-                    $("[name=state_form]").val(customer.state);
-                    $("[name=postcode_form]").val(customer.zip_code);
-                    $("[name=county]").val(customer.country);
-                    $("[name=phone]").val(customer.phone_h);
-                    $("[name=mobile]").val(customer.phone_m);
-                    $("[name=email]").val(customer.email);
-                    $("[name=state_form]").val(customer.state);
-                    $("[name=businessname]").val(customer.business_name);
-                }
+                type: 'POST',
+                url: url,
+                data: _this.serialize(),                
+                success: function(result) {
+                    Swal.fire({
+                        title: 'Save Successful!',
+                        text: "Workorder has been saved successfully.",
+                        icon: 'success',
+                        showCancelButton: false,
+                        confirmButtonText: 'Okay'
+                    }).then((result) => {
+                        //if (result.value) {
+                            location.reload();
+                        //}
+                    });
+
+                    _this.trigger("reset");
+
+                    _this.find("button[type=submit]").html("Submit");
+                    _this.find("button[type=submit]").prop("disabled", false);
+                },
+            });
+        }else{
+            Swal.fire({
+            icon: 'error',
+                title: 'Error!',
+                html: form_err_msg
             });
         }
     });
-</script>
 
-<script>
+    $(".datepicker").datepicker({
+        format: 'mm/dd/yyyy',
+        autoclose: true
+    });
+
+    $('.number-field').keyup(function() {
+        var val = this.value.replace(/\D/g, '');
+        val = val.replace(/^(\d{3})/, '$1-');
+        val = val.replace(/-(\d{3})/, '-$1-');
+        val = val.replace(/(\d)-(\d{4}).*/, '$1-$2');
+        this.value = val;
+    });
+
+    $('.number-field_two').keyup(function() {
+        var val = this.value.replace(/\D/g, '');
+        val = val.replace(/^(\d{3})/, '$1-');
+        val = val.replace(/-(\d{2})/, '-$1-');
+        val = val.replace(/(\d)-(\d{4}).*/, '$1-$2');
+        this.value = val;
+    });
+
+    $("#payment_method").on("change", function() {
+        let paymentMethod = $(this).val();
+
+        hideAllPaymentMethods();
+        switch (paymentMethod) {
+            case "Cash":
+                $("#cash_area").removeClass("d-none");
+                break;
+            case "Invoicing":
+                $("#invoicing").removeClass("d-none");
+                break;
+            case "Check":
+                $("#check_area").removeClass("d-none");
+                break;
+            case "Credit Card":
+                $("#credit_card").removeClass("d-none");
+                break;
+            case "Debit Card":
+                $("#debit_card").removeClass("d-none");
+                break;
+            case "ACH":
+                $("#ach_area").removeClass("d-none");
+                break;
+            case "Venmo":
+                $("#venmo_area").removeClass("d-none");
+                break;
+            case "Paypal":
+                $("#paypal_area").removeClass("d-none");
+                break;
+            case "Square":
+                $("#square_area").removeClass("d-none");
+                break;
+            case "Warranty Work":
+                $("#warranty_area").removeClass("d-none");
+                break;
+            case "Home Owner Financing":
+                $("#home_area").removeClass("d-none");
+                break;
+            case "e-Transfer":
+                $("#e_area").removeClass("d-none");
+                break;
+            case "Other Credit Card Professor":
+                $("#other_credit_card").removeClass("d-none");
+                break;
+            case "Other Payment Type":
+                $("#other_payment_area").removeClass("d-none");
+                break;
+        }
+    });
+
+    //Header
+    $("#form_update_header").on("submit", function(e) {
+        e.preventDefault();
+
+        var url = "<?php echo base_url('workorder/save_update_header'); ?>";
+        $.ajax({
+            type: 'POST',
+            url: url,
+            data: {
+                id: $("#update_h_id").val(),
+                content: CKEDITOR.instances['editor3'].getData()
+            },
+            success: function(result) {
+                // Swal.fire({
+                //     //title: 'Save Successful!',
+                //     text: "Header has been updated successfully.",
+                //     icon: 'success',
+                //     showCancelButton: false,
+                //     confirmButtonText: 'Okay'
+                // });
+
+                $("#update_header_modal").modal('hide');
+                $("#header_text").html(CKEDITOR.instances['editor3'].getData());
+                $('.save_update_header').html("Save");
+            },
+            beforeSend:function(){
+                $('.save_update_header').html('<span class="bx bx-loader bx-spin"></span>');
+            }
+        });
+    });
+
+    //Terms and condition
+    $("#form_update_termscon").on("submit", function(e) {
+        e.preventDefault();
+
+        var url = "<?php echo base_url('workorder/save_update_tc'); ?>";
+        var newContent = CKEDITOR.instances['editor-update-termscon'].getData();
+
+        $.ajax({
+            type: 'POST',
+            url: url,
+            data: {
+                id: $("#update_tc_id").val(),
+                content: newContent
+            },
+            success: function(result) {
+
+                // Swal.fire({
+                //     //title: 'Save Successful!',
+                //     text: "Terms and Condition has been updated successfully.",
+                //     icon: 'success',
+                //     showCancelButton: false,
+                //     confirmButtonText: 'Okay'
+                // });
+
+                $("#update_termscon_modal").modal('hide');
+                $("#terms_and_condition_text").html(newContent);
+                $('#btn-update-termscon').html("Save");
+            },
+            beforeSend:function(){
+                $('#btn-update-termscon').html('<span class="bx bx-loader bx-spin"></span>');
+            }
+        });
+    });
+
+    $("#payment_method").on("change", function() {
+        let paymentMethod = $(this).val();
+
+        hideAllPaymentMethods();
+        switch (paymentMethod) {
+            case "Cash":
+                $("#cash_area").removeClass("d-none");
+                break;
+            case "Invoicing":
+                $("#invoicing").removeClass("d-none");
+                break;
+            case "Check":
+                $("#check_area").removeClass("d-none");
+                break;
+            case "Credit Card":
+                $("#credit_card").removeClass("d-none");
+                break;
+            case "Debit Card":
+                $("#debit_card").removeClass("d-none");
+                break;
+            case "ACH":
+                $("#ach_area").removeClass("d-none");
+                break;
+            case "Venmo":
+                $("#venmo_area").removeClass("d-none");
+                break;
+            case "Paypal":
+                $("#paypal_area").removeClass("d-none");
+                break;
+            case "Square":
+                $("#square_area").removeClass("d-none");
+                break;
+            case "Warranty Work":
+                $("#warranty_area").removeClass("d-none");
+                break;
+            case "Home Owner Financing":
+                $("#home_area").removeClass("d-none");
+                break;
+            case "e-Transfer":
+                $("#e_area").removeClass("d-none");
+                break;
+            case "Other Credit Card Professor":
+                $("#other_credit_card").removeClass("d-none");
+                break;
+            case "Other Payment Type":
+                $("#other_payment_area").removeClass("d-none");
+                break;
+        }
+    });
+});
+
+function hideAllPaymentMethods() {
+    $("#cash_area").addClass("d-none");
+    $("#invoicing").addClass("d-none");
+    $("#check_area").addClass("d-none");
+    $("#credit_card").addClass("d-none");
+    $("#debit_card").addClass("d-none");
+    $("#ach_area").addClass("d-none");
+    $("#venmo_area").addClass("d-none");
+    $("#paypal_area").addClass("d-none");
+    $("#square_area").addClass("d-none");
+    $("#warranty_area").addClass("d-none");
+    $("#home_area").addClass("d-none");
+    $("#e_area").addClass("d-none");
+    $("#other_credit_card").addClass("d-none");
+    $("#other_payment_area").addClass("d-none");
+}
+
+function getTotalPrice() {
+    // alert('test');
+    let val2 = 0;
+    $('.allprices').each(function() {
+
+        let a = $(this).val();
+
+        let c = $(this).val(numeral(a).format('0,0[.]00'));
+        let am = $(this).val(a.replaceAll(",", ""));
+        val2 += (parseFloat(c.val()) || 0);
+    });
+
+    let installationCost = $('#installationCost').val();
+    let otps = $('#otps').val();
+    let monthlyMonitoring = $('#monthlyMonitoring').val();
+
+    let eq = val2;
+    $('#equipmentCost').val(eq.toFixed(2));
+    $('.equipment_cost').html(eq.toFixed(2));
+
+    let ec = $('#equipmentCost').val();
+
+    let grandtaxes = (parseFloat(ec) * (7.5 / 100));
+    $('#salesTax').val(grandtaxes)
+    let salesTax = $('#salesTax').val();
+    $('.sales_tax_total').html(grandtaxes.toFixed(2));
+
+    let overAllTotal = parseFloat(val2) + parseFloat(salesTax) + parseFloat(installationCost) + parseFloat(otps) + parseFloat(monthlyMonitoring);
+
+    let val3 = overAllTotal;
+    if( isNaN(val3) ){
+        val3 = 0;
+    }
+
+    let val4 = $('#totalDue').html(val3.toFixed(2));
+
+    $('.totalDue').val(val3.toFixed(2));
+    $('#payment_amount_grand').val(val3.toFixed(2));
+    $('#payment_amount').val(val3.toFixed(2));
+}
+window.addEventListener('DOMContentLoaded', (event) => {
+    $("#customer_id").on( 'change', function () {
+        if(this.value !== ""){
+            autoFillCustomer(this.value);
+        }
+    });
+
+    function autoFillCustomer(customerId){
+        $.ajax({
+            type: "POST",
+            url: "<?= base_url() ?>/job/get_customer_selected",
+            data: { id : customerId },
+            success: function(data) {
+                const {data: customer} = JSON.parse(data);
+                $("[name=firstname]").val(customer.first_name);
+                $("[name=lastname]").val(customer.last_name);
+                $("[name=address]").val(customer.mail_add);
+                $("[name=city_form]").val(customer.city);
+                $("[name=state_form]").val(customer.state);
+                $("[name=postcode_form]").val(customer.zip_code);
+                $("[name=county]").val(customer.country);
+                $("[name=phone]").val(customer.phone_h);
+                $("[name=mobile]").val(customer.phone_m);
+                $("[name=email]").val(customer.email);
+                $("[name=state_form]").val(customer.state);
+                $("[name=businessname]").val(customer.business_name);
+            }
+        });
+    }
+});
+
 $(document).on('click', '.saveCustomerEst', function() {
 
     var first_name      = $('[name="first_name"]').val();
@@ -1615,9 +1604,7 @@ $(document).on('click', '.saveCustomerEst', function() {
     }
 
 });
-</script>
 
-<script>
 $(document).on('click','.customer_type',function(){
     // alert('test');
     if ($('input[name=customer_type]:checked').val() == "Commercial") {
@@ -1629,28 +1616,27 @@ $(document).on('click','.customer_type',function(){
 
     }
 });
-</script>   
-<script>
+
 $(document).ready(function() {
-var options = {
-  urlGetAll: base_url + "invoice/customer/json_list",
-  urlGetAllJob: base_url + "invoice/job/json_list",
-  urlAdd: base_url + "invoice/source/save/json",
-  urlServiceAddressForm: base_url + "invoice/service_address_form",
-  urlSaveServiceAddress: base_url + "invoice/save_service_address",
-  urlGetServiceAddress: base_url + "invoice/json_get_address_services",
-  urlRemoveServiceAddress: base_url + "invoice/remove_address_services",
-  urlAdditionalContactForm: base_url + "invoice/new_customer_form",
-  urlRecordPaymentForm: base_url + "invoice/record_payment_form",
-  urlPayNowForm: base_url + "invoice/pay_now_form",
-  urlSaveAdditionalContact: base_url + "invoice/save_new_customer",
-  urlGetAdditionalContacts: base_url + "invoice/json_get_new_customers",
-  urlRemoveInvoice: base_url + "invoice/delete",
-  urlCloneInvoice: base_url + "invoice/clone",
-  urlMarkAsSentInvoice: base_url + "invoice/mark_as_sent",
-  urlSavePaymentRecord: base_url + "invoice/save_payment_record",
-  urlPayNow: base_url + "invoice/stripePost",
-};
+    var options = {
+    urlGetAll: base_url + "invoice/customer/json_list",
+    urlGetAllJob: base_url + "invoice/job/json_list",
+    urlAdd: base_url + "invoice/source/save/json",
+    urlServiceAddressForm: base_url + "invoice/service_address_form",
+    urlSaveServiceAddress: base_url + "invoice/save_service_address",
+    urlGetServiceAddress: base_url + "invoice/json_get_address_services",
+    urlRemoveServiceAddress: base_url + "invoice/remove_address_services",
+    urlAdditionalContactForm: base_url + "invoice/new_customer_form",
+    urlRecordPaymentForm: base_url + "invoice/record_payment_form",
+    urlPayNowForm: base_url + "invoice/pay_now_form",
+    urlSaveAdditionalContact: base_url + "invoice/save_new_customer",
+    urlGetAdditionalContacts: base_url + "invoice/json_get_new_customers",
+    urlRemoveInvoice: base_url + "invoice/delete",
+    urlCloneInvoice: base_url + "invoice/clone",
+    urlMarkAsSentInvoice: base_url + "invoice/mark_as_sent",
+    urlSavePaymentRecord: base_url + "invoice/save_payment_record",
+    urlPayNow: base_url + "invoice/stripePost",
+    };
 
 
   // open additional contact form
@@ -1686,16 +1672,31 @@ var options = {
       });
     }
   });
-});
-</script>
-<script>
-$(document).ready(function() {
 
     $(".dob_customer_form").datepicker({
-            format: 'mm/dd/yyyy',
-            autoclose: true
-        });
+        format: 'mm/dd/yyyy',
+        autoclose: true
+    });
+
+    $('#btn-add-attachment').on('click', function(){
+        var tableBody = $("#tbl-attachments tbody");
+        let rowCount = $('#tbl-attachments > tbody > tr').length + 1;
+        if( rowCount < 10 ){
+            let html = `
+            <tr>
+                <td><input class="form-control" type="file" name="attachments[]" /></td>
+                <td><a href="javascript:void(0);" data-id="${rowCount}" class="btn-remove-row-attachment nsm-button danger" style="line-height:35px;"><i class='bx bx-trash'></i></a></td>
+            </tr>`;
+
+            tableBody.append(html);
+        }else{
+            Swal.fire({
+            icon: 'error',
+                title: 'Error!',
+                html: 'Can only accept max 10 attachments'
+            });
+        }
+    });
 });
 </script>
 <?php include viewPath('v2/includes/footer'); ?>
-<!-- <script src="<?php echo $url->assets ?>js/add.js"></script> -->
