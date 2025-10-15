@@ -207,28 +207,28 @@
 </div>
 
 <div class="modal fade nsm-modal fade" id="update_header_modal" tabindex="-1" aria-labelledby="update_header_modal_label" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
-        <form id="form_update_header">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <span class="modal-title content-title">Update Header</span>
-                    <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
-                </div>
-                <div class="modal-body">
-                    <div class="row g-3">
-                        <div class="col-12">
-                            <textarea name="update_header_content" rows="5" id="editor3" class="nsm-field form-control ckeditor"><?php echo $headers->content; ?></textarea>
-                            <input type="hidden" id="company_id_header" value="<?php echo getLoggedCompanyID(); ?>">
-                            <input type="hidden" id="update_h_id" value="<?php echo $headers->id; ?>">
-                        </div>
+    <div class="modal-dialog modal-lg modal-dialog-centered">        
+        <div class="modal-content">
+            <div class="modal-header">
+                <span class="modal-title content-title">Update Header</span>
+                <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
+            </div>
+            <div class="modal-body">
+                <form id="form_update_header">
+                <div class="row g-3">
+                    <div class="col-12">
+                        <textarea name="update_header_content" rows="5" id="editor3" class="nsm-field form-control ckeditor"><?php echo $headers->content; ?></textarea>
+                        <input type="hidden" id="company_id_header" value="<?php echo getLoggedCompanyID(); ?>">
+                        <input type="hidden" id="update_h_id" value="<?php echo $headers->id; ?>">
                     </div>
                 </div>
-                <div class="modal-footer">
-                    <button type="button" class="nsm-button" data-bs-dismiss="modal">Cancel</button>
-                    <button type="button" id="save_update_header" class="nsm-button primary save_update_header">Save</button>
-                </div>
+                </form>
             </div>
-        </form>
+            <div class="modal-footer">
+                <button type="button" class="nsm-button" data-bs-dismiss="modal">Cancel</button>
+                <button type="submit" class="nsm-button primary save_update_header" form="form_update_header">Save</button>
+            </div>
+        </div>
     </div>
 </div>
 
@@ -613,7 +613,7 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="nsm-button" data-bs-dismiss="modal">Cancel</button>
-                <button type="submit" class="nsm-button primary" form="form_update_termscon">Save</button>
+                <button type="submit" class="nsm-button primary" id="btn-update-termscon" form="form_update_termscon">Save</button>
             </div>
         </div>        
     </div>
