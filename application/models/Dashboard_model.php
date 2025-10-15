@@ -240,6 +240,8 @@ class Dashboard_model extends MY_Model
                 $this->db->where('acs_profile.company_id', $company_id);
                 $this->db->where('acs_office.lead_source !=', "");
                 $this->db->join('acs_office', 'acs_office.fk_prof_id = acs_profile.prof_id', 'left');
+                $this->db->where("DATE_FORMAT(acs_profile.created_at, '%Y-%m-%d') >=", $dateFrom);
+                $this->db->where("DATE_FORMAT(acs_profile.created_at, '%Y-%m-%d') <=", $dateTo);
                 $this->db->group_by('acs_office.lead_source');
                 $query = $this->db->get();
                 return $query->result();
@@ -426,7 +428,7 @@ class Dashboard_model extends MY_Model
                             ']'
                         ) AS technicians,
 
-                        SUM(job_items.total) AS job_total, 
+                        SUM(job_items.total * job_items.qty) AS job_total, 
                         jobs.date_created AS date_created, 
                         jobs.date_updated AS date_updated
 
@@ -443,6 +445,7 @@ class Dashboard_model extends MY_Model
 
                     WHERE jobs.company_id = {$company_id}
                     AND jobs.status IN ('Finished', 'Completed')
+                    AND job_items.total != 0
                     AND DATE_FORMAT(jobs.date_created, '%Y-%m-%d') >= '{$dateFrom}'
                     AND DATE_FORMAT(jobs.date_created, '%Y-%m-%d') <= '{$dateTo}'
                     GROUP BY jobs.id

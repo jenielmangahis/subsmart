@@ -412,18 +412,19 @@
                                             <?php if ($estimate->status === 'Accepted') { ?>
                                                 <?php if(checkRoleCanAccessModule('estimates', 'write')){ ?>
                                                 <li>
-                                                    <a class="dropdown-item"
-                                                        href="<?php echo base_url('job/estimate_job/'.$estimate->id); ?>">Convert to
-                                                        Job</a>
+                                                    <a class="dropdown-item" href="<?php echo base_url('job/estimate_job/'.$estimate->id); ?>">Convert to Job</a>
                                                 </li>
                                                 <?php } ?>
                                             <?php } ?>
                                             
                                             <?php if(checkRoleCanAccessModule('estimates', 'write')){ ?>
                                             <li>
-                                                <a class="dropdown-item"
-                                                    href="<?php echo base_url('workorder/estimateConversionWorkorder/'.$estimate->id); ?>">Convert
-                                                    to Workorder</a>
+                                                <?php if( in_array(logged('company_id'), adi_company_ids()) ){ ?>
+                                                    <a class="dropdown-item convert-to-workorder" id="convert-to-workorder" data-estimate-number="<?php echo $estimate->estimate_number; ?>" data-template="adi" data-id="<?php echo $estimate->id; ?>" href="javascript:void(0);">Convert to Workorder</a>
+                                                <?php } else { ?>
+                                                    <a class="dropdown-item convert-to-workorder" id="convert-to-workorder" data-estimate-number="<?php echo $estimate->estimate_number; ?>" data-template="non_adi" data-id="<?php echo $estimate->id; ?>" href="javascript:void(0);">Convert to Workorder</a>
+                                                    <!-- <a class="dropdown-item" href="<?php //echo base_url('workorder/estimateConversionWorkorder/'.$estimate->id); ?>">Convert to Workorder</a> -->
+                                                <?php } ?>
                                             </li>
                                             <?php } ?>
 
@@ -704,6 +705,31 @@ $(document).ready(function() {
                         });
                     }
                 });
+            }
+        });
+    });
+
+    $(document).on("click", ".convert-to-workorder", function() {
+        let template   = $(this).attr("data-template");   
+        let est_number = $(this).attr("data-estimate-number"); 
+        let id         = $(this).attr("data-id"); 
+        
+        if(template == 'adi') {
+            var redirect_url = base_url + 'workorder/estimate_convert_to_workorder/' + id;            
+        } else {
+            var redirect_url = base_url + 'workorder/estimateConversionWorkorder/' + id;
+        }
+
+        Swal.fire({
+            title: 'Convert Estimate to Work Order',
+            html: `You are going create a new workorder based on estimate number <b>${est_number}</b>. Would you like to proceed?`,
+            icon: 'question',
+            confirmButtonText: 'Yes, Proceed',
+            showCancelButton: true,
+            cancelButtonText: "No"
+        }).then((result) => {
+            if (result.value) {
+                window.location.href = redirect_url;
             }
         });
     });

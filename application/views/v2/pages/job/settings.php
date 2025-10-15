@@ -41,66 +41,58 @@ table.dataTable.no-footer {
     </div>
     <?php
         $input_disabled = "disabled='disabled'"; 
-        if(checkRoleCanAccessModule('job-settings', 'write')){
-            $input_disabled = '';
-        }
+        // if(checkRoleCanAccessModule('job-settings', 'write')){
+        //     $input_disabled = '';
+        // }
     ?>
     <div class="col-12" style="min-height:750px">
         <div class="nsm-page">
             <div class="nsm-page-content">                
                 <div class="row g-3 align-items-start">
-                    <div class="col-12 col-md-3">                        
-                        <form id="frm-update-job-settings">
-                            <div class="col-12">
-                                <div class="nsm-card primary">
-                                    <div class="row g-3">
-                                        <div class="col-12">
-                                            <div class="nsm-card-header d-block">
-                                                <div class="nsm-card-title">
-                                                    <span>Job Order Number</span>
-                                                </div>
-                                                <label class="nsm-subtitle">Set the prefix and the next auto-generated number.</label>
+                    <div class="col-12 col-md-3">      
+                        <div class="col-12">
+                            <div class="nsm-card primary">
+                                <div class="row g-3">
+                                    <div class="col-12">
+                                        <div class="nsm-card-header d-block">
+                                            <div class="nsm-card-title">
+                                                <span>Job Order Number</span>
                                             </div>
-                                            <div class="nsm-card-content">
-                                                <div class="row g-2">
-                                                    <div class="col-12 col-md-3">
-                                                        <input type="text" placeholder="Prefix" name="job_settings_prefix" id="number-prefix" class="nsm-field form-control" value="<?php echo $settings_prefix ?>" autocomplete="off" <?= $input_disabled; ?> />
-                                                    </div>
-                                                    <div class="col-12 col-md-9">
-                                                        <input type="number" placeholder="Next Number" name="job_settings_next_number" id="number-base" class="nsm-field form-control" value="<?php echo $settings_next_num; ?>" autocomplete="off" <?= $input_disabled; ?> />
-                                                    </div>
+                                            <label class="nsm-subtitle">Prefix and the next auto-generated number.</label>
+                                        </div>
+                                        <div class="nsm-card-content">
+                                            <div class="row g-2">
+                                                <div class="col-12 col-md-3">
+                                                    <input type="text" placeholder="Prefix" name="job_settings_prefix" id="number-prefix" class="nsm-field form-control" value="<?php echo $settings_prefix ?>" autocomplete="off" <?= $input_disabled; ?> />
+                                                </div>
+                                                <div class="col-12 col-md-9">
+                                                    <input type="number" placeholder="Next Number" name="job_settings_next_number" id="number-base" class="nsm-field form-control" value="<?php echo $settings_next_num; ?>" autocomplete="off" <?= $input_disabled; ?> />
                                                 </div>
                                             </div>
                                         </div>
+                                    </div>
 
-                                        <div class="col-12">
-                                            <div class="nsm-card-header d-block">
-                                                <div class="nsm-card-title">
-                                                    <span>Job Account Number</span>
-                                                </div>
-                                                <label class="nsm-subtitle">Set the next auto-generated number.</label>
+                                    <div class="col-12">
+                                        <div class="nsm-card-header d-block">
+                                            <div class="nsm-card-title">
+                                                <span>Job Account Number</span>
                                             </div>
-                                            <div class="nsm-card-content">
-                                                <div class="row g-2">
-                                                    <div class="col-12 col-md-3">
-                                                        <input type="text" placeholder="" class="nsm-field form-control" value="<?php echo $comp_id.'-'; ?>" disabled="" readonly="" />
-                                                    </div>
-                                                    <div class="col-12 col-md-9">
-                                                        <input type="number" placeholder="Next Number" name="job_settings_account_number_next_number" id="job-account-number-base" class="nsm-field form-control" value="<?php echo $settings_job_account_next_num; ?>" autocomplete="off" <?= $input_disabled; ?> />
-                                                    </div>
+                                            <label class="nsm-subtitle">Next auto-generated number.</label>
+                                        </div>
+                                        <div class="nsm-card-content">
+                                            <div class="row g-2">
+                                                <div class="col-12 col-md-3">
+                                                    <input type="text" placeholder="" class="nsm-field form-control" value="<?php echo $comp_id.'-'; ?>" disabled="" readonly="" />
+                                                </div>
+                                                <div class="col-12 col-md-9">
+                                                    <input type="number" placeholder="Next Number" name="job_settings_account_number_next_number" id="job-account-number-base" class="nsm-field form-control" value="<?php echo $settings_job_account_next_num; ?>" autocomplete="off" <?= $input_disabled; ?> />
                                                 </div>
                                             </div>
                                         </div>
-                                        <?php if(checkRoleCanAccessModule('job-settings', 'write')){ ?>
-                                        <div class="col-12 text-end">
-                                            <hr>
-                                            <button type="submit" class="nsm-button primary">Save Changes</button>
-                                        </div>                                        
-                                        <?php } ?>
                                     </div>
                                 </div>
                             </div>
-                        </form> 
+                        </div>
                     </div>
                     <div class="col-12 col-md-9">
                         <div class="nsm-card primary">

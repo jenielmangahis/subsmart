@@ -2237,119 +2237,213 @@ class Dashboard extends Widgets
                 echo json_encode($graphData);
             break;
             case 'sales':
-                $graphData = ['GRAPH' => [], 'TOTAL_AMOUNT' => 0, 'TOTAL_COUNT' => count($data) ];
-    
+                $graphData = ['GRAPH' => [], 'TOTAL_AMOUNT' => 0, 'TOTAL_COUNT' => count($data)];
+            
                 usort($data, function($a, $b) {
                     return strtotime($a->date) - strtotime($b->date);
                 });
-
-                $accumulativeValue = 0.0;
+            
+                $dateFrom = new DateTime(date('Y-m-01', strtotime($data[0]->date)));
+                $dateTo = new DateTime(date('Y-m-01', strtotime($data[count($data)-1]->date)));
+            
+                $monthlyTotals = [];
                 foreach ($data as $datas) {
-                    $accumulativeValue += $datas->total;
                     $month = strtoupper(date('Y M', strtotime($datas->date)));
-                    $graphData['GRAPH'][$month] = number_format($accumulativeValue, 2, '.', '');
+                    if (!isset($monthlyTotals[$month])) {
+                        $monthlyTotals[$month] = 0.0;
+                    }
+                    $monthlyTotals[$month] += $datas->total;
                 }
-    
+            
+                $accumulativeValue = 0.0;
+                $current = clone $dateFrom;
+                while ($current <= $dateTo) {
+                    $monthKey = strtoupper($current->format('Y M'));
+                    $accumulativeValue += isset($monthlyTotals[$monthKey]) ? $monthlyTotals[$monthKey] : 0.0;
+                    $graphData['GRAPH'][$monthKey] = number_format($accumulativeValue, 2, '.', '');
+                    $current->modify('first day of next month');
+                }
+            
                 $graphData['TOTAL_AMOUNT'] = number_format($accumulativeValue, 2, '.', '');
                 echo json_encode($graphData);
             break;
             case 'unpaid_invoices':
-                $graphData = ['GRAPH' => [], 'TOTAL_AMOUNT' => 0, 'TOTAL_COUNT' => count($data) ];
-    
+                $graphData = ['GRAPH' => [], 'TOTAL_AMOUNT' => 0, 'TOTAL_COUNT' => count($data)];
+            
                 usort($data, function($a, $b) {
                     return strtotime($a->date) - strtotime($b->date);
                 });
-
-                $accumulativeValue = 0.0;
+            
+                $dateFrom = new DateTime(date('Y-m-01', strtotime($data[0]->date)));
+                $dateTo = new DateTime(date('Y-m-01', strtotime($data[count($data)-1]->date)));
+            
+                $monthlyTotals = [];
                 foreach ($data as $datas) {
-                    $accumulativeValue += $datas->total;
                     $month = strtoupper(date('Y M', strtotime($datas->date)));
-                    $graphData['GRAPH'][$month] = number_format($accumulativeValue, 2, '.', '');
+                    if (!isset($monthlyTotals[$month])) {
+                        $monthlyTotals[$month] = 0.0;
+                    }
+                    $monthlyTotals[$month] += $datas->total;
                 }
-    
+            
+                $accumulativeValue = 0.0;
+                $current = clone $dateFrom;
+                while ($current <= $dateTo) {
+                    $monthKey = strtoupper($current->format('Y M'));
+                    $accumulativeValue += isset($monthlyTotals[$monthKey]) ? $monthlyTotals[$monthKey] : 0.0;
+                    $graphData['GRAPH'][$monthKey] = number_format($accumulativeValue, 2, '.', '');
+                    $current->modify('first day of next month');
+                }
+            
                 $graphData['TOTAL_AMOUNT'] = number_format($accumulativeValue, 2, '.', '');
                 echo json_encode($graphData);
             break;
             case 'past_due_invoices':
-                $graphData = ['GRAPH' => [], 'TOTAL_AMOUNT' => 0, 'TOTAL_COUNT' => count($data) ];
-    
+                $graphData = ['GRAPH' => [], 'TOTAL_AMOUNT' => 0, 'TOTAL_COUNT' => count($data)];
+            
                 usort($data, function($a, $b) {
                     return strtotime($a->date) - strtotime($b->date);
                 });
-
-                $accumulativeValue = 0.0;
+            
+                $dateFrom = new DateTime(date('Y-m-01', strtotime($data[0]->date)));
+                $dateTo = new DateTime(date('Y-m-01', strtotime($data[count($data)-1]->date)));
+            
+                $monthlyTotals = [];
                 foreach ($data as $datas) {
-                    $accumulativeValue += $datas->total;
                     $month = strtoupper(date('Y M', strtotime($datas->date)));
-                    $graphData['GRAPH'][$month] = number_format($accumulativeValue, 2, '.', '');
+                    if (!isset($monthlyTotals[$month])) {
+                        $monthlyTotals[$month] = 0.0;
+                    }
+                    $monthlyTotals[$month] += $datas->total;
                 }
-    
+            
+                $accumulativeValue = 0.0;
+                $current = clone $dateFrom;
+                while ($current <= $dateTo) {
+                    $monthKey = strtoupper($current->format('Y M'));
+                    $accumulativeValue += isset($monthlyTotals[$monthKey]) ? $monthlyTotals[$monthKey] : 0.0;
+                    $graphData['GRAPH'][$monthKey] = number_format($accumulativeValue, 2, '.', '');
+                    $current->modify('first day of next month');
+                }
+            
                 $graphData['TOTAL_AMOUNT'] = number_format($accumulativeValue, 2, '.', '');
                 echo json_encode($graphData);
             break;
             case 'open_invoices':
-                $graphData = ['GRAPH' => [], 'TOTAL_AMOUNT' => 0, 'TOTAL_COUNT' => count($data) ];
-    
+                $graphData = ['GRAPH' => [], 'TOTAL_AMOUNT' => 0, 'TOTAL_COUNT' => count($data)];
+            
                 usort($data, function($a, $b) {
                     return strtotime($a->date) - strtotime($b->date);
                 });
-
-                $accumulativeValue = 0.0;
+            
+                $dateFrom = new DateTime(date('Y-m-01', strtotime($data[0]->date)));
+                $dateTo = new DateTime(date('Y-m-01', strtotime($data[count($data)-1]->date)));
+            
+                $monthlyTotals = [];
                 foreach ($data as $datas) {
-                    $accumulativeValue += $datas->total;
                     $month = strtoupper(date('Y M', strtotime($datas->date)));
-                    $graphData['GRAPH'][$month] = number_format($accumulativeValue, 2, '.', '');
+                    if (!isset($monthlyTotals[$month])) {
+                        $monthlyTotals[$month] = 0.0;
+                    }
+                    $monthlyTotals[$month] += $datas->total;
                 }
-    
+            
+                $accumulativeValue = 0.0;
+                $current = clone $dateFrom;
+                while ($current <= $dateTo) {
+                    $monthKey = strtoupper($current->format('Y M'));
+                    $accumulativeValue += isset($monthlyTotals[$monthKey]) ? $monthlyTotals[$monthKey] : 0.0;
+                    $graphData['GRAPH'][$monthKey] = number_format($accumulativeValue, 2, '.', '');
+                    $current->modify('first day of next month');
+                }
+            
                 $graphData['TOTAL_AMOUNT'] = number_format($accumulativeValue, 2, '.', '');
                 echo json_encode($graphData);
             break;
             case 'job':
-                $graphData = ['GRAPH' => [], 'TOTAL_JOBS' => 0, 'TOTAL_COUNT' => count($data) ];
-    
+                $graphData = ['GRAPH' => [], 'TOTAL_JOBS' => 0, 'TOTAL_COUNT' => count($data)];
+            
                 usort($data, function($a, $b) {
                     return strtotime($a->date) - strtotime($b->date);
                 });
-
+            
+                $dateFrom = new DateTime(date('Y-m-01', strtotime($data[0]->date)));
+                $dateTo = new DateTime(date('Y-m-01', strtotime($data[count($data)-1]->date)));
+                
+                $current = clone $dateFrom;
+                while ($current <= $dateTo) {
+                    $monthKey = strtoupper($current->format('Y M'));
+                    $graphData['GRAPH'][$monthKey] = 0;
+                    $current->modify('first day of next month');
+                }
+            
                 foreach ($data as $datas) {
                     $month = strtoupper(date('Y M', strtotime($datas->date)));
                     $graphData['GRAPH'][$month] += 1;
                 }
-    
-                $graphData['TOTAL_JOBS'] = $accumulativeValue;
+            
+                $graphData['TOTAL_JOBS'] = count($data);
                 echo json_encode($graphData);
             break;
             case 'income':
-                $graphData = ['GRAPH' => [], 'TOTAL_AMOUNT' => 0, 'TOTAL_COUNT' => count($data) ];
-    
+                $graphData = ['GRAPH' => [], 'TOTAL_AMOUNT' => 0, 'TOTAL_COUNT' => count($data)];
+            
                 usort($data, function($a, $b) {
                     return strtotime($a->date) - strtotime($b->date);
                 });
-
-                $accumulativeValue = 0.0;
+            
+                $dateFrom = new DateTime(date('Y-m-01', strtotime($data[0]->date)));
+                $dateTo = new DateTime(date('Y-m-01', strtotime($data[count($data)-1]->date)));
+            
+                $monthlyTotals = [];
                 foreach ($data as $datas) {
-                    $accumulativeValue += $datas->total;
                     $month = strtoupper(date('Y M', strtotime($datas->date)));
-                    $graphData['GRAPH'][$month] = number_format($accumulativeValue, 2, '.', '');
+                    if (!isset($monthlyTotals[$month])) {
+                        $monthlyTotals[$month] = 0.0;
+                    }
+                    $monthlyTotals[$month] += $datas->total;
                 }
-    
+            
+                $accumulativeValue = 0.0;
+                $current = clone $dateFrom;
+                while ($current <= $dateTo) {
+                    $monthKey = strtoupper($current->format('Y M'));
+                    $accumulativeValue += isset($monthlyTotals[$monthKey]) ? $monthlyTotals[$monthKey] : 0.0;
+                    $graphData['GRAPH'][$monthKey] = number_format($accumulativeValue, 2, '.', '');
+                    $current->modify('first day of next month');
+                }
+            
                 $graphData['TOTAL_AMOUNT'] = number_format($accumulativeValue, 2, '.', '');
                 echo json_encode($graphData);
             break;
             case 'collections':
-                $graphData = ['GRAPH' => [], 'TOTAL_AMOUNT' => 0, 'TOTAL_COUNT' => count($data) ];
-    
+                $graphData = ['GRAPH' => [], 'TOTAL_AMOUNT' => 0, 'TOTAL_COUNT' => count($data)];
+            
                 usort($data, function($a, $b) {
                     return strtotime($a->date) - strtotime($b->date);
                 });
-
-                $accumulativeValue = 0.0;
+            
+                $dateFrom = new DateTime(date('Y-m-01', strtotime($data[0]->date)));
+                $dateTo = new DateTime(date('Y-m-01', strtotime($data[count($data)-1]->date)));
+            
+                $monthlyTotals = [];
                 foreach ($data as $datas) {
-                    $accumulativeValue += $datas->total;
                     $month = strtoupper(date('Y M', strtotime($datas->date)));
-                    $graphData['GRAPH'][$month] = number_format($accumulativeValue, 2, '.', '');
+                    if (!isset($monthlyTotals[$month])) {
+                        $monthlyTotals[$month] = 0.0;
+                    }
+                    $monthlyTotals[$month] += $datas->total;
                 }
-    
+            
+                $accumulativeValue = 0.0;
+                $current = clone $dateFrom;
+                while ($current <= $dateTo) {
+                    $monthKey = strtoupper($current->format('Y M'));
+                    $accumulativeValue += isset($monthlyTotals[$monthKey]) ? $monthlyTotals[$monthKey] : 0.0;
+                    $graphData['GRAPH'][$monthKey] = number_format($accumulativeValue, 2, '.', '');
+                    $current->modify('first day of next month');
+                }
+            
                 $graphData['TOTAL_AMOUNT'] = number_format($accumulativeValue, 2, '.', '');
                 echo json_encode($graphData);
             break;
@@ -2552,19 +2646,33 @@ class Dashboard extends Widgets
                 echo json_encode($graphData);
             break;
             case 'paid_invoices':
-                $graphData = ['GRAPH' => [], 'TOTAL_AMOUNT' => 0, 'TOTAL_COUNT' => count($data) ];
-    
+                $graphData = ['GRAPH' => [], 'TOTAL_AMOUNT' => 0, 'TOTAL_COUNT' => count($data)];
+            
                 usort($data, function($a, $b) {
                     return strtotime($a->date) - strtotime($b->date);
                 });
-
-                $accumulativeValue = 0.0;
+            
+                $dateFrom = new DateTime(date('Y-m-01', strtotime($data[0]->date)));
+                $dateTo = new DateTime(date('Y-m-01', strtotime($data[count($data)-1]->date)));
+            
+                $monthlyTotals = [];
                 foreach ($data as $datas) {
-                    $accumulativeValue += $datas->total;
                     $month = strtoupper(date('Y M', strtotime($datas->date)));
-                    $graphData['GRAPH'][$month] = number_format($accumulativeValue, 2, '.', '');
+                    if (!isset($monthlyTotals[$month])) {
+                        $monthlyTotals[$month] = 0.0;
+                    }
+                    $monthlyTotals[$month] += $datas->total;
                 }
-    
+            
+                $accumulativeValue = 0.0;
+                $current = clone $dateFrom;
+                while ($current <= $dateTo) {
+                    $monthKey = strtoupper($current->format('Y M'));
+                    $accumulativeValue += isset($monthlyTotals[$monthKey]) ? $monthlyTotals[$monthKey] : 0.0;
+                    $graphData['GRAPH'][$monthKey] = number_format($accumulativeValue, 2, '.', '');
+                    $current->modify('first day of next month');
+                }
+            
                 $graphData['TOTAL_AMOUNT'] = number_format($accumulativeValue, 2, '.', '');
                 echo json_encode($graphData);
             break;
@@ -2903,27 +3011,28 @@ class Dashboard extends Widgets
                 echo json_encode($graphData);
             break;
             case 'job_install':
-                $graphData = ['GRAPH' => [], 'TOTAL_COUNT' => count($data)];
+                $graphData = ['GRAPH' => [], 'TOTAL_JOBS' => 0, 'TOTAL_COUNT' => count($data)];
             
                 usort($data, function($a, $b) {
                     return strtotime($a->date) - strtotime($b->date);
                 });
-
-                $accumulativeCount = 0;
-                $lastMonth = ''; 
+            
+                $dateFrom = new DateTime(date('Y-m-01', strtotime($data[0]->date)));
+                $dateTo = new DateTime(date('Y-m-01', strtotime($data[count($data)-1]->date)));
                 
-                foreach ($data as $datas) {
-                    $month = strtoupper(date('Y M', strtotime($datas->date)));
-                    
-                    if ($month !== $lastMonth) {
-                        $accumulativeCount = 0; 
-                    }
-                    
-                    $accumulativeCount += 1;
-                    $graphData['GRAPH'][$month] = $accumulativeCount;
-                    $lastMonth = $month;
+                $current = clone $dateFrom;
+                while ($current <= $dateTo) {
+                    $monthKey = strtoupper($current->format('Y M'));
+                    $graphData['GRAPH'][$monthKey] = 0;
+                    $current->modify('first day of next month');
                 }
             
+                foreach ($data as $datas) {
+                    $month = strtoupper(date('Y M', strtotime($datas->date)));
+                    $graphData['GRAPH'][$month] += 1;
+                }
+            
+                $graphData['TOTAL_JOBS'] = count($data);
                 echo json_encode($graphData);
             break;
             default:

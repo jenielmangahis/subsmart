@@ -22,19 +22,17 @@
                         <div class="nsm-card primary">
                             <div class="nsm-card-header d-block">
                                 <div class="nsm-card-title">
-                                    <span>Invoice Number</span>
+                                    <span>Estimate Number</span>
                                 </div>
-                                <label class="nsm-subtitle">Set the prefix and the next auto-generated number.</label>
+                                <label class="nsm-subtitle">Prefix and the next auto-generated number.</label>
                             </div>
                             <div class="nsm-card-content">
                                 <div class="row g-2">
                                     <div class="col-12 col-md-3">
-                                        <input <?= $disabled; ?> type="text" placeholder="Prefix" name="prefix" class="nsm-field form-control" value="<?php echo ($setting) ? $setting->estimate_num_prefix : 'EST-' ?>" required="" autocomplete="off"/>
-                                        <span class="validation-error-field hide" data-formerrors-for-name="next_custom_number_prefix" data-formerrors-message="true"></span>
+                                        <input type="text" placeholder="Prefix" name="prefix" class="nsm-field form-control" value="<?php echo ($setting) ? $setting->estimate_num_prefix : 'EST-' ?>" disabled autocomplete="off"/>                                        
                                     </div>
                                     <div class="col-12 col-md-9">
-                                        <input <?= $disabled; ?>  type="text" placeholder="Next Number" name="base" class="nsm-field form-control" value="<?php echo ($setting) ? $setting->estimate_num_next : $default_next_num  ?>" required="" <?= $disabled; ?> autocomplete="off"/>
-                                        <span class="validation-error-field hide" data-formerrors-for-name="next_custom_number_base" data-formerrors-message="true"></span>
+                                        <input type="number" placeholder="Next Number" name="base" class="nsm-field form-control" value="<?php echo ($setting) ? $setting->estimate_num_next : $default_next_num  ?>" disabled autocomplete="off"/>
                                     </div>
                                 </div>
                             </div>
@@ -116,8 +114,8 @@
                     </div>
                     <?php if(checkRoleCanAccessModule('estimate-settings', 'write')){ ?>
                     <div class="col-12 text-end">
-                        <button type="submit" data-action="save" class="nsm-button primary">
-                            Save Changes
+                        <button type="submit" data-action="save" id="btn-update-estimate-settings" class="nsm-button primary">
+                            Save
                         </button>
                     </div>
                     <?php } ?>
@@ -140,9 +138,11 @@ $(function(){
             data: $('#settings_form').serialize(),
             success: function(o)
             {          
+                $('#btn-update-estimate-settings').html('Save');
                 if( o.is_success == 1 ){                   
-                    Swal.fire({                    
-                        html: "Estimate settings was successfully updated.",
+                    Swal.fire({        
+                        title: 'Estimate Settings',            
+                        html: "Settings was successfully updated.",
                         icon: 'success',
                         showCancelButton: false,
                         confirmButtonText: 'Okay'
@@ -158,6 +158,9 @@ $(function(){
                     html: o.msg
                     });
                 } 
+            },
+            beforeSend: function(){
+                $('#btn-update-estimate-settings').html('<div class="col"><span class="bx bx-loader bx-spin"></span></div>');
             }
         });
     });

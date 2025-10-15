@@ -844,14 +844,14 @@ $(".select_item").click(function () {
     price +
     '\'  type="number" step="any" name="price[]" data-counter=\'' +
     count +
-    '\' class="form-control price hidden_mobile_view text-end" placeholder="Unit Price"><input type="hidden" class="priceqty" id=\'priceqty_' +
+    '\' class="form-control price hidden_mobile_view" placeholder="Unit Price"><input type="hidden" class="priceqty" id=\'priceqty_' +
     idd +
     '\'><div class="show_mobile_view"><span class="price">' +
     price +
     "</span></div></td>\n" +
     // "<td width=\"10%\"><input type=\"number\" class=\"form-control discount\" name=\"discount[]\" data-counter="0" id=\"discount_0\" min="0" value="0" ></td>\n" +
     // "<td width=\"10%\"><small>Unit Cost</small><input type=\"text\" name=\"item_cost[]\" class=\"form-control\"></td>\n" +
-    '<td class="hidden_mobile_view"><input type="number" step="any" min=0 name="discount[]" value="0" class="form-control discount text-end" data-counter=\'' +
+    '<td class="hidden_mobile_view"><input type="number" step="any" min=0 name="discount[]" value="0" class="form-control discount" data-counter=\'' +
     count +
     "' id='discount_" +
     count +
@@ -859,7 +859,7 @@ $(".select_item").click(function () {
     // "<td width=\"25%\"><small>Inventory Location</small><input type=\"text\" name=\"item_loc[]\" class=\"form-control\"></td>\n" +
     '<td class="hidden_mobile_view"><input type="text" data-itemid=\'' +
     idd +
-    '\' class="form-control tax_change text-end" name="tax[]" readonly data-counter=\'' +
+    '\' class="form-control tax_change" name="tax[]" readonly data-counter=\'' +
     count +
     "' id='tax1_" +
     count +
@@ -870,7 +870,7 @@ $(".select_item").click(function () {
     total_ +
     "' id='span_total_" +
     count +
-    '\' class="span-input total_per_item">test' +
+    '\' class="span-input total_per_item">' +
     total +
     // "</span><a href=\"javascript:void(0)\" class=\"remove_item_row\"><i class=\"fa fa-times-circle\" aria-hidden=\"true\"></i></a>"+
     '</span> <input type="hidden" name="total[]" id=\'sub_total_text' +
@@ -881,7 +881,7 @@ $(".select_item").click(function () {
     "<td class='row-btn-actions'>\n" +
     '<a href="#" class="remove nsm-button danger" id=\'' +
     idd +
-    '\'><i class="bx bx-fw bx-trash"></i></a>\n' +
+    '\'><i class="fa fa-trash" style="margin-top:9px;"></i></a>\n' +
     "</td>\n" +
     "</tr>";
   tableBody = $("#jobs_items_table_body");

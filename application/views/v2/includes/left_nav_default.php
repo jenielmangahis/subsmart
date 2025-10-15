@@ -144,7 +144,7 @@ echo 'active';
         <i class='bx bx-fw bx-line-chart'></i> Sales <i class='bx bx-chevron-down list-dropdown-icon general-transition'></i>
     </a>
     <ul class="mt-3">
-        <li class="<?php if ($page->title == 'Events' || $page->title == 'Event Tags' || $page->title == 'Event Types') {
+        <li class="<?php if ($page->title == 'Events' || $page->title == 'Event Tags' || $page->title == 'Event Types' || $page->title == 'Events Settings') {
             echo 'selected';
         } ?>">
             <a href="<?php echo base_url('events'); ?>">
@@ -172,7 +172,7 @@ echo 'active';
                 <i class='bx bx-fw bx-task'></i> Work Orders
             </a>
         </li>                        
-        <li class="<?php if ($page->title == 'Service Tickets') {
+        <li class="<?php if ($page->title == 'Service Tickets' || $page->title == 'Service Ticket Settings') {
             echo 'selected';
         } ?>">
             <a href="<?php echo base_url('customer/tickets'); ?>">

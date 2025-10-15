@@ -3250,11 +3250,12 @@ class Job extends MY_Controller
 
         $unique_notify_users =  array_unique($to_notify_users);
 
-        $content_notification = 'Job #' . $job_number . ' has been scheduled.';
+        $logged_name = logged('FName') . ' ' . logged('LName');
+        $content_notification = 'Job #' . $job_number . ' has been updated by ' . $logged_name;
         foreach($unique_notify_users as $to_notify_user) {
             $job_notify = array(
                 'user_id' => $to_notify_user,
-                'title' => 'Job Status',
+                'title' => 'Job Updated',
                 'content' => $content_notification,
                 'status' => 1,
                 'date_created' => date("Y-m-d H:i:s"),

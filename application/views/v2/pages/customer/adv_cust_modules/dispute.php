@@ -9,19 +9,19 @@
             <div class="row g-3">
                 <div class="col-12">
                     <div class="row g-2 mb-3">
-                        <div class="col-12 col-md-3"></div>
+                        <div class="col-3 col-md-3"></div>
                         <div class="col-3 text-end">
-                            <img class="w-100" style="max-width: 76px;" src="https://app.creditrepaircloud.com/application/images/equifax.png">
+                            <img class="w-100" style="max-width: 76px;" src="<?= $url->assets . 'img/accounting/credit_card_bureaus/equifax.png'; ?>">
                         </div>
                         <div class="col-3 text-end">
-                            <img class="w-100" style="max-width: 76px;" src="https://app.creditrepaircloud.com/application/images/experian.png">
+                            <img class="w-100" style="max-width: 76px;" src="<?= $url->assets . 'img/accounting/credit_card_bureaus/experian.png'; ?>">
                         </div>
                         <div class="col-3 text-end">
-                            <img class="w-100" style="max-width: 76px;" src="https://app.creditrepaircloud.com/application/images/trans_union.png">
+                            <img class="w-100" style="max-width: 76px;" src="<?= $url->assets . 'img/accounting/credit_card_bureaus/transunion.png'; ?>">
                         </div>
                     </div>
                     <div class="row g-2 mb-1">
-                        <div class="col-12 col-md-3">
+                        <div class="col-3 col-md-3">
                             <label class="content-title">Unspecified</label>
                         </div>
                         <div class="col-3 text-end">
@@ -35,7 +35,7 @@
                         </div>
                     </div>
                     <div class="row g-2 mb-1">
-                        <div class="col-12 col-md-3">
+                        <div class="col-3 col-md-3">
                             <label class="content-title">Positive</label>
                         </div>
                         <div class="col-3 text-end">
@@ -49,7 +49,7 @@
                         </div>
                     </div>
                     <div class="row g-2 mb-1">
-                        <div class="col-12 col-md-3">
+                        <div class="col-3 col-md-3">
                             <label class="content-title">Deleted</label>
                         </div>
                         <div class="col-3 text-end">
@@ -63,7 +63,7 @@
                         </div>
                     </div>
                     <div class="row g-2 mb-1">
-                        <div class="col-12 col-md-3">
+                        <div class="col-3 col-md-3">
                             <label class="content-title">Repaired</label>
                         </div>
                         <div class="col-3 text-end">
@@ -77,7 +77,7 @@
                         </div>
                     </div>
                     <div class="row g-2 mb-1">
-                        <div class="col-12 col-md-3">
+                        <div class="col-3 col-md-3">
                             <label class="content-title">In Dispute</label>
                         </div>
                         <div class="col-3 text-end">
@@ -91,7 +91,7 @@
                         </div>
                     </div>
                     <div class="row g-2 mb-1">
-                        <div class="col-12 col-md-3">
+                        <div class="col-3 col-md-3">
                             <label class="content-title">Verified</label>
                         </div>
                         <div class="col-3 text-end">
@@ -105,7 +105,7 @@
                         </div>
                     </div>
                     <div class="row g-2 mb-1">
-                        <div class="col-12 col-md-3">
+                        <div class="col-3 col-md-3">
                             <label class="content-title">Negative</label>
                         </div>
                         <div class="col-3 text-end">
@@ -119,7 +119,7 @@
                         </div>
                     </div>
                     <div class="row g-2 mb-1">
-                        <div class="col-12 col-md-3">
+                        <div class="col-3 col-md-3">
                             <label class="content-title">Updated</label>
                         </div>
                         <div class="col-3 text-end">
@@ -133,7 +133,7 @@
                         </div>
                     </div>
                     <div class="row g-2 mb-1">
-                        <div class="col-12 col-md-3">
+                        <div class="col-3 col-md-3">
                             <label class="content-title">Bureau Letters</label>
                         </div>
                         <div class="col-3 text-end">
@@ -150,10 +150,10 @@
                         <div class="col-12">
                             <hr>
                         </div>
-                        <div class="col-12 col-md-3">
+                        <div class="col-3 col-md-3">
                             <label class="content-title">Furnisher Letters</label>
                         </div>
-                        <div class="col-12 col-md-9 text-end">
+                        <div class="col-9 col-md-9 text-end">
                             <label class="content-subtitle">0</label>
                         </div>
                     </div>

@@ -85,46 +85,46 @@ defined('BASEPATH') or exit('No direct script access allowed');
                     <button type="button" class="dropdown-toggle nsm-button" data-bs-toggle="dropdown" style="width:122px;">
                         <span>Action <i class='bx bx-fw bx-chevron-down'></i>
                     </button>
-                    <ul class="dropdown-menu dropdown-menu-end select-filter">
-                      <li style="font-size:17px;">
+                    <ul class="dropdown-menu dropdown-menu-end">
+                      <li>
                         <?php if($workorder->work_order_type_id == '4'){ ?>
-                          <a class="dropdown-item" href="javascript:void(0);" data-toggle="modal" data-target="#sharePreviewAgree"><i class='bx bxs-envelope'></i> Share</a>
+                          <a class="dropdown-item" href="javascript:void(0);" data-toggle="modal" data-target="#sharePreviewAgree">Share</a>
                         <?php }elseif($workorder->work_order_type_id == '3'){ ?>
-                          <a class="dropdown-item" href="javascript:void(0);" data-toggle="modal" data-target="#sharePreviewSolar"><i class='bx bxs-envelope'></i> Share</a>
+                          <a class="dropdown-item" href="javascript:void(0);" data-toggle="modal" data-target="#sharePreviewSolar">Share</a>
                         <?php }else{ ?>
-                          <a class="dropdown-item" id="share-preview" href="javascript:void(0);"><i class='bx bxs-envelope'></i> Share</a>
+                          <a class="dropdown-item" id="share-preview" href="javascript:void(0);"> Share</a>
                         <?php } ?>
                       </li>
-                      <li style="font-size:17px;">
+                      <li>
                         <?php if($workorder->work_order_type_id == '2'){ ?>
-                          <a class="dropdown-item" href="<?php echo base_url('workorder/editAlarm/' . $workorder->id) ?>"><i class='bx bx-edit'></i> Edit</a>        
+                          <a class="dropdown-item" href="<?php echo base_url('workorder/editAlarm/' . $workorder->id) ?>">Edit</a>        
                         <?php }elseif($workorder->work_order_type_id == '3'){ ?>
-                          <a class="dropdown-item" href="<?php echo base_url('workorder/editSolar/' . $workorder->id) ?>"><i class='bx bx-edit'></i> Edit</a>       
+                          <a class="dropdown-item" href="<?php echo base_url('workorder/editSolar/' . $workorder->id) ?>">Edit</a>       
                         <?php }else{ ?>
-                          <a class="dropdown-item" href="<?php echo base_url('workorder/edit/' . $workorder->id) ?>"><i class='bx bx-edit'></i> Edit</a> 
+                          <a class="dropdown-item" href="<?php echo base_url('workorder/edit/' . $workorder->id) ?>">Edit</a> 
                         <?php } ?>
                         </li>
-                        <li style="font-size:17px;">
+                        <li>
                         <?php if($workorder->work_order_type_id == 1){ ?>                           
-                          <a class="dropdown-item" target="_new" href="<?php echo base_url('share_Link/work_order_pdf/' . $workorder->id) ?>"><i class='bx bxs-file-pdf'></i> PDF</a>
+                          <a class="dropdown-item" target="_new" href="<?php echo base_url('share_Link/work_order_pdf/' . $workorder->id) ?>">PDF</a>
                         <?php }else if($workorder->work_order_type_id == 4){ ?>
-                          <a class="dropdown-item" target="_new" href="<?php echo base_url('share_Link/work_order_pdf_agreement/' . $workorder->id) ?>"><i class='bx bxs-file-pdf'></i> PDF</a>
+                          <a class="dropdown-item" target="_new" href="<?php echo base_url('share_Link/work_order_pdf_agreement/' . $workorder->id) ?>">PDF</a>
                         <?php } else{ ?>
-                          <a class="dropdown-item" target="_new" href="<?php echo base_url('share_Link/work_order_pdf_alarm/' . $workorder->id) ?>"><i class='bx bxs-file-pdf'></i> PDF</a>
+                          <a class="dropdown-item" target="_new" href="<?php echo base_url('share_Link/work_order_pdf_alarm/' . $workorder->id) ?>">PDF</a>
                         <?php } ?>
                         </li>
-                        <li style="font-size:17px;">
+                        <li>
                         <?php if($workorder->work_order_type_id == 1){ ?>
-                          <a class="dropdown-item" href="javascript:void(0);" onclick="printDiv('printableArea')"><i class='bx bxs-printer'></i> Print</a>
+                          <a class="dropdown-item" href="javascript:void(0);" onclick="printDiv('printableArea')">Print</a>
                         <?php }else if($workorder->work_order_type_id == 3){ ?>
-                          <a class="dropdown-item" href="<?php echo base_url('workorder/printSolar/' . $workorder->id) ?>"><i class='bx bxs-printer'></i> Print</a>
+                          <a class="dropdown-item" href="<?php echo base_url('workorder/printSolar/' . $workorder->id) ?>">Print</a>
                         <?php } else{ ?>
-                          <a class="dropdown-item" data-print-modal="open" href="javascript:void(0);" onclick="printDiv('printableArea')"><i class='bx bxs-printer'></i> Print</a>
+                          <a class="dropdown-item" data-print-modal="open" href="javascript:void(0);" onclick="printDiv('printableArea')">Print</a>
                         <?php } ?>
                       </li>                        
                     </ul>
                 </div>
-                  <a class="nsm-button primary" href="<?php echo base_url('workorder') ?>">BACK TO WORKORDER LIST</a>
+                  <a class="nsm-button primary" href="<?php echo base_url('workorder') ?>">BACK TO WORK ORDER LIST</a>
                   <input type="hidden" value="<?php echo getCompanyBusinessProfileImage(); ?>" id="urlLogo">
                 </div>
               </div>
@@ -245,31 +245,35 @@ defined('BASEPATH') or exit('No direct script access allowed');
                   </div>
                 </div>
                 <div class="row mt-4">
-                  <h6 class="title-border">ADDITIONAL CONTACTS:</h6>
-                  <div class="">
-                    <?php if($contacts) { ?>
-                    <?php foreach($contacts as $cont){ ?>
-                      <?php 
-                        $contact_name = "---";
-                        if($cont->first_name != null && $cont->last_name != null) {
-                          $contact_name = $cont->first_name . " " . $cont->last_name;
-                        } else {
-                          $contact_name = $cont->name != null ? $cont->name : $cont->first_name;
-                        }
-                      ?>
-                      <h4><?= $contact_name; ?></h4>
-                      <i class="bx bx-phone"></i><span class=""> <?= formatPhoneNumber($cont->phone); ?></span><br /><br />
-                    <?php } ?>
-                    <?php } else { ?>
-                      <h4><?= 'None'; ?></h4>
-                    <?php } ?>
+                  <div class="col-12 col-md-6">
+                    <h6 class="title-border">ADDITIONAL CONTACTS:</h6>
+                    <div class="">
+                      <?php if($contacts) { ?>
+                      <?php foreach($contacts as $cont){ ?>
+                        <?php 
+                          $contact_name = "---";
+                          if($cont->first_name != null && $cont->last_name != null) {
+                            $contact_name = $cont->first_name . " " . $cont->last_name;
+                          } else {
+                            $contact_name = $cont->name != null ? $cont->name : $cont->first_name;
+                          }
+                        ?>
+                        <h4 style="font-size:18px;"><i class='bx bx-user-circle'></i> <?= $contact_name; ?></h4>
+                        <span class=""><i class="bx bx-phone"></i> <?= formatPhoneNumber($cont->phone); ?></span><br /><br />
+                      <?php } ?>
+                      <?php } else { ?>
+                        <h4><?= 'None'; ?></h4>
+                      <?php } ?>
+                    </div>
                   </div>
-                  
+                  <div class="col-12 col-md-12">
+                    <h6 class="title-border">TERMS AND CONDITIONS :</h6>
+                    <span class="workorder-box"><?= $workorder->terms_and_conditions ?? "None"; ?></span>
+                  </div>
                 </div> 
                 
                 <div class="row mt-4">
-                  <h6 class="title-border">TERMS AND CONDITIONS :</h6>
-                  <span class="workorder-box"><?= $workorder->terms_and_conditions ?? "None"; ?></span>
+                  
                 </div>                
 
                 <div class="row mt-4">
@@ -584,12 +588,6 @@ defined('BASEPATH') or exit('No direct script access allowed');
                     <h6 class="title-border">SALES REPRESENTATIVES :</h6>
                     <span class="workorder-box"><?= $agreements->sales_re_name ?? "None"; ?></span> 
                   </div>
-
-                  <div class="col-md-12">
-                    <h6 class="title-border">URL LINK :</h6>
-                    <span class="workorder-box"><a href="<?php echo base_url('workorder/view/'.$workorder->id) ?>" target="_blank"><?php echo base_url('workorder/view/'.$workorder->id) ?></a></span> 
-                  </div>
-
                   <div class="col-md-6 mt-5" style="text-align: center; min-height: 150px;">
                       <img src="<?php echo base_url('uploads/workorders/signatures/'.$workorder->company_id.'/'.$workorder->company_representative_signature); ?>" />
                       <br /><?= $company->first_name . ' ' . $company->last_name; ?>
@@ -620,7 +618,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
             <div class="modal-body">
                 <div class="row">
                     <div class="col-12">                        
-                      <input type="text" class="nsm-field form-control mb-2 share-link-url" value="<?php echo base_url('share_Link/public_view/'.$workorder->id) ?>" readonly>                          
+                      <input type="text" class="nsm-field form-control mb-2 share-link-url" value="<?= $public_view_url; ?>" readonly>                          
                     </div>
                 </div>
             </div>

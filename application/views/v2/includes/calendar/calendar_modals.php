@@ -68,7 +68,7 @@
     </div>
 </div>
 <div class="modal fade nsm-modal fade" id="create_waitlist_modal" tabindex="-1" aria-labelledby="create_waitlist_modal_label" aria-hidden="true">
-    <div class="modal-dialog modal-md modal-dialog-centered">        
+    <div class="modal-dialog modal-md modal-dialog-centered" style="max-width:520px;">        
             <div class="modal-content">
                 <div class="modal-header">
                     <span class="modal-title content-title">Create Wait List</span>
@@ -87,11 +87,11 @@
                                 </div>
                                 <div class="col-12 col-md-3">
                                     <span id="waitlist-time-popover" data-toggle="popover" data-placement="right"data-container="body">
-                                        <input type="text" name="appointment_time_from" id="waitlist-time-from" class="nsm-field form-control timepicker" placeholder="Time From" required />
+                                        <input type="time" name="appointment_time_from" id="waitlist-time-from" class="nsm-field form-control" placeholder="Time From" required />
                                     </span>
                                 </div>
                                 <div class="col-12 col-md-3">
-                                    <input type="text" name="appointment_time_to" id="waitlist-time-to" class="nsm-field form-control timepicker" placeholder="Time To" value="" required />
+                                    <input type="time" name="appointment_time_to" id="waitlist-time-to" class="nsm-field form-control" placeholder="Time To" value="" required />
                                 </div>
                             </div>
                         </div>
@@ -117,7 +117,7 @@
                                 </div>   
                                 <div class="col-12 col-md-6">
                                     <label class="content-subtitle fw-bold d-block mb-2">Contact Number</label>
-                                    <input type="text" value="" name="contact_number" placeholder="xxx-xxx-xxxx" class="nsm-field form-control phone-number-format" />                          
+                                    <input type="text" value="" name="contact_number" placeholder="xxx-xxx-xxxx" class="nsm-field form-control create-waitlist-phone-number-format" />                          
                                 </div>  
                                 <div class="col-12 col-md-6">
                                     <label class="content-subtitle fw-bold d-block mb-2">Email</label>
@@ -466,7 +466,7 @@
 </div>
 
 <div class="modal fade nsm-modal fade" id="view_upcoming_schedules_modal" tabindex="-1" aria-labelledby="view_upcoming_schedules_modal_label" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
+    <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
         <div class="modal-content">
             <div class="modal-header">
                 <span class="modal-title content-title">Upcoming Schedules</span>
@@ -534,7 +534,7 @@
 
 <!-- New calendar modals -->
 <div class="modal fade nsm-modal fade" id="modal-quick-select-schedule-type" tabindex="-1" aria-labelledby="modal-quick-access-calendar-schedule-label" aria-hidden="true">
-    <div class="modal-dialog modal-md" style="margin-top: 5%;">        
+    <div class="modal-dialog modal-md modal-dialog-centered">        
         <div class="modal-content">
             <div class="modal-header">
                 <span class="modal-title content-title">Select Schedule Type</span>
@@ -1026,22 +1026,24 @@
 </div>
 
 <div class="modal fade nsm-modal fade" id="modal-quick-add-event" aria-labelledby="modal-quick-add-event-label" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
-        <form method="post" id="quick-add-event-form">   
-            <div class="modal-content">
-                <div class="modal-header">
-                    <span class="modal-title content-title">Create Event</span>
-                    <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
-                </div>
-                <div class="modal-body" id="quick-add-event-form-container" style="max-height: 800px; overflow: auto;"></div>
-                <div class="modal-footer" style="display:block;">                    
-                    <div style="float:right;">
-                        <button type="button" class="nsm-button primary" data-bs-dismiss="modal">Cancel</button>
-                        <button type="submit" class="nsm-button primary" id="btn-event-submit">Schedule</button>
-                    </div>
+    <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">         
+        <div class="modal-content">
+            <div class="modal-header">
+                <span class="modal-title content-title">Create Event</span>
+                <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
+            </div>
+            <div class="modal-body">
+                <form method="post" id="quick-add-event-form">  
+                    <div id="quick-add-event-form-container"></div>
+                </form>
+            </div>
+            <div class="modal-footer" style="display:block;">                    
+                <div style="float:right;">
+                    <button type="button" class="nsm-button primary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="nsm-button primary" id="btn-event-submit" form="quick-add-event-form">Schedule</button>
                 </div>
             </div>
-        </form>
+        </div>
     </div>
 </div>
 

@@ -1785,7 +1785,6 @@ class Events extends MY_Controller
         $cid = logged('company_id');
         $uid = logged('id');
 
-        // get all job tags
         $get_login_user = array(
             'where' => array(
                 'id' => $uid
@@ -1798,6 +1797,9 @@ class Events extends MY_Controller
         // get all job tags
         $get_job_tags = array(
             'table' => 'event_tags',
+            'where' => array(
+                'company_id' => $cid
+            ),
             'select' => 'id,name,marker_icon',
         );
         $this->page_data['job_tags'] = $this->general->get_data_with_param($get_job_tags);
@@ -1981,8 +1983,8 @@ class Events extends MY_Controller
         $eventSettings = $this->EventSettings_model->getByCompanyId($cid);
         if( $eventSettings ){
             $event_settings_data = [
-                'event_prefix' => $post['event_settings_prefix'],
-                'event_next_num' => $post['event_settings_next_number'],
+                //'event_prefix' => $post['event_settings_prefix'],
+                //'event_next_num' => $post['event_settings_next_number'],
                 'timezone' => $post['event_settings_timezone'],
                 'customer_reminder_notification' => $post['event_settings_customer_reminder_notification']
             ];
@@ -1990,8 +1992,8 @@ class Events extends MY_Controller
         }else{
             $event_settings_data = [
                 'company_id' => $cid,
-                'event_prefix' => $post['event_settings_prefix'],
-                'event_next_num' => $post['event_settings_next_number'],
+                'event_prefix' => 'EVENT',
+                'event_next_num' => 1,
                 'timezone' => $post['event_settings_timezone'],
                 'customer_reminder_notification' => $post['event_settings_customer_reminder_notification'],
                 'auto_sync_icloud_cal' => 0,
@@ -2008,7 +2010,7 @@ class Events extends MY_Controller
         }
 
         //Activity Logs
-        $activity_name = 'Events Settings : Updated settings'; 
+        $activity_name = 'Events Settings : Updated Settings'; 
         createActivityLog($activity_name);
 
         $is_success = 1;

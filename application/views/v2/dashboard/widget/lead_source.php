@@ -46,7 +46,7 @@
             </div>
         </div>
         <div class="row mb-2">
-            <!-- <div class="col-md-12">
+            <div class="col-md-12">
                 <div class="input-group">
                     <select class="form-select <?php echo "widgetFilter1_$id"; ?>">
                         <option value="all_time">All Time</option>
@@ -60,7 +60,7 @@
                         <option value="last_60_days">Last 60 Days</option>
                     </select>
                 </div>
-            </div> -->
+            </div>
         </div>
         <div class="row <?php echo "textDatas_$id"; ?>">
             <div class="col text-nowrap <?php echo "textDataContainer_$id"; ?>">

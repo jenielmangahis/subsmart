@@ -119,6 +119,9 @@
         max-width: 400px !important;
     }
 }
+.pignose-calendar-row .event-date:hover{
+    cursor:pointer !important;
+}
 </style>
 <div class="row page-content g-0">
     <div class="col-12 mb-3">
@@ -313,6 +316,20 @@
         });
         $('#wait-list-add-customer-popover').popover();
         $('#wait-list-add-tag-popover').popover();
+
+        $('.create-waitlist-phone-number-format').keydown(function(e) {
+            var key = e.charCode || e.keyCode || 0;
+            $text = $(this);
+            if (key !== 8 && key !== 9) {
+                if ($text.val().length === 3) {
+                    $text.val($text.val() + '-');
+                }
+                if ($text.val().length === 7) {
+                    $text.val($text.val() + '-');
+                }
+            }
+            return (key == 8 || key == 9 || key == 46 || (key >= 48 && key <= 57) || (key >= 96 && key <= 105));
+        });
 
         $("#select-employee").multipleSelect({selectAll:false});
 
@@ -927,6 +944,9 @@
                 },
                 success: function(result) {
                     $('#edit_appointment_container').html(result);
+                },
+                beforeSend: function(){
+                    $('#edit_appointment_container').html('<span class="bx bx-loader bx-spin"></span>');
                 }
             });
         });
@@ -1688,27 +1708,14 @@
                 }
             },
             schedules: <?= $mini_calendar_events; ?>,
-            select: miniCalenarOnSelectHandler
+            select: function(date, context) {
+                    if( context.storage.schedules[0].date ){
+                        renderMiniCalendarShowSchedules(context.storage.schedules[0].date);
+                    }
+                }
         });
 
-        function miniCalenarOnSelectHandler(date, context) {            
-            var selected_date = '';
-
-            if (date[0] !== null) {
-                selected_date = date[0].format('YYYY-MM-DD');
-            }
-
-            if (date[0] !== null && date[1] !== null) {
-                selected_date = '';
-            }
-            else if (date[0] === null && date[1] == null) {
-                selected_date = '';
-            }
-
-            if (date[1] !== null) {
-                selected_date = date[1].format('YYYY-MM-DD');
-            }
-
+        function renderMiniCalendarShowSchedules(selected_date) {   
             $('#view_upcoming_schedules_modal').modal('show');
 
             let url = "<?= base_url('calendar/_load_upcoming_calendar_by_date') ?>";
@@ -2743,6 +2750,9 @@
             },
             success: function(result) {
                 $('#edit_appointment_container').html(result);
+            },
+            beforeSend: function(){
+                $('#edit_appointment_container').html('<span class="bx bx-loader bx-spin"></span>');
             }
         });
     }
