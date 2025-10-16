@@ -116,7 +116,7 @@ class Tickets extends MY_Controller
 
         $summaryFilters[]   = ['field' => 'tickets.is_archived', 'value' => 0];
         $totalTickets = $this->tickets_model->getAllByCompanyId($cid, $summaryFilters, $sort);  
-        $openTickets  = $this->tickets_model->getCompanyOpenServiceTickets($cid,[],$summaryFilters);
+        $openTickets  = $this->tickets_model->getCompanyOpenServiceTicketsV2($cid,[],$summaryFilters);
         $ticketTotalAmount = $this->tickets_model->getCompanyTotalAmountServiceTickets($cid,[],$summaryFilters);
 
         $this->page_data['tickets'] = $tickets;

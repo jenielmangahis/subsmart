@@ -2537,6 +2537,7 @@ class Customer extends MY_Controller
         $this->load->model('AccountingTerm_model');
         $this->load->model('FinancingPaymentCategory_model');
         $this->load->model('AcsCustomerSubscriptionBilling_model');
+        $this->load->model('AcsBilling_model');
 
         $this->hasAccessModule(9);
 
@@ -3754,6 +3755,9 @@ class Customer extends MY_Controller
         $this->load->model('AcsSolarInfoLenderType_model');
         $this->load->model('Clients_model');
         $this->load->model('CustomerAddress_model');
+        $this->load->model('Workorder_model');
+        $this->load->model('Jobs_model');
+        $this->load->model('UserCustomerDocfile_model');
 
         $this->hasAccessModule(9);
 
@@ -3837,6 +3841,7 @@ class Customer extends MY_Controller
                 $this->page_data['acs_info_solar'] = $acs_info_solar;
             }
         }
+
         $get_customer_groups = [
             'where' => [
                     'company_id' => logged('company_id'),
@@ -3977,6 +3982,34 @@ class Customer extends MY_Controller
         
         $customerAddress  = $this->CustomerAddress_model->getAllByCustomerId($id);
 
+        $woSubmittedLatest = [];
+        $jobFinishedLatest = [];
+        $recentDocfile = [];
+        $default_login_value = '';
+        if( $customer ){
+            $woSubmittedLatest = $this->Workorder_model->getRecentByCustomerIdAndStatus($customer->prof_id, 'Submitted');
+            $jobFinishedLatest = $this->Jobs_model->getRecentByCustomerIdAndStatus($customer->prof_id, 'Finished');
+            $recentDocfile     = $this->UserCustomerDocfile_model->getRecentDocfileByCustomerId($customer->prof_id);
+            
+
+            $comb1 = strtoupper(substr(trim($customer->first_name),0,1));
+            $comb2 = strtolower($customer->last_name);
+            $address_number = extractCustomerAddressNumber($customer->mail_add);
+            if( $address_number ){
+                $comb3 = $address_number;
+            }else{
+                if( $customer->customer_no != '' ){
+                    $comb3 = str_replace("-","",$customer->customer_no);
+                    $comb3 = substr(trim($comb3),0,3);
+                }else{
+                    $comb3 = substr(trim($customer->prof_id),0,3);
+                }
+            }
+
+            $default_login_value = $comb1 . $comb2 . $comb3;
+
+        }
+
         $this->page_data['page']->title = 'Customers';
         $this->page_data['page']->parent = 'Customers';
         $this->page_data['customerAddress'] = $customerAddress;
@@ -3992,6 +4025,10 @@ class Customer extends MY_Controller
         $this->page_data['company_industry']   = $company_industry;
         $this->page_data['is_with_customer_subscription'] = $client->is_with_customer_subscription;        
         $this->page_data['is_with_property_rental']       = $client->is_with_property_rental;
+        $this->page_data['woSubmittedLatest'] = $woSubmittedLatest;
+        $this->page_data['jobFinishedLatest'] = $jobFinishedLatest;
+        $this->page_data['recentDocfile'] = $recentDocfile;
+        $this->page_data['default_login_value'] = $default_login_value;
         //$this->load->view('v2/pages/customer/add', $this->page_data);
         $this->load->view('v2/pages/customer/add_dynamic_fields', $this->page_data);
     }
@@ -8519,15 +8556,19 @@ class Customer extends MY_Controller
     }
 
     public function customer_subscriptions()
-    {        
+    {   
         $this->load->model('Customer_advance_model');
 
         $company_id = logged('company_id');
-        $activeSubscriptions = $this->Customer_advance_model->getTotalActiveSubscriptionsByCompanyId($company_id);
+        $activeSubscriptions    = $this->Customer_advance_model->getTotalActiveSubscriptionsByCompanyId($company_id);
+        $completedSubscriptions = $this->Customer_advance_model->getTotalCompletedSubscriptionsByCompanyId($company_id);
+        $totalSubscriptions     = $this->Customer_advance_model->getTotalSubscriptionsByCompanyId($company_id);
 
         $this->page_data['page']->title = 'Customer Subscriptions';
         $this->page_data['page']->parent = 'Customers';
         $this->page_data['activeSubscriptions'] = $activeSubscriptions;
+        $this->page_data['completedSubscriptions'] = $completedSubscriptions;
+        $this->page_data['totalSubscriptions'] = $totalSubscriptions;
         $this->load->view('v2/pages/customer/subscription_list', $this->page_data);
     }
 
