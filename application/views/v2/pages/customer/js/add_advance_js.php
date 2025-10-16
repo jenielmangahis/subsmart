@@ -48,7 +48,7 @@
             placeholder: "Select Pay History"
         });
         $("#cancel_reason").select2({
-            placeholder: "Select Saved By"
+            placeholder: "Select Reason"
         });
         $("#pre_install_survey").select2({
             placeholder: "Select Pre-Install Survey"
@@ -69,7 +69,7 @@
             placeholder: "Select Warranty Type"
         });
         $("#communication_type").select2({
-            placeholder: "Select Communication Type"
+            placeholder: "Select Service Package"
         });
         $("#acct_type").select2({
             placeholder: "Select Account Type"
