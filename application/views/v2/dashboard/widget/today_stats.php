@@ -12,7 +12,7 @@
             <div class="col-md-12">
                 <h5 class="mt-0 fw-bold">
                     <a role="button" class="text-decoration-none" href="javascript:void(0)" style="color:#6a4a86 !important">
-                        <?php echo "<i class='$icon'></i>&nbsp;&nbsp;$title"; ?> <span class="badge widgetBadge position-absolute opacity-25"><?php echo ucfirst($type); ?></span>
+                        <?php echo "<i class='$icon'></i>&nbsp;&nbsp;$title"; ?> <button class="btn btn-success float-end opacity-50 btn-sm widgetRefreshButton <?php echo "refresh_widget_$id"; ?>"><small>REFRESH</small></button>
                     </a>
                     <div class="dropdown float-end widgetDropdownMenu display_none">
                         <a href="javascript:void(0)" class="dropdown-toggle text-decoration-none" data-bs-toggle="dropdown" aria-expanded="false">
@@ -30,7 +30,7 @@
                 <span><?php echo $description; ?></span>
             </div>
         </div>
-        <!-- <div class="row mb-2">
+        <div class="row mb-2 d-none">
             <div class="col-md-12">
                 <div class="input-group">
                     <select class="form-select <?php echo "widgetFilter1_$id"; ?>">
@@ -46,7 +46,7 @@
                     </select>
                 </div>
             </div>
-        </div> -->
+        </div>
         <div class="row <?php echo "textDatas_$id"; ?>">
             <div class="col text-nowrap <?php echo "textDataContainer_$id"; ?>">
                 <div class="text-center textData">
@@ -103,7 +103,7 @@
 
     function <?php echo "processData_$id"; ?>(category, dateFrom, dateTo, filter3) { 
         $.ajax({
-            //url: `${window.location.origin}/dashboard/thumbnailWidgetRequest`,
+            //url: `${window.origin}/dashboard/thumbnailWidgetRequest`,
             url: base_url + `/dashboard/thumbnailWidgetRequest`,
             type: "POST",
             data: {
@@ -274,5 +274,13 @@
                 $('.<?php echo "graphDataContainer_$id"; ?>').hide();
             }
         }
+    });
+
+    $(document).on('click', '.<?php echo "refresh_widget_$id"; ?>', function () {
+        $(this).removeClass('btn-success').addClass('btn-secondary').attr('disabled', true).html('<i class="fas fa-spinner fa-pulse"></i>');
+        $('.<?php echo "widgetFilter1_$id"; ?>').change();
+        setTimeout(() => {
+            $(this).removeClass('btn-secondary').addClass('btn-success').removeAttr('disabled').html('<small>REFRESH</small>');
+        }, 3000);
     });
 </script>

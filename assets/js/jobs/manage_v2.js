@@ -30,7 +30,7 @@ async function initJobType(selector = "#job_type") {
         return {
           results: response.data.map((item) => ({
             ...item,
-            id: item.id,
+            id: item.title,
             text: item.title,
           })),
         };
@@ -65,6 +65,7 @@ async function initJobTag(selector = "#job_tag") {
           ...item,
           id: item.id,
           text: item.name,
+          marker_icon: item.marker_icon
         }));
 
         window.__jobTags = results;
@@ -132,13 +133,14 @@ function templateResult(iconKey) {
 
     let icon = item[iconKey] || undefined;
 
-    if (!icon && iconKey === "marker_icon" && Array.isArray(window.__jobTags)) {
-      // Fix about weird issue where icon not showing on value
-      const match = window.__jobTags.find((tag) => tag.id === item.id);
-      if (match.marker_icon) {
-        icon = match.marker_icon;
-      }
-    }
+    // if (!icon && iconKey === "marker_icon" && Array.isArray(window.__jobTags)) {
+    //   // Fix about weird issue where icon not showing on value
+    //   const match = window.__jobTags.find((tag) => tag.id === item.id);
+    //   console.log('match' + match);
+    //   if (match.marker_icon) {
+    //     icon = match.marker_icon;
+    //   }
+    // }
 
     if (!icon && item.element && item.element.dataset.image) {
       icon = item.element.dataset.image;
@@ -147,7 +149,7 @@ function templateResult(iconKey) {
     if (typeof icon === "string" && icon.length) {      
       icon = base_url + `/uploads/icons/${icon}`;
     } else {      
-      icon = base_url + "/uploads/job_tags/default_no_image.jpg";
+      icon = base_url + "/uploads/icons/administrative_tools_48px.png";
     }
 
     return $(

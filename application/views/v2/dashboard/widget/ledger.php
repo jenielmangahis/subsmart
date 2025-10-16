@@ -157,7 +157,7 @@
     const selectizeLedgerInstance = selectLedgerCustomerInput[0].selectize;
 
     $.ajax({
-        url: `${window.location.origin}/dashboard/thumbnailWidgetRequest`,
+        url: `${window.origin}/dashboard/thumbnailWidgetRequest`,
         type: "POST",
         data: {
             category: "customer_list",
@@ -197,7 +197,7 @@
         const customerID = $(this).val();
         if (customerID != "") {
             $.ajax({
-                url: `${window.location.origin}/dashboard/thumbnailWidgetRequest`,
+                url: `${window.origin}/dashboard/thumbnailWidgetRequest`,
                 type: "POST",
                 data: {
                     category: "ledger_lookup",

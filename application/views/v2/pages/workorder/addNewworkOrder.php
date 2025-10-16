@@ -1451,14 +1451,10 @@ $(document).on('click','.btn-edit-header',function(){
 
     //Terms and condition
     $("#form_update_termscon").on("submit", function(e) {
-        let _this = $(this);
-            e.preventDefault();
+        e.preventDefault();
 
-            var url = "<?php echo base_url('workorder/save_update_tc'); ?>";
-            var newContent = CKEDITOR.instances['editor-update-termscon'].getData();
-
-            _this.find("button[type=submit]").html("Saving");
-            _this.find("button[type=submit]").prop("disabled", true);
+        var url = "<?php echo base_url('workorder/save_update_tc'); ?>";
+        var newContent = CKEDITOR.instances['editor-update-termscon'].getData();
 
         $.ajax({
             type: 'POST',
@@ -1481,9 +1477,11 @@ $(document).on('click','.btn-edit-header',function(){
                 $("#terms_and_condition_text").html(newContent);
                 _this.trigger("reset");
 
-                _this.find("button[type=submit]").html("Save");
-                _this.find("button[type=submit]").prop("disabled", false);
+                $('#btn-update-termscon').html("Save");
             },
+            beforeSend:function(){
+                $('#btn-update-termscon').html('<span class="bx bx-loader bx-spin"></span>');
+            }
         });
     });
 

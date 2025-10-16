@@ -931,7 +931,7 @@
                                                             <select id="job_type" name="job_type" class="form-control">
                                                                 <option value="">Select Type</option>
                                                                 <?php if( $defaultJobType ){ ?>
-                                                                    <option  value="<?= $defaultJobType->id; ?>" data-image="<?= $defaultJobType->icon_marker; ?>" selected="selected"><?= $defaultJobType->title; ?></option>
+                                                                    <option  value="<?= $defaultJobType->title; ?>" data-image="<?= $defaultJobType->icon_marker; ?>" selected="selected"><?= $defaultJobType->title; ?></option>
                                                                 <?php } ?>
                                                             </select>
                                                             <script>

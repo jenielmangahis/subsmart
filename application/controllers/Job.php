@@ -400,7 +400,7 @@ class Job extends MY_Controller
             $items = $this->jobs_model->get_specific_job_items($id);
 
             $job = $this->jobs_model->get_specific_job($id);
-            $defaultJobType = $this->JobType_model->getByTitle($job->job_type);
+            $defaultJobType = $this->JobType_model->getByTitleAndCompanyId($job->job_type,$comp_id);
             $this->page_data['jobs_data'] = $job;
             $this->page_data['jobs_data_items'] = $items;
             $this->page_data['defaultJobType'] = $defaultJobType;
@@ -2997,7 +2997,7 @@ class Job extends MY_Controller
                 //Activity Logs
                 $this->load->model('Activity_model');
                 $user_id = logged('id');
-                $activity_name = 'Created Job Number ' . $job_number; 
+                $activity_name = 'Jobs : Created job number ' . $job_number; 
                 $this->Activity_model->add($activity_name,$user_id);
 
                 //Google Calendar
@@ -3073,7 +3073,7 @@ class Job extends MY_Controller
                         $job_items_data['qty']  = $input['item_qty'][$xx];
                         $job_items_data['commission'] = $input['item_commission'][$xx];
                         $job_items_data['margin'] = $input['item_margin'][$xx];
-                        $job_items_data['cost'] = $input['item_price'][$xx] * $input['item_qty'][$xx];
+                        $job_items_data['cost'] = $input['item_price'][$xx];
                         $job_items_data['tax']      = 0;
                         $job_items_data['total']    = $input['item_price'][$xx] * $input['item_qty'][$xx];
                         $job_items_data['location'] = $input['location'][$xx];
@@ -3102,7 +3102,7 @@ class Job extends MY_Controller
                 //Activity Logs
                 $this->load->model('Activity_model');
                 $user_id = logged('id');
-                $activity_name = 'Updated Job Number ' . $job_number; 
+                $activity_name = 'Jobs : Updated job number ' . $job_number; 
                 $this->Activity_model->add($activity_name,$user_id);
                 
                 // Update payments

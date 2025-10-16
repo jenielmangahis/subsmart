@@ -1246,11 +1246,31 @@ class Workorder_model extends MY_Model
         return $query;
     }
 
+    public function getWorkOrderSettingTermsConditionById($id)
+    {
+        $this->db->select('*');
+        $this->db->from('work_order_terms_conditions');
+        $this->db->where('id', $id);
+
+        $query = $this->db->get()->row();
+        return $query;
+    }
+
     public function getWorkOrderSettingHeaderByCompanyId($company_id)
     {
         $this->db->select('*');
         $this->db->from('work_order_headers');
         $this->db->where('company_id', $company_id);
+
+        $query = $this->db->get()->row();
+        return $query;
+    }
+
+    public function getWorkOrderSettingHeaderById($id)
+    {
+        $this->db->select('*');
+        $this->db->from('work_order_headers');
+        $this->db->where('id', $id);
 
         $query = $this->db->get()->row();
         return $query;
@@ -1524,6 +1544,20 @@ class Workorder_model extends MY_Model
         }
     }
 
+    public function updateSettingTermsConditions($id, $data = [])
+    {
+        if($id > 0 ){
+            $this->db->where('id', $id);
+            $this->db->update('work_order_terms_conditions', $data);
+            return $id;
+        }else{
+            $termsCondition = $this->db->insert('work_order_terms_conditions', $data);
+            $insert_id = $this->db->insert_id();
+            return  $insert_id;
+           
+        }
+    }
+
     public function update_setting_header($data)
     {
         extract($data);
@@ -1536,6 +1570,19 @@ class Workorder_model extends MY_Model
             $this->db->where('id', $id);
             $this->db->update('work_order_headers', array('content' => $content));
             return $data;
+        }
+    }
+
+    public function updateSettingHeader($id, $data = [])
+    {
+        if($id > 0){
+            $this->db->where('id', $id);
+            $this->db->update('work_order_headers', $data);
+            return $id;
+        }else{
+            $header = $this->db->insert('work_order_headers', $data);
+            $insert_id = $this->db->insert_id();
+            return  $insert_id;
         }
     }
 

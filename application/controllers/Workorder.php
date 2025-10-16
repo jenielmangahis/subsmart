@@ -3271,55 +3271,56 @@ class Workorder extends MY_Controller
         echo json_encode($custom_dataQuery);
     }
 
-    public function save_update_tc(){
-        $company_id  = getLoggedCompanyID();
-        $termsCondition = $this->workorder_model->getWorkOrderSettingTermsConditionByCompanyId($company_id);
-        if( $termsCondition ){            
+    public function save_update_tc()
+    {
+        $post = $this->input->post();
+        $company_id  = logged('company_id');
+
+        $termsCondition = $this->workorder_model->getWorkOrderSettingTermsConditionById($post['id']);
+        if( $termsCondition && $termsCondition->company_id == $company_id ){            
             $id   =  $termsCondition->id;
-            $data = array(        
-                'id' => $id,        
+            $data = array(    
                 'content' => $this->input->post('content'),
-                'company_id' => $company_id,
-                'date_created' => date("Y-m-d H:i:s"),
                 'date_updated' => date("Y-m-d H:i:s")
             );
         }else{            
+            $id   = 0;
             $data = array(
-                'id' => '',
                 'content' => $this->input->post('content'),
-                'company_id' => $company_id,                
+                'company_id' => $company_id,           
+                'date_created' => date("Y-m-d H:i:s"),     
                 'date_updated' => date("Y-m-d H:i:s")
             );
         }
 
-        $dataQuery = $this->workorder_model->update_tc($data);
+        $dataQuery = $this->workorder_model->updateSettingTermsConditions($id, $data);
 
         echo json_encode($dataQuery);
     }
 
-    public function save_update_header(){
-        $company_id  = getLoggedCompanyID();
-        $settingHeader = $this->workorder_model->getWorkOrderSettingHeaderByCompanyId($company_id);
-        if( $settingHeader ){            
+    public function save_update_header()
+    {
+        $post = $this->input->post();
+        $company_id  = logged('company_id');
+
+        $settingHeader = $this->workorder_model->getWorkOrderSettingHeaderById($post['id']);
+        if( $settingHeader && $settingHeader->company_id == $company_id ){            
             $id   =  $settingHeader->id;
             $data = array(        
-                'id' => $id,        
                 'content' => $this->input->post('content'),
-                'company_id' => $company_id,
-                'date_created' => date("Y-m-d H:i:s"),
                 'date_updated' => date("Y-m-d H:i:s")
             );
-        }else{            
+        }else{    
+            $id = 0;        
             $data = array(
-                'id' => '',
                 'content' => $this->input->post('content'),
-                'company_id' => $company_id,                
+                'company_id' => $company_id,       
+                'date_created' => date("Y-m-d H:i:s"),         
                 'date_updated' => date("Y-m-d H:i:s")
             );
         }
 
-        $dataQuery = $this->workorder_model->update_setting_header($data);
-
+        $dataQuery = $this->workorder_model->updateSettingHeader($id, $data);
         echo json_encode($dataQuery);
     }
 
@@ -12429,7 +12430,7 @@ class Workorder extends MY_Controller
         $this->page_data['page']->title  = 'Convert Estimate to Workorder';
 
         $estimate = $this->estimate_model->getById($id);
-        if ($estimate) {
+        if ($estimate && $estimate->company_id == $company_id) {
             $query_autoincrment = $this->db->query("SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE table_name = 'customer_groups'");
             $result_autoincrement = $query_autoincrment->result_array();
 
@@ -12538,8 +12539,6 @@ class Workorder extends MY_Controller
             $this->load->view('v2/pages/workorder/addEstimateToWorkorder', $this->page_data);            
             
         } else {
-            $this->session->set_flashdata('message', 'Record not found.');
-            $this->session->set_flashdata('alert_class', 'alert-danger');
             redirect('estimate');            
         }
     }

@@ -1336,7 +1336,7 @@ $("#attachment-file").change(function() {
                     // console.log({ data });
                     if (data.job_id) {
                         window.open("<?php echo base_url('job/createInvoice/'); ?>" + data.job_id, '_blank','location=yes,height=650,width=1200,scrollbars=yes,status=yes');
-                        window.location.href = "<?php echo base_url('job/new_job1/'); ?>" + data.job_id;
+                        window.location.href = "<?php echo base_url('job/edit/'); ?>" + data.job_id;
                         return;
                     }
                 }
