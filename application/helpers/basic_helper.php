@@ -5863,3 +5863,10 @@ function getWorkOrderStaticItems() {
 
     return $items_arr;
 }
+
+function extractCustomerAddressNumber($addressString) {
+    if (preg_match('/^\d+/', $addressString, $matches)) {
+        return $matches[0]; 
+    }
+    return null; 
+}
