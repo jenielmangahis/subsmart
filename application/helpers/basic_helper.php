@@ -5824,3 +5824,42 @@ function getCustomerFieldValue($formSettings, $field_group, $field_name){
 
     return $field_value;
 }
+
+function getWorkOrderStaticItems() {
+    //$items_arr   = [];
+
+    $items_arr = [
+        [
+            "name" => "Type of Install",
+            "sub" => ['New','Takeover']
+        ],
+        ["name" => "Recessed Door Contact"],
+        ["name" => "Surface Contact"],
+        ["name" => "Keyless Remote"],
+        ["name" => "Motion Detector"],
+        ["name" => "Smoke Communicator"],
+        ["name" => "Glass Break Detector"],
+        ["name" => "Carbon Monoxide"],
+        ["name" => "Medical Pendant"],
+        ["name" => "Door Bell Camera"],
+        ["name" => "Z-Thermostat"],
+        ["name" => "Wifi-Card"],
+        ["name" => "Z-Card"],
+        [
+            "name" => "Z-Lock",
+            "sub" => ['BZ','BS','CS']
+        ],
+        ["name" => "WAP"],
+        ["name" => "IP-CAM (Indoor)"],
+        ["name" => "IP-CAM (Outdoor)"],
+        ["name" => "Warranty ePaperwork"],
+        ["name" => "Advertising Kit"],
+        ["name" => "Certificate of Insurance"],
+        [
+            "name" => "Translater",
+            "sub" => ['GE','HW','DSC']
+        ],
+    ];
+
+    return $items_arr;
+}

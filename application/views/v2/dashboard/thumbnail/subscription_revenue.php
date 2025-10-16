@@ -12,7 +12,7 @@
             <div class="col-md-12">
                 <h5 class="mt-0 fw-bold">
                     <a role="button" class="text-decoration-none" href="javascript:void(0)" style="color:#6a4a86 !important">
-                        <?php echo "<i class='$icon'></i>&nbsp;&nbsp;$title"; ?> <span class="badge bg-secondary position-absolute opacity-25"><?php echo ucfirst($type); ?></span>
+                        <?php echo "<i class='$icon'></i>&nbsp;&nbsp;$title"; ?> <button class="btn btn-success float-end opacity-50 btn-sm thumbnailRefreshButton <?php echo "refresh_thumbnail_$id"; ?>"><small>REFRESH</small></button>
                     </a>
                     <div class="dropdown float-end thumbnailDropdownMenu display_none">
                         <a href="javascript:void(0)" class="dropdown-toggle text-decoration-none" data-bs-toggle="dropdown" aria-expanded="false">
@@ -135,8 +135,7 @@
 
     function <?php echo "processData_$id"; ?>(category, dateFrom, dateTo, filter3) { 
         $.ajax({
-            url: `${window.location.origin}/dashboard/thumbnailWidgetRequest`,
-            //url: base_url + `/dashboard/thumbnailWidgetRequest`,
+            url: `${window.origin}/dashboard/thumbnailWidgetRequest`,
             type: "POST",
             data: {
                 category: category,
@@ -215,7 +214,7 @@
 
                 // get Weekly subscriptions amount
                 $.ajax({
-                    url: `${window.location.origin}/dashboard/thumbnailWidgetRequest`,
+                    url: `${window.origin}/dashboard/thumbnailWidgetRequest`,
                     type: "POST",
                     data: {
                         category: "weekly_subscription_amount",
@@ -226,7 +225,7 @@
                     success: function (response) {
                         const weekly_subscription_amount = JSON.parse(response);
                         let weeklyValue = (weekly_subscription_amount[0].total) ? parseFloat(weekly_subscription_amount[0].total).toLocaleString('en-US', { style: 'currency', currency: 'USD' }) : '$0.00';
-                        let weeklyValueFormat = (weekly_subscription_amount[0].total)
+                        let weeklyValueFormat = (weekly_subscription_amount[0].total && !(weekly_subscription_amount[0].total <= 0))
                             ? `<span class="badge bg-success" style="border-radius: 5px; font-weight: 500; font-size: 11px;">+ ${weeklyValue}</span>`
                             : `<span class="badge bg-secondary" style="border-radius: 5px; font-weight: 500; font-size: 11px;">$0.00</span>`; 
                         let weeklyCountFormat = (weekly_subscription_amount[0].weekly_subscribers != 0)
@@ -327,5 +326,13 @@
                 $('.<?php echo "graphDataContainer_$id"; ?>').hide();
             }
         }
+    });
+
+    $(document).on('click', '.<?php echo "refresh_thumbnail_$id"; ?>', function () {
+        $(this).removeClass('btn-success').addClass('btn-secondary').attr('disabled', true).html('<i class="fas fa-spinner fa-pulse"></i>');
+        $('.<?php echo "thumbnailFilter1_$id"; ?>').change();
+        setTimeout(() => {
+            $(this).removeClass('btn-secondary').addClass('btn-success').removeAttr('disabled').html('<small>REFRESH</small>');
+        }, 3000);
     });
 </script>

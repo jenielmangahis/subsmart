@@ -328,6 +328,9 @@
                                 </div>
                             </div>
                             <div class="nsm-card-content">
+                                <?php 
+                                    $default_items = getWorkOrderStaticItems();
+                                ?>
                                 <table class="nsm-table_ itemTable">
                                     <thead>
                                         <th style="text-align:center;" data-name="Items">Items</th>
@@ -337,20 +340,49 @@
                                         <th style="text-align:center;" data-name="Price">Price</th>
                                     </thead>
                                     <tbody>
-                                        <?php foreach($items_data as $item) { ?>
-                                            <?php 
-                                                $i_total_amount = $item->price * $item->qty;
-                                            ?>
+                                        <?php foreach($default_items as $default_item) { ?>
                                             <tr>
                                                 <td>
-                                                    <input type="text" class="nsm-field form-control" name="item[]" value="<?php echo $item->title; ?>">
-                                                    <input type="hidden" name="dataValue[]">
+                                                    <?php if($default_item['sub']) {  ?>
+                                                        <div class="row g-2">
+                                                            <div class="col">
+                                                                <input type="text" class="nsm-field form-control fw-bold" name="item[]" value="<?php echo $default_item['name']; ?>">
+                                                            </div>
+                                                            <div class="col-auto d-flex align-items-center">
+                                                                <?php foreach($default_item['sub'] as $sub_key => $sub_item) { ?>
+                                                                    <div class="form-check d-inline-block me-2 mb-0">
+                                                                        <input class="form-check-input check-one-field" type="checkbox" name="checkOneOne" id="sub<?php echo $default_item['name']; ?>_<?php echo $sub_key; ?>" value="<?php echo $sub_item; ?>">
+                                                                        <label class="form-check-label" for="toi_1"><?php echo $sub_item; ?></label>
+                                                                    </div>
+                                                                <?php } ?>
+                                                            </div>                                                            
+                                                        </div>                                                        
+                                                    <?php }else{ ?>
+                                                        <input type="text" class="nsm-field form-control" name="item[]" value="<?php echo $default_item['name']; ?>">
+                                                        <input type="hidden" name="dataValue[]">                                                        
+                                                    <?php } ?>
                                                 </td>
-                                                <td><input style="text-align:center;" type="text" class="nsm-field form-control" name="qty[]" value="<?php echo $item->qty; ?>"></td>
+                                                <td><input style="text-align:center;" type="text" class="nsm-field form-control" name="qty[]" value=""></td>
                                                 <td><input style="text-align:center;" type="text" class="nsm-field form-control" name="existing[]"></td>
                                                 <td><input style="text-align:center;" type="text" class="nsm-field form-control" name="location[]"></td>
-                                                <td><input style="text-align:center;" type="text" class="nsm-field form-control all-price-field allprices" name="price[]" value="<?php echo number_format($i_total_amount,2); ?>"></td>
+                                                <td><input style="text-align:center;" type="text" class="nsm-field form-control all-price-field allprices" name="price[]" value=""></td>
                                             </tr>
+                                        <?php } ?>
+
+                                        <?php foreach($items_data as $item) { ?>
+                                            <?php 
+                                                //$i_total_amount = $item->price * $item->qty;
+                                            ?>
+                                            <!-- <tr>
+                                                <td>
+                                                    <input type="text" class="nsm-field form-control" name="item[]" value="<?php //echo $item->title; ?>">
+                                                    <input type="hidden" name="dataValue[]">
+                                                </td>
+                                                <td><input style="text-align:center;" type="text" class="nsm-field form-control" name="qty[]" value="<?php //echo $item->qty; ?>"></td>
+                                                <td><input style="text-align:center;" type="text" class="nsm-field form-control" name="existing[]"></td>
+                                                <td><input style="text-align:center;" type="text" class="nsm-field form-control" name="location[]"></td>
+                                                <td><input style="text-align:center;" type="text" class="nsm-field form-control all-price-field allprices" name="price[]" value="<?php //echo number_format($i_total_amount,2); ?>"></td>
+                                            </tr> -->
                                         <?php } ?>
                                     </tbody>
                                 </table>
@@ -1025,8 +1057,7 @@
                     </div>
                     <div class="col-12 text-end">
                         <button type="button" class="nsm-button" onclick="location.href='<?php echo url('workorder') ?>'">Cancel</button>
-                        <!-- <button type="submit" class="nsm-button">Send to Customer</button> -->
-                        <button type="submit" class="nsm-button primary">Submit</button>
+                        <button type="submit" class="nsm-button primary">Save</button>
                     </div>
                 </div>
                 <?php echo form_close(); ?>
@@ -1195,7 +1226,50 @@ $(document).ready(function() {
         $('.dcam_check').val(this.value);
     });
 
-    $("#form_new_adi_workorder").on("submit", function(e) {            
+    $("#form_new_adi_workorder").on("submit", function(e) {
+
+        let _this = $(this);
+        e.preventDefault();    
+
+        _this.find("button[type=submit]").html("Saving");
+        _this.find("button[type=submit]").prop("disabled", true);          
+
+        var url          = base_url+"workorder/_save_estimate_convert_to_workorder";
+        let total_amount = $('#payment_amount_grand').val();        
+        
+        var post_data = new FormData(this);
+        $.ajax({
+            type: 'POST',
+            url: url,
+            data: post_data,
+            processData: false,
+            contentType: false,
+            dataType: "json",
+            success: function(result) {
+                Swal.fire({
+                    title: 'Convert Estimate to Workorder',
+                    html: result.msg,
+                    icon: result.is_success == 1 ? 'success' : 'error',
+                    showCloseButton: false,
+                    showCancelButton: false,
+                    confirmButtonColor: '#2ca01c',
+                    confirmButtonText: 'Okay'
+                }).then((res) => {
+                    if(res.isConfirmed) {
+                        if(result.is_success == 1) {
+                            _this.trigger("reset");
+                            window.location = base_url + "workorder";                        
+                        } else {
+                            _this.find("button[type=submit]").html("Submit");
+                            _this.find("button[type=submit]").prop("disabled", false);                             
+                        }
+                    }
+                });
+            },
+        });        
+    });
+
+    $("#form_new_adi_workorderOld").on("submit", function(e) {            
         e.preventDefault();
         var url = "<?php echo base_url('workorder/savenewWorkorderAgreement'); ?>";            
 
