@@ -525,7 +525,9 @@ class Dashboard_model extends MY_Model
             case 'today_stats':
                 $currentMonthFirstDay = date('Y-m-01');
                 $currentMonthLastDay = date('Y-m-t');
-                
+                $currentDayStart = date('Y-m-d') . ' 00:00:00';
+                $currentDayEnd = date('Y-m-d') . ' 23:59:59';
+
                 $query = $this->db->query("
                     SELECT
                         invoices.company_id AS company_id, 
@@ -545,8 +547,8 @@ class Dashboard_model extends MY_Model
                     FROM jobs
                     WHERE jobs.company_id = '{$company_id}' 
                         AND jobs.status = 'Scheduled'
-                    AND DATE_FORMAT(jobs.date_created, '%Y-%m-%d') >= '{$dateFrom}'
-                    AND DATE_FORMAT(jobs.date_created, '%Y-%m-%d') <= '{$dateTo}'
+                    AND DATE_FORMAT(jobs.date_created, '%Y-%m-%d') >= '{$currentDayStart}'
+                    AND DATE_FORMAT(jobs.date_created, '%Y-%m-%d') <= '{$currentDayEnd}'
                     UNION
                     SELECT
                         jobs.company_id AS company_id, 
@@ -555,8 +557,8 @@ class Dashboard_model extends MY_Model
                     FROM jobs
                     WHERE jobs.company_id = '{$company_id}' 
                         AND jobs.status IN ('Finished', 'Completed')
-                    AND DATE_FORMAT(jobs.date_created, '%Y-%m-%d') >= '{$dateFrom}'
-                    AND DATE_FORMAT(jobs.date_created, '%Y-%m-%d') <= '{$dateTo}'
+                    AND DATE_FORMAT(jobs.date_created, '%Y-%m-%d') >= '{$currentDayStart}'
+                    AND DATE_FORMAT(jobs.date_created, '%Y-%m-%d') <= '{$currentDayEnd}'
                     UNION
                     SELECT
                         invoices.company_id AS company_id, 
@@ -586,8 +588,8 @@ class Dashboard_model extends MY_Model
                     FROM tickets
                     WHERE tickets.company_id = '{$company_id}' 
                         AND tickets.ticket_status = 'Scheduled'
-                    AND DATE_FORMAT(tickets.created_at, '%Y-%m-%d') >= '{$dateFrom}'
-                    AND DATE_FORMAT(tickets.created_at, '%Y-%m-%d') <= '{$dateTo}'
+                    AND DATE_FORMAT(tickets.created_at, '%Y-%m-%d') >= '{$currentDayStart}'
+                    AND DATE_FORMAT(tickets.created_at, '%Y-%m-%d') <= '{$currentDayEnd}'
                 ");
                 $data = $query->result();
                 return $data;

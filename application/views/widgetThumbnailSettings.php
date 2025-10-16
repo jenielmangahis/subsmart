@@ -108,6 +108,11 @@
             width: 12px;
             height: 12px;
         }
+
+    .thumbnailRefreshButton,
+    .widgetRefreshButton {
+        margin-top: -3px;
+    }
 </style>
 <div class="modal fade" id="dashboardThumbnailWidgetSettingsModal" role="dialog" data-bs-keyboard="true">
     <div class="modal-dialog modal-lg">
@@ -331,7 +336,7 @@
 
         $(document).on('click', '.thumbnailCustomizeLayout', function() {
             thumbnailMasonry.destroy();
-            $('.thumbnailCustomizeLayout').hide();
+            $('.thumbnailCustomizeLayout, .thumbnailRefreshButton').hide();
             $('.thumbnailSaveLayout').show();
             $('.thumbnailCancelLayout').show();
             $('.thumbnailDropdownMenu').show();
@@ -346,7 +351,7 @@
         });
 
         $(document).on('click', '.thumbnailSaveLayout', function() {
-            $('.thumbnailCustomizeLayout').show();
+            $('.thumbnailCustomizeLayout, .thumbnailRefreshButton').show();
             $('.thumbnailSaveLayout').hide();
             $('.thumbnailCancelLayout').hide();
             $('.thumbnailDropdownMenu').hide();
@@ -394,7 +399,7 @@
         });
 
         $(document).on('click', '.thumbnailCancelLayout', function() {
-            $('.thumbnailCustomizeLayout').show();
+            $('.thumbnailCustomizeLayout, .thumbnailRefreshButton').show();
             $('.thumbnailSaveLayout').hide();
             $('.thumbnailCancelLayout').hide();
             $('.thumbnailDropdownMenu').hide();
@@ -529,7 +534,7 @@
 
         $(document).on('click', '.widgetCustomizeLayout', function() {
             widgetMasonry.destroy();
-            $('.widgetCustomizeLayout').hide();
+            $('.widgetCustomizeLayout, .widgetRefreshButton').hide();
             $('.widgetSaveLayout').show();
             $('.widgetCancelLayout').show();
             $('.widgetDropdownMenu').show();
@@ -544,7 +549,7 @@
         });
 
         $(document).on('click', '.widgetSaveLayout', function() {
-            $('.widgetCustomizeLayout').show();
+            $('.widgetCustomizeLayout, .widgetRefreshButton').show();
             $('.widgetSaveLayout').hide();
             $('.widgetCancelLayout').hide();
             $('.widgetDropdownMenu').hide();
@@ -592,7 +597,7 @@
         });
 
         $(document).on('click', '.widgetCancelLayout', function() {
-            $('.widgetCustomizeLayout').show();
+            $('.widgetCustomizeLayout, .widgetRefreshButton').show();
             $('.widgetSaveLayout').hide();
             $('.widgetCancelLayout').hide();
             $('.widgetDropdownMenu').hide();

@@ -12,7 +12,7 @@
             <div class="col-md-12">
                 <h5 class="mt-0 fw-bold">
                     <a role="button" class="text-decoration-none" href="javascript:void(0)" style="color:#6a4a86 !important">
-                        <?php echo "<i class='$icon'></i>&nbsp;&nbsp;$title"; ?> <span class="badge widgetBadge position-absolute opacity-25"><?php echo ucfirst($type); ?></span>
+                        <?php echo "<i class='$icon'></i>&nbsp;&nbsp;$title"; ?> <button class="btn btn-success float-end opacity-50 btn-sm widgetRefreshButton <?php echo "refresh_widget_$id"; ?>"><small>REFRESH</small></button>
                     </a>
                     <div class="dropdown float-end widgetDropdownMenu display_none">
                         <a href="javascript:void(0)" class="dropdown-toggle text-decoration-none" data-bs-toggle="dropdown" aria-expanded="false">
@@ -30,7 +30,7 @@
                 <span><?php echo $description; ?></span>
             </div>
         </div>
-        <!-- <div class="row mb-2">
+        <div class="row mb-2 d-none">
             <div class="col-md-12">
                 <div class="input-group">
                     <select class="form-select <?php echo "widgetFilter1_$id"; ?>">
@@ -46,7 +46,7 @@
                     </select>
                 </div>
             </div>
-        </div> -->
+        </div>
         <div class="row">
             <div class="col text-nowrap <?php echo "textDataContainer_$id"; ?>">
                 <div class="table-responsive" style="max-height: 500px;">
@@ -103,7 +103,7 @@
 
     function <?php echo "processData_$id"; ?>(category, dateFrom, dateTo, filter3) { 
         $.ajax({
-            url: `${window.location.origin}/dashboard/thumbnailWidgetRequest`,
+            url: `${window.origin}/dashboard/thumbnailWidgetRequest`,
             type: "POST",
             data: {
                 category: category,
@@ -122,6 +122,8 @@
                 if (response != "null") {
                     let data = JSON.parse(response);
                     
+                    $('.<?php echo "tableData_$id"; ?> > tbody > tr').remove();
+
                     Object.entries(data).forEach(([key, value]) => {
                         const initials = data[key].customer.split(' ').map(word => word.charAt(0)).join('');
                         const timestamp = new Date(data[key].date).toLocaleString('en-US', { month: 'short', day: 'numeric', year: 'numeric', hour: 'numeric', minute: '2-digit', hour12: true }).replace(/(AM|PM)/, match => match.toUpperCase()).replace(',', '');
@@ -236,5 +238,13 @@
                 $('.<?php echo "textDataContainer_$id"; ?>').show();
             }
         }
+    });
+
+    $(document).on('click', '.<?php echo "refresh_widget_$id"; ?>', function () {
+        $(this).removeClass('btn-success').addClass('btn-secondary').attr('disabled', true).html('<i class="fas fa-spinner fa-pulse"></i>');
+        $('.<?php echo "widgetFilter1_$id"; ?>').change();
+        setTimeout(() => {
+            $(this).removeClass('btn-secondary').addClass('btn-success').removeAttr('disabled').html('<small>REFRESH</small>');
+        }, 3000);
     });
 </script>

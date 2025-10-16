@@ -215,7 +215,7 @@
     const selectizeScorecardInstance = selectScorecardEmployeeInput[0].selectize;
 
     $.ajax({
-        url: `${window.location.origin}/dashboard/thumbnailWidgetRequest`,
+        url: `${window.origin}/dashboard/thumbnailWidgetRequest`,
         type: "POST",
         data: {
             category: "tech_employees",
@@ -268,7 +268,7 @@
 
         if (employeeID != "") {
             $.ajax({
-                url: `${window.location.origin}/dashboard/thumbnailWidgetRequest`,
+                url: `${window.origin}/dashboard/thumbnailWidgetRequest`,
                 type: "POST",
                 data: {
                     category: "scorecard_lookup",
@@ -322,7 +322,7 @@
 
     function getMyLedger() {
         $.ajax({
-            url: `${window.location.origin}/dashboard/thumbnailWidgetRequest`,
+            url: `${window.origin}/dashboard/thumbnailWidgetRequest`,
             type: "POST",
             data: {
                 category: "user_info",
@@ -342,7 +342,7 @@
     }
 
     // $.ajax({
-    //     url: `${window.location.origin}/dashboard/thumbnailWidgetRequest`,
+    //     url: `${window.origin}/dashboard/thumbnailWidgetRequest`,
     //     type: "POST",
     //     data: {
     //         category: "scorecard",
