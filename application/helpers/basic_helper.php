@@ -5866,7 +5866,6 @@ function getWorkOrderStaticItems() {
     return $items_arr;
 }
 
-<<<<<<< HEAD
 function getWorkOrderStaticEnhancedServices() {
     $items_arr = [
         ["name" => "DVR"],     
@@ -5878,11 +5877,11 @@ function getWorkOrderStaticEnhancedServices() {
         ["name" => ""],
     ];
     return $items_arr;
-=======
+} 
+
 function extractCustomerAddressNumber($addressString) {
     if (preg_match('/^\d+/', $addressString, $matches)) {
         return $matches[0]; 
     }
     return null; 
->>>>>>> 241de4b6b1adcb096bbb836d4d1a9b962cb63f94
 }
