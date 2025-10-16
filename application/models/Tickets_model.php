@@ -710,6 +710,31 @@ class Tickets_model extends MY_Model
         return $query->result();
     }
 
+    public function getCompanyOpenServiceTicketsV2($cid, $date_range = [], $filters = [])
+    {
+        $this->db->select('*');        
+        $this->db->from($this->table);   
+        $this->db->where('tickets.company_id', $cid);       
+        $this->db->join('acs_profile', 'tickets.customer_id  = acs_profile.prof_id'); 
+        $this->db->where_in('ticket_status', ['New', 'Scheduled', 'Arrived', 'Started', 'Approved']);
+
+        if( !empty($date_range) ){
+            $this->db->where('date_issued >=', $date_range['from']);
+            $this->db->where('date_issued <=', $date_range['to']);
+        }
+
+        if( !empty($filters) ){
+            foreach( $filters as $f ){
+                $this->db->where($f['field'], $f['value']);
+            }
+        }
+        
+        $this->db->order_by('id', 'DESC');
+
+        $query = $this->db->get();
+        return $query->result();
+    }
+
     public function getAllCompletedTicketsByCompanyIdAndDateRange($cid, $date_range = array())
     {
         $this->db->select('*');        

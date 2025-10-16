@@ -1396,6 +1396,18 @@ class Jobs_model extends MY_Model
             $this->db->delete($this->table);
         }        
     }
+
+    public function getRecentByCustomerIdAndStatus($customer_id, $staus)
+    {        
+        $this->db->select('*');
+		$this->db->from($this->table);        
+		$this->db->where('customer_id', $customer_id);
+        $this->db->where('status', $staus);
+        $this->db->order_by('id', 'DESC');
+        
+        $query = $this->db->get();
+        return $query->row();
+    }
 }
 /* End of file Jobs_model.php */
 /* Location: ./application/models/Jobs_model.php */
