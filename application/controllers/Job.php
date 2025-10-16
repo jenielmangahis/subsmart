@@ -6955,6 +6955,7 @@ class Job extends MY_Controller
     public function ajax_update_job_status()
     {
         $this->load->model('Invoice_model', 'invoice_model');
+        $this->load->model('AcsOffice_model');
 
         $is_success = 0;
         $invoice_id = 0;
@@ -6967,12 +6968,16 @@ class Job extends MY_Controller
 
         $job = $this->jobs_model->getByIdAndCompanyId($post['job_id'], $company_id);
         $invoice = $this->invoice_model->getByJobId($post['job_id']);
-        if ($job) {  
+        if ($job) {              
+            $data_acs_office = [];
             if( $post['job_status'] == 'Arrival' ){
                 $data = [
                     'omw_date' => date("Y-m-d",strtotime($post['omw_date'])),
                     'omw_time' => date("h:i A",strtotime($post['omw_time'])),
                     'status' => 'Arrival'
+                ];
+                $data_acs_office = [
+                    'tech_arrive_time' => date("h:i A",strtotime($post['omw_time']))
                 ];
                 $is_valid = true;
             }elseif( $post['job_status'] == 'Started' ){
@@ -6981,12 +6986,18 @@ class Job extends MY_Controller
                     'job_start_time' => date("h:i A",strtotime($post['job_start_time'])),
                     'status' => 'Started'
                 ];
+                $data_acs_office = [
+                    'install_date' => date("m/d/Y",strtotime($post['job_start_date']))
+                ];
                 $is_valid = true;
             }elseif( $post['job_status'] == 'Finished' ){
                 $data = [
                     'finished_date' => date("Y-m-d",strtotime($post['finished_date'])),
                     'finished_time' => date("h:i A",strtotime($post['finished_time'])),
                     'status' => 'Finished'
+                ];
+                $data_acs_office = [
+                    'tech_depart_time' => date("h:i A",strtotime($post['finished_time']))
                 ];
                 $is_valid = true;
             }elseif( $post['job_status'] == 'Approved' ){
@@ -7001,6 +7012,13 @@ class Job extends MY_Controller
 
                 if( $invoice ){
                     $invoice_id = $invoice->id;
+                }
+
+                if( $data_acs_office ){
+                    $customer = $this->AcsOffice_model->getByProfId($job->customer_id);
+                    if( $customer ){
+                        $this->AcsOffice_model->updateByProfId($customer->fk_prof_id, $data_acs_office);
+                    }
                 }
 
                 //Activity Logs

@@ -933,6 +933,30 @@ class Customer_advance_model extends MY_Model
         return $query->row();
     }
 
+    public function getTotalCompletedSubscriptionsByCompanyId($company_id)
+    {
+        $today = date('m/d/Y');
+        $this->db->select('COUNT(acs_billing.bill_id) AS total_records, SUM(acs_billing.mmr) AS total_amount_subscriptions');
+        $this->db->from('acs_billing');
+        $this->db->join('acs_profile', 'acs_billing.fk_prof_id = acs_profile.prof_id', 'left');
+        $this->db->where('acs_profile.company_id', $company_id);
+        $this->db->where('acs_billing.recurring_end_date <=', $today);        
+        $query = $this->db->get();
+
+        return $query->row();
+    }
+
+    public function getTotalSubscriptionsByCompanyId($company_id)
+    {
+        $this->db->select('COUNT(acs_billing.bill_id) AS total_records, SUM(acs_billing.mmr) AS total_amount_subscriptions');
+        $this->db->from('acs_billing');
+        $this->db->join('acs_profile', 'acs_billing.fk_prof_id = acs_profile.prof_id', 'left');
+        $this->db->where('acs_profile.company_id', $company_id);
+        $query = $this->db->get();
+
+        return $query->row();
+    }
+
     public function get_all_completed_subscription_by_company_id($company_id = 0)
     {
         $today = date('m/d/Y');

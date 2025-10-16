@@ -40,7 +40,7 @@ class Inventory extends MY_Controller
     }
 
     public function index()
-    {
+    {        
         if(!checkRoleCanAccessModule('inventory', 'read')){
 			show403Error();
 			return false;

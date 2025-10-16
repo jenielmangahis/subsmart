@@ -266,7 +266,8 @@
     $(function(){
         $('.btn-cancel').on('click', function(){
             location.href = base_url + 'customer';
-        });
+        });       
+
         <?php if($profile_info){ ?>
         $('.btn-view-subscription').on('click', function(){
             location.href = base_url + 'customer/subscription/<?= $profile_info->prof_id; ?>';

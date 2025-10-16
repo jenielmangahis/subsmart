@@ -1941,6 +1941,18 @@ class Workorder_model extends MY_Model
         return $query->result();
     }
 
+    public function getRecentByCustomerIdAndStatus($customer_id, $staus)
+    {        
+        $this->db->select('*');
+		$this->db->from($this->table);        
+		$this->db->where('customer_id', $customer_id);
+        $this->db->where('status', $staus);
+        $this->db->order_by('id', 'DESC');
+
+        $query = $this->db->get();
+        return $query->row();
+    }
+
     public function getByProfIdComp($prof_id)
     {
 

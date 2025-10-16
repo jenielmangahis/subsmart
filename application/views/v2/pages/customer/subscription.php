@@ -252,7 +252,7 @@
                     <div class="nsm-card primary">     
                         <div class="nsm-card-header">
                             <div class="nsm-card-title">
-                                <span class="custom-ticket-header"><i class='bx bx-credit-card' ></i>Payment Information</span>
+                                <span class="custom-ticket-header"><i class='bx bx-credit-card' style="position:relative;top:2px;"></i> Auto Pay</span>
                             </div>
                         </div>                               
                         <div class="nsm-card-content container-right">       
@@ -310,6 +310,30 @@
                                         </div>
                                     </div>
                                 <div id="credit_card">
+                                    <?php 
+                                        $credit_card_number = '';
+                                        $exp_month = '';
+                                        $exp_year  = '';
+                                        $exp_cvc   = '';
+                                        if(isset($billing_info )){
+                                            if( $billing_info->credit_card_num != '' ){
+                                                $credit_card_number = $billing_info->credit_card_num;
+                                            }
+
+                                            if( $billing_info->credit_card_exp != '' ){
+                                                $credit_card_exp = explode("/", $billing_info->credit_card_exp);
+                                                $date = $credit_card_exp[0] . '/01/'. $credit_card_exp[1];
+                                                $date = date("Y-m-d",strtotime($date));
+                                                $exp_month = date("m", strtotime($date));
+                                                $exp_year  = date("Y", strtotime($date));
+                                            } 
+
+                                            if( $billing_info->credit_card_exp_mm_yyyy != '' ){
+                                                $exp_cvc = $billing_info->credit_card_exp_mm_yyyy;
+                                            }
+                                        }
+                                    
+                                    ?>
                                     <div class="row form_line">
                                         <div class="col-md-4">
                                             Card Number
@@ -326,19 +350,10 @@
                                             <div class="row">
                                                 <div class="col-md-4">
                                                     <select id="exp_month" name="exp_month" data-customer-source="dropdown" class="input_select" required>
-                                                        <option  value=""></option>
-                                                        <option  value="1">01</option>
-                                                        <option  value="2">02</option>
-                                                        <option  value="3">03</option>
-                                                        <option  value="4">04</option>
-                                                        <option  value="5">05</option>
-                                                        <option  value="6">06</option>
-                                                        <option  value="7">07</option>
-                                                        <option  value="8">08</option>
-                                                        <option  value="9">09</option>
-                                                        <option  value="10">10</option>
-                                                        <option  value="11">11</option>
-                                                        <option  value="12">12</option>
+                                                        <?php for($x=1; $x<=12; $x++){ ?>
+                                                            <?php $sel_month_value = str_pad($x, 2, '0', STR_PAD_LEFT); ?>
+                                                            <option value="<?= $sel_month_value; ?>" <?= $sel_month_value == $exp_month ? 'selected="selected"' : ''; ?>><?= $sel_month_value; ?></option>
+                                                        <?php } ?>
                                                     </select>
                                                 </div>
                                                 <div class="col-md-4">
@@ -349,12 +364,12 @@
                                                     <select id="exp_year" name="exp_year" data-customer-source="dropdown" class="input_select" required>
                                                         <option  value=""></option>
                                                         <?php for( $x = $min_year; $x<$max_year; $x++ ){ ?>
-                                                        <option  value="<?= $x; ?>"><?= $x; ?></option>
+                                                        <option  value="<?= $x; ?>" <?= $exp_year == $x ? 'selected="selected"' : ''; ?>><?= $x; ?></option>
                                                         <?php } ?>
                                                     </select>
                                                 </div>
                                                 <div class="col-md-4">
-                                                    <input type="text" maxlength="4" class="form-control" name="cvc" id="cvc" value="" placeholder="CVC" required/>
+                                                    <input type="text" maxlength="4" class="form-control" name="cvc" id="cvc" value="<?= $exp_cvc; ?>" placeholder="CVC" required/>
                                                 </div>
                                             </div>
                                         </div>
