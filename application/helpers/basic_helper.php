@@ -5826,9 +5826,9 @@ function getCustomerFieldValue($formSettings, $field_group, $field_name){
 }
 
 function getWorkOrderStaticItems() {
-    //$items_arr   = [];
-
     $items_arr = [
+        //["name" => "Arlo 2 CAM IP"], //Note:this is sample for testing
+        //["name" => "Cellular Card Honeywell"], //Note:this is sample for testing
         [
             "name" => "Type of Install",
             "sub" => ['New','Takeover']
@@ -5859,7 +5859,22 @@ function getWorkOrderStaticItems() {
             "name" => "Translater",
             "sub" => ['GE','HW','DSC']
         ],
+        ["name" => ""],
+        ["name" => ""],
     ];
 
+    return $items_arr;
+}
+
+function getWorkOrderStaticEnhancedServices() {
+    $items_arr = [
+        ["name" => "DVR"],     
+        [
+            "name" => "Cameras",
+            "sub" => ['PERS','PERS w/Fall Detect']
+        ],
+        ["name" => ""],
+        ["name" => ""],
+    ];
     return $items_arr;
 }

@@ -92,6 +92,7 @@
         <div class="nsm-page">
             <div class="nsm-page-content">
                 <?php echo form_open_multipart('workorder/savenewWorkorderAgreement', ['class' => 'form-validate', 'id' => 'form_new_adi_workorder', 'autocomplete' => 'off']); ?>
+                <input type="hidden" id="estimate_id" class="form-control" name="estimate_id" value="<?php echo !empty($estimate->id) ? $estimate->id : 0; ?>">
                 <div class="row g-3">
                     <div class="col-12">
                         <div class="nsm-card primary">
@@ -330,6 +331,7 @@
                             <div class="nsm-card-content">
                                 <?php 
                                     $default_items = getWorkOrderStaticItems();
+                                    $default_enhance_services = getWorkOrderStaticEnhancedServices();
                                 ?>
                                 <table class="nsm-table_ itemTable">
                                     <thead>
@@ -341,32 +343,110 @@
                                     </thead>
                                     <tbody>
                                         <?php foreach($default_items as $default_item) { ?>
-                                            <tr>
-                                                <td>
-                                                    <?php if($default_item['sub']) {  ?>
-                                                        <div class="row g-2">
-                                                            <div class="col">
-                                                                <input type="text" class="nsm-field form-control fw-bold" name="item[]" value="<?php echo $default_item['name']; ?>">
-                                                            </div>
-                                                            <div class="col-auto d-flex align-items-center">
-                                                                <?php foreach($default_item['sub'] as $sub_key => $sub_item) { ?>
-                                                                    <div class="form-check d-inline-block me-2 mb-0">
-                                                                        <input class="form-check-input check-one-field" type="checkbox" name="checkOneOne" id="sub<?php echo $default_item['name']; ?>_<?php echo $sub_key; ?>" value="<?php echo $sub_item; ?>">
-                                                                        <label class="form-check-label" for="toi_1"><?php echo $sub_item; ?></label>
-                                                                    </div>
-                                                                <?php } ?>
-                                                            </div>                                                            
-                                                        </div>                                                        
-                                                    <?php }else{ ?>
-                                                        <input type="text" class="nsm-field form-control" name="item[]" value="<?php echo $default_item['name']; ?>">
-                                                        <input type="hidden" name="dataValue[]">                                                        
-                                                    <?php } ?>
-                                                </td>
-                                                <td><input style="text-align:center;" type="text" class="nsm-field form-control" name="qty[]" value=""></td>
-                                                <td><input style="text-align:center;" type="text" class="nsm-field form-control" name="existing[]"></td>
-                                                <td><input style="text-align:center;" type="text" class="nsm-field form-control" name="location[]"></td>
-                                                <td><input style="text-align:center;" type="text" class="nsm-field form-control all-price-field allprices" name="price[]" value=""></td>
-                                            </tr>
+                                                <?php 
+                                                    $default_item_data = [];
+                                                    foreach($items_data as $item) {
+                                                        if(strtolower($item->title) == strtolower($default_item['name'])) {
+                                                            $default_item_data['qty']   = $item->qty;
+                                                            $default_item_data['price'] = $item->price;
+                                                        }
+                                                    }
+                                                ?>
+                                                <?php if($default_item['sub']) {  ?>
+                                                    <tr>
+                                                        <td style="width: 35%">
+                                                            <input type="text" class="nsm-field form-control" name="item[]" value="<?php echo $default_item['name']; ?>">
+                                                            <input type="hidden" name="dataValue[]">                                                       
+                                                        </td>
+                                                        <td style="width: 10%"><input style="text-align:center;" type="text" class="nsm-field form-control" name="qty[]" value="<?php echo !empty($default_item_data['qty']) ? $default_item_data['qty'] : 0; ?>"></td>
+                                                        <td style="width: 20%"><input style="text-align:center;" type="text" class="nsm-field form-control" name="existing[]"></td>
+                                                        <td style="width: 20%"><input style="text-align:center;" type="text" class="nsm-field form-control" name="location[]"></td>
+                                                        <td style="width: 15%"><input style="text-align:center;" type="text" class="nsm-field form-control all-price-field allprices" name="price[]" value="<?php echo !empty($default_item_data['price']) ? $default_item_data['price'] : number_format(0,2); ?>"></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td colspan="5" style="padding: 4px;">
+                                                            <?php if($default_item['sub']) {  ?>
+                                                                <div class="row g-2">
+                                                                    <div class="col-auto d-flex align-items-center">
+                                                                        <?php foreach($default_item['sub'] as $sub_key => $sub_item) { ?>
+                                                                            <div class="form-check d-inline-block me-2 mb-0">
+                                                                                <input class="form-check-input check-one-field" type="checkbox" name="checkOneOne" id="sub<?php echo $default_item['name']; ?>_<?php echo $sub_key; ?>" value="<?php echo $sub_item; ?>">
+                                                                                <label class="form-check-label" for="toi_1"><?php echo $sub_item; ?></label>
+                                                                            </div>
+                                                                        <?php } ?>
+                                                                    </div>                                                            
+                                                                </div>                                                        
+                                                            <?php } ?>
+                                                        </td>
+                                                    </tr>
+                                                <?php } else { ?>
+                                                    <tr>
+                                                        <td style="width: 35%">
+                                                            <input type="text" class="nsm-field form-control" name="item[]" value="<?php echo $default_item['name']; ?>">
+                                                            <input type="hidden" name="dataValue[]">                                                        
+                                                        </td>
+                                                        <td style="width: 10%"><input style="text-align:center;" type="text" class="nsm-field form-control" name="qty[]" value="<?php echo !empty($default_item_data['qty']) ? $default_item_data['qty'] : 0; ?>"></td>
+                                                        <td style="width: 20%"><input style="text-align:center;" type="text" class="nsm-field form-control" name="existing[]"></td>
+                                                        <td style="width: 20%"><input style="text-align:center;" type="text" class="nsm-field form-control" name="location[]"></td>
+                                                        <td style="width: 15%"><input style="text-align:center;" type="text" class="nsm-field form-control all-price-field allprices" name="price[]" value="<?php echo !empty($default_item_data['price']) ? $default_item_data['price'] : number_format(0,2); ?>"></td>
+                                                    </tr>
+                                                <?php } ?>
+                                        <?php } ?>
+                                        <tr>
+                                            <td colspan="5" style="padding: 5px; text-align: center"><strong>ENHANCED SERVICES</strong></td>
+                                        </tr>
+                                        <?php foreach($default_enhance_services as $default_enhance_service) { ?>
+
+                                                <?php 
+                                                    $default_es_data = [];
+                                                    foreach($items_data as $item) {
+                                                        if(strtolower($item->title) == strtolower($default_enhance_service['name'])) {
+                                                            $default_es_data['qty']   = $item->qty;
+                                                            $default_es_data['price'] = $item->price;
+                                                        }
+                                                    }
+                                                ?>                                            
+
+                                                <?php if($default_enhance_service['sub']) {  ?>
+                                                    <tr>
+                                                        <td style="width: 35%">
+                                                            <input type="text" class="nsm-field form-control" name="item[]" value="<?php echo $default_enhance_service['name']; ?>">
+                                                            <input type="hidden" name="dataValue[]">                                                        
+                                                        </td>
+                                                        <td style="width: 10%"><input style="text-align:center;" type="text" class="nsm-field form-control" name="qty[]" value="<?php echo !empty($default_es_data['qty']) ? $default_es_data['qty'] : 0; ?>"></td>
+                                                        <td style="width: 20%"><input style="text-align:center;" type="text" class="nsm-field form-control" name="existing[]"></td>
+                                                        <td style="width: 20%"><input style="text-align:center;" type="text" class="nsm-field form-control" name="location[]"></td>
+                                                        <td style="width: 15%"><input style="text-align:center;" type="text" class="nsm-field form-control all-price-field allprices" name="price[]" value="<?php echo !empty($default_es_data['price']) ? $default_es_data['price'] : number_format(0,2); ?>"></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td colspan="5" style="padding: 4px;">
+                                                            <?php if($default_enhance_service['sub']) {  ?>
+                                                                <div class="row g-2">
+                                                                    <div class="col-auto d-flex align-items-center">
+                                                                        <?php foreach($default_enhance_service['sub'] as $sub_key => $sub_item) { ?>
+                                                                            <div class="form-check d-inline-block me-2 mb-0">
+                                                                                <input class="form-check-input check-one-field" type="checkbox" name="checkOneOne" id="sub<?php echo $default_item['name']; ?>_<?php echo $sub_key; ?>" value="<?php echo $sub_item; ?>">
+                                                                                <label class="form-check-label" for="toi_1"><?php echo $sub_item; ?></label>
+                                                                            </div>
+                                                                        <?php } ?>
+                                                                    </div>                                                            
+                                                                </div>                                                        
+                                                            <?php } ?>
+                                                        </td>
+                                                    </tr>
+                                                <?php } else { ?>
+                                                    <tr>
+                                                        <td style="width: 35%">
+                                                            <input type="text" class="nsm-field form-control" name="item[]" value="<?php echo $default_enhance_service['name']; ?>">
+                                                            <input type="hidden" name="dataValue[]">                                                        
+                                                        </td>
+                                                        <td style="width: 10%"><input style="text-align:center;" type="text" class="nsm-field form-control" name="qty[]" value="<?php echo !empty($default_es_data['qty']) ? $default_es_data['qty'] : 0; ?>"></td>
+                                                        <td style="width: 20%"><input style="text-align:center;" type="text" class="nsm-field form-control" name="existing[]"></td>
+                                                        <td style="width: 20%"><input style="text-align:center;" type="text" class="nsm-field form-control" name="location[]"></td>
+                                                        <td style="width: 15%"><input style="text-align:center;" type="text" class="nsm-field form-control all-price-field allprices" name="price[]" value="<?php echo !empty($default_es_data['price']) ? $default_es_data['price'] : number_format(0,2); ?>"></td>
+                                                    </tr>
+                                                <?php } ?>                                            
+
                                         <?php } ?>
 
                                         <?php foreach($items_data as $item) { ?>
@@ -970,7 +1050,7 @@
                                          <table class="table table-borderless" id="tbl-attachments">
                                             <tbody>
                                             <tr>
-                                                <td><input class="form-control" type="file" name="attachments[]" /></td>
+                                                <td><input class="form-control" type="file" name="attachments[]" accept="image/*" /></td>
                                                 <td>&nbsp;</td>
                                             </tr>
                                             </tbody>
@@ -1235,7 +1315,18 @@ $(document).ready(function() {
         _this.find("button[type=submit]").prop("disabled", true);          
 
         var url          = base_url+"workorder/_save_estimate_convert_to_workorder";
-        let total_amount = $('#payment_amount_grand').val();        
+        let total_amount = $('#payment_amount_grand').val();       
+        
+        if( parseFloat(total_amount) <= 0 ){
+            form_err_msg = 'Cannot accept 0 total amount due';
+            Swal.fire({
+            icon: 'error',
+                title: 'Error!',
+                html: form_err_msg
+            });    
+            _this.find("button[type=submit]").html("Submit");
+            _this.find("button[type=submit]").prop("disabled", false);               
+        }        
         
         var post_data = new FormData(this);
         $.ajax({
