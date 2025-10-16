@@ -54,10 +54,20 @@
             <div class="col-md-6"><?= getCustomerFieldValue($companyFormSetting, 'billing-information', 'equipment'); ?></div>
             <div class="col-md-6">
                 <div class="input-group">
+                    <?php   
+                        $billing_equipment = 0;
+                        if( isset($billing_info) && $billing_info->equipment != '' ){
+                            $billing_equipment = $billing_info->equipment;
+                        }else{
+                            if( $woSubmittedLatest ){
+                                $billing_equipment = $woSubmittedLatest->subtotal;
+                            }
+                        }
+                    ?>
                     <div class="input-group-prepend">
                         <span class="input-group-text" id="basic-addon1">$</span>
                     </div>
-                    <input type="number" step="0.01" class="form-control input_select" name="equipment" value="<?php if(isset($billing_info)){ echo $billing_info->equipment != null ? $billing_info->equipment : $profile_info->equipment; } ?>">
+                    <input type="number" step="0.01" class="form-control input_select" name="equipment" value="<?= $billing_equipment; ?>" />
                 </div>
             </div>
         </div>
@@ -65,10 +75,20 @@
             <div class="col-md-6"><?= getCustomerFieldValue($companyFormSetting, 'billing-information', 'initial_dep'); ?></div>
             <div class="col-md-6">
                 <div class="input-group">
+                    <?php   
+                        $billing_initial_dep = 0;
+                        if( isset($billing_info) && $billing_info->initial_dep != '' ){
+                            $billing_initial_dep = $billing_info->initial_dep;
+                        }else{
+                            if( $woSubmittedLatest ){
+                                $billing_initial_dep = $woSubmittedLatest->deposit_collected;
+                            }
+                        }
+                    ?>
                     <div class="input-group-prepend">
                         <span class="input-group-text" id="basic-addon1">$</span>
                     </div>
-                    <input type="number" step="0.01" class="form-control input_select" name="initial_dep" value="<?php if(isset($billing_info)){ echo $billing_info->initial_dep != null ? $billing_info->initial_dep : $profile_info->initial_dep; } ?>" >
+                    <input type="number" step="0.01" class="form-control input_select" name="initial_dep" value="<?= $billing_initial_dep; ?>" >
                 </div>
             </div>
         </div>

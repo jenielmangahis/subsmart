@@ -153,6 +153,101 @@
                 $('#' + date_id).prop("disabled", true); // Element(s) are now enabled.
             }
         });
+
+        $('#acct_type').on('change',function(){
+            let acct_type = $(this).val();
+            if( acct_type == 'In-House' ){
+                $('#funding-information-container').hide();
+            }else{
+                $('#funding-information-container').show();
+            }
+        });
+
+        $(document).on('change', '#status', function(){
+            let status = $(this).val();
+            if( status == 'Cancelled' || status == 'Cancel' || status == 'Charge Back' || status == 'Collection' || status == 'Competition Lost' ){
+                $('#office-info-cancel-date').attr('required', 'required');
+                $('#cancel_reason').attr('required', 'required');
+                $('#collections').attr('required', 'required');
+                $('#office-use-collection-date').attr('required', 'required');
+                $('#office-info-collect-amount').attr('required', 'required');
+                $('#cancelled-related-fields-container-a').show();
+            }else{
+                $('#office-info-cancel-date').removeAttr('required');
+                $('#cancel_reason').removeAttr('required');
+                $('#collections').removeAttr('required');
+                $('#office-use-collection-date').removeAttr('required');
+                $('#office-info-collect-amount').removeAttr('required');
+                $('#cancelled-related-fields-container-a').hide();
+            }
+        });
+
+        $(".paper-chk").click(function() { 
+            return false; 
+        });
+
+        $('#rep_paper_date').on('change', function(){
+            let val = $(this).val();            
+            if( val != '' ){
+                $('#chk_rep_paper').prop('checked', true);
+            }else{
+                $('#chk_rep_paper').prop('checked', false);
+            }   
+        });
+
+        $('#tech_paper_date').on('change', function(){
+            let val = $(this).val();            
+            if( val != '' ){
+                $('#chk_paper_date').prop('checked', true);
+            }else{
+                $('#chk_paper_date').prop('checked', false);
+            }   
+        });
+
+        $('#paper_imagine_count').on('change', function(){
+            let val = $(this).val();            
+            if( val > 0 ){
+                $('#chk_imagine_count').prop('checked', true);
+            }else{
+                $('#chk_imagine_count').prop('checked', false);
+            }   
+        });
+
+        $('#paper_paperwork').on('change', function(){
+            let val = $(this).val();            
+            if( val != '' ){
+                $('#chk_paper_paperwork').prop('checked', true);
+            }else{
+                $('#chk_paper_paperwork').prop('checked', false);
+            }   
+        });
+
+        $('#paper_submitted').on('change', function(){
+            let val = $(this).val();            
+            if( val != '' ){
+                $('#chk_paper_submitted').prop('checked', true);
+            }else{
+                $('#chk_paper_submitted').prop('checked', false);
+            }   
+        });
+
+        $('#paper_funded').on('change', function(){
+            let val = $(this).val();            
+            if( val > 0 ){
+                $('#chk_paper_funded').prop('checked', true);
+            }else{
+                $('#chk_paper_funded').prop('checked', false);
+            }   
+        });
+
+        $('#paper_charged_back').on('change', function(){
+            let val = $(this).val();            
+            if( val > 0 ){
+                $('#chk_charged_back').prop('checked', true);
+            }else{
+                $('#chk_charged_back').prop('checked', false);
+            }   
+        });
     });
 
     $(document).on('click', '#btn-notify-customer-new-pw', function(e) {

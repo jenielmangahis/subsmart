@@ -25,6 +25,63 @@
                 </select>
                 <a href="javascript:void(0);" class="nsm-button btn-small" id="btn-quick-add-customer-status"><span class="fa fa-plus"></span> Add Status</a>
             </div>
+        </div>        
+        <div id="cancelled-related-fields-container-a" class="office_info-optional" <?= $profile_info->status != 'Cancelled' || $profile_info->status != 'Cancel' ? 'style="display:none;"' : ''; ?>>
+            <div class="row form_line" <?= isCustomerFieldEnabled($companyFormSetting, 'office-use-information', 'cancel_date') == 0 ? 'style="display:none;"' : ''; ?>>
+                <div class="col-md-4"><?= getCustomerFieldValue($companyFormSetting, 'office-use-information', 'cancel_date'); ?></div>
+                <div class="col-md-8">
+                    <input data-type="office_info_cancel_date" type="text" class="form-control" name="cancel_date" id="office-info-cancel-date" value="<?php if(isset($office_info)){ echo  $office_info->cancel_date; } ?>" />
+                </div>
+            </div>
+            <div class="row form_line" <?= isCustomerFieldEnabled($companyFormSetting, 'office-use-information', 'cancel_reason') == 0 ? 'style="display:none;"' : ''; ?>>
+                <div class="col-md-4"><?= getCustomerFieldValue($companyFormSetting, 'office-use-information', 'cancel_reason'); ?></div>
+                <div class="col-md-8">
+                    <select id="cancel_reason" name="cancel_reason" data-customer-source="dropdown" class="input_select" >
+                        <option <?php if(isset($office_info)){ if($office_info->cancel_reason == ""){ echo 'selected'; } } ?> value="">Select</option>
+                        <option <?php if(isset($office_info)){ if($office_info->cancel_reason == 'DS'){ echo 'selected'; } } ?> value="DS">Dissatisfied with Service</option>
+                        <option <?php if(isset($office_info)){ if($office_info->cancel_reason == 'FH'){ echo 'selected'; } } ?> value="FH">Financial Hardship</option>
+                        <option <?php if(isset($office_info)){ if($office_info->cancel_reason == 'FC'){ echo 'selected'; } } ?> value="FC">Fulfilled Contract</option>
+                        <option <?php if(isset($office_info)){ if($office_info->cancel_reason == 'Moving'){ echo 'selected'; } } ?> value="Moving">Moving</option>
+                        <option <?php if(isset($office_info)){ if($office_info->cancel_reason == 'NP'){ echo 'selected'; } } ?> value="NP">Non-Payment</option>
+                        <option <?php if(isset($office_info)){ if($office_info->cancel_reason == 'Paid BOC'){ echo 'selected'; } } ?> value="Paid BOC">Paid BOC</option>
+                        <option <?php if(isset($office_info)){ if($office_info->cancel_reason == 'PA'){ echo 'selected'; } } ?> value="PA">Passed Away</option>
+                        <option <?php if(isset($office_info)){ if($office_info->cancel_reason == 'SUC'){ echo 'selected'; } } ?> value="SUC">Still Under Contruct</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="row form_line" <?= isCustomerFieldEnabled($companyFormSetting, 'office-use-information', 'collections') == 0 ? 'style="display:none;"' : ''; ?>>
+                <div class="col-md-4"><?= getCustomerFieldValue($companyFormSetting, 'office-use-information', 'collections'); ?></div>
+                <div class="col-md-8">
+                    <select id="collections" name="collections" data-customer-source="dropdown" class="form-controls input_select">
+                        <option value=""></option>
+                        <option <?= isset($alarm_info) && $alarm_info->collections == 'In Process' ?  'selected' : '';?> value="In Process">In Process</option>
+                        <option <?= isset($alarm_info) && $alarm_info->collections == 'Sent' ?  'selected' : '';?> value="Sent">Sent</option>
+                        <option <?= isset($alarm_info) && $alarm_info->collections == 'None Collectable' ?  'selected' : '';?> value="None Collectable">None Collectable</option>
+                        <option <?= isset($alarm_info) && $alarm_info->collections == 'In Collections' ?  'selected' : '';?> value="In Collections">In Collection</option>
+                        <option <?= isset($alarm_info) && $alarm_info->collections == 'Civil Suit' ?  'selected' : '';?> value="Civil Suit">Civil Suit</option>
+                        <option <?= isset($alarm_info) && $alarm_info->collections == 'Taken Action' ?  'selected' : '';?> value="Taken Action">Taken Action</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="row form_line" <?= isCustomerFieldEnabled($companyFormSetting, 'office-use-information', 'collect_date') == 0 ? 'style="display:none;"' : ''; ?>>
+                <div class="col-md-4"><?= getCustomerFieldValue($companyFormSetting, 'office-use-information', 'collect_date'); ?></div>
+                <div class="col-md-8">
+                    <input data-type="office_info_collection_date" type="text" class="form-control date_picker" name="collect_date" id="office-use-collection-date" value="<?php if(isset($office_info)){ echo $office_info->collect_date; } ?>" />
+                </div>
+            </div>
+            <div class="row form_line" <?= isCustomerFieldEnabled($companyFormSetting, 'office-use-information', 'collect_amount') == 0 ? 'style="display:none;"' : ''; ?>>
+                <div class="col-md-4"><?= getCustomerFieldValue($companyFormSetting, 'office-use-information', 'collect_amount'); ?></div>
+                <div class="col-md-8">
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text" id="basic-addon1">$</span>
+                        </div>
+                        <input type="number" step="any" class="form-control input_select" name="collect_amount" id="office-info-collect-amount" value="<?php if(isset($office_info)){ echo $office_info->collect_amount; } ?>">
+                    </div>
+                </div>
+            </div>
         </div>
         <div class="row form_line">
             <div class="col-md-4">
@@ -177,12 +234,20 @@
                 </select>
             </div>
         </div>
-        <div class="row form_line">
+        <!-- <div class="row form_line">
             <div class="col-md-4">
                 Country
             </div>
             <div class="col-md-8">
                 <input data-type="customer_address_country" type="text" class="form-control" name="country" id="country" value="<?php if(isset($profile_info->country)){ echo $profile_info->country; } ?> " />
+            </div>
+        </div> -->
+        <div class="row form_line">
+            <div class="col-md-4">
+                County</span>
+            </div>
+            <div class="col-md-8">
+                <input data-type="customer_address_county" type="text" class="form-control" name="county" id="county" value="<?php if(isset($profile_info->county)){ echo $profile_info->county; } ?>"/>
             </div>
         </div>
         <div class="row form_line">
@@ -200,15 +265,7 @@
             <div class="col-md-8">
                 <input data-type="customer_address_city" type="text" class="form-control" name="city" id="city" value="<?php if(isset($profile_info->city)){ echo $profile_info->city; } ?>" required/>
             </div>
-        </div>
-        <div class="row form_line">
-            <div class="col-md-4">
-                County</span>
-            </div>
-            <div class="col-md-8">
-                <input data-type="customer_address_county" type="text" class="form-control" name="county" id="county" value="<?php if(isset($profile_info->county)){ echo $profile_info->county; } ?>"/>
-            </div>
-        </div>
+        </div>        
         <div class="row form_line">
             <div class="col-md-4">
                 State <span class="required"> *</span>
@@ -217,7 +274,6 @@
                 <input data-type="customer_address_state" type="text" class="form-control" name="state" id="state" value="<?php if(isset($profile_info->state)){ echo $profile_info->state; } ?>" required/>
             </div>
         </div>
-
         <div class="row form_line">
             <div class="col-md-4">
                 Zip Code <span class="required"> *</span>

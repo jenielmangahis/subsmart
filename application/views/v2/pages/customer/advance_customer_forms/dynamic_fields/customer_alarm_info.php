@@ -60,10 +60,10 @@
                 <select name="acct_type" id="acct_type" class="input_select">
                     <option <?php if(isset($alarm_info)){ if($alarm_info->acct_type == ''){echo "selected";} } ?> value=""></option>
                     <option <?php if(isset($alarm_info)){ if($alarm_info->acct_type == 'In-House'){echo "selected";} } ?> value="In-House">In-House</option>
-                    <option <?php if(isset($alarm_info)){ if($alarm_info->acct_type == 'Purchase'){echo "selected";} } ?> value="Purchase">Purchase</option>
-                    <option <?php if(isset($alarm_info)){ if($alarm_info->acct_type == 'Commercial'){echo "selected";} } ?> value="Commercial">Commercial</option>
+                    <option <?php if(isset($alarm_info)){ if($alarm_info->acct_type == 'Funded'){echo "selected";} } ?> value="Funded">Funded</option>
+                    <!-- <option <?php if(isset($alarm_info)){ if($alarm_info->acct_type == 'Commercial'){echo "selected";} } ?> value="Commercial">Commercial</option>
                     <option <?php if(isset($alarm_info)){ if($alarm_info->acct_type == 'Rental'){echo "selected";} } ?> value="Rental">Rental</option>
-                    <option <?php if(isset($alarm_info)){ if($alarm_info->acct_type == 'Residential'){echo "selected";} } ?> value="Residential">Residential</option>
+                    <option <?php if(isset($alarm_info)){ if($alarm_info->acct_type == 'Residential'){echo "selected";} } ?> value="Residential">Residential</option> -->
                 </select>
                 <!-- <a href="<?= base_url() ?>customer/settings" target="_blank"  style="color:#58bc4f;font-size: 10px;"><span class="fa fa-plus"></span> Manage Type</a>&nbsp;&nbsp; -->
             </div>
@@ -241,7 +241,13 @@
         <div class="row form_line field-custom-name-container" <?= isCustomerFieldEnabled($companyFormSetting, 'alarm-information', 'alarm_login') == 0 ? 'style="display:none;"' : ''; ?>>
             <div class="col-md-6"><?= getCustomerFieldValue($companyFormSetting, 'alarm-information', 'alarm_login'); ?></div>
             <div class="col-md-6">
-                <input type="text" class="form-control" name="alarm_login" id="alarm_login" value="<?php if(isset($alarm_info)){ echo $alarm_info->alarm_login; } ?>"/>
+                <?php 
+                    $alarm_login = $default_login_value;
+                    if( isset($alarm_info) && $alarm_info->alarm_login != '' ){
+                        $alarm_login = $alarm_info->alarm_login;
+                    }
+                ?>
+                <input type="text" class="form-control" name="alarm_login" id="alarm_login" value="<?= $alarm_login; ?>"/>
             </div>
         </div>
         <div class="row form_line field-custom-name-container" <?= isCustomerFieldEnabled($companyFormSetting, 'alarm-information', 'alarm_customer_id') == 0 ? 'style="display:none;"' : ''; ?>>
