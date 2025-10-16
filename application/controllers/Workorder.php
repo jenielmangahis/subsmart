@@ -10650,7 +10650,7 @@ class Workorder extends MY_Controller
                         'customer_id'      => $w_acs,
                         'file_name'        => $attachment_photo,
                         'document_type'    => 'photo_id_copy',
-                        'document_label'   => 'Convert Estimate to Workorder Attachment',
+                        'document_label'   => 'Photo ID Copy',
                         'is_predefined'    => 0,
                         'is_active'        => 1,
                         'date_created'     => date("Y-m-d H:i:s")
@@ -10681,8 +10681,8 @@ class Workorder extends MY_Controller
                             $acsc_data = array(
                                 'customer_id'      => $w_acs,
                                 'file_name'        => $attachment_photo,
-                                'document_type'    => 'photo_id_copy',
-                                'document_label'   => 'Convert Estimate to Workorder Attachment',
+                                'document_type'    => 'client_agreement',
+                                'document_label'   => 'Client Agreement',
                                 'is_predefined'    => 0,
                                 'is_active'        => 1,
                                 'date_created'     => date("Y-m-d H:i:s")
@@ -11460,7 +11460,7 @@ class Workorder extends MY_Controller
                         'customer_id'      => $customer_id,
                         'file_name'        => $attachment_photo,
                         'document_type'    => 'photo_id_copy',
-                        'document_label'   => 'Convert Estimate to Workorder Attachment',
+                        'document_label'   => 'Photo ID Copy',
                         'is_predefined'    => 0,
                         'is_active'        => 1,
                         'date_created'     => date("Y-m-d H:i:s")
@@ -11490,8 +11490,8 @@ class Workorder extends MY_Controller
                             $acsc_data = array(
                                 'customer_id'      => $customer_id,
                                 'file_name'        => $attachment_photo,
-                                'document_type'    => 'photo_id_copy',
-                                'document_label'   => 'Convert Estimate to Workorder Attachment',
+                                'document_type'    => 'client_agreement',
+                                'document_label'   => 'Client Agreement',
                                 'is_predefined'    => 0,
                                 'is_active'        => 1,
                                 'date_created'     => date("Y-m-d H:i:s")
