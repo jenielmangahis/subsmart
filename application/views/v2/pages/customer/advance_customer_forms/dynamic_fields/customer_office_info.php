@@ -183,6 +183,7 @@
                 </select>
             </div>
         </div>
+        <?php if(logged('industry_type') != 'Alarm Industry'){ ?>
         <div class="row form_line" <?= isCustomerFieldEnabled($companyFormSetting, 'office-use-information', 'system_type') == 0 ? 'style="display:none;"' : ''; ?>>
             <div class="col-md-6"><?= getCustomerFieldValue($companyFormSetting, 'office-use-information', 'system_type'); ?></div>
             <div class="col-md-6">
@@ -192,5 +193,6 @@
                 <a href="javascript:void(0);" class="nsm-button btn-small" id="btn-quick-add-system-package-type"><span class="fa fa-plus"></span> Add System Package Type</a>
             </div>
         </div>
+        <?php } ?>
     </div>
 </div>

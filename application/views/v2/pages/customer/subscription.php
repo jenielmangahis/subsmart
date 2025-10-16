@@ -252,7 +252,7 @@
                     <div class="nsm-card primary">     
                         <div class="nsm-card-header">
                             <div class="nsm-card-title">
-                                <span class="custom-ticket-header"><i class='bx bx-credit-card' ></i>Payment Information</span>
+                                <span class="custom-ticket-header"><i class='bx bx-credit-card' style="position:relative;top:2px;"></i> Auto Pay</span>
                             </div>
                         </div>                               
                         <div class="nsm-card-content container-right">       
