@@ -1201,6 +1201,7 @@ a.nsm-button {
   width: 100%;
   flex-direction: column;
   justify-content: center;
+  padding:2px;
 }
 
 .nsm-notification-content.read {
@@ -2282,4 +2283,11 @@ span.select2-selection {
 }
 .swal2-html-container{
   padding:2px !important;
+}
+#all_notifications_container{
+  height: auto;
+  overflow: auto;
+  max-height: 262px;
+  width:300px;
+  /* padding:0.5rem 1rem; */
 }
