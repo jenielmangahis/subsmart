@@ -887,6 +887,7 @@ class Workorder_model extends MY_Model
         $this->db->select('*');
 		$this->db->from('contacts');
 		$this->db->where('customer_id', $customer_id);
+        $this->db->where('name !=', '');
 		$query = $this->db->get();
 		return $query->result();
     }
