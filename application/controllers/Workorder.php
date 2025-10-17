@@ -10634,7 +10634,8 @@ class Workorder extends MY_Controller
 
             if( $addQuery > 0 ) {
 
-                $customerDocFolderPath = "./uploads/customerdocuments/".$company_id."/";        
+                $customerDocFolderPath = "./uploads/customerdocuments/".$company_id."/";   
+                //$customerDocFolderPath2 = "./uploads/CompanyPhoto/".$company_id."/"; 
                 if (!file_exists($customerDocFolderPath)) {
                     mkdir($customerDocFolderPath, 0777, true);
                 }      
@@ -10643,7 +10644,7 @@ class Workorder extends MY_Controller
                 if(isset($_FILES['attachment_id']) && $_FILES['attachment_id']['tmp_name'] != '') {
                     $tmp_name  = $_FILES['attachment_id']['tmp_name'];
                     $extension = strtolower(end(explode('.',$_FILES['attachment_id']['name'])));
-                    $attachment_photo = $wo_id."_photo_".basename($_FILES["attachment_id"]["name"]);
+                    $attachment_photo = $this->input->post('workorder_number')."_photo_".basename($_FILES["attachment_id"]["name"]);
                     move_uploaded_file($tmp_name, $customerDocFolderPath.$attachment_photo);
 
                     $acsc_data = array(
@@ -10668,6 +10669,11 @@ class Workorder extends MY_Controller
                     
                 }
 
+                $customerDocFolderPath2 = "./uploads/CompanyPhoto/".$company_id."/"; 
+                if (!file_exists($customerDocFolderPath2)) {
+                    mkdir($customerDocFolderPath2, 0777, true);
+                }     
+
                 if(isset($_FILES['attachments'])) {
                     $attachments = $_FILES['attachments'];
                     foreach($attachments['name'] as $key => $attachment_name) {
@@ -10675,8 +10681,8 @@ class Workorder extends MY_Controller
                         if(isset($attachments['tmp_name'][$key]) && $attachments['tmp_name'][$key] != '') {
                             $tmp_name  = $attachments['tmp_name'][$key];
                             $extension = strtolower(end(explode('.',$filename)));
-                            $attachment_photo = $wo_id."_photo_".basename($filename);
-                            move_uploaded_file($tmp_name, $customerDocFolderPath.$attachment_photo);
+                            $attachment_photo = $this->input->post('workorder_number') ."_photo_".basename($filename);
+                            move_uploaded_file($tmp_name, $customerDocFolderPath2.$attachment_photo);
 
                             $acsc_data = array(
                                 'customer_id'      => $w_acs,
@@ -10696,6 +10702,13 @@ class Workorder extends MY_Controller
                                     'customer_id'   => $w_acs
                                 );                        
                                 $wo_attach = $this->workorder_model->save_work_order_attachments($woa_data); 
+
+                                $wop_data = array(
+                                    'path'          => "uploads/CompanyPhoto/".$company_id."/" . $attachment_photo,
+                                    'work_order_id' => $wo_id,
+                                    'company_id'    => $company_id
+                                );  
+                                $wo_attach2 = $this->workorder_model->save_work_order_photo($wop_data); 
                             } 
                                                         
                         }
@@ -11444,7 +11457,8 @@ class Workorder extends MY_Controller
 
             if( $addQuery > 0 ) {
 
-                $customerDocFolderPath = "./uploads/customerdocuments/".$company_id."/";        
+                $customerDocFolderPath = "./uploads/customerdocuments/".$company_id."/";    
+                //$customerDocFolderPath2 = "./uploads/CompanyPhoto/".$company_id."/";     
                 if (!file_exists($customerDocFolderPath)) {
                     mkdir($customerDocFolderPath, 0777, true);
                 }      
@@ -11453,7 +11467,7 @@ class Workorder extends MY_Controller
                 if(isset($_FILES['attachment_id']) && $_FILES['attachment_id']['tmp_name'] != '') {
                     $tmp_name  = $_FILES['attachment_id']['tmp_name'];
                     $extension = strtolower(end(explode('.',$_FILES['attachment_id']['name'])));
-                    $attachment_photo = $wo_id."_photo_".basename($_FILES["attachment_id"]["name"]);
+                    $attachment_photo = $work_order_number."_photo_".basename($_FILES["attachment_id"]["name"]);
                     move_uploaded_file($tmp_name, $customerDocFolderPath.$attachment_photo);
 
                     $acsc_data = array(
@@ -11477,6 +11491,11 @@ class Workorder extends MY_Controller
                     }                     
                 }
 
+                $customerDocFolderPath2 = "./uploads/CompanyPhoto/".$company_id."/"; 
+                if (!file_exists($customerDocFolderPath2)) {
+                    mkdir($customerDocFolderPath2, 0777, true);
+                }                  
+
                 if(isset($_FILES['attachments'])) {
                     $attachments = $_FILES['attachments'];
                     foreach($attachments['name'] as $key => $attachment_name) {
@@ -11484,8 +11503,8 @@ class Workorder extends MY_Controller
                         if(isset($attachments['tmp_name'][$key]) && $attachments['tmp_name'][$key] != '') {
                             $tmp_name  = $attachments['tmp_name'][$key];
                             $extension = strtolower(end(explode('.',$filename)));
-                            $attachment_photo = $wo_id."_photo_".basename($filename);
-                            move_uploaded_file($tmp_name, $customerDocFolderPath.$attachment_photo);
+                            $attachment_photo = $work_order_number."_photo_".basename($filename);
+                            move_uploaded_file($tmp_name, $customerDocFolderPath2.$attachment_photo);
 
                             $acsc_data = array(
                                 'customer_id'      => $customer_id,
@@ -11505,6 +11524,13 @@ class Workorder extends MY_Controller
                                     'customer_id'   => $customer_id
                                 );                        
                                 $wo_attach = $this->workorder_model->save_work_order_attachments($woa_data); 
+
+                                $wop_data = array(
+                                    'path'          => "uploads/CompanyPhoto/".$company_id."/" . $attachment_photo,
+                                    'work_order_id' => $wo_id,
+                                    'company_id'    => $company_id
+                                );  
+                                $wo_attach2 = $this->workorder_model->save_work_order_photo($wop_data);                                 
                             }                             
                         }
                     }
