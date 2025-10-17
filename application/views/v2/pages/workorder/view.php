@@ -408,9 +408,13 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                 $qty = $item->qty > 0 ? $item->qty : 0;
                                 $total_cost = $item->price > 0 ? $item->price : 0;
                                 if( $total_cost > 0 ){
-                                  $unit_cost  = $total_cost / $qty;
+                                  if($qty != 0) {
+                                    $unit_cost = $total_cost / $qty;
+                                  } else {
+                                    $unit_cost = 0;
+                                  }
                                 }else{
-                                  $unit_cost  = 0;
+                                  $unit_cost = 0;
                                 }
                               ?>
                               <tr class="table-items__tr">

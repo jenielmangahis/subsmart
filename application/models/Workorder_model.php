@@ -2363,6 +2363,13 @@ class Workorder_model extends MY_Model
 		return  $insert_id;
     }
 
+    public function save_work_order_photo($data)
+    {
+        $vendor = $this->db->insert('work_orders_photo', $data);
+	    $insert_id = $this->db->insert_id();
+		return  $insert_id;
+    }
+
     public function save_office($data)
     {
         $vendor = $this->db->insert('acs_office', $data);
