@@ -164,20 +164,45 @@
                     </div>                    
                 </div>    
                 <div class="col-12 col-md-6">
+                    <button class="nsm-button primary w-100 ms-0" id="customer-edit-login-information">
+                        <i class='bx bx-edit'></i> Edit Login Information
+                    </button>
+                </div>
+                <div class="col-12 col-md-6">
+                    <button class="nsm-button primary w-100 ms-0" id="customer-login-as-mobile-user">
+                        <i class='bx bx-mobile-alt' ></i> Login as Mobile User
+                    </button>
+                </div>
+                <div class="col-12 col-md-6">
+                    <button class="nsm-button primary w-100 ms-0" id="customer-reset-password">
+                        <i class='bx bx-reset' ></i> Reset Password
+                    </button>
+                </div>
+                <div class="col-12 col-md-6">
+                    <button class="nsm-button primary w-100 ms-0" id="customer-reset-2fa">
+                        <i class='bx bx-reset' ></i> Reset 2FA
+                    </button>
+                </div>
+                <div class="col-12 col-md-6">
+                    <button class="nsm-button primary w-100 ms-0" id="emailtemplate-assign--trigger">
+                        <i class='bx bx-envelope' ></i> Resend Welcome Email
+                    </button>
+                </div>
+                <!-- <div class="col-12 col-md-6">
                     <button class="nsm-button w-100 ms-0" id="emailtemplate-assign--trigger">
                         <i class='bx bx-fw bx-edit'></i> Send Welcome Email
                     </button>
-                </div>
+                </div> -->
                 <!-- <div class="col-12 col-md-6">
                         <button class="nsm-button primary w-100 ms-0" onclick="window.open('<?= base_url('customer/module/'.$cus_id) ?>', '_blank', 'location=yes,height=1080,width=1500,scrollbars=yes,status=yes');">
                             <i class='bx bx-fw bx-eraser'></i> Visit Website
                         </button>
                 </div> -->
-                <div class="col-12 col-md-6">
+                <!-- <div class="col-12 col-md-6">
                     <button class="nsm-button w-100 ms-0 ">
                         <i class='bx bx-fw bx-history'></i> Send Reset Password
                     </button>
-                </div>            
+                </div>             -->
             </div>
         </div>
 
