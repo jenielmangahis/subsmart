@@ -228,8 +228,8 @@ class CompanyCustomerFormSetting_model extends MY_Model
             // ],
             'financing-schedule' => [
                 'finance_amount' => ['field_name' => 'Finance Amount', 'required' => 'yes', 'is_visible' => 'yes'],
-                'recurring_start_date' => ['field_name' => 'Recurring Start Date', 'required' => 'yes', 'is_visible' => 'yes'],
-                'recurring_end_date' => ['field_name' => 'Recurring End Date', 'required' => 'yes', 'is_visible' => 'yes'],
+                'recurring_start_date' => ['field_name' => 'Payment Start Date', 'required' => 'yes', 'is_visible' => 'yes'],
+                'recurring_end_date' => ['field_name' => 'Payment End Date', 'required' => 'yes', 'is_visible' => 'yes'],
                 'transaction_category' => ['field_name' => 'Category', 'required' => 'yes', 'is_visible' => 'yes'],
                 'frequency' => ['field_name' => 'Billing Frequency', 'required' => 'yes', 'is_visible' => 'yes'],
             ]
