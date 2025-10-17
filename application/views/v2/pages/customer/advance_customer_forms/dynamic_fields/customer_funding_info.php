@@ -1,4 +1,10 @@
-<div class="nsm-card primary" id="funding-information-container">
+<?php 
+    $is_container_hidden = '';
+    if( isset($alarm_info) && $alarm_info->acct_type == 'In-House' ){
+        $is_container_hidden = 'style="display:none;"';
+    }
+?>
+<div class="nsm-card primary" id="funding-information-container" <?= $is_container_hidden; ?>>
     <div class="nsm-card-header">
         <div class="nsm-card-title">
             <span><i class="bx bx-fw bx-user"></i>Funding Information</span>

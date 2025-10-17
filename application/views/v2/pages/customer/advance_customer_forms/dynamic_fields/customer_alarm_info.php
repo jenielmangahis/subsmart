@@ -192,6 +192,20 @@
             </div>
         </div>
 
+        <div class="row form_line field-custom-name-container" <?= isCustomerFieldEnabled($companyFormSetting, 'alarm-information', 'account_cost') == 0 ? 'style="display:none;"' : ''; ?>>
+            <div class="col-md-6"><?= getCustomerFieldValue($companyFormSetting, 'alarm-information', 'account_cost'); ?></div>
+            <div class="col-md-6">
+                <input type="text" class="form-control" name="account_cost" id="account_cost" value="<?= $alarm_info ? ($alarm_info->account_cost !=0 ? $alarm_info->account_cost : '') : '';  ?>"/>
+            </div>
+        </div>
+
+        <div class="row form_line field-custom-name-container" <?= isCustomerFieldEnabled($companyFormSetting, 'alarm-information', 'pass_thru_cost') == 0 ? 'style="display:none;"' : ''; ?>>
+            <div class="col-md-6"><?= getCustomerFieldValue($companyFormSetting, 'alarm-information', 'pass_thru_cost'); ?></div>
+            <div class="col-md-6">
+                <input type="text" class="form-control" name="pass_thru_cost" id="pass_thru_cost" value="<?= $alarm_info ? ($alarm_info->pass_thru_cost !=0 ? $alarm_info->pass_thru_cost : '') : '';  ?>"/>
+            </div>
+        </div>
+
         <div class="row form_line field-custom-name-container" <?= isCustomerFieldEnabled($companyFormSetting, 'alarm-information', 'otps') == 0 ? 'style="display:none;"' : ''; ?>>
             <div class="col-md-6"><?= getCustomerFieldValue($companyFormSetting, 'alarm-information', 'otps'); ?></div>
             <div class="col-md-6">
@@ -210,20 +224,6 @@
             <div class="col-md-6"><?= getCustomerFieldValue($companyFormSetting, 'alarm-information', 'monthly_monitoring'); ?></div>
             <div class="col-md-6">
                 <input type="text" class="form-control" name="monthly_monitoring" id="monthly_monitoring" value="<?= $alarm_info ? ($alarm_info->monthly_monitoring !=0 ? $alarm_info->monthly_monitoring : '') : '';  ?>"/>
-            </div>
-        </div>
-
-        <div class="row form_line field-custom-name-container" <?= isCustomerFieldEnabled($companyFormSetting, 'alarm-information', 'account_cost') == 0 ? 'style="display:none;"' : ''; ?>>
-            <div class="col-md-6"><?= getCustomerFieldValue($companyFormSetting, 'alarm-information', 'account_cost'); ?></div>
-            <div class="col-md-6">
-                <input type="text" class="form-control" name="account_cost" id="account_cost" value="<?= $alarm_info ? ($alarm_info->account_cost !=0 ? $alarm_info->account_cost : '') : '';  ?>"/>
-            </div>
-        </div>
-
-        <div class="row form_line field-custom-name-container" <?= isCustomerFieldEnabled($companyFormSetting, 'alarm-information', 'pass_thru_cost') == 0 ? 'style="display:none;"' : ''; ?>>
-            <div class="col-md-6"><?= getCustomerFieldValue($companyFormSetting, 'alarm-information', 'pass_thru_cost'); ?></div>
-            <div class="col-md-6">
-                <input type="text" class="form-control" name="pass_thru_cost" id="pass_thru_cost" value="<?= $alarm_info ? ($alarm_info->pass_thru_cost !=0 ? $alarm_info->pass_thru_cost : '') : '';  ?>"/>
             </div>
         </div>
 
