@@ -423,7 +423,13 @@
                         </label>
                     </div>
                     <div class="col-12 col-md-6">
-                        <label class="content-subtitle"><?= !empty($alarm_info->alarm_login) ? $alarm_info->alarm_login : '---'; ?></label>
+                        <?php 
+                            $alarm_login = $default_login_value;
+                            if( isset($alarm_info) && $alarm_info->alarm_login != '' ){
+                                $alarm_login = $alarm_info->alarm_login;
+                            }
+                        ?>
+                        <label class="content-subtitle"><?= $alarm_login; ?></label>
                     </div>
                 </div>
 
@@ -454,7 +460,8 @@
         <div class="row mb-3">
             <div class="col-12">
                 <div class="nsm-card-title">
-                    <span>Access Information</span>
+                    <span><i class="bx bx-fw bx-cog"></i>Access Information</span>
+                    <hr />
                 </div>
             </div>
         </div>
@@ -490,7 +497,8 @@
         <div class="row mb-3">
             <div class="col-12">
                 <div class="nsm-card-title">
-                    <span>Custom Field</span>
+                    <span><i class="bx bx-fw bx-customize"></i>Custom Fields</span>
+                    <hr />
                 </div>
             </div>
         </div>
@@ -521,11 +529,12 @@
         <div class="row mb-3">
             <div class="col-12">
                 <div class="nsm-card-title">
-                    <span>Subscription Pay Plan</span>
+                    <span><i class="bx bx-fw bx-recycle"></i>Subscription Pay Plan</span>
+                    <hr />
                 </div>
             </div>
         </div>
-        <div class="row g-1">
+        <div class="row g-1 mb-5">
             <div class="col-12 col-md-6">
                 <label class="content-subtitle fw-bold">Finance Amount</label>
             </div>
@@ -577,10 +586,10 @@
             <div class="col-12 mt-3">
                 <button type="button" class="nsm-button primary w-100" onclick="location.href='<?= base_url('customer/subscription/' . $this->uri->segment(3)) ?>'">Capture Now</button>
             </div>
-            <div class="col-12">
+            <!-- <div class="col-12">
                 <hr>
-            </div>
-            <div class="col-12 col-md-6">
+            </div> -->
+            <!-- <div class="col-12 col-md-6">
                 <label class="content-subtitle fw-bold">Equipment Cost</label>
             </div>
             <div class="col-12 col-md-6">
@@ -597,39 +606,30 @@
             </div>
             <div class="col-12 col-md-6">
                 <label class="content-subtitle">$<?= !empty($office_info->job_profit) ? number_format((float)$office_info->job_profit, 2, '.', ',') : '0.00'; ?></label>
-            </div>
+            </div> -->
+        </div>
+        <div class="row mb-3">
             <div class="col-12">
-                <label class="content-subtitle fw-bold">Customer Portal</label>
+                <div class="nsm-card-title">
+                    <span><i class="bx bx-fw bx-log-in"></i>Customer Portal</span>
+                    <hr />
+                </div>
             </div>
-            <!-- 
+        </div>
+        <div class="row g-1 mb-5">
             <div class="col-12 mt-3">
+                <?php 
+                    $customer_id = $this->uri->segment(3);
+                    $customer_unique_id = hashids_encrypt($customer_id, '', 45);
+                    $public_url = base_url('/client_hub/' . $customer_unique_id . "?source=share");
+                ?>
+                <label class="visually-hidden" for="customer-public-url">Username</label>
                 <div class="input-group">
-                    <input type="text" class="form-control nsm-field" readonly id="sharableLink" value="<?= base_url('share_link/public_preview_/') . $this->uri->segment(3); ?>">
-                    <button class="nsm-button mb-0" type="button" id="copyLink">
-                        <i class='bx bx-copy mt-2'></i>
-                    </button>
+                <div class="input-group-text"><i class='bx bxs-user-rectangle'></i></div>
+                    <input type="text" class="form-control customer-public-url" id="customer-public-url" placeholder="Customer Hub" disabled value="<?php echo $public_url; ?>" >                        
                 </div>
-            </div>
-            -->
-          
-            <div class="col-12 mt-3">
-                <div class="row">
-                    <?php 
-                        $customer_id = $this->uri->segment(3);
-                        $customer_unique_id = hashids_encrypt($customer_id, '', 45);
-                        $public_url = base_url('/client_hub/' . $customer_unique_id . "?source=share");
-                    ?>
-                    <div class="col-md-12">
-                        <label class="visually-hidden" for="customer-public-url">Username</label>
-                        <div class="input-group">
-                        <div class="input-group-text"><i class='bx bxs-user-rectangle'></i></div>
-                            <input type="text" class="form-control customer-public-url" id="customer-public-url" placeholder="Customer Hub" disabled value="<?php echo $public_url; ?>" >                        
-                        </div>
-                        <button class="nsm-button primary w-40 ms-0 copy-customer-public-url mt-2" id="copy-customer-public-url" onClick="javascript:copyCustomerPublicUrl();" style="background-color: #6a4a86; color: #ffffff;"><i class='bx bx-copy-alt'></i> Copy to clipboard</button>  
-                    </div>
-                </div>
-            </div>      
-
+                <button class="nsm-button primary w-40 ms-0 copy-customer-public-url mt-2" id="copy-customer-public-url" onClick="javascript:copyCustomerPublicUrl();" style="background-color: #6a4a86; color: #ffffff;"><i class='bx bx-copy-alt'></i> Copy to clipboard</button>  
+            </div>   
         </div>
     </div>
 </div>

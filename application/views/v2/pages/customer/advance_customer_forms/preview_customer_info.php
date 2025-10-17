@@ -128,13 +128,14 @@
             </div>
             <div class="col-12 col-md-6">
                 <label class="content-subtitle">
-                    <?php
-                    $ssn_numbers = explode('-', $profile_info->ssn);
-                    if (isset($ssn_numbers[2])) {
-                        echo '**-***-' . $ssn_numbers[2];
-                    } else {
-                        echo 'n/a';
-                    }
+                    <?php 
+                        if (logged("user_type") == 1){
+                            $ssn = $profile_info->ssn;
+                        }else{
+                            $ssn = maskString($profile_info->ssn);
+                        }
+
+                        echo $ssn;
                     ?>
                 </label>
             </div>
@@ -163,11 +164,11 @@
                 <label class="content-subtitle"><?= isset($profile_info) && !empty($profile_info->phone_m) ? formatPhoneNumber($profile_info->phone_m) : '---'; ?></label>
             </div>
         </div>
-
         <div class="row mb-3">
             <div class="col-12">
                 <div class="nsm-card-title">
-                    <span>Emergency Contacts</span>
+                    <span><i class="bx bx-fw bx-user"></i>Emergency Contacts</span>
+                    <hr />
                 </div>
             </div>
         </div>
@@ -206,7 +207,8 @@
         <div class="row mb-3">
             <div class="col-12">
                 <div class="nsm-card-title">
-                    <span>Billing Information</span>
+                    <span><i class="bx bx-fw bx-credit-card"></i>Billing Information</span>
+                    <hr />
                 </div>
             </div>
         </div>
@@ -239,6 +241,40 @@
                     <?= isset($billing_info) && !empty($billing_info->zip) ? $billing_info->zip : '---' ?>
                 </label>
             </div>
+
+            <div class="col-12 col-md-6">
+                <label class="content-subtitle fw-bold">Equipment</label>
+            </div>
+            <div class="col-12 col-md-6">
+                <?php   
+                    $billing_equipment = 0;
+                    if( isset($billing_info) && $billing_info->equipment != '' ){
+                        $billing_equipment = $billing_info->equipment;
+                    }else{
+                        if( $woSubmittedLatest ){
+                            $billing_equipment = $woSubmittedLatest->subtotal;
+                        }
+                    }
+                ?>
+                <label class="content-subtitle"><?= $billing_equipment; ?></label>
+            </div>
+            <div class="col-12 col-md-6">
+                <label class="content-subtitle fw-bold">Initial Deposit</label>
+            </div>
+            <div class="col-12 col-md-6">
+                <?php   
+                    $billing_initial_dep = 0;
+                    if( isset($billing_info) && $billing_info->initial_dep != '' ){
+                        $billing_initial_dep = $billing_info->initial_dep;
+                    }else{
+                        if( $woSubmittedLatest ){
+                            $billing_initial_dep = $woSubmittedLatest->deposit_collected;
+                        }
+                    }
+                ?>
+                <label class="content-subtitle"><?= $billing_initial_dep; ?></label>
+            </div>
+
             <div class="col-12 col-md-6">
                 <label class="content-subtitle fw-bold">Rate Plan</label>
             </div>
@@ -307,12 +343,25 @@
                 <label class="content-subtitle"><?= date("m/d/Y", strtotime($billing_info->next_billing_date)); ?></label>
             </div>
             <?php } ?>
+            <div class="col-12 col-md-6">
+                <label class="content-subtitle fw-bold">Late Fee Collected</label>
+            </div>
+            <div class="col-12 col-md-6">
+                <label class="content-subtitle">$<?= isset($billing_info) ? $billing_info->late_fee : '0.00'; ?></label>
+            </div>
+            <div class="col-12 col-md-6">
+                <label class="content-subtitle fw-bold">Payment Recorded</label>
+            </div>
+            <div class="col-12 col-md-6">
+                <label class="content-subtitle">$<?= isset($billing_info) ? $billing_info->payment_fee : '0.00'; ?></label>
+            </div>
         </div>
 
         <div class="row mb-3">
             <div class="col-12">
                 <div class="nsm-card-title">
-                    <span>Payment Details</span>
+                    <span><i class="bx bx-fw bx-credit-card"></i>Payment Details</span>
+                    <hr />
                 </div>
             </div>
         </div>
@@ -348,37 +397,37 @@
             <div class="col-12 col-md-6" style="<?= $billing_info->bill_method != 'CHECK' && $billing_info->bill_method != 'ACH' ? 'display:none;' : ''; ?>">
                 <label class="content-subtitle"><?= !empty($billing_info->bank_name) ? $billing_info->bank_name : '---' ?></label>
             </div>
-            <div class="col-12 col-md-6" style="<?= $billing_info->bill_method != 'CC' ? 'display:none;' : ''; ?>">
+            <div class="col-12 col-md-6" style="<?= $billing_info->bill_method != 'CC' && $billing_info->bill_method != 'Credit Card' ? 'display:none;' : ''; ?>">
                 <label class="content-subtitle fw-bold">Credit Card Type</label>
             </div>
-            <div class="col-12 col-md-6" style="<?= $billing_info->bill_method != 'CC' ? 'display:none;' : ''; ?>">
+            <div class="col-12 col-md-6" style="<?= $billing_info->bill_method != 'CC' && $billing_info->bill_method != 'Credit Card' ? 'display:none;' : ''; ?>">
                 <label class="content-subtitle"><?= !empty($billing_info->card_type) ? $billing_info->card_type : '---' ?></label>
             </div>
-            <div class="col-12 col-md-6" style="<?= $billing_info->bill_method != 'CC' ? 'display:none;' : ''; ?>">
+            <div class="col-12 col-md-6" style="<?= $billing_info->bill_method != 'CC' && $billing_info->bill_method != 'Credit Card' ? 'display:none;' : ''; ?>">
                 <label class="content-subtitle fw-bold">Credit Card Number</label>
             </div>
-            <div class="col-12 col-md-6" style="<?= $billing_info->bill_method != 'CC' ? 'display:none;' : ''; ?>">
+            <div class="col-12 col-md-6" style="<?= $billing_info->bill_method != 'CC' && $billing_info->bill_method != 'Credit Card' ? 'display:none;' : ''; ?>">
                 <?php 
                     if (logged("user_type") == 1){
                         $cc_num = $billing_info->credit_card_num;
                     }else{
-                        $cc_num = strMask($billing_info->credit_card_num,'X');
+                        $cc_num = maskString($billing_info->credit_card_num);
                     }
                 ?>
                 <label class="content-subtitle"><?= !empty($billing_info->credit_card_num) ? $cc_num : '---' ?></label>
             </div>
-            <div class="col-12 col-md-6" style="<?= $billing_info->bill_method != 'CC' ? 'display:none;' : ''; ?>">
+            <div class="col-12 col-md-6" style="<?= $billing_info->bill_method != 'CC' && $billing_info->bill_method != 'Credit Card' ? 'display:none;' : ''; ?>">
                 <label class="content-subtitle fw-bold">Credit Card Expiration</label>
             </div>
-            <div class="col-12 col-md-6" style="<?= $billing_info->bill_method != 'CC' ? 'display:none;' : ''; ?>">
+            <div class="col-12 col-md-6" style="<?= $billing_info->bill_method != 'CC' && $billing_info->bill_method != 'Credit Card' ? 'display:none;' : ''; ?>">
                 <label class="content-subtitle">
                     <?= !empty($billing_info->credit_card_exp) ? $billing_info->credit_card_exp : '---' ?>                    
                 </label>
             </div>
-            <div class="col-12 col-md-6" style="<?= $billing_info->bill_method != 'CC' ? 'display:none;' : ''; ?>">
+            <div class="col-12 col-md-6" style="<?= $billing_info->bill_method != 'CC' && $billing_info->bill_method != 'Credit Card' ? 'display:none;' : ''; ?>">
                 <label class="content-subtitle fw-bold">Credit Card CVC</label>
             </div>
-            <div class="col-12 col-md-6" style="<?= $billing_info->bill_method != 'CC' ? 'display:none;' : ''; ?>">
+            <div class="col-12 col-md-6" style="<?= $billing_info->bill_method != 'CC' && $billing_info->bill_method != 'Credit Card' ? 'display:none;' : ''; ?>">
                 <label class="content-subtitle">
                     <?= !empty($billing_info->credit_card_exp_mm_yyyy) ? $billing_info->credit_card_exp_mm_yyyy : '---' ?>
                 </label>
