@@ -418,14 +418,16 @@
                                             <?php } ?>
                                             
                                             <?php if(checkRoleCanAccessModule('estimates', 'write')){ ?>
-                                            <li>
-                                                <?php if( in_array(logged('company_id'), adi_company_ids()) ){ ?>
-                                                    <a class="dropdown-item convert-to-workorder" id="convert-to-workorder" data-estimate-number="<?php echo $estimate->estimate_number; ?>" data-template="adi" data-id="<?php echo $estimate->id; ?>" href="javascript:void(0);">Convert to Workorder</a>
-                                                <?php } else { ?>
-                                                    <a class="dropdown-item convert-to-workorder" id="convert-to-workorder" data-estimate-number="<?php echo $estimate->estimate_number; ?>" data-template="non_adi" data-id="<?php echo $estimate->id; ?>" href="javascript:void(0);">Convert to Workorder</a>
-                                                    <!-- <a class="dropdown-item" href="<?php //echo base_url('workorder/estimateConversionWorkorder/'.$estimate->id); ?>">Convert to Workorder</a> -->
+                                                <?php if( $estimate->status != 'Draft' ){ ?>
+                                                <li>
+                                                    <?php if( in_array(logged('company_id'), adi_company_ids()) ){ ?>
+                                                        <a class="dropdown-item convert-to-workorder" id="convert-to-workorder" data-estimate-number="<?php echo $estimate->estimate_number; ?>" data-template="adi" data-id="<?php echo $estimate->id; ?>" href="javascript:void(0);">Convert to Workorder</a>
+                                                    <?php } else { ?>
+                                                        <a class="dropdown-item convert-to-workorder" id="convert-to-workorder" data-estimate-number="<?php echo $estimate->estimate_number; ?>" data-template="non_adi" data-id="<?php echo $estimate->id; ?>" href="javascript:void(0);">Convert to Workorder</a>
+                                                        <!-- <a class="dropdown-item" href="<?php //echo base_url('workorder/estimateConversionWorkorder/'.$estimate->id); ?>">Convert to Workorder</a> -->
+                                                    <?php } ?>
+                                                </li>
                                                 <?php } ?>
-                                            </li>
                                             <?php } ?>
 
                                             <li>
@@ -724,9 +726,9 @@ $(document).ready(function() {
             title: 'Convert Estimate to Work Order',
             html: `You are going create a new workorder based on estimate number <b>${est_number}</b>. Would you like to proceed?`,
             icon: 'question',
-            confirmButtonText: 'Yes, Proceed',
+            confirmButtonText: 'Proceed',
             showCancelButton: true,
-            cancelButtonText: "No"
+            cancelButtonText: "Cancel"
         }).then((result) => {
             if (result.value) {
                 window.location.href = redirect_url;

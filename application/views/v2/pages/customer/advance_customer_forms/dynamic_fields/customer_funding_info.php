@@ -33,6 +33,18 @@
                 </select>
             </div>
         </div>
+        <div class="row form_line field-custom-name-container" <?= isCustomerFieldEnabled($companyFormSetting, 'alarm-information', 'mcn') == 0 ? 'style="display:none;"' : ''; ?>>
+            <div class="col-md-7"><?= getCustomerFieldValue($companyFormSetting, 'alarm-information', 'mcn'); ?></div>
+            <div class="col-md-5">
+                <input type="text" class="form-control" name="mcn" id="mcn" value="<?php if(isset($alarm_info)){ echo $alarm_info->mcn !=0 ? $alarm_info->mcn : ''; } ?>"/>
+            </div>
+        </div>
+        <div class="row form_line field-custom-name-container" <?= isCustomerFieldEnabled($companyFormSetting, 'alarm-information', 'scn') == 0 ? 'style="display:none;"' : ''; ?>>
+            <div class="col-md-7"><?= getCustomerFieldValue($companyFormSetting, 'alarm-information', 'scn'); ?></div>
+            <div class="col-md-5">
+                <input type="text" class="form-control" name="scn" id="scn" value="<?php if(isset($alarm_info)){ echo $alarm_info->scn !=0 ? $alarm_info->scn : ''; } ?>"/>
+            </div>
+        </div>
         <hr>
         <div class="row form_line field-custom-name-container" <?= isCustomerFieldEnabled($companyFormSetting, 'funding-information', 'monitoring_waived') == 0 ? 'style="display:none;"' : ''; ?>>
             <div class="col-md-7"><?= getCustomerFieldValue($companyFormSetting, 'funding-information', 'monitoring_waived'); ?></div>
