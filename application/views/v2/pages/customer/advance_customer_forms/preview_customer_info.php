@@ -408,7 +408,7 @@
             </div>
             <div class="col-12 col-md-6" style="<?= $billing_info->bill_method != 'CC' && $billing_info->bill_method != 'Credit Card' ? 'display:none;' : ''; ?>">
                 <?php 
-                    if (logged("user_type") == 1){
+                    if (logged("user_type") == 7){
                         $cc_num = $billing_info->credit_card_num;
                     }else{
                         $cc_num = maskString($billing_info->credit_card_num);
