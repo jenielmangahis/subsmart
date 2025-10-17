@@ -244,11 +244,12 @@ defined('BASEPATH') or exit('No direct script access allowed');
                       </div>
                   </div>
                 </div>
+                <?php if($contacts) { ?>
                 <div class="row mt-4">
                   <div class="col-12 col-md-6">
                     <h6 class="title-border">ADDITIONAL CONTACTS:</h6>
                     <div class="">
-                      <?php if($contacts) { ?>
+                      
                       <?php foreach($contacts as $cont){ ?>
                         <?php 
                           $contact_name = "---";
@@ -261,11 +262,8 @@ defined('BASEPATH') or exit('No direct script access allowed');
                         <h4 style="font-size:18px;"><i class='bx bx-user-circle'></i> <?= $contact_name; ?></h4>
                         <span class=""><i class="bx bx-phone"></i> <?= formatPhoneNumber($cont->phone); ?></span><br /><br />
                       <?php } ?>
-                      <?php } else { ?>
-                        <h4><?= 'None'; ?></h4>
-                      <?php } ?>
-                    </div>
                   </div>
+                  <?php } ?>
                   <div class="col-12 col-md-12">
                     <h6 class="title-border">TERMS AND CONDITIONS :</h6>
                     <span class="workorder-box"><?= $workorder->terms_and_conditions ?? "None"; ?></span>
