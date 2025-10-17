@@ -419,6 +419,17 @@
                 <div class="row p-0 field-custom-name-container">
                     <div class="col-12 col-md-6">
                         <label class="content-subtitle fw-bold">
+                            <field-custom-name readonly default="Customer ID" form="alarm_info"></field-custom-name>
+                        </label>
+                    </div>
+                    <div class="col-12 col-md-6">
+                        <label class="content-subtitle"><?= !empty($alarm_info->alarm_customer_id) ? $alarm_info->alarm_customer_id : '---'; ?></label>
+                    </div>
+                </div>
+
+                <div class="row p-0 field-custom-name-container">
+                    <div class="col-12 col-md-6">
+                        <label class="content-subtitle fw-bold">
                             <field-custom-name readonly default="Login" form="alarm_info"></field-custom-name>
                         </label>
                     </div>
@@ -433,18 +444,7 @@
                     </div>
                 </div>
 
-                <div class="row p-0 field-custom-name-container">
-                    <div class="col-12 col-md-6">
-                        <label class="content-subtitle fw-bold">
-                            <field-custom-name readonly default="Customer ID" form="alarm_info"></field-custom-name>
-                        </label>
-                    </div>
-                    <div class="col-12 col-md-6">
-                        <label class="content-subtitle"><?= !empty($alarm_info->alarm_customer_id) ? $alarm_info->alarm_customer_id : '---'; ?></label>
-                    </div>
-                </div>
-
-                <div class="row p-0 field-custom-name-container">
+                <!-- <div class="row p-0 field-custom-name-container">
                     <div class="col-12 col-md-6">
                         <label class="content-subtitle fw-bold">
                             <field-custom-name readonly default="CS Account" form="alarm_info"></field-custom-name>
@@ -453,7 +453,7 @@
                     <div class="col-12 col-md-6">
                         <label class="content-subtitle"><?= !empty($alarm_info->alarm_cs_account) ? $alarm_info->alarm_cs_account : '---'; ?></label>
                     </div>
-                </div>
+                </div> -->
             <?php endif; ?> 
         </div>
 

@@ -165,9 +165,9 @@
 
         $('#financing-payment-amount').on('change', function(){
             let amount = $(this).val();
-            
+
             const today = new Date();
-            const formattedDate = today.toLocaleDateString('en-GB');
+            const formattedDate = today.toLocaleDateString('en-US');
             let current_date = formattedDate;
             
             if( amount <= 0 ){
@@ -200,6 +200,10 @@
 
         $(".paper-chk").click(function() { 
             return false; 
+        });
+
+        $('#chkRecurringActive').click(function(){
+            return false;
         });
 
         $('#rep_paper_date').on('change', function(){

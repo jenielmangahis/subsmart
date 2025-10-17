@@ -1,24 +1,23 @@
 <div class="nsm-card primary">
     <div class="nsm-card-header">
         <div class="nsm-card-title">
-            <?php if(isset($billing_info)){ ?>
-                <?php
-                    $recurring_end_date = date("Y-m-d");
-                    $current_date = date("Y-m-d");
-                    if( strtotime($billing_info->recurring_end_date) > 0 ){
-                        $recurring_end_date = date("Y-m-d", strtotime($billing_info->recurring_end_date));
-                    }
-                ?>                        
-                <span class="d-block">
-                    <i class='bx bx-fw bx-credit-card'></i>Billing Information
-                    <?php if( $recurring_end_date > $current_date ){ ?>
-                        <span class="badge badge-primary float-end" style="font-size:13px;"><i class='bx bx-recycle'></i> Active Subscription</span>
-                    <?php } ?>
-                </span>
-            <?php }else{ ?>
-                <span><i class='bx bx-fw bx-credit-card'></i>Billing Information</span>
-            <?php } ?>
-            
+            <span><i class='bx bx-fw bx-credit-card'></i>Billing Information</span>
+            <?php 
+                $recurring_end_date = date("Y-m-d");
+                $current_date = date("Y-m-d");
+                if( strtotime($billing_info->recurring_end_date) > 0 ){
+                    $recurring_end_date = date("Y-m-d", strtotime($billing_info->recurring_end_date));
+                }
+
+                $is_recurring_active = '';
+                if( $recurring_end_date > $current_date ){ 
+                    $is_recurring_active = 'checked';
+                }
+            ?>
+            <div class="form-check form-switch float-end">
+                <input class="form-check-input" type="checkbox" role="switch" id="chkRecurringActive" <?= $is_recurring_active; ?> readonly>
+                <label class="form-check-label" for="chkRecurringActive">Recurring Subscription</label>
+            </div>
         </div>
     </div>
     <div class="nsm-card-content"><hr>
