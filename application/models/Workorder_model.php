@@ -2349,6 +2349,20 @@ class Workorder_model extends MY_Model
 		return  $insert_id;
     }
 
+    public function save_acs_customer_document($data)
+    {
+        $vendor = $this->db->insert('acs_customer_documents', $data);
+	    $insert_id = $this->db->insert_id();
+		return  $insert_id;
+    }
+
+    public function save_work_order_attachments($data)
+    {
+        $vendor = $this->db->insert('work_order_attachments', $data);
+	    $insert_id = $this->db->insert_id();
+		return  $insert_id;
+    }
+
     public function save_office($data)
     {
         $vendor = $this->db->insert('acs_office', $data);

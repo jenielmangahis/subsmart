@@ -192,7 +192,14 @@
                             $schedule_type   = $schedule['data']->service_type;
                             $schedule_customer_name  = $schedule['data']->first_name . ' ' . $schedule['data']->last_name;
                             $schedule_customer_phone = $cust_phone;
-                            $schedule_location = $schedule['data']->service_location;
+
+                            $address = $schedule['data']->service_location;
+                            $filter_address = str_replace($schedule['data']->acs_city,"", $address);
+                            $filter_address = str_replace($schedule['data']->acs_state,"", $filter_address);
+                            $filter_address = str_replace($schedule['data']->acs_zip,"", $filter_address);
+                            $filter_address = str_replace(",","", $filter_address);
+
+                            $schedule_location = $filter_address;
                             $schedule_location_b = $schedule['data']->acs_city . ', ' . $schedule['data']->acs_state . ' ' . $schedule['data']->acs_zip;
                             $schedule_event_name = '';
                             $schedule_expiry_date = '';

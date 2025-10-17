@@ -10454,9 +10454,10 @@ class Workorder extends MY_Controller
         $is_success = 0;
         $msg = 'Cannot save data.';
 
-        $company_id = logged('company_id');
-        $user_id    = logged('id');
-        $post       = $this->input->post();     
+        $company_id  = logged('company_id');
+        $user_id     = logged('id');
+        $customer_id = $this->input->post('customer_id');
+        $post        = $this->input->post();    
 
         // Save - Start
         $wo_id = $this->input->post('wo_id');
@@ -10505,8 +10506,6 @@ class Workorder extends MY_Controller
         }
 
         $options = implode(',', array_key_exists('options', $_POST) ? $_POST['options'] : []);
-
-        $customer_id = $this->input->post('customer_id');
 
         if(empty($customer_id)) {
 
@@ -10579,6 +10578,7 @@ class Workorder extends MY_Controller
             $contacts2 = $this->workorder_model->save_contact($contact2);
 
             $new_data = array(
+                'estimate_id'                           => !empty($this->input->post('estimate_id')) ? $this->input->post('estimate_id') : 0,
                 'work_order_number'                     => $this->input->post('workorder_number'),
                 'customer_id'                           => $w_acs,
                 'business_name'                         => $this->input->post('business_name'),
@@ -10632,6 +10632,78 @@ class Workorder extends MY_Controller
 
             $addQuery = $this->workorder_model->save_workorder($new_data);
 
+            if( $addQuery > 0 ) {
+
+                $customerDocFolderPath = "./uploads/customerdocuments/".$company_id."/";        
+                if (!file_exists($customerDocFolderPath)) {
+                    mkdir($customerDocFolderPath, 0777, true);
+                }      
+                
+                $wo_id = $addQuery;
+                if(isset($_FILES['attachment_id']) && $_FILES['attachment_id']['tmp_name'] != '') {
+                    $tmp_name  = $_FILES['attachment_id']['tmp_name'];
+                    $extension = strtolower(end(explode('.',$_FILES['attachment_id']['name'])));
+                    $attachment_photo = $wo_id."_photo_".basename($_FILES["attachment_id"]["name"]);
+                    move_uploaded_file($tmp_name, $customerDocFolderPath.$attachment_photo);
+
+                    $acsc_data = array(
+                        'customer_id'      => $w_acs,
+                        'file_name'        => $attachment_photo,
+                        'document_type'    => 'photo_id_copy',
+                        'document_label'   => 'Photo ID Copy',
+                        'is_predefined'    => 0,
+                        'is_active'        => 1,
+                        'date_created'     => date("Y-m-d H:i:s")
+                    );
+                    $acs_cust_docs = $this->workorder_model->save_acs_customer_document($acsc_data);  
+                    if($acs_cust_docs) {
+                        
+                        $woa_data = array(
+                            'work_order_id' => $wo_id,
+                            'document_id'   => $acs_cust_docs,
+                            'customer_id'   => $w_acs
+                        );                        
+                        $wo_attach = $this->workorder_model->save_work_order_attachments($woa_data); 
+                    }                  
+                    
+                }
+
+                if(isset($_FILES['attachments'])) {
+                    $attachments = $_FILES['attachments'];
+                    foreach($attachments['name'] as $key => $attachment_name) {
+                        $filename = $attachment_name;
+                        if(isset($attachments['tmp_name'][$key]) && $attachments['tmp_name'][$key] != '') {
+                            $tmp_name  = $attachments['tmp_name'][$key];
+                            $extension = strtolower(end(explode('.',$filename)));
+                            $attachment_photo = $wo_id."_photo_".basename($filename);
+                            move_uploaded_file($tmp_name, $customerDocFolderPath.$attachment_photo);
+
+                            $acsc_data = array(
+                                'customer_id'      => $w_acs,
+                                'file_name'        => $attachment_photo,
+                                'document_type'    => 'client_agreement',
+                                'document_label'   => 'Client Agreement',
+                                'is_predefined'    => 0,
+                                'is_active'        => 1,
+                                'date_created'     => date("Y-m-d H:i:s")
+                            );
+                            $acs_cust_docs = $this->workorder_model->save_acs_customer_document($acsc_data);  
+                            if($acs_cust_docs) {
+                                
+                                $woa_data = array(
+                                    'work_order_id' => $wo_id,
+                                    'document_id'   => $acs_cust_docs,
+                                    'customer_id'   => $w_acs
+                                );                        
+                                $wo_attach = $this->workorder_model->save_work_order_attachments($woa_data); 
+                            } 
+                                                        
+                        }
+                    }
+                }                
+
+            }            
+
             $solarItems = array(
                 'firstname'                 => $this->input->post('firstname'),
                 'lastname'                  => $this->input->post('lastname'),
@@ -10684,15 +10756,17 @@ class Workorder extends MY_Controller
             $i = 0;
 
             foreach($item as $row){
-                $data['item']           = $item[$i];
-                $data['qty']            = $qty[$i];
-                $data['existing']       = $existing[$i];
-                $data['location']       = $location[$i];
-                $data['price']          = $price[$i];
-                $data['check_data']     = $checkValue[$i];
-                $data['work_order_id']  = $addQuery;
+                if($item[$i] != "" && ($qty[$i] != "" && $price[$i] > 0)) {
+                    $data['item']           = $item[$i];
+                    $data['qty']            = $qty[$i];
+                    $data['existing']       = $existing[$i];
+                    $data['location']       = $location[$i];
+                    $data['price']          = $price[$i];
+                    $data['check_data']     = $checkValue[$i];
+                    $data['work_order_id']  = $addQuery;
 
-                $result_set = $this->workorder_model->add_workorder_agreement_items($data);
+                    $result_set = $this->workorder_model->add_workorder_agreement_items($data);
+                }
                 $i++;
             }
 
@@ -11188,7 +11262,6 @@ class Workorder extends MY_Controller
             }
 
         }else{
-
             $totalDue = $this->input->post('totalDue');
             $monitor = $this->input->post('monthlyMonitoring');
             $equip = $totalDue - $monitor;
@@ -11247,8 +11320,8 @@ class Workorder extends MY_Controller
             $deleteContacts = $this->workorder_model->delete_contact($customer_id);
 
             $contact = array(
-                'first_name'                    => $this->input->post('first_ecn_first'),
-                'last_name'                     => $this->input->post('first_ecn_last'),
+                'first_name'           => $this->input->post('first_ecn_first'),
+                'last_name'            => $this->input->post('first_ecn_last'),
                 'phone'                => $this->input->post('first_ecn_no'),
                 'customer_id'          => $customer_id,
             );
@@ -11296,6 +11369,7 @@ class Workorder extends MY_Controller
             $work_order_number = $prefix . $next_num;
 
             $new_data = array(
+                'estimate_id'                           => !empty($this->input->post('estimate_id')) ? $this->input->post('estimate_id') : 0,
                 'work_order_number'                     => $work_order_number,
                 'customer_id'                           => $customer_id,
                 'business_name'                         => $this->input->post('business_name'),
@@ -11368,6 +11442,76 @@ class Workorder extends MY_Controller
                 }     
             }
 
+            if( $addQuery > 0 ) {
+
+                $customerDocFolderPath = "./uploads/customerdocuments/".$company_id."/";        
+                if (!file_exists($customerDocFolderPath)) {
+                    mkdir($customerDocFolderPath, 0777, true);
+                }      
+                
+                $wo_id = $addQuery;
+                if(isset($_FILES['attachment_id']) && $_FILES['attachment_id']['tmp_name'] != '') {
+                    $tmp_name  = $_FILES['attachment_id']['tmp_name'];
+                    $extension = strtolower(end(explode('.',$_FILES['attachment_id']['name'])));
+                    $attachment_photo = $wo_id."_photo_".basename($_FILES["attachment_id"]["name"]);
+                    move_uploaded_file($tmp_name, $customerDocFolderPath.$attachment_photo);
+
+                    $acsc_data = array(
+                        'customer_id'      => $customer_id,
+                        'file_name'        => $attachment_photo,
+                        'document_type'    => 'photo_id_copy',
+                        'document_label'   => 'Photo ID Copy',
+                        'is_predefined'    => 0,
+                        'is_active'        => 1,
+                        'date_created'     => date("Y-m-d H:i:s")
+                    );
+                    $acs_cust_docs = $this->workorder_model->save_acs_customer_document($acsc_data);  
+                    if($acs_cust_docs) {
+                        
+                        $woa_data = array(
+                            'work_order_id' => $wo_id,
+                            'document_id'   => $acs_cust_docs,
+                            'customer_id'   => $customer_id
+                        );                        
+                        $wo_attach = $this->workorder_model->save_work_order_attachments($woa_data); 
+                    }                     
+                }
+
+                if(isset($_FILES['attachments'])) {
+                    $attachments = $_FILES['attachments'];
+                    foreach($attachments['name'] as $key => $attachment_name) {
+                        $filename = $attachment_name;
+                        if(isset($attachments['tmp_name'][$key]) && $attachments['tmp_name'][$key] != '') {
+                            $tmp_name  = $attachments['tmp_name'][$key];
+                            $extension = strtolower(end(explode('.',$filename)));
+                            $attachment_photo = $wo_id."_photo_".basename($filename);
+                            move_uploaded_file($tmp_name, $customerDocFolderPath.$attachment_photo);
+
+                            $acsc_data = array(
+                                'customer_id'      => $customer_id,
+                                'file_name'        => $attachment_photo,
+                                'document_type'    => 'client_agreement',
+                                'document_label'   => 'Client Agreement',
+                                'is_predefined'    => 0,
+                                'is_active'        => 1,
+                                'date_created'     => date("Y-m-d H:i:s")
+                            );
+                            $acs_cust_docs = $this->workorder_model->save_acs_customer_document($acsc_data);  
+                            if($acs_cust_docs) {
+                                
+                                $woa_data = array(
+                                    'work_order_id' => $wo_id,
+                                    'document_id'   => $acs_cust_docs,
+                                    'customer_id'   => $customer_id
+                                );                        
+                                $wo_attach = $this->workorder_model->save_work_order_attachments($woa_data); 
+                            }                             
+                        }
+                    }
+                }                
+
+            }
+
             $solarItems = array(
                 'firstname'                 => $this->input->post('firstname'),
                 'lastname'                  => $this->input->post('lastname'),
@@ -11420,15 +11564,16 @@ class Workorder extends MY_Controller
             $i = 0;
 
             foreach($item as $row){
-                $data['item']           = $item[$i];
-                $data['qty']            = $qty[$i];
-                $data['existing']       = $existing[$i];
-                $data['location']       = $location[$i];
-                $data['price']          = $price[$i];
-                $data['check_data']     = $checkValue[$i];
-                $data['work_order_id']  = $addQuery;
-
-                $result_set = $this->workorder_model->add_workorder_agreement_items($data);
+                if($item[$i] != "" && ($qty[$i] != "" && $price[$i] > 0)) {
+                    $data['item']           = $item[$i];
+                    $data['qty']            = $qty[$i];
+                    $data['existing']       = $existing[$i];
+                    $data['location']       = $location[$i];
+                    $data['price']          = $price[$i];
+                    $data['check_data']     = $checkValue[$i];
+                    $data['work_order_id']  = $addQuery;
+                    $result_set = $this->workorder_model->add_workorder_agreement_items($data);
+                }                
                 $i++;
             }
 
