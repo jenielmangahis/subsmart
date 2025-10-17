@@ -1941,6 +1941,18 @@ class Workorder_model extends MY_Model
         return $query->result();
     }
 
+    public function getRecentByCustomerIdAndStatus($customer_id, $staus)
+    {        
+        $this->db->select('*');
+		$this->db->from($this->table);        
+		$this->db->where('customer_id', $customer_id);
+        $this->db->where('status', $staus);
+        $this->db->order_by('id', 'DESC');
+
+        $query = $this->db->get();
+        return $query->row();
+    }
+
     public function getByProfIdComp($prof_id)
     {
 
@@ -2332,6 +2344,20 @@ class Workorder_model extends MY_Model
     public function save_payment_billing($data)
     {
         $vendor = $this->db->insert('acs_billing', $data);
+	    $insert_id = $this->db->insert_id();
+		return  $insert_id;
+    }
+
+    public function save_acs_customer_document($data)
+    {
+        $vendor = $this->db->insert('acs_customer_documents', $data);
+	    $insert_id = $this->db->insert_id();
+		return  $insert_id;
+    }
+
+    public function save_work_order_attachments($data)
+    {
+        $vendor = $this->db->insert('work_order_attachments', $data);
 	    $insert_id = $this->db->insert_id();
 		return  $insert_id;
     }

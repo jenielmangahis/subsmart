@@ -110,6 +110,17 @@ class UserCustomerDocfile_model extends MY_Model
         $query = $this->db->get()->row();
         return $query;
     }
+
+    public function getRecentDocfileByCustomerId($customer_id)
+    {
+        $this->db->select('*');
+        $this->db->from($this->table);  
+        $this->db->where('customer_id', $customer_id);
+        $this->db->order_by('id', 'DESC');
+        
+        $query = $this->db->get()->row();
+        return $query;
+    }
 }
 
 /* End of file UserCustomerDocfile_model.php */

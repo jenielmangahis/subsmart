@@ -5824,3 +5824,64 @@ function getCustomerFieldValue($formSettings, $field_group, $field_name){
 
     return $field_value;
 }
+
+function getWorkOrderStaticItems() {
+    $items_arr = [
+        //["name" => "Arlo 2 CAM IP"], //Note:this is sample for testing
+        //["name" => "Cellular Card Honeywell"], //Note:this is sample for testing
+        [
+            "name" => "Type of Install",
+            "sub" => ['New','Takeover']
+        ],
+        ["name" => "Recessed Door Contact"],
+        ["name" => "Surface Contact"],
+        ["name" => "Keyless Remote"],
+        ["name" => "Motion Detector"],
+        ["name" => "Smoke Communicator"],
+        ["name" => "Glass Break Detector"],
+        ["name" => "Carbon Monoxide"],
+        ["name" => "Medical Pendant"],
+        ["name" => "Door Bell Camera"],
+        ["name" => "Z-Thermostat"],
+        ["name" => "Wifi-Card"],
+        ["name" => "Z-Card"],
+        [
+            "name" => "Z-Lock",
+            "sub" => ['BZ','BS','CS']
+        ],
+        ["name" => "WAP"],
+        ["name" => "IP-CAM (Indoor)"],
+        ["name" => "IP-CAM (Outdoor)"],
+        ["name" => "Warranty ePaperwork"],
+        ["name" => "Advertising Kit"],
+        ["name" => "Certificate of Insurance"],
+        [
+            "name" => "Translater",
+            "sub" => ['GE','HW','DSC']
+        ],
+        ["name" => ""],
+        ["name" => ""],
+    ];
+
+    return $items_arr;
+}
+
+function getWorkOrderStaticEnhancedServices() {
+    $items_arr = [
+        ["name" => "DVR"],     
+        [
+            "name" => "Cameras",
+            "sub" => ['PERS','PERS w/Fall Detect']
+        ],
+        ["name" => ""],
+        ["name" => ""],
+    ];
+    return $items_arr;
+} 
+
+function extractCustomerAddressNumber($addressString) {
+    if (preg_match('/^\d+/', $addressString, $matches)) {
+        return $matches[0]; 
+    }
+    return null; 
+}
