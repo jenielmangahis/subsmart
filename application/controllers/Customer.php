@@ -1200,22 +1200,13 @@ class Customer extends MY_Controller
                     </a>
                     <ul class='dropdown-menu dropdown-menu-end'>
                         <li>
-                            <a class='dropdown-item' href='".('customer/preview_/'.$customer->prof_id)."'>Preview</a>
-                        </li>
-                        ".$edit_action."
-                        ".$email_action."
-                        ".$call_action."
-                        ".$send_esign_action."
-                        <li>
-                            <a class='dropdown-item' href='".base_url('invoice/add?cus_id='.$customer->prof_id)."'>Invoice</a>
-                        </li>
-                        <li>
                             <a class='dropdown-item' href='".base_url('customer/module/'.$customer->prof_id)."'>Dashboard</a>
                         </li>
-                        ".$schedule_action."
                         <li>
-                            <a class='dropdown-item sms-messages' data-id='".$customer->prof_id."' href='javascript:void(0);'>Message</a>
+                            <a class='dropdown-item' href='".('customer/preview_/'.$customer->prof_id)."'>View</a>
                         </li>
+                        ".$edit_action."         
+                        ".$schedule_action."
                         ".$favorite_action."
                         ".$delete_action."
                     </ul>
