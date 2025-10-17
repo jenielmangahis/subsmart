@@ -228,7 +228,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                   <div class="col-md-6 col-12" style="font-size:16px;">
                       <h4 class="title-border">FROM :</h4>
                       <h4><i class="bx bx-buildings"></i> <?= $company->business_name; ?></h4>
-                      <div class="col-xl-5 ml-0 pl-0">
+                      <div>
                         <span class="ul-text"><?php echo $company->street .'<br />'.$company->city .', '.$company->state .' '.$company->zip; ?></span><br>                        
                         <span class=""><i class='bx bx-envelope'></i> Email: <?= $company->business_email; ?><br />
                         <span class=""><i class='bx bx-phone'></i> Phone: <?= formatPhoneNumber($company->office_phone); ?></span>
@@ -237,15 +237,15 @@ defined('BASEPATH') or exit('No direct script access allowed');
                   <div class="col-md-6 col-12" style="font-size:16px;">
                       <h4 class="title-border">TO :</h4>
                       <h4><i class="bx bx-buildings"></i>  <?= $customer->first_name . ' ' . $customer->last_name; ?></h4>
-                      <div class="">
+                      <div>
                         <span class=""><?= $customer->mail_add . '<br />' . $customer->city.', '. $customer->state .' '. $customer->zip_code;  ?></span><br />
                         <span class=""><i class='bx bx-envelope'></i> Email: <?= $customer->email; ?><br />
                         <span class=""><i class='bx bx-phone'></i> Phone:<?= formatPhoneNumber($customer->phone_m); ?><br />
                       </div>
                   </div>
-                </div>
-                <?php if($contacts) { ?>
+                </div>                
                 <div class="row mt-4">
+                  <?php if($contacts) { ?>
                   <div class="col-12 col-md-6">
                     <h6 class="title-border">ADDITIONAL CONTACTS:</h6>
                     <div class="">
