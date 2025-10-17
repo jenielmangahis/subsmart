@@ -234,8 +234,8 @@
                                     <?php 
                                         $ticket_time = '---';
                                         if( $ticket->scheduled_time != '' && $ticket->scheduled_time_to != '' ){
-                                            $time_from =  date("G:i A", strtotime($ticket->scheduled_time)); 
-                                            $time_to =  date("G:i A", strtotime($ticket->scheduled_time_to)); 
+                                            $time_from =  date("g:i A", strtotime($ticket->scheduled_time)); 
+                                            $time_to =  date("g:i A", strtotime($ticket->scheduled_time_to)); 
                                             $ticket_time = $time_from . ' to ' . $time_to;
                                         }
 
