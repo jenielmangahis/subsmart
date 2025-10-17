@@ -13,7 +13,7 @@
                     <div class="input-group-prepend">
                         <span class="input-group-text" id="basic-addon1">$</span>
                     </div>
-                    <input type="number" step="any" class="form-control input_select" name="finance_amount"  value="<?= isset($billing_info) ? $billing_info->finance_amount : ''; ?>">
+                    <input type="number" step="any" min="0" class="form-control input_select" id="financing-payment-amount" name="finance_amount"  value="<?= isset($billing_info) ? $billing_info->finance_amount : ''; ?>">
                 </div>
             </div>
         </div>

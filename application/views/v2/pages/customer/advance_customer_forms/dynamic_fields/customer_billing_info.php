@@ -241,7 +241,7 @@
             <div class="col-md-6">
                 <div class="input-group">
                     <div class="input-group-prepend">
-                        <span class="input-group-text" style="width:35px;" id="">%</span>
+                        <span class="input-group-text" style="width:35px;" id="">$</span>
                     </div>
                     <input type="number" step="any" class="form-control" name="payment_fee" value="<?= isset($billing_info) ? $billing_info->payment_fee : '0.00'; ?>">
                 </div>

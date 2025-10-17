@@ -353,7 +353,7 @@
                 <label class="content-subtitle fw-bold">Payment Recorded</label>
             </div>
             <div class="col-12 col-md-6">
-                <label class="content-subtitle">%<?= isset($billing_info) ? $billing_info->payment_fee : '0.00'; ?></label>
+                <label class="content-subtitle">$<?= isset($billing_info) ? $billing_info->payment_fee : '0.00'; ?></label>
             </div>
         </div>
 
