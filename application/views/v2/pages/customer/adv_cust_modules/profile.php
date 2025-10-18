@@ -222,7 +222,8 @@ div#controls div#call-controls div#volume-indicators > div {
                                         <?= $profile_info->first_name . ' ' . $profile_info->last_name ?>
                                     <?php endif; ?>    
                                 </span>
-                                <span class="content-subtitle d-block"><?= $profile_info->email ?></span>
+                                <span class="content-subtitle d-block mt-1"><i class='bx bx-envelope'></i> <?= $profile_info->email ?></span>
+                                <span class="content-subtitle d-block mt-1"><i class='bx bx-phone' ></i> <?= formatPhoneNumber($profile_info->phone_m); ?></span>
                             </div>
                             <div class="col-12 col-md-6 text-end">
                                 <?php
@@ -244,8 +245,7 @@ div#controls div#call-controls div#volume-indicators > div {
                                         break;
                                 endswitch;
                                 ?>
-                                <span class="nsm-badge <?= $badge ?>"><?= !is_null($profile_info->status) ? $profile_info->status : 'Pending'; ?></span>
-                                <span class="content-subtitle d-block"><?= formatPhoneNumber($profile_info->phone_m); ?></span>
+                                <span class="nsm-badge <?= $badge ?>"><?= $profile_info->status != '' ? $profile_info->status : 'Pending'; ?></span>                                
                             </div>
                         </div>
                     </div>

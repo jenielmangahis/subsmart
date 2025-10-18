@@ -51,36 +51,7 @@
                                     }
                                 ?>
                             </span>
-                        </div>
-                        
-                        <div class="col-12 col-md-6">
-                            <label class="content-title">Mon. Waived</label>
-                        </div>
-                        <div class="col-12 col-md-6">
-                            <span class="content-subtitle">
-                                <?php 
-                                    if ($office_info->monitoring_waived) {
-                                        echo $office_info->monitoring_waived; 
-                                    } else {
-                                        echo "&mdash;";
-                                    }
-                                ?>
-                            </span>
-                        </div>
-                        <div class="col-12 col-md-6">
-                            <label class="content-title">RebateCheck1</label>
-                        </div>
-                        <div class="col-12 col-md-6">
-                            <span class="content-subtitle">
-                                <?php 
-                                    if ($office_info->rebate_check1) {
-                                        echo $office_info->rebate_check1; 
-                                    } else {
-                                        echo "&mdash;";
-                                    }
-                                ?>
-                            </span>
-                        </div>
+                        </div>                        
                         <div class="col-12 col-md-6">
                             <label class="content-title">Warranty Type</label>
                         </div>

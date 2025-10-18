@@ -9,6 +9,9 @@
     max-height: 650px;
     overflow-y: auto;
 }
+.payment-method-container .content-title{
+    font-size:13px;
+}
 </style>
 <div class="row page-content g-0">
     <div class="col-12 mb-3">
