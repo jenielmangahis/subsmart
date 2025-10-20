@@ -134,7 +134,7 @@
                 </div>
             </div>            
             <?php include viewPath('v2/pages/customer/adv_cust_modules/billing'); ?>      
-            <?php if( isAdmin() ){ ?>
+            <?php if( isAdmin() && in_array(logged('company_id'), adi_company_ids()) ){ ?>
                 <?php include viewPath('v2/pages/customer/adv_cust_modules/payment_method_images'); ?>      
             <?php } ?>
             <div class="row g-3">

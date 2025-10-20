@@ -200,14 +200,7 @@ div#controls div#call-controls div#volume-indicators > div {
         <div class="nsm-card-header d-block">
             <div class="nsm-card-title">
                 <span>Profile</span>
-                <?php 
-                    $balance_class = 'balance-green';
-                    $balance = 100;
-                    if( $balance > 0 ){
-                        $balance_class = 'balance-red';
-                    }
-                ?>
-                <span class="float-end">Balance : <span class="<?= $balance_class; ?>">$100.00</span></span>
+                <span class="float-end">Balance : <span id="customer-balance-amount">$0.00</span></span>
             </div>
         </div>
         <div class="nsm-card-content">
@@ -223,8 +216,12 @@ div#controls div#call-controls div#volume-indicators > div {
                                 ?>
                                 </span>
                             <?php else: ?>
-                                <span><?= ucwords($profile_info->first_name[0]) . ucwords($profile_info->last_name[0]) ?></span>
-                            <?php endif; ?>
+                                <?php 
+                                    $profile_info->first_name = trim($profile_info->first_name);
+                                    $profile_info->last_name  = trim($profile_info->last_name);
+                                ?>
+                                <span><?= ucwords(trim($profile_info->first_name[0])) . ucwords(trim($profile_info->last_name[0])) ?></span>
+                            <?php endif; ?>                            
                         </div>
 
                         <div class="row w-100">
@@ -367,7 +364,7 @@ div#controls div#call-controls div#volume-indicators > div {
                         </button>
                     </div>
                     <div class="col-12 col-md-6">
-                        <button class="nsm-button primary w-100 ms-0 mt-2" onclick="window.open('<?= base_url('customer/credit_industry/' . $this->uri->segment(3)); ?>', '_blank', 'location=yes,height=1080,width=1500,scrollbars=yes,status=yes');">
+                        <button class="nsm-button primary w-100 ms-0 mt-2" onclick="window.open('<?= base_url('invoice/add?cus_id=' . $customer_id); ?>', '_blank', 'location=yes,height=1080,width=1500,scrollbars=yes,status=yes');">
                             <i class='bx bx-plus bx-fw'></i> Create Invoice
                         </button>
                     </div>
@@ -481,6 +478,31 @@ $(document).ready(function() {
         initSignatureModal(); 
         $('#modal-customer-signature').modal('show');
     });
+
+    load_customer_ledger_balance_amount();
+    function load_customer_ledger_balance_amount(){
+        let customer_id = "<?= $cus_id; ?>";
+        let url = base_url + 'customer/_ledger_balance_amount';
+        $.ajax({
+            type: "POST",
+            url: url,
+            data: {
+                customer_id: customer_id
+            },
+            dataType:'json',
+            success: function(result) {
+                let ledger_balance = parseFloat(result.balance);
+                if( ledger_balance > 0 ){                    
+                    $('#customer-balance-amount').addClass('balance-red').html('$' + ledger_balance.toFixed(2));
+                }else{
+                    $('#customer-balance-amount').addClass('balance-green').html('$' + ledger_balance.toFixed(2));
+                }
+            },
+            beforeSend: function(){
+                $('#customer-balance-amount').html('<span class="bx bx-loader bx-spin"></span>');
+            }
+        });
+    }
 
     function initSignatureModal() {
         const $modal = document.getElementById('modal-customer-signature');

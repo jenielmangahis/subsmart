@@ -356,3 +356,10 @@
         </div>
     </div>    
 </div>
+<script>
+$(function(){
+    $('#chkRecurringActive').click(function(){
+        return false;
+    });
+});
+</script>

@@ -1,6 +1,7 @@
 <div class="mt-4 mb-4" id="img-payment-methods"></div>
 <script>
 $(function(){
+    <?php if( isAdmin() ){ ?>
     load_customer_payment_method_images();
     function load_customer_payment_method_images(){
         let customer_id = "<?= $cus_id; ?>";
@@ -19,5 +20,6 @@ $(function(){
             }
         });
     }
+    <?php } ?>
 });
 </script>
