@@ -34,8 +34,9 @@ class Notification_Counter extends MY_Controller {
 		//Customers
         $total_company = count($this->Customer_model->getAllCustomerByCustomerType('',$company_id, 'Commercial',''));
 		$total_person  = count($this->Customer_model->getAllCustomerByCustomerType('',$company_id, 'Residential','')); 
-		
-        //Taskhub
+		$total_subscribers  = $this->Customer_model->getAllSubscribersCount(); 
+
+		//Taskhub
         $tasks = $this->Taskhub_model->getAllNotCompletedTasksByCompanyId($company_id);
 		$total_taskhub = count($tasks);
 
@@ -50,6 +51,7 @@ class Notification_Counter extends MY_Controller {
 		'total_online_booking' => $total_online_booking,
 	    'total_company' => $total_company,
 		'total_person' => $total_person,
+		'total_subscribers' => $total_subscribers,
 	];
 
 		echo json_encode($json_data);

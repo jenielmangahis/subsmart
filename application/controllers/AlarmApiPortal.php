@@ -215,6 +215,261 @@ class AlarmApiPortal extends MY_Controller {
         $data = ['msg' => $msg, 'is_success' => $is_success];
 		echo json_encode($data);
     }
+
+    // Optimized version
+    public function import_alarmcom_customers()
+    {
+        $this->load->helper(['alarm_api_helper']);
+        $this->load->helper(['alarm_dictionary_helper']);
+        $this->load->database();
+        $alarmApi = new AlarmApi();
+        $token = $alarmApi->generateAlarmToken();
+
+        $pageNumber = 1;
+        $pageSize = 100;
+        $fields = ['customerId', 'loginName', 'firstName', 'lastName', 'email', 'phoneNumber', 'companyName', 'installAddress', 'panelVersion', 'modemInfo', 'joinDate'];
+
+        $this->db->truncate('alarmcom_customers');
+
+        while (true) {
+            $params = ['pageNumber' => $pageNumber, 'pageSize' => $pageSize];
+            $getCustomerRequest = $alarmApi->getAlarmCustomers($token, $params);
+            $response = curl_exec($getCustomerRequest);
+            curl_close($getCustomerRequest);
+            $customers = json_decode($response, true);
+
+            if (empty($customers)) {
+                break;
+            }
+
+            $multiHandle = curl_multi_init();
+            $curlHandles = [];
+
+            foreach ($customers as $index => $customer) {
+                $ch = $alarmApi->getAlarmCustomerDetails($customer["customerId"], $token, $fields);
+                curl_multi_add_handle($multiHandle, $ch);
+                $curlHandles[$index] = $ch;
+            }
+
+            $running = null;
+            do {
+                curl_multi_exec($multiHandle, $running);
+                curl_multi_select($multiHandle);
+            } while ($running > 0);
+
+            $sample = [];
+            foreach ($curlHandles as $ch) {
+                $response = curl_multi_getcontent($ch);
+                $sample[] = json_decode($response, true);
+                curl_multi_remove_handle($multiHandle, $ch);
+                curl_close($ch);
+            }
+
+            curl_multi_close($multiHandle);
+
+            foreach ($sample as $entry) {
+                $address = $entry['installAddress'] ?? [];
+                $modem_info = $entry['modemInfo'] ?? [];
+
+                $data = [
+                    "customer_id" => $entry["customerId"],
+                    "login_name" => $entry["loginName"],
+                    "first_name" => $entry["firstName"],
+                    "last_name" => $entry["lastName"],
+                    "company_name" => $entry["companyName"] ?? null,
+                    "email" => $entry["email"] ?? null,
+                    "phone_no" => $entry["phoneNumber"] ?? null,
+                    "street1" => $address["street1"] ?? null,
+                    "street2" => $address["street2"] ?? null,
+                    "city" => $address["city"] ?? null,
+                    "state" => $address["state"] ?? null,
+                    "zip" => $address["zip"] ?? null,
+                    "panel_version" => getPanelDetails($entry["panelVersion"]),
+                    "modeminfo_network" => getNetworkDetails($modem_info["radioNetworkType"]),
+                    "modeminfo_imei" => $modem_info["imei"] ?? null,
+                    "join_date" => $entry["joinDate"] ?? null,
+                ];
+
+                $this->db->insert('alarmcom_customers', $data);
+            }
+
+            $pageNumber++;
+        }
+
+        echo '<pre>';
+        echo "Import complete.\n";
+        echo "Last page reached: " . ($pageNumber - 1) . "\n";
+        echo '</pre>';
+    }
+
+    // public function search_alarmcom_customers()
+    // {
+    //     $nameKeyword = $this->input->get('name_keyword');
+    //     $fuzzyKeyword = $this->input->get('fuzzy_keyword');
+    
+    //     $search_scope = [
+    //         'first_name', 
+    //         'last_name', 
+    //         'email', 
+    //         'phone_no', 
+    //         'company_name', 
+    //         'street1', 
+    //         'street2', 
+    //         'city', 
+    //         'state', 
+    //         'zip'
+    //     ];
+    
+    //     if (empty($nameKeyword) || empty($fuzzyKeyword)) {
+    //         // echo json_encode(['message' => 'Missing name_keyword or fuzzy_keyword']);
+    //         echo json_encode(['message' => 'Not available']);
+    //         return;
+    //     }
+    
+    //     $normalizedName = strtolower(preg_replace('/[\s\W]+/', '', $nameKeyword));
+    //     $normalizedFuzzy = strtolower(preg_replace('/[\s\W]+/', '', $fuzzyKeyword));
+
+    //     $query = $this->db->get('alarmcom_customers');
+    //     $raw_results = $query->result_array();
+    
+    //     $name_match_found = false;
+    //     foreach ($raw_results as $row) {
+    //         $full_name = strtolower(preg_replace('/[\s\W]+/', '', ($row['first_name'] ?? '') . ($row['last_name'] ?? '')));
+    //         if (strpos($normalizedName, $full_name) !== false || strpos($full_name, $normalizedName) !== false) {
+    //             $name_match_found = true;
+    //             break;
+    //         }
+    //     }
+    
+    //     if (!$name_match_found) {
+    //         echo json_encode(['message' => 'Not available']);
+    //         return;
+    //     }
+    
+    //     $best_match = null;
+    //     $highest_score = -1;
+    
+    //     foreach ($raw_results as $row) {
+    //         $score = 0;
+    
+    //         foreach ($search_scope as $field) {
+    //             $value = strtolower(preg_replace('/[\s\W]+/', '', $row[$field] ?? ''));
+    
+    //             if (strpos($value, $normalizedFuzzy) !== false) {
+    //                 $score += 2;
+    //             } else {
+    //                 $lev = levenshtein($normalizedFuzzy, $value);
+    //                 $maxLen = max(strlen($normalizedFuzzy), strlen($value));
+    //                 $similarity = $maxLen > 0 ? 1 - ($lev / $maxLen) : 0;
+    //                 $score += $similarity;
+    //             }
+    //         }
+    
+    //         if ($score > $highest_score) {
+    //             $highest_score = $score;
+    //             $best_match = $row;
+    //             $best_match['match_score'] = round($score, 4);
+    //         }
+    //     }
+    
+    //     echo json_encode($best_match);
+    // }
+
+    public function searchAlarmEquipment()
+    {
+        $this->load->helper(['alarm_api_helper']);
+        $this->load->helper(['alarm_dictionary_helper']);
+        $alarmApi = new AlarmApi();
+        $token = $alarmApi->generateAlarmToken();
+        $customer_id = $this->input->post('customer_id');
+
+        $equipmentDetails = $alarmApi->getAlarmCustomerEquipmentDetails($customer_id, $token);
+
+        $sensor_device       = [1,2,3,4,5,6,7,8,9,19,25,26,27,30,41,44,45,50,52,53,54,57,60,61,62,63,64,65,66,67,113,114,117,124,128,129];
+        $peripheral_device   = [38,39,47,48,49,55,58,75,76,86,87,93,101,123,132];
+        $video_device        = [11,30,68,91,93,126];
+        $access_point_device = [82];
+        $zwave_device        = [20,21,22,23,28,29,92];
+        $liftmaster_device   = [36,37];
+        $geo_device          = [13,42];
+        $voice_device        = [56,78,79,88];
+        $panel_device        = [127];
+
+        $groupedDevices = [
+            'sensor'        => [],
+            'peripheral'    => [],
+            'video'         => [],
+            'access_point'  => [],
+            'zwave'         => [],
+            'liftmaster'    => [],
+            'geo'           => [],
+            'voice'         => [],
+            'panel'         => [],
+            'unknown'       => [],
+        ];
+
+        foreach ($equipmentDetails as $device) {
+            $id = $device['deviceType'];
+            $device['deviceName'] = getDeviceDetails($id);
+
+            switch (true) {
+                case in_array($id, $sensor_device):
+                    $groupedDevices['sensor'][] = $device;
+                    break;
+                case in_array($id, $peripheral_device):
+                    $groupedDevices['peripheral'][] = $device;
+                    break;
+                case in_array($id, $video_device):
+                    $groupedDevices['video'][] = $device;
+                    break;
+                case in_array($id, $access_point_device):
+                    $groupedDevices['access_point'][] = $device;
+                    break;
+                case in_array($id, $zwave_device):
+                    $groupedDevices['zwave'][] = $device;
+                    break;
+                case in_array($id, $liftmaster_device):
+                    $groupedDevices['liftmaster'][] = $device;
+                    break;
+                case in_array($id, $geo_device):
+                    $groupedDevices['geo'][] = $device;
+                    break;
+                case in_array($id, $voice_device):
+                    $groupedDevices['voice'][] = $device;
+                    break;
+                case in_array($device['deviceId'], $panel_device):
+                    $groupedDevices['panel'][] = $device;
+                    break;
+                default:
+                    $groupedDevices['unknown'][] = $device;
+            }
+        }
+
+        echo json_encode($groupedDevices);
+    }
+
+
+
+    public function searchAlarmCustomer()
+    {
+        $this->load->helper(['alarm_api_helper']);
+        $alarmApi = new AlarmApi();
+        $token = $alarmApi->generateAlarmToken();
+        $customer_id = $this->input->post('customer_id');
+
+        $customerDetails = $alarmApi->getAlarmCustomerInfo($customer_id, $token);
+
+        echo '<pre>';
+        print_r($customerDetails);
+        echo '</pre>';
+    }
+
+    public function testOnlyMethod()
+    {
+        $this->load->helper(['alarm_dictionary_helper']);
+        echo getDeviceDetails(1);
+    }
+
 }
 
 

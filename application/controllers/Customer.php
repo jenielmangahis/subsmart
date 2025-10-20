@@ -2774,7 +2774,8 @@ class Customer extends MY_Controller
         $this->load->model('Business_model');
         $this->load->model('Invoice_model', 'invoice_model');
         $this->load->library('wizardlib');                
-        
+        $alarm_api_helper = new AlarmApi();
+
         if(!checkRoleCanAccessModule('customer-dashboard', 'read')){
 			show403Error();
 			return false;
@@ -2828,10 +2829,9 @@ class Customer extends MY_Controller
                 $this->page_data['assignedUser'] = $assignedUser;
                 $this->page_data['commission'] = $this->customer_ad_model->getTotalCommission($id);
                 $this->page_data['cust_invoices'] = $this->invoice_model->getAllByCustomerId($id);
-                $this->page_data['profile_info'] = $this->customer_ad_model->get_data_by_id('prof_id', $id, 'acs_profile');
-
+                $profile_info = $this->customer_ad_model->get_data_by_id('prof_id', $id, 'acs_profile');
+                $this->page_data['profile_info'] = $profile_info;
                 $this->page_data['log_info'] = $this->customer_ad_model->getCustomerActivityLogs($id);
-
                 $this->page_data['access_info'] = $this->customer_ad_model->get_data_by_id('fk_prof_id', $id, 'acs_access');
                 $this->page_data['office_info'] = $office_info;
                 $this->page_data['billing_info'] = $this->customer_ad_model->get_data_by_id('fk_prof_id', $id, 'acs_billing');
@@ -2868,6 +2868,26 @@ class Customer extends MY_Controller
 
                 $this->page_data['customer_client_agreements'] = $customer_client_agreements;
                 $this->page_data['customer_documents'] = $customerDocuments;
+
+
+                
+                // search Alarm.com customer
+                if (
+                    strpos($profile_info->status, 'Active w/RAR') !== false ||
+                    strpos($profile_info->status, 'Active w/RMR') !== false ||
+                    strpos($profile_info->status, 'Active w/RQR') !== false ||
+                    strpos($profile_info->status, 'Active w/RYR') !== false ||
+                    strpos($profile_info->status, 'Inactive w/RMM') !== false
+                ) {
+                    $nameKeyword = "{$profile_info->first_name} {$profile_info->last_name}";
+                    $fuzzyKeyword = "{$profile_info->email} {$profile_info->phone_h} {$profile_info->mail_add} {$profile_info->county} {$profile_info->state} {$profile_info->zip_code} {$profile_info->country} {$profile_info->subdivision}";
+                }
+
+                $alarmCustomerDetails = $alarm_api_helper->searchAlarmCustomer($nameKeyword, $fuzzyKeyword);
+                $this->page_data['alarm_info'] = $alarmCustomerDetails;
+
+
+
                 // $this->page_data['esign_documents'] = $this->getCustomerGeneratedEsigns($id);
             } else {
                 redirect(base_url('customer/'));

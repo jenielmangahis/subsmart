@@ -144,13 +144,13 @@ echo 'active';
         <i class='bx bx-fw bx-line-chart'></i> Sales <i class='bx bx-chevron-down list-dropdown-icon general-transition'></i>
     </a>
     <ul class="mt-3">
-        <li class="<?php if ($page->title == 'Events' || $page->title == 'Event Tags' || $page->title == 'Event Types' || $page->title == 'Events Settings') {
+        <li class="<?php if ($page->title == 'Service Tickets' || $page->title == 'Service Ticket Settings') {
             echo 'selected';
         } ?>">
-            <a href="<?php echo base_url('events'); ?>">
-                <i class='bx bx-fw bx-calendar-event'></i> Events
+            <a href="<?php echo base_url('customer/tickets'); ?>">
+                <i class='bx bx-fw bx-note'></i> Tickets
             </a>
-        </li>
+        </li>  
         <li class="<?php if ($page->title == 'Jobs' || $page->title == 'Job Types' || $page->title == 'Job Tags' || $page->title == 'Bird Eye View' || $page->title == 'Checklist' || $page->title == 'Job Settings') {
             echo 'selected';
         } ?>">
@@ -171,14 +171,14 @@ echo 'active';
             <a href="<?php echo base_url('workorder'); ?>">
                 <i class='bx bx-fw bx-task'></i> Work Orders
             </a>
-        </li>                        
-        <li class="<?php if ($page->title == 'Service Tickets' || $page->title == 'Service Ticket Settings') {
+        </li>    
+        <li class="<?php if ($page->title == 'Events' || $page->title == 'Event Tags' || $page->title == 'Event Types' || $page->title == 'Events Settings') {
             echo 'selected';
         } ?>">
-            <a href="<?php echo base_url('customer/tickets'); ?>">
-                <i class='bx bx-fw bx-note'></i> Tickets
+            <a href="<?php echo base_url('events'); ?>">
+                <i class='bx bx-fw bx-calendar-event'></i> Events
             </a>
-        </li>  
+        </li>                    
     </ul>
 </li>
 <li class="<?php if ($page->title == 'Customers' || $page->title == 'Commercial' || $page->title == 'Residential') {
@@ -190,22 +190,6 @@ echo 'active';
         <i class='bx bx-fw bx-group'></i>My Customers <i class='bx bx-chevron-down list-dropdown-icon general-transition'></i>
     </a>
     <ul class="mt-3">
-        <li class="d-flex align-items-center <?php if ($page->title == 'Residential') {
-            echo 'selected';
-        } ?>">
-            <a href="<?php echo base_url('customer/residential'); ?>">
-            <i class='bx bx-fw bxs-face'></i>&nbsp;&nbsp;Residential
-            </a>
-            <div id="sidebar-persons-counter" ></div>   
-        </li>
-        <li class="d-flex align-items-center <?php if ($page->title == 'Commercial') {
-            echo 'selected';
-        } ?>">
-            <a href="<?php echo base_url('customer/commercial'); ?>">
-            <i class='bx bx-fw bx-building'></i>&nbsp;&nbsp;Commercial
-            </a>
-            <div id="sidebar-company-counter" ></div>   
-        </li>
         <li class="<?php if ($page->title == 'Customers') {
             echo 'selected';
         } ?>">
@@ -213,12 +197,29 @@ echo 'active';
                 <i class='bx bx-fw bx-group'></i> List of Customer
             </a>
         </li>
+        <li class="d-flex align-items-center <?php if ($page->title == 'Residential') {
+            echo 'selected';
+        } ?>">
+            <a href="<?php echo base_url('customer/residential'); ?>">
+                <i class='bx bx-fw bxs-face'></i>&nbsp;&nbsp;Residential
+            </a>
+            <div id="sidebar-persons-counter" ></div>   
+        </li>
+        <li class="d-flex align-items-center <?php if ($page->title == 'Commercial') {
+            echo 'selected';
+        } ?>">
+            <a href="<?php echo base_url('customer/commercial'); ?>">
+                <i class='bx bx-fw bx-building'></i>&nbsp;&nbsp;Commercial
+            </a>
+            <div id="sidebar-company-counter" ></div>   
+        </li>
         <li class="<?php if ($page->title == 'Customer Subscriptions') {
             echo 'selected';
         } ?>">
             <a href="<?php echo base_url('customer/subscriptions'); ?>">
-                <i class='bx bx-fw bx-user-pin'></i> Subscriptions
+                <i class='bx bx-fw bx-user-pin'></i>&nbsp;&nbsp;Subscriptions
             </a>
+            <div id="sidebar-subscribers-counter" ></div>  1
         </li>
         <li class="<?php if ($page->title == 'Customer Groups') {
             echo 'selected';
