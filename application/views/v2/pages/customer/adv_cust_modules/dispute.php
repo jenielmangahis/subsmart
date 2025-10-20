@@ -5,7 +5,7 @@
                 <span>Dispute</span>
             </div>
         </div>
-        <div class="nsm-card-content">
+        <div class="nsm-card-content" style="height:auto;">
             <div class="row g-3">
                 <div class="col-12">
                     <div class="row g-2 mb-3">
@@ -151,31 +151,65 @@
                             <hr>
                         </div>
                         <div class="col-3 col-md-3">
+                            <label class="content-title">Score</label>
+                        </div>
+                        <div class="col-3 text-end">
+                            <label class="content-subtitle">0</label>
+                        </div>
+                        <div class="col-3 text-end">
+                            <label class="content-subtitle">0</label>
+                        </div>
+                        <div class="col-3 text-end">
+                            <label class="content-subtitle">0</label>
+                        </div>
+                        <div class="col-12">
+                            <hr>
+                        </div>
+                        <div class="col-3 col-md-3">
                             <label class="content-title">Furnisher Letters</label>
                         </div>
-                        <div class="col-9 col-md-9 text-end">
+                        <div class="col-3 text-end">
+                            <label class="content-subtitle">0</label>
+                        </div>
+                        <div class="col-3 text-end">
+                            <label class="content-subtitle">0</label>
+                        </div>
+                        <div class="col-3 text-end">
                             <label class="content-subtitle">0</label>
                         </div>
                     </div>
                 </div>
+                <hr />
+            </div>
+            <div class="row g-3 mt-5">
                 <div class="col-12 col-md-6">
-                    <button class="nsm-button w-100 ms-0 mt-2" onclick="window.open('<?= base_url('customer/credit_industry/' . $this->uri->segment(3)); ?>', '_blank', 'location=yes,height=1080,width=1500,scrollbars=yes,status=yes');">
+                    <button class="nsm-button primary w-100 ms-0 mt-2" onclick="window.open('<?= base_url('customer/credit_industry/' . $this->uri->segment(3)); ?>', '_blank', 'location=yes,height=1080,width=1500,scrollbars=yes,status=yes');">
                         <i class='bx bx-fw bx-list-check'></i> View/Update All Dispute Items
                     </button>
                 </div>
                 <div class="col-12 col-md-6">
-                    <button class="nsm-button w-100 ms-0 mt-2">
+                    <button class="nsm-button primary w-100 ms-0 mt-2">
                         <i class='bx bx-fw bx-import'></i> Import Online Credit Reports
                     </button>
                 </div>
                 <div class="col-12 col-md-6" onclick="window.open('<?= base_url('EsignEditor/customers/' . $this->uri->segment(3)); ?>', '_blank', 'location=yes,height=1080,width=1500,scrollbars=yes,status=yes');">
-                    <button class="nsm-button w-100 ms-0">
+                    <button class="nsm-button primary w-100 ms-0">
                         <i class='bx bx-fw bx-mail-send'></i> Last Letter Sent
                     </button>
                 </div>
                 <div class="col-12 col-md-6">
                     <button class="nsm-button w-100 ms-0 primary" onclick="window.open('<?= base_url('EsignEditor/wizard?customer_id=' . $this->uri->segment(3)); ?>', '_blank', 'location=yes,height=1080,width=1500,scrollbars=yes,status=yes');">
                         <i class='bx bx-fw bx-envelope'></i> Letter Wizard
+                    </button>
+                </div>
+                <div class="col-12 col-md-6">
+                    <button role="button" class="nsm-button primary w-100 ms-0">
+                        <i class='bx bx-fw bx-arrow-from-left'></i> Manual Entry
+                    </button>
+                </div>
+                <div class="col-12 col-md-6">
+                    <button role="button" class="nsm-button primary w-100 ms-0">
+                        <i class='bx bx-fw bx-export'></i> Pull Credit
                     </button>
                 </div>
             </div>

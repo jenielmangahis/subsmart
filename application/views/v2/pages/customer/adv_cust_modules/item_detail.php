@@ -122,21 +122,21 @@
                         </div>
                         <div class="equipmentItem text-center px-3 mb-2" equipment-type="communication">
                             <span class="opacity-50">
-                                <i class="<?php echo $equipmentIcons[communication]; ?>"></i>
+                                <i class="<?php echo $equipmentIcons['communication']; ?>"></i>
                                 <br>
                                 <small class="fw-bold">Comm</small>
                             </span>
                         </div>
                         <div class="equipmentItem text-center px-3 mb-2" equipment-type="panel">
                             <span class="opacity-50">
-                                <i class="<?php echo $equipmentIcons[panel]; ?>"></i>
+                                <i class="<?php echo $equipmentIcons['panel']; ?>"></i>
                                 <br>
                                 <small class="fw-bold">Panel</small>
                             </span>
                         </div>
                         <div class="equipmentItem text-center px-3 mb-2" equipment-type="sensor">
                             <span class="opacity-50">
-                                <i class="<?php echo $equipmentIcons[sensor]; ?>"></i>
+                                <i class="<?php echo $equipmentIcons['sensor']; ?>"></i>
                                 <br>
                                 <small class="fw-bold">Sensor</small>
                             </span>
