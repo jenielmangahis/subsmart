@@ -235,6 +235,7 @@
                      <div class="col-12 col-md-4 mb-2">
                        <?php include viewPath('v2/pages/customer/advance_customer_forms/preview_alarm_info'); ?>
                     </div>
+                    <?php if( logged('industry_type') != 'Alarm Industry' ){ ?>
                     <div class="col-12 col-md-4 mb-2">
                         <?php include viewPath('v2/pages/customer/advance_customer_forms/preview_billing_info'); ?>                        
                     </div>

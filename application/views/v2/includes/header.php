@@ -145,9 +145,13 @@ if ($this->session->userdata('usertimezone') == null) {
             background-color: #7367f0 !important;
             color: #fff !important;
         }
-        #sidebar-persons-counter .badge-primary, #sidebar-company-counter .badge-primary{
+        
+        #sidebar-persons-counter .badge-primary, 
+        #sidebar-company-counter .badge-primary,
+        #sidebar-subscribers-counter .badge-primary {
             background-color:#6a4a86 !important;
         }
+
         #quick-customer-search-result-container{
             display: block;
             padding: 10px;
