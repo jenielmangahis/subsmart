@@ -57,8 +57,6 @@
     // print_r($alarm_info_api);
     // echo '</pre>';
 ?>
-<script src="https://cdn.datatables.net/2.1.8/js/dataTables.min.js"></script>
-<script src="https://cdn.datatables.net/rowgroup/1.5.0/js/dataTables.rowGroup.min.js"></script>
 <style>
     .equipmentCategories {
         cursor: pointer;
@@ -97,19 +95,23 @@
     .display_none {
         display: none;
     }
+
+    .addNewEquipment {
+        border-color: lightgray;
+    }
 </style>
 <div class="col-12 col-md-4">
     <div class="nsm-card nsm-grid">
         <div class="nsm-card-header d-block">
             <div class="nsm-card-title">
                 <span>Equipment</span>
-                <button class="btn btn-success float-end opacity-50 btn-sm equipmentWidgetRefreshButton"><small>REFRESH</small></button>
+                <button class="btn btn-primary float-end opacity-50 btn-sm equipmentWidgetRefreshButton"><small>REFRESH</small></button>
             </div>
         </div>
         <div class="nsm-card-content">
             <div class="row g-3">
                 <div class="col-lg-12 mb-1">
-                    <input type="text" class="form-control equipmentSearchBar"  placeholder="Search">
+                    <input type="text" class="form-control equipmentSearchBar" placeholder="Search">
                 </div>
                 <div class="col-lg-12">
                     <div class="equipmentCategories table-responsive d-flex">
@@ -202,11 +204,11 @@
                                 <div class="d-flex align-items-center mt-3 mb-3 gap-3">
                                     <i class="<?php echo $equipmentIcons['communication']; ?> fs-4 text-muted"></i>
                                     <div class="d-flex flex-column">
-                                        <small class="text-muted upperEquipmentDetail"><?php echo $alarm_info_api['modeminfo_network']; ?></small>
+                                        <small class="text-muted upperEquipmentDetail"><?php echo $alarmcom_info['modeminfo_network']; ?></small>
                                         <strong class="text-muted">Cellular</strong>
                                     </div>
                                     <div class="equipmentSerial ms-auto text-end">
-                                        <strong class="text-muted mx-1"><?php echo $alarm_info_api['modeminfo_imei']; ?></strong>
+                                        <strong class="text-muted mx-1"><?php echo $alarmcom_info['modeminfo_imei']; ?></strong>
                                         <span class="text-success"><i class="fas fa-check-circle"></i></span>
                                     </div>
                                 </div>
@@ -222,7 +224,7 @@
                                 <div class="d-flex align-items-center mt-3 mb-3 gap-3">
                                     <i class="<?php echo $equipmentIcons['panel']; ?> fs-4 text-muted"></i>
                                     <div class="d-flex flex-column">
-                                        <small class="text-muted upperEquipmentDetail"><?php echo $alarm_info_api['panel_version']; ?></small>
+                                        <small class="text-muted upperEquipmentDetail"><?php echo $alarmcom_info['panel_version']; ?></small>
                                         <strong class="text-muted panelDeviceName">Panel</strong>
                                     </div>
                                     <div class="equipmentSerial ms-auto text-end">
@@ -275,7 +277,7 @@
                         </button>
                         <div class="collapse" id="geoCollapse"></div>
                     </div>
-                    <div class="equipmentAccordion display_none border rounded mb-2" equipment-type="voice">
+                    <div class="equipmentAccordion display_none border rounded" equipment-type="voice">
                         <button class="btn w-100 text-start accordionButton text-muted" type="button" data-bs-toggle="collapse" data-bs-target="#voiceCollapse">
                             <strong>Voice Device <span class="voiceDeviceCount">(0)</span></strong>
                         </button>
@@ -289,6 +291,7 @@
                         </div>
                     </div>
                 </div>
+                
             </div>
         </div>
     </div>
@@ -304,7 +307,7 @@
             beforeSend: function() {
                 $('.equipmentAccordion').hide();
                 $('.equipmentLoader').fadeIn('fast');
-                $('.equipmentWidgetRefreshButton').removeClass('btn-success').addClass('btn-secondary').attr('disabled', true).html('<i class="fas fa-spinner fa-pulse"></i>');
+                $('.equipmentWidgetRefreshButton').removeClass('btn-primary').addClass('btn-secondary').attr('disabled', true).html('<i class="fas fa-spinner fa-pulse"></i>');
             },
             success: function(response) {
                 const equipmentDetails = JSON.parse(response);
@@ -573,22 +576,22 @@
 
                 $('.equipmentAccordion').fadeIn('fast');
                 $('.equipmentLoader').hide();
-                $('.equipmentWidgetRefreshButton').removeClass('btn-secondary').addClass('btn-success').removeAttr('disabled').html('<small>REFRESH</small>');
+                $('.equipmentWidgetRefreshButton').removeClass('btn-secondary').addClass('btn-primary').removeAttr('disabled').html('<small>REFRESH</small>');
             },
             error: function(jqXHR, textStatus, errorThrown) {
                 $('.equipmentAccordion').fadeIn('fast');
                 $('.equipmentLoader').hide();
-                $('.equipmentWidgetRefreshButton').removeClass('btn-secondary').addClass('btn-success').removeAttr('disabled').html('<small>REFRESH</small>');
+                $('.equipmentWidgetRefreshButton').removeClass('btn-secondary').addClass('btn-primary').removeAttr('disabled').html('<small>REFRESH</small>');
             }
         });
     }
 
     $(document).ready(function () {
-        getAlarmEquipmentDetails("<?php echo $alarm_info_api['customer_id']; ?>");
+        getAlarmEquipmentDetails("<?php echo $alarmcom_info['customer_id']; ?>");
     });
 
     $(document).on('click', '.equipmentWidgetRefreshButton', function() {
-        getAlarmEquipmentDetails("<?php echo $alarm_info_api['customer_id']; ?>");
+        getAlarmEquipmentDetails("<?php echo $alarmcom_info['customer_id']; ?>");
     });
 
     $(document).on('click', '.equipmentItem', function () {
