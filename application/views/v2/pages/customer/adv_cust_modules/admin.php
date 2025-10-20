@@ -36,21 +36,7 @@
                                     }
                                 ?>
                             </span>
-                        </div>
-                        <div class="col-12 col-md-6">
-                            <label class="content-title">Assign To</label>
-                        </div>
-                        <div class="col-12 col-md-6">
-                            <span class="content-subtitle">
-                                <?php 
-                                    if ($office_info->technician) {
-                                        echo getUser($office_info->technician);
-                                    } else {
-                                        echo "&mdash;";
-                                    }
-                                ?>
-                            </span>
-                        </div>
+                        </div>                        
                         <div class="col-12 col-md-6">
                             <label class="content-title">Pre Survey</label>
                         </div>
@@ -59,6 +45,20 @@
                                 <?php 
                                     if ($office_info->pre_install_survey) {
                                         echo $office_info->pre_install_survey; 
+                                    } else {
+                                        echo "&mdash;";
+                                    }
+                                ?>
+                            </span>
+                        </div>
+                        <div class="col-12 col-md-6">
+                            <label class="content-title">Post Survey</label>
+                        </div>
+                        <div class="col-12 col-md-6">
+                            <span class="content-subtitle">
+                                <?php 
+                                    if ($office_info->post_install_survey) {
+                                        echo $office_info->post_install_survey; 
                                     } else {
                                         echo "&mdash;";
                                     }
@@ -115,15 +115,15 @@
                                 ?>
                                 <?php //$sales_rep->FName. ' ' . $sales_rep->LName; ?>
                             </span>
-                        </div>
+                        </div>                        
                         <div class="col-12 col-md-6">
-                            <label class="content-title">Post Survey</label>
+                            <label class="content-title">Tech</label>
                         </div>
                         <div class="col-12 col-md-6">
                             <span class="content-subtitle">
                                 <?php 
-                                    if ($office_info->post_install_survey) {
-                                        echo $office_info->post_install_survey; 
+                                    if ($office_info->technician) {
+                                        echo getUser($office_info->technician);
                                     } else {
                                         echo "&mdash;";
                                     }
@@ -132,9 +132,18 @@
                         </div>
                     </div>
                 </div>
+            </div>            
+            <?php include viewPath('v2/pages/customer/adv_cust_modules/billing'); ?>      
+            <?php if( isAdmin() ){ ?>
+                <?php include viewPath('v2/pages/customer/adv_cust_modules/payment_method_images'); ?>      
+            <?php } ?>
+            <div class="row g-3">
                 <div class="col-12">
                     <button role="button" class="nsm-button primary w-100 ms-0 mt-3" onclick="window.open('<?= base_url('customer/activities/'.$profile_info->prof_id) ?>', '_blank', 'location=yes,height=1080,width=1500,scrollbars=yes,status=yes');">
                          <i class='bx bx-fw bx-history'></i> History Log
+                    </button>
+                    <button role="button" class="nsm-button primary w-100 ms-0 mt-3" onclick="window.open('<?= base_url('/customer/add_advance/' . $profile_info->prof_id) ?>', '_blank', 'location=yes,height=1080,width=1500,scrollbars=yes,status=yes');">
+                        <i class='bx bx-fw bx-message-square-edit'></i> View/Edit Module
                     </button>
                 </div>
             </div>

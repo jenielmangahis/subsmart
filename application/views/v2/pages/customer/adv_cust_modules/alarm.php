@@ -10,13 +10,21 @@
                 <div class="col-12 col-md-6">
                     <div class="row g-2">
                         <div class="col-12 col-md-6">
-                            <label class="content-title">Account Type</label>
+                            <label class="content-title purple-label">Account Type</label>
                         </div>
                         <div class="col-12 col-md-6">
-                            <span class="content-subtitle">
+                            <span class="content-subtitle purple-label">
                                 <?= $alarm_info && $alarm_info->acct_type != '' ? $alarm_info->acct_type : '---'; ?>                                   
                             </span>
                         </div>
+                        <div class="col-12 col-md-6">
+                            <label class="content-title">Dealer Number</label>
+                        </div>
+                        <div class="col-12 col-md-6">
+                            <span class="content-subtitle">
+                               ---
+                            </span>
+                        </div>       
                         <div class="col-12 col-md-6">
                             <label class="content-title">Monitoring Company</label>
                         </div>
@@ -32,7 +40,15 @@
                             <span class="content-subtitle">
                                 <?= $alarm_info && $alarm_info->monitor_id != '' ? $alarm_info->monitor_id : '---'; ?>                                                                
                             </span>
-                        </div>                                                
+                        </div>  
+                        <div class="col-12 col-md-6">
+                            <label class="content-title">Site Type</label>
+                        </div>
+                        <div class="col-12 col-md-6">
+                            <span class="content-subtitle">
+                                ---
+                            </span>
+                        </div>                                                                      
                         <div class="col-12 col-md-6">
                             <label class="content-title">Online</label>
                         </div>
@@ -48,7 +64,21 @@
                             <span class="content-subtitle">
                                 <?= $alarm_info && $alarm_info->in_service != '' ? $alarm_info->in_service : 'No'; ?>      
                             </span>
+                        </div>  
+                        <div class="col-12 col-md-6">
+                            <label class="content-title">Warranty Type</label>
                         </div>
+                        <div class="col-12 col-md-6">
+                            <span class="content-subtitle">
+                                 <?php 
+                                    if ($alarm_info->warranty_type) {
+                                        echo $alarm_info->warranty_type; 
+                                    } else {
+                                        echo "---";
+                                    }
+                                ?>
+                            </span>
+                        </div>                       
                         <div class="col-12 col-md-6">
                             <label class="content-title">Abort Code / Password</label>
                         </div>
@@ -70,12 +100,18 @@
                             <span class="content-subtitle">
                                 <?= $alarm_info && $alarm_info->install_code != '' ? $alarm_info->install_code : '---'; ?>      
                             </span>
-                        </div>                         
+                        </div>   
+                        <div class="col-12 col-md-12">
+                            <label class="content-title"></label>
+                        </div>                      
+                        <div class="col-12 col-md-12">
+                            <label class="content-title"></label>
+                        </div>                      
                         <div class="col-12 col-md-6">
-                            <label class="content-title">Service Package</label>
+                            <label class="content-title purple-label">Service Package</label>
                         </div>
                         <div class="col-12 col-md-6">
-                            <span class="content-subtitle">
+                            <span class="content-subtitle purple-label">
                                 <?= $alarm_info && $alarm_info->comm_type != '' ? $alarm_info->comm_type : '---'; ?>      
                             </span>
                         </div>   
@@ -131,36 +167,13 @@
                 <div class="col-12 col-md-6">
                     <div class="row g-2">
                         <div class="col-12 col-md-6">
-                            <label class="content-title">Panel Type</label>
+                            <label class="content-title purple-label">Panel Type</label>
                         </div>
                         <div class="col-12 col-md-6">
-                            <span class="content-subtitle">
+                            <span class="content-subtitle purple-label">
                                 <?= $alarm_info && $alarm_info->panel_type != '' ? $alarm_info->panel_type : '---'; ?>      
                             </span>
-                        </div>                  
-                        <div class="col-12 col-md-6">
-                            <label class="content-title">Warranty Type</label>
-                        </div>
-                        <div class="col-12 col-md-6">
-                            <span class="content-subtitle">
-                                 <?php 
-                                    if ($alarm_info->warranty_type) {
-                                        echo $alarm_info->warranty_type; 
-                                    } else {
-                                        echo "---";
-                                    }
-                                ?>
-                            </span>
-                        </div>
-                        <div class="col-12 col-md-6">
-                            <label class="content-title">Site Type</label>
-                        </div>
-                        <div class="col-12 col-md-6">
-                            <span class="content-subtitle">
-                                ---
-                            </span>
-                        </div> 
-
+                        </div>                                          
                         <div class="col-12 col-md-6">
                             <label class="content-title">Secondary System Type</label>
                         </div>
@@ -207,20 +220,14 @@
                                     <?= $alarm_customer_info && $alarm_customer_info['customer'] ? $alarm_customer_info['customer']->customerId : '---'; ?>
                                 </span>
                             </div>   
-                        <?php } ?>
-                        <div class="col-12 col-md-6 mt-4">
-                            <label class="content-title">Dealer Number</label>
+                        <?php } ?>            
+                        <div class="col-12 col-md-12"></div>                                             
+                        <div class="col-12 col-md-12"></div>
+                        <div class="col-12 col-md-6">
+                            <label class="content-title purple-label">Service Provider</label>
                         </div>
                         <div class="col-12 col-md-6">
-                            <span class="content-subtitle">
-                               ---
-                            </span>
-                        </div>                                        
-                        <div class="col-12 col-md-6 mt-4">
-                            <label class="content-title">Service Provider</label>
-                        </div>
-                        <div class="col-12 col-md-6">
-                            <span class="content-subtitle">
+                            <span class="content-subtitle purple-label">
                                 <?= $alarm_info && $alarm_info->dealer != '' ? trim($alarm_info->dealer) : '---'; ?>   
                             </span>
                         </div>
@@ -242,10 +249,10 @@
                         </div>
                     </div>
                 </div>
-            </div> 
-            <div class="row g-3 mt-4">
+            </div>
+            <?php if( $alarm_info && $alarm_info->acct_type != 'In-House' ){ ?>
                 <?php include viewPath('v2/pages/customer/adv_cust_modules/funding'); ?>    
-            </div> 
+            <?php } ?>
             <?php if( $alarm_customer_info ){ ?>
                 <?php if( $alarm_customer_info['equipments']['data'] ){ ?>
                     <div class="row g-3">

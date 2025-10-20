@@ -54,7 +54,7 @@
     ];
 
     // echo '<pre>';
-    // print_r($alarm_info);
+    // print_r($alarm_info_api);
     // echo '</pre>';
 ?>
 <script src="https://cdn.datatables.net/2.1.8/js/dataTables.min.js"></script>
@@ -202,11 +202,11 @@
                                 <div class="d-flex align-items-center mt-3 mb-3 gap-3">
                                     <i class="<?php echo $equipmentIcons['communication']; ?> fs-4 text-muted"></i>
                                     <div class="d-flex flex-column">
-                                        <small class="text-muted upperEquipmentDetail"><?php echo $alarm_info['modeminfo_network']; ?></small>
+                                        <small class="text-muted upperEquipmentDetail"><?php echo $alarm_info_api['modeminfo_network']; ?></small>
                                         <strong class="text-muted">Cellular</strong>
                                     </div>
                                     <div class="equipmentSerial ms-auto text-end">
-                                        <strong class="text-muted mx-1"><?php echo $alarm_info['modeminfo_imei']; ?></strong>
+                                        <strong class="text-muted mx-1"><?php echo $alarm_info_api['modeminfo_imei']; ?></strong>
                                         <span class="text-success"><i class="fas fa-check-circle"></i></span>
                                     </div>
                                 </div>
@@ -222,7 +222,7 @@
                                 <div class="d-flex align-items-center mt-3 mb-3 gap-3">
                                     <i class="<?php echo $equipmentIcons['panel']; ?> fs-4 text-muted"></i>
                                     <div class="d-flex flex-column">
-                                        <small class="text-muted upperEquipmentDetail"><?php echo $alarm_info['panel_version']; ?></small>
+                                        <small class="text-muted upperEquipmentDetail"><?php echo $alarm_info_api['panel_version']; ?></small>
                                         <strong class="text-muted panelDeviceName">Panel</strong>
                                     </div>
                                     <div class="equipmentSerial ms-auto text-end">
@@ -584,11 +584,11 @@
     }
 
     $(document).ready(function () {
-        getAlarmEquipmentDetails("<?php echo $alarm_info['customer_id']; ?>");
+        getAlarmEquipmentDetails("<?php echo $alarm_info_api['customer_id']; ?>");
     });
 
     $(document).on('click', '.equipmentWidgetRefreshButton', function() {
-        getAlarmEquipmentDetails("<?php echo $alarm_info['customer_id']; ?>");
+        getAlarmEquipmentDetails("<?php echo $alarm_info_api['customer_id']; ?>");
     });
 
     $(document).on('click', '.equipmentItem', function () {
