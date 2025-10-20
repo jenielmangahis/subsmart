@@ -12509,6 +12509,80 @@ class Customer extends MY_Controller
         $this->load->view('v2/pages/customer/dashboard/ajax_customer_ledger', $this->page_data);
     }
 
+    public function ajax_customer_ledger_invoice()
+    {
+        $this->load->model('Payment_records_model');
+        $this->load->model('Invoice_model');
+        $this->load->model('AcsProfile_model');    
+        $this->load->model('Users_model');    
+        $this->load->model('Jobs_model');
+
+        $company_id = logged('company_id');
+        $post       = $this->input->post();
+        $cid        = isset($post['customer_id']) && $post['customer_id'] > 0 ? $post['customer_id'] : $this->session->userdata('module_customer_id');
+        $invoices   = $this->Invoice_model->getAllByCustomerIdAndCompanyId($cid, $company_id);
+        $customer   = $this->AcsProfile_model->getByProfId($cid);
+        $customer_address = $customer->mail_add . ' <br />' . $customer->city . ', ' . $customer->state . ' ' . $customer->zip_code;
+        $ledger = [];
+        $g_total_payment = 0;
+        $g_total_income  = 0;
+        foreach( $invoices as $invoice ){
+            $date = date("m/d/y", strtotime($invoice->date_issued));
+            $user = $this->Users_model->getUserByID($invoice->user_id);            
+            if( $company_id == 139 || $company_id == 1 ){
+                $description =  date('F', strtotime($invoice->due_date)) . ' rent';
+                if( $invoice->job_id > 0 ){
+                    $job = $this->Jobs_model->getByIdAndCompanyId($invoice->job_id, $invoice->company_id);
+                    if( $job ){
+                        $description = 'Issued invoice for job number ' . $job->job_number;
+                    }
+                }                
+            }else{
+                $description = 'Issued invoice number ' . $invoice->invoice_number;
+                if( $invoice->job_id > 0 ){
+                    $job = $this->Jobs_model->getByIdAndCompanyId($invoice->job_id, $invoice->company_id);
+                    if( $job ){
+                        $description = 'Issued invoice for job number ' . $job->job_number;
+                    }
+                }
+            }
+
+            $payments = $this->Payment_records_model->getAllByInvoiceId($invoice->id);            
+            $total_payment = 0;
+            $payment_method = '---';
+            foreach( $payments as $p ){
+                $total_payment += $p->invoice_amount;
+                $payment_method = $p->payment_method == 'cc' ? 'Credit Card' : ucwords($p->payment_method); 
+            }
+
+            $g_total_income += $invoice->grand_total;
+            $g_total_payment += $total_payment;
+
+            $ledger[$date][] = [
+                'id' => $invoice->id,
+                'user' => $user ? $user->FName . ' ' . $user->LName : '---',
+                'payment_method' => $payment_method,                
+                'type' => 'income',                
+                'date' => $date,
+                'description' => $description,
+                'amount' => $invoice->grand_total,
+                'payment' => $total_payment,
+                'late_fee' => $invoice->late_fee,
+                'date_created' => $invoice->date_created
+            ];
+        }
+        
+        $balance = $g_total_income - $g_total_payment;
+
+        $this->page_data['customer_address'] = $customer_address;
+        $this->page_data['total_income']  = $g_total_income;
+        $this->page_data['total_payment'] = $g_total_payment;
+        $this->page_data['balance'] = $balance;
+        $this->page_data['default_email'] = logged('email');
+        $this->page_data['ledger']    = $ledger;
+        $this->load->view('v2/pages/customer/dashboard/ajax_customer_invoice_ledger', $this->page_data);
+    }
+
     public function ajax_delete_company_reason()
     {
         $this->load->model('CompanyReason_model');
