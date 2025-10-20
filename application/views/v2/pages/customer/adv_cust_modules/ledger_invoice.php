@@ -2,7 +2,7 @@
     <div class="nsm-card nsm-grid">
         <div class="nsm-card-header d-block">
             <div class="nsm-card-title">
-                <span>Ledger</span>
+                <span>Ledger Invoice</span>
             </div>
         </div>
               
@@ -44,9 +44,10 @@
                                 <span>More Action <i class='bx bx-fw bx-chevron-down'></i>
                             </button>
                             <ul class="dropdown-menu dropdown-menu-end">
-                                <li><a class="dropdown-item" href="<?= url('customer/export_customer_ledger'); ?>"><i class='bx bx-spreadsheet'></i> Export to Excel</a></li>
-                                <li><a class="dropdown-item" href="javascript:void(0);" id="btn-send-email-customer-ledger"><i class='bx bx-envelope' ></i> Send to email</a></li>
-                                <li><a class="dropdown-item" href="javascript:void(0);" id="btn-print-customer-ledger"><i class='bx bx-printer' ></i>Print</a></li>
+                                
+                                <li><a class="dropdown-item" href="javascript:void(0);" id="btn-send-email-customer-ledger"><i class='bx bx-envelope' ></i> Share</a></li>
+                                <li><a class="dropdown-item" href="javascript:void(0);" id="btn-print-customer-ledger"><i class='bx bx-printer'></i> Print</a></li>
+                                <li><a class="dropdown-item" href="<?= url('customer/export_customer_ledger'); ?>"><i class='bx bx-spreadsheet'></i> Save as Excel</a></li>
                             </ul>     
                         </div>
                     </div>  
