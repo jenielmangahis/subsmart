@@ -119,6 +119,8 @@ $route['customer/_payment_method_images'] = 'Customer/ajax_payment_method_images
 
 $route['customer/_ledger_invoice'] = 'Customer/ajax_customer_ledger_invoice';
 
+$route['customer/_ledger_invoice'] = 'Customer/ajax_customer_ledger_invoice';
+
 // Credit Bureau
 $route['credit_bureau/list'] = 'Credit_Bureau/index';
 $route['credit_bureau/add_new'] = 'Credit_Bureau/add_new';
