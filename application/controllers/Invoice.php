@@ -286,6 +286,7 @@ class Invoice extends MY_Controller
         $this->load->helper('functions');
         $this->load->model('JobTags_model');
         $this->load->model('TaxRates_model');
+        $this->load->model('AcsProfile_model');
 
         add_footer_js(array(        
             'assets/js/v2/add_items.js',                
@@ -324,8 +325,11 @@ class Invoice extends MY_Controller
         // }
 
         $default_cust_id = 0;
-        if( $this->input->get('cus_id') ){
-            $default_cust_id = $this->input->get('cus_id');
+        $defaultCustomer = [];
+        if( $this->input->get('cus_id') ){          
+            $default_cust_id = $this->input->get('cus_id');            
+            $defaultCustomer = $this->AcsProfile_model->getByProfId($default_cust_id);
+
         }
         
         $defaullTaxRate = $this->TaxRates_model->getDefaultTaxRateByCompanyId($company_id);
@@ -342,6 +346,7 @@ class Invoice extends MY_Controller
         $this->page_data['default_tax_percentage'] = $default_tax_percentage;
         $this->page_data['clients'] = $this->workorder_model->getclientsById();
         $this->page_data['default_cust_id'] = $default_cust_id;
+        $this->page_data['defaultCustomer'] = $defaultCustomer;
         $this->page_data['workorder']  = $workorder;
         $this->page_data['w_customer'] = $w_customer;
         $this->page_data['w_items']    = $w_items;

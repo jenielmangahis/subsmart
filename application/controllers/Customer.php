@@ -13541,4 +13541,32 @@ class Customer extends MY_Controller
             $this->load->view('v2/pages/customer/ajax_payment_method_images', $this->page_data);
         }
     }
+
+    public function ajax_ledger_balance_amount()
+    {
+        $this->load->model('Payment_records_model');
+        $this->load->model('Invoice_model');
+        
+        $post = $this->input->post();
+        
+        $invoices   = $this->Invoice_model->getAllByCustomerIdAndCompanyId($post['customer_id'], $company_id);
+        $g_total_payment = 0;
+        $g_total_income  = 0;
+        foreach( $invoices as $invoice ){
+            $payments = $this->Payment_records_model->getAllByInvoiceId($invoice->id);            
+            $total_payment = 0;
+            $payment_method = '---';
+            foreach( $payments as $p ){
+                $total_payment += $p->invoice_amount;
+            }
+
+            $g_total_income += $invoice->grand_total;
+            $g_total_payment += $total_payment;
+        }
+        
+        $balance = $g_total_income - $g_total_payment;
+
+        $return = ['balance' => $balance];
+        echo json_encode($return);
+    }
 }
