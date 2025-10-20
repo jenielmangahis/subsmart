@@ -5859,8 +5859,8 @@ function getWorkOrderStaticItems() {
             "name" => "Translater",
             "sub" => ['GE','HW','DSC']
         ],
-        ["name" => ""],
-        ["name" => ""],
+        //["name" => ""],
+        //["name" => ""],
     ];
 
     return $items_arr;

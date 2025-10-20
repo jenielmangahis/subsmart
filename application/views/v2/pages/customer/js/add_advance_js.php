@@ -163,6 +163,22 @@
             }
         });
 
+        $('#financing-payment-amount').on('change', function(){
+            let amount = $(this).val();
+
+            const today = new Date();
+            const formattedDate = today.toLocaleDateString('en-US');
+            let current_date = formattedDate;
+            
+            if( amount <= 0 ){
+                $('#recurring_start_date').val('');
+                $('#recurring_end_date').val('');
+            }else{
+                $('#recurring_start_date').val(current_date);
+                $('#recurring_end_date').val(current_date);
+            }
+        });
+
         $(document).on('change', '#status', function(){
             let status = $(this).val();
             if( status == 'Cancelled' || status == 'Cancel' || status == 'Charge Back' || status == 'Collection' || status == 'Competition Lost' ){
@@ -184,6 +200,10 @@
 
         $(".paper-chk").click(function() { 
             return false; 
+        });
+
+        $('#chkRecurringActive').click(function(){
+            return false;
         });
 
         $('#rep_paper_date').on('change', function(){

@@ -69,82 +69,118 @@
                                 <div class="row g-3">
                                     <div class="col-12 col-md">
                                         <label class="content-subtitle fw-bold mb-2">
-                                            <field-custom-name readonly default="Rep Paper" form="papers"></field-custom-name>
+                                            <field-custom-name readonly default="Work Order" form="papers"></field-custom-name>
                                         </label>
                                         <div class="input-group">
+                                            <?php 
+                                                $is_checked = '';
+                                                $rep_paper_date = '';
+                                                if( isset($papers->rep_paper_date) && $papers->rep_paper_date !== '' ){
+                                                    $rep_paper_date = date("Y-m-d", strtotime($papers->rep_paper_date));
+                                                    $is_checked = 'checked="checked"'; 
+                                                }else{
+                                                    if( $woSubmittedLatest ){
+                                                        $rep_paper_date = date("Y-m-d", strtotime($woSubmittedLatest->date_issued));
+                                                        $is_checked = 'checked="checked"';
+                                                    }
+                                                }
+                                            
+                                            ?>
                                             <div class="input-group-text">
-                                                <input <?= isset($papers->rep_paper_date) ? "checked" : "" ?> class="form-check-input mt-0" type="checkbox" value="rep_paper_date" id="rep_paper" disabled>
+                                                <input <?= $is_checked; ?> class="form-check-input mt-0" type="checkbox" value="rep_paper_date" id="rep_paper" disabled>
                                             </div>
-                                            <input value="<?= isset($papers->rep_paper_date) ? $papers->rep_paper_date : "" ?>" type="text" class="form-control nsm-field" name="rep_paper_date" id="rep_paper_date" disabled>
+                                            <input value="<?= $rep_paper_date; ?>" type="text" class="form-control nsm-field" name="rep_paper_date" id="rep_paper_date" disabled>
                                         </div>
                                     </div>
                                     <div class="col-12 col-md">
                                         <label class="content-subtitle fw-bold mb-2">
-                                            <field-custom-name readonly default="Tech Paper" form="papers"></field-custom-name>
+                                            <field-custom-name readonly default="Job Finished" form="papers"></field-custom-name>
                                         </label>
                                         <div class="input-group">
+                                            <?php 
+                                                $is_checked = '';
+                                                $tech_paper_date = '';
+                                                if( isset($papers->tech_paper_date) && $papers->tech_paper_date !== '' ){
+                                                    $tech_paper_date = date("Y-m-d", strtotime($papers->rep_paper_date));
+                                                    $is_checked = 'checked="checked"'; 
+                                                }else{
+                                                    if( $jobFinishedLatest ){
+                                                        if( strtotime($jobFinishedLatest->finished_date) > 0 ){
+                                                            $tech_paper_date = date("Y-m-d", strtotime($jobFinishedLatest->finished_date));
+                                                        }else{
+                                                            $tech_paper_date = date("Y-m-d", strtotime($jobFinishedLatest->end_date));
+                                                        }
+                                                        $is_checked = 'checked="checked"';
+                                                    }
+                                                }
+                                            
+                                            ?>
                                             <div class="input-group-text">
-                                                <input <?= isset($papers->tech_paper_date) ? "checked" : "" ?> class="form-check-input mt-0" type="checkbox" value="tech_paper_date" disabled>
+                                                <input <?= $is_checked; ?> class="form-check-input mt-0" type="checkbox" value="tech_paper_date" disabled>
                                             </div>
-                                            <input value="<?= isset($papers->tech_paper_date) ? $papers->tech_paper_date : "" ?>" type="text" class="form-control nsm-field" name="tech_paper_date" id="tech_paper_date" disabled>
+                                            <input value="<?= $tech_paper_date; ?>" type="text" class="form-control nsm-field" name="tech_paper_date" id="tech_paper_date" disabled>
                                         </div>
                                     </div>
                                     <div class="col-12 col-md">
                                         <label class="content-subtitle fw-bold mb-2">
-                                            <field-custom-name readonly default="Scanned" form="papers"></field-custom-name>
+                                            <field-custom-name readonly default="Imagine Count" form="papers"></field-custom-name>
                                         </label>
                                         <div class="input-group">
+                                            <?php 
+                                                $is_checked = '';
+                                                $imagine_count = '0';
+                                                if( isset($papers->imagine_count) && $papers->imagine_count > 0 ){
+                                                    $imagine_count = $papers->imagine_count;
+                                                    $is_checked = 'checked="checked"';
+                                                }   
+                                            ?>
                                             <div class="input-group-text">
-                                                <input <?= isset($papers->scanned_date) ? "checked" : "" ?> class="form-check-input mt-0" type="checkbox" value="scanned_date" disabled>
+                                                <input <?= $is_checked; ?> class="form-check-input mt-0" type="checkbox" value="scanned_date" disabled>
                                             </div>
-                                            <input value="<?= isset($papers->scanned_date) ? $papers->scanned_date : "" ?>" type="text" class="form-control nsm-field" name="scanned_date" id="scanned_date" disabled>
+                                            <input value="<?= $imagine_count; ?>" type="text" class="form-control nsm-field" name="scanned_date" id="scanned_date" disabled>
                                         </div>
                                     </div>
                                     <div class="col-12 col-md">
                                         <label class="content-subtitle fw-bold mb-2">
-                                            <field-custom-name readonly default="Paperwork" form="papers"></field-custom-name>
+                                            <field-custom-name readonly default="Completed eSign Uploaded" form="papers"></field-custom-name>
                                         </label>
                                         <div class="input-group">
+                                            <?php 
+                                                $is_checked = '';
+                                                $paperwork = '';
+                                                if( isset($papers->paperwork) && $papers->paperwork != '' ){
+                                                    $paperwork = $papers->paperwork;
+                                                    $is_checked = 'checked="checked"';
+                                                }else{
+                                                    if( $recentDocfile ){
+                                                        $paperwork = $recentDocfile->docusign_envelope_id;
+                                                        $is_checked = 'checked="checked"';
+                                                    }
+                                                }
+                                            ?>
                                             <div class="input-group-text">
-                                                <input class="form-check-input mt-0" type="checkbox" value="scanned_date">
+                                                <input <?= $is_checked; ?> class="form-check-input mt-0" type="checkbox" value="scanned_date">
                                             </div>
-                                            <select class="nsm-field form-select" name="paperwork" id="paperwork">
-                                                <option value="" selected="selected">Select</option>
-                                                <option value="Approved">Approved</option>
-                                                <option value="Rejected">Rejected</option>
-                                                <option value="Pending Kept">Pending Kept</option>
-                                                <option value="Pending Sent">Pending Sent</option>
-                                                <option value="None">None</option>
-                                            </select>
+                                            <input value="<?= $paperwork; ?>" type="text" class="form-control nsm-field" name="paperwork" id="paperwork" disabled>
                                         </div>
                                     </div>
                                     <div class="col-12 col-md">
                                         <label class="content-subtitle fw-bold mb-2">
-                                            <field-custom-name readonly default="Submitted" form="papers"></field-custom-name>
+                                            <field-custom-name readonly default="Payment Image" form="papers"></field-custom-name>
                                         </label>
                                         <div class="input-group">
+                                            <?php 
+                                                $is_checked = '';
+                                                $submitted = '';
+                                                if( isset($papers->submitted) && $papers->submitted != '' ){
+                                                    $submitted = $papers->submitted;
+                                                    $is_checked = 'checked="checked"';
+                                                }   
+                                            ?>
                                             <div class="input-group-text">
-                                                <input <?= isset($papers->submitted) ? "checked" : "" ?> class="form-check-input mt-0" type="checkbox" value="submitted" disabled>
+                                                <input <?= $is_checked; ?> class="form-check-input mt-0" type="checkbox" value="submitted" disabled>
                                             </div>
-                                            <input value="<?= isset($papers->submitted) ? $papers->submitted : "" ?>" type="text" class="form-control nsm-field" name="submitted" id="submitted" disabled>
-                                        </div>
-                                    </div>
-                                    <div class="col-12 col-md">
-                                        <label class="content-subtitle fw-bold mb-2">
-                                            <field-custom-name readonly default="Rep Paid" form="papers"></field-custom-name>
-                                        </label>
-                                        <div class="input-group">
-                                            <span class="input-group-text">$</span>
-                                            <input type="number" class="form-control nsm-field" name="rep_paid" id="rep_paid" disabled min="0" step="0.01">
-                                        </div>
-                                    </div>
-                                    <div class="col-12 col-md">
-                                        <label class="content-subtitle fw-bold mb-2">
-                                            <field-custom-name readonly default="Tech Paid" form="papers"></field-custom-name>
-                                        </label>
-                                        <div class="input-group">
-                                            <span class="input-group-text">$</span>
-                                            <input type="number" class="form-control nsm-field" name="tech_paid" id="tech_paid" disabled min="0">
+                                            <input value="<?= $submitted; ?>" type="text" class="form-control nsm-field" name="submitted" id="submitted" disabled>
                                         </div>
                                     </div>
                                     <div class="col-12 col-md">
@@ -152,10 +188,18 @@
                                             <field-custom-name readonly default="Funded" form="papers"></field-custom-name>
                                         </label>
                                         <div class="input-group">
+                                            <?php 
+                                                $is_checked = '';
+                                                $funded = '0';
+                                                if( isset($papers->funded) && $papers->funded != '' ){
+                                                    $funded = $papers->submitted;
+                                                    $is_checked = 'checked="checked"';
+                                                }   
+                                            ?>
                                             <div class="input-group-text">
-                                                <input <?= isset($papers->funded) ? "checked" : "" ?> class="form-check-input mt-0" type="checkbox" value="funded" disabled>
+                                                <input <?= $is_checked; ?> class="form-check-input mt-0" type="checkbox" value="funded" disabled>
                                             </div>
-                                            <input value="<?= isset($papers->funded) ? $papers->funded : "" ?>" type="text" class="form-control nsm-field" name="funded" id="funded" disabled>
+                                            <input value="<?= $funded; ?>" type="text" class="form-control nsm-field" name="funded" id="funded" disabled>
                                         </div>
                                     </div>
                                     <div class="col-12 col-md">
@@ -163,10 +207,18 @@
                                             <field-custom-name readonly default="Charged Back" form="papers"></field-custom-name>
                                         </label>
                                         <div class="input-group">
+                                            <?php 
+                                                $is_checked = '';
+                                                $charged_back = '0';
+                                                if( isset($papers->charged_back) && $papers->charged_back != '' ){
+                                                    $charged_back = $papers->charged_back;
+                                                    $is_checked = 'checked="checked"';
+                                                }   
+                                            ?>
                                             <div class="input-group-text">
-                                                <input <?= isset($papers->charged_back) ? "checked" : "" ?> class="form-check-input mt-0" type="checkbox" value="charged_back" disabled>
+                                                <input <?= $is_checked; ?> class="form-check-input mt-0" type="checkbox" value="charged_back" disabled>
                                             </div>
-                                            <input value="<?= isset($papers->charged_back) ? $papers->charged_back : "" ?>" type="text" class="form-control nsm-field" name="charged_back" id="charged_back" disabled>
+                                            <input value="<?= $charged_back; ?>" type="text" class="form-control nsm-field" name="charged_back" id="charged_back" disabled>
                                         </div>
                                     </div>
                                 </div>
@@ -180,16 +232,16 @@
                     </div>                    
                     <div class="col-12 col-md-4 mb-2">
                         <?php include viewPath('v2/pages/customer/advance_customer_forms/preview_office_info'); ?>
+                        <?php include viewPath('v2/pages/customer/advance_customer_forms/preview_funding_info'); ?>
                     </div>
                     <div class="col-12 col-md-4 mb-2">
                        <?php include viewPath('v2/pages/customer/advance_customer_forms/preview_alarm_info'); ?>
                     </div>
+                    <?php if( logged('industry_type') != 'Alarm Industry' ){ ?>
                     <div class="col-12 col-md-4 mb-2">
-                        <?php include viewPath('v2/pages/customer/advance_customer_forms/preview_property_info'); ?>
+                        <?php include viewPath('v2/pages/customer/advance_customer_forms/preview_notes_info'); ?>
                     </div>
-                    <div class="col-12 col-md-4 mb-2">
-                       <?php include viewPath('v2/pages/customer/advance_customer_forms/preview_notes_info'); ?>
-                    </div>
+                    <?php } ?>
                 </div>
                 <!-- end of div to print  -->
                 </div>
@@ -200,7 +252,6 @@
 </div>
 
 <script src="<?=base_url('assets/js/customer/components/FieldCustomName.js');?>"></script>
-
 <script src="<?= base_url("assets/js/printThis.js") ?>"></script> 
 
 <script type="text/javascript">
@@ -212,34 +263,16 @@
         });
 
         $("#printDivPreview").on("click", function(){
-            // var divToPrint=document.getElementById('DivIdToPrint');
-            // var newWin=window.open('','Print-Window');
-            // newWin.document.open();
-            // newWin.document.write('<html><body onload="window.print()">'+divToPrint.innerHTML+'</body></html>');
-            // newWin.document.close();
-            // setTimeout(function(){newWin.close();},10);
-
-
-            // var css= '<link rel="stylesheet" href="<?= base_url("assets/css/v2/bootstrap.min.css") ?>" />';
-            // var prtContent = document.getElementById("DivIdToPrint");
-            // var WinPrint = window.open('','Print-Window');
-            // WinPrint.document.write(prtContent.innerHTML);
-            // // WinPrint.document.write( "<link rel='stylesheet' href='style.css' type='text/css' media='print'/>" );
-            // WinPrint.document.write('<style>@page{size:landscape;}</style><html><head><title></title>');
-            // WinPrint.document.write(css + jQuery('#DivIdToPrint').html());
-            // WinPrint.document.head.innerHTML = css;
-            // WinPrint.document.close();
-            // WinPrint.focus();
             $("#DivIdToPrint").printThis({
-      debug: false,              // show the iframe for debugging
-      importCSS: true,           //import page CSS
-      importStyle: true,//thrown in for extra measure
-      printContainer: true,      // grab outer container as well as the contents of the selector
-      loadCSS: "<?= base_url("assets/css/v2/bootstrap.min.css") ?>", // path to additional css file
-      loadCSS: "<?= base_url("assets/css/v2/main.css") ?>",
-      pageTitle: "",             // add title to print page
-      removeInline: false        // remove all inline styles from print elements
-  });
+                debug: false,              // show the iframe for debugging
+                importCSS: true,           //import page CSS
+                importStyle: true,//thrown in for extra measure
+                printContainer: true,      // grab outer container as well as the contents of the selector
+                loadCSS: "<?= base_url("assets/css/v2/bootstrap.min.css") ?>", // path to additional css file
+                loadCSS: "<?= base_url("assets/css/v2/main.css") ?>",
+                pageTitle: "",             // add title to print page
+                removeInline: false        // remove all inline styles from print elements
+            });
         });
 
     });

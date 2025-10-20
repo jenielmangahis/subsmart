@@ -485,22 +485,13 @@ class Customer extends MY_Controller
                 </a>
                 <ul class='dropdown-menu dropdown-menu-end'>
                     <li>
-                        <a class='dropdown-item' href='".base_url('customer/preview_/'.$customer->prof_id)."'>Preview</a>
-                    </li>
-                    ".$edit_action."
-                    ".$email_action."
-                    ".$call_action."    
-                    ".$send_esign_action."        
-                    <li>
-                        <a class='dropdown-item' href='".base_url('invoice/add?cus_id='.$customer->prof_id)."'>Invoice</a>
-                    </li>
-                    <li>
                         <a class='dropdown-item' href='".base_url('customer/module/'.$customer->prof_id)."'>Dashboard</a>
                     </li>
-                    ".$schedule_action."
                     <li>
-                        <a class='dropdown-item sms-messages' data-id='".$customer->prof_id."' href='javascript:void(0);'>Message</a>
+                        <a class='dropdown-item' href='".base_url('customer/preview_/'.$customer->prof_id)."'>View</a>
                     </li>
+                    ".$edit_action."                                        
+                    ".$schedule_action."
                     ".$favorite_action."
                     ".$delete_action."
                 </ul>
@@ -771,22 +762,13 @@ class Customer extends MY_Controller
                 </a>
                 <ul class='dropdown-menu dropdown-menu-end'>
                     <li>
-                        <a class='dropdown-item' href='".base_url('customer/preview_/'.$customer->prof_id)."'>Preview</a>
-                    </li>
-                    ".$edit_action."
-                    ".$email_action."
-                    ".$call_action."  
-                    ".$send_esign_action."                  
-                    <li>
-                        <a class='dropdown-item' href='".base_url('invoice/add?cus_id='.$customer->prof_id)."'>Invoice</a>
-                    </li>
-                    <li>
                         <a class='dropdown-item' href='".base_url('customer/module/'.$customer->prof_id)."'>Dashboard</a>
                     </li>
-                    ".$schedule_action."
                     <li>
-                        <a class='dropdown-item sms-messages' data-id='".$customer->prof_id."' href='javascript:void(0);'>Message</a>
+                        <a class='dropdown-item' href='".base_url('customer/preview_/'.$customer->prof_id)."'>View</a>
                     </li>
+                    ".$edit_action."                    
+                    ".$schedule_action."
                     ".$favorite_action."
                     ".$delete_action."
                 </ul>
@@ -1218,22 +1200,13 @@ class Customer extends MY_Controller
                     </a>
                     <ul class='dropdown-menu dropdown-menu-end'>
                         <li>
-                            <a class='dropdown-item' href='".('customer/preview_/'.$customer->prof_id)."'>Preview</a>
-                        </li>
-                        ".$edit_action."
-                        ".$email_action."
-                        ".$call_action."
-                        ".$send_esign_action."
-                        <li>
-                            <a class='dropdown-item' href='".base_url('invoice/add?cus_id='.$customer->prof_id)."'>Invoice</a>
-                        </li>
-                        <li>
                             <a class='dropdown-item' href='".base_url('customer/module/'.$customer->prof_id)."'>Dashboard</a>
                         </li>
-                        ".$schedule_action."
                         <li>
-                            <a class='dropdown-item sms-messages' data-id='".$customer->prof_id."' href='javascript:void(0);'>Message</a>
+                            <a class='dropdown-item' href='".('customer/preview_/'.$customer->prof_id)."'>View</a>
                         </li>
+                        ".$edit_action."         
+                        ".$schedule_action."
                         ".$favorite_action."
                         ".$delete_action."
                     </ul>
@@ -1925,6 +1898,9 @@ class Customer extends MY_Controller
     {
         $this->load->model('jobs_model');
         $this->load->model('AcsProperties_model');
+        $this->load->model('Workorder_model');
+        $this->load->model('Jobs_model');
+        $this->load->model('UserCustomerDocfile_model');
 
         $is_allowed = $this->isAllowedModuleAccess(9);
         if (!$is_allowed) {
@@ -1989,11 +1965,42 @@ class Customer extends MY_Controller
             ];
             $this->page_data['contacts'] = $this->general->get_data_with_param($customer_contacts);
         }
+
+        $woSubmittedLatest = [];
+        $jobFinishedLatest = [];
+        $recentDocfile = [];
+        $default_login_value = '';
+        if( $customer ){
+            $woSubmittedLatest = $this->Workorder_model->getRecentByCustomerIdAndStatus($customer->prof_id, 'Submitted');
+            $jobFinishedLatest = $this->Jobs_model->getRecentByCustomerIdAndStatus($customer->prof_id, 'Finished');
+            $recentDocfile     = $this->UserCustomerDocfile_model->getRecentDocfileByCustomerId($customer->prof_id);
+            
+
+            $comb1 = strtoupper(substr(trim($customer->first_name),0,1));
+            $comb2 = strtolower($customer->last_name);
+            $address_number = extractCustomerAddressNumber($customer->mail_add);
+            if( $address_number ){
+                $comb3 = $address_number;
+            }else{
+                if( $customer->customer_no != '' ){
+                    $comb3 = str_replace("-","",$customer->customer_no);
+                    $comb3 = substr(trim($comb3),0,3);
+                }else{
+                    $comb3 = substr(trim($customer->prof_id),0,3);
+                }
+            }
+
+            $default_login_value = $comb1 . $comb2 . $comb3;
+
+        }
         
         $this->page_data['sales_area'] = $this->customer_ad_model->get_all(false, '', 'ASC', 'ac_salesarea', 'sa_id');
         $this->page_data['employees'] = $this->customer_ad_model->get_all(false, '', 'ASC', 'users', 'id');
         $this->page_data['users'] = $this->users_model->getUsers();
-
+        $this->page_data['woSubmittedLatest'] = $woSubmittedLatest;
+        $this->page_data['jobFinishedLatest'] = $jobFinishedLatest;
+        $this->page_data['recentDocfile'] = $recentDocfile;
+        $this->page_data['default_login_value'] = $default_login_value;
         $this->load->view('v2/pages/customer/preview', $this->page_data);
     }
 
@@ -2767,7 +2774,8 @@ class Customer extends MY_Controller
         $this->load->model('Business_model');
         $this->load->model('Invoice_model', 'invoice_model');
         $this->load->library('wizardlib');                
-        
+        $alarm_api_helper = new AlarmApi();
+
         if(!checkRoleCanAccessModule('customer-dashboard', 'read')){
 			show403Error();
 			return false;
@@ -2821,10 +2829,9 @@ class Customer extends MY_Controller
                 $this->page_data['assignedUser'] = $assignedUser;
                 $this->page_data['commission'] = $this->customer_ad_model->getTotalCommission($id);
                 $this->page_data['cust_invoices'] = $this->invoice_model->getAllByCustomerId($id);
-                $this->page_data['profile_info'] = $this->customer_ad_model->get_data_by_id('prof_id', $id, 'acs_profile');
-
+                $profile_info = $this->customer_ad_model->get_data_by_id('prof_id', $id, 'acs_profile');
+                $this->page_data['profile_info'] = $profile_info;
                 $this->page_data['log_info'] = $this->customer_ad_model->getCustomerActivityLogs($id);
-
                 $this->page_data['access_info'] = $this->customer_ad_model->get_data_by_id('fk_prof_id', $id, 'acs_access');
                 $this->page_data['office_info'] = $office_info;
                 $this->page_data['billing_info'] = $this->customer_ad_model->get_data_by_id('fk_prof_id', $id, 'acs_billing');
@@ -2861,6 +2868,26 @@ class Customer extends MY_Controller
 
                 $this->page_data['customer_client_agreements'] = $customer_client_agreements;
                 $this->page_data['customer_documents'] = $customerDocuments;
+
+
+                
+                // search Alarm.com customer
+                if (
+                    strpos($profile_info->status, 'Active w/RAR') !== false ||
+                    strpos($profile_info->status, 'Active w/RMR') !== false ||
+                    strpos($profile_info->status, 'Active w/RQR') !== false ||
+                    strpos($profile_info->status, 'Active w/RYR') !== false ||
+                    strpos($profile_info->status, 'Inactive w/RMM') !== false
+                ) {
+                    $nameKeyword = "{$profile_info->first_name} {$profile_info->last_name}";
+                    $fuzzyKeyword = "{$profile_info->email} {$profile_info->phone_h} {$profile_info->mail_add} {$profile_info->county} {$profile_info->state} {$profile_info->zip_code} {$profile_info->country} {$profile_info->subdivision}";
+                }
+
+                $alarmCustomerDetails = $alarm_api_helper->searchAlarmCustomer($nameKeyword, $fuzzyKeyword);
+                $this->page_data['alarm_info'] = $alarmCustomerDetails;
+
+
+
                 // $this->page_data['esign_documents'] = $this->getCustomerGeneratedEsigns($id);
             } else {
                 redirect(base_url('customer/'));

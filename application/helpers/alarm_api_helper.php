@@ -1,14 +1,16 @@
 <?php
-class AlarmApi
+class AlarmApi extends MY_Model
 {
     public function generateToken()
     {
+
         $token = '';
         $error = '';
 
         $client_id = 'a7fcfa9b-1392-46da-8823-0a200bf5e10f';
         $username  = 'Adialarms.com';
-        $password  = 'cZUj@8Sz3G4#dTk';
+        // $password  = 'cZUj@8Sz3G4#dTk';
+        $password  = 'Chasemyles5$$$$$!';
         
         $post = [
             'client_id' => $client_id,
@@ -37,7 +39,6 @@ class AlarmApi
         } catch (Exception $e) {
             $error = 'Cannot generate token.';
         }
-        
 
         $return = ['token' => $token, 'error' => $error];
         return $return;
@@ -52,7 +53,7 @@ class AlarmApi
         }else{
             $url = 'https://alarmadmin.alarm.com/PartnerApi/v1/customers';
         }
-        
+
         $headers   = [];
         $headers[] = 'Authorization: Bearer '.$token;
 
@@ -410,4 +411,227 @@ class AlarmApi
 
         return $features;
     }
+
+    // Optimized version
+    public function generateAlarmToken()
+    {
+        if (session_status() === PHP_SESSION_NONE) {
+            session_start();
+        }
+
+        if (!empty($_SESSION['alarm_token']) && (time() - ($_SESSION['alarm_token_time'] ?? 0) < 0)) {
+            return $_SESSION['alarm_token'];
+        }
+
+        $credentials = [
+            "client_id" => "a7fcfa9b-1392-46da-8823-0a200bf5e10f",
+            "grant_type" => "password",
+            "username" => "Adialarms.com",
+            "password" => "Chasemyles5$$$$$!",
+        ];
+
+        try {
+            $ch = curl_init('https://alarmadmin.alarm.com/AdminApiAccess/token');
+            curl_setopt_array($ch, [
+                CURLOPT_POST => true,
+                CURLOPT_POSTFIELDS => http_build_query($credentials),
+                CURLOPT_RETURNTRANSFER => true,
+                CURLOPT_TIMEOUT => 10,
+            ]);
+
+            $response = curl_exec($ch);
+            if ($response === false) {
+                throw new Exception('cURL Error: ' . curl_error($ch));
+            }
+
+            $result = json_decode($response);
+            curl_close($ch);
+
+            if (!empty($result->access_token)) {
+                $_SESSION['alarm_token'] = $result->access_token;
+                $_SESSION['alarm_token_time'] = time();
+                return $result->access_token;
+            }
+
+        } catch (Exception $e) {}
+
+        return null;
+    }
+
+    public function getAlarmCustomers($token, $param = [])
+    {
+        $url = "https://alarmadmin.alarm.com/PartnerApi/v1/customers";
+
+        if (!empty($param) && is_array($param)) {
+            $url .= '?' . http_build_query($param);
+        }
+
+        $ch = curl_init();
+        curl_setopt_array($ch, [
+            CURLOPT_URL => $url,
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_HTTPHEADER => [
+                "Authorization: Bearer {$token}",
+                "Content-Type: application/json",
+            ],
+            CURLOPT_CONNECTTIMEOUT => 5,
+            CURLOPT_TIMEOUT => 15,
+            CURLOPT_TCP_FASTOPEN => true,
+            CURLOPT_FOLLOWLOCATION => true,
+            CURLOPT_MAXREDIRS => 3
+        ]);
+
+        return $ch;
+    }
+
+    public function getAlarmCustomerDetails($customer_id, $token, $fields = [])
+    {
+        $url = "https://alarmadmin.alarm.com/PartnerApi/v1/customers/{$customer_id}";
+
+        if (!empty($fields) && is_array($fields)) {
+            $url .= '?fields=' . implode(',', $fields);
+        }
+
+        $ch = curl_init();
+        curl_setopt_array($ch, [
+            CURLOPT_URL => $url,
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_HTTPHEADER => [
+                "Authorization: Bearer {$token}",
+                "Content-Type: application/json",
+            ],
+            CURLOPT_CONNECTTIMEOUT => 5,
+            CURLOPT_TIMEOUT => 15,         
+            CURLOPT_TCP_FASTOPEN => true,  
+            CURLOPT_FOLLOWLOCATION => true,
+            CURLOPT_MAXREDIRS => 3
+        ]);
+
+        return $ch;
+    }
+
+    public function getAlarmCustomerEquipmentDetails($customer_id, $token)
+    {
+        $url = "https://alarmadmin.alarm.com/PartnerApi/v1/customers/{$customer_id}/equipment";
+
+        $ch = curl_init();
+        curl_setopt_array($ch, [
+            CURLOPT_URL => $url,
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_HTTPHEADER => [
+                "Authorization: Bearer {$token}",
+                "Content-Type: application/json",
+            ],
+            CURLOPT_CONNECTTIMEOUT => 5,
+            CURLOPT_TIMEOUT => 15,
+            CURLOPT_TCP_FASTOPEN => true,
+            CURLOPT_FOLLOWLOCATION => true,
+            CURLOPT_MAXREDIRS => 3
+        ]);
+
+        $response = curl_exec($ch);
+
+        if (curl_errno($ch)) {
+            $error = curl_error($ch);
+            curl_close($ch);
+            return ['error' => $error];
+        }
+
+        curl_close($ch);
+        return json_decode($response, true); 
+    }
+
+    public function getAlarmCustomerInfo($customer_id, $token)
+    {
+        $url = "https://alarmadmin.alarm.com/PartnerApi/v1/customers/{$customer_id}";
+
+        $ch = curl_init();
+        curl_setopt_array($ch, [
+            CURLOPT_URL => $url,
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_HTTPHEADER => [
+                "Authorization: Bearer {$token}",
+                "Content-Type: application/json",
+            ],
+            CURLOPT_CONNECTTIMEOUT => 5,
+            CURLOPT_TIMEOUT => 15,
+            CURLOPT_TCP_FASTOPEN => true,
+            CURLOPT_FOLLOWLOCATION => true,
+            CURLOPT_MAXREDIRS => 3
+        ]);
+
+        $response = curl_exec($ch);
+
+        if (curl_errno($ch)) {
+            $error = curl_error($ch);
+            curl_close($ch);
+            return ['error' => $error];
+        }
+
+        curl_close($ch);
+        return json_decode($response, true); 
+    }
+
+
+    public function searchAlarmCustomer($nameSearch, $fuzzySearch)
+    {
+        $this->load->database();
+
+        $searchFields = [
+            'first_name', 'last_name', 'email', 'phone_no',
+            'company_name', 'street1', 'street2', 'city', 'state', 'zip'
+        ];
+
+        if (empty($nameSearch) || empty($fuzzySearch)) {
+            return ['message' => 'Search keywords required'];
+        }
+
+        $normalize = fn($str) => strtolower(preg_replace('/[\s\W]+/', '', $str));
+        $normalizedName  = $normalize($nameSearch);
+        $normalizedFuzzy = $normalize($fuzzySearch);
+
+        $customers = $this->db->get('alarmcom_customers')->result_array();
+        if (empty($customers)) {
+            return ['message' => 'No customer records found'];
+        }
+
+        foreach ($customers as $customer) {
+            $fullName = $normalize(($customer['first_name'] ?? '') . ($customer['last_name'] ?? ''));
+            if (strpos($normalizedName, $fullName) !== false || strpos($fullName, $normalizedName) !== false) {
+                $customer['match_type'] = 'exact_name';
+                $customer['match_score'] = 10;
+                return $customer;
+            }
+        }
+
+        $bestMatch = null;
+        $highestScore = -1;
+
+        foreach ($customers as $customer) {
+            $score = 0;
+
+            foreach ($searchFields as $field) {
+                $value = $normalize($customer[$field] ?? '');
+
+                if (strpos($value, $normalizedFuzzy) !== false) {
+                    $score += 2;
+                } else {
+                    $lev = levenshtein($normalizedFuzzy, $value);
+                    $maxLen = max(strlen($normalizedFuzzy), strlen($value));
+                    $similarity = $maxLen > 0 ? 1 - ($lev / $maxLen) : 0;
+                    $score += $similarity;
+                }
+            }
+
+            if ($score > $highestScore) {
+                $highestScore = $score;
+                $bestMatch = $customer;
+                $bestMatch['match_type'] = 'fuzzy';
+                $bestMatch['match_score'] = round($score, 4);
+            }
+        }
+
+        return $bestMatch ?? ['message' => 'No match found'];
+    }
+
 }

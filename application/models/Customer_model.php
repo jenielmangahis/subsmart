@@ -120,6 +120,28 @@ class Customer_model extends MY_Model
         $query = $this->db->get();
         return $query->result();
     }
+    
+    // get all subscribers
+    public function getAllSubscribersCount()
+    {
+        $company_id = logged('company_id');
+        $dateFrom = "1970-01-01";
+        $dateTo = date('Y-m-d');
+
+        $query = $this->db->query("
+            SELECT
+                COUNT(acs_profile.prof_id) AS total
+            FROM acs_profile
+            LEFT JOIN acs_billing ON acs_billing.fk_prof_id = acs_profile.prof_id
+            WHERE acs_profile.company_id = '{$company_id}' 
+                AND acs_profile.status IN ('Active w/RAR', 'Active w/RQR','Active w/RMR', 'Active w/RYR', 'Inactive w/RMM')
+                AND acs_profile.is_archived = 0
+                AND DATE_FORMAT(acs_billing.bill_start_date, '%Y-%m-%d') >= '{$dateFrom}'
+                AND DATE_FORMAT(acs_billing.bill_start_date, '%Y-%m-%d') <= '{$dateTo}'
+        ");
+        $data = $query->result();
+        return $data[0]->total;
+    }
 
     public function getAllCommercialCustomers($search = null, $company_id, $customer_type, $filter_status = null) {
         $this->db->select('*, acs_billing.mmr AS customer_mmr, concat(acs_profile.mail_add, " ", acs_profile.city, " ", acs_profile.state," , ",acs_profile.zip_code) AS customer_address');

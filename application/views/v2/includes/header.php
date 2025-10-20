@@ -145,9 +145,13 @@ if ($this->session->userdata('usertimezone') == null) {
             background-color: #7367f0 !important;
             color: #fff !important;
         }
-        #sidebar-persons-counter .badge-primary, #sidebar-company-counter .badge-primary{
+        
+        #sidebar-persons-counter .badge-primary, 
+        #sidebar-company-counter .badge-primary,
+        #sidebar-subscribers-counter .badge-primary {
             background-color:#6a4a86 !important;
         }
+
         #quick-customer-search-result-container{
             display: block;
             padding: 10px;
@@ -629,9 +633,6 @@ $newtasks = getTasks();
                                     <div id="notif-badge-count" class="notif-badge-count"></div>
                                 </a>
                                 <div class="dropdown-menu dropdown-list nsm-nav-dropdown" style="max-height: 650px; overflow-y: auto;">
-                                    <div class="list-header">
-                                        <h6 class="dropdown-header fw-bold">Notifications: </h6>
-                                    </div>
                                     <div id="all_notifications_container">
                                         <div class="text-center py-3">
                                             <span class="content-subtitle">No notifications for now.</span>
@@ -645,7 +646,7 @@ $newtasks = getTasks();
                                         <span class="content-subtitle">Clear Notifications</span>
                                     </div>
                                     <div class="list-item" style="float: right; width: 50%; text-align: right;" onclick="location.href='<?php echo site_url(); ?>notifications'">
-                                        <span class="content-subtitle">View All</span>
+                                        <span class="content-subtitle">View All Notification</span>
                                     </div>
                                 </div>
                             </div>

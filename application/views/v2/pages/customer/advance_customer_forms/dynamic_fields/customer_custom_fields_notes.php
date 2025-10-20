@@ -1,7 +1,7 @@
 <div class="nsm-card primary">
     <div class="nsm-card-header">
         <div class="nsm-card-title">
-            <span><i class='bx bx-fw bx-customize'></i> Custom Field</span>
+            <span><i class='bx bx-fw bx-customize'></i> Custom Fields</span>
         </div>
     </div>
     <div class="nsm-card-content" id="custom_field" data-section="custom_field"><hr>

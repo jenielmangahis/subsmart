@@ -113,19 +113,6 @@
                 <input type="text" class="form-control" name="install_code" id="install_code" value="<?php if(isset($alarm_info)){ echo $alarm_info->install_code ?  $alarm_info->install_code : ''; } ?>"/>
             </div>
         </div>
-        <div class="row form_line field-custom-name-container" <?= isCustomerFieldEnabled($companyFormSetting, 'alarm-information', 'mcn') == 0 ? 'style="display:none;"' : ''; ?>>
-            <div class="col-md-6"><?= getCustomerFieldValue($companyFormSetting, 'alarm-information', 'mcn'); ?></div>
-            <div class="col-md-6">
-                <input type="text" class="form-control" name="mcn" id="mcn" value="<?php if(isset($alarm_info)){ echo $alarm_info->mcn !=0 ? $alarm_info->mcn : ''; } ?>"/>
-            </div>
-        </div>
-        <div class="row form_line field-custom-name-container" <?= isCustomerFieldEnabled($companyFormSetting, 'alarm-information', 'scn') == 0 ? 'style="display:none;"' : ''; ?>>
-            <div class="col-md-6"><?= getCustomerFieldValue($companyFormSetting, 'alarm-information', 'scn'); ?></div>
-            <div class="col-md-6">
-                <input type="text" class="form-control" name="scn" id="scn" value="<?php if(isset($alarm_info)){ echo $alarm_info->scn !=0 ? $alarm_info->scn : ''; } ?>"/>
-            </div>
-        </div>
-
         <div class="row form_line field-custom-name-container" <?= isCustomerFieldEnabled($companyFormSetting, 'alarm-information', 'panel_type') == 0 ? 'style="display:none;"' : ''; ?>>
             <div class="col-md-6"><?= getCustomerFieldValue($companyFormSetting, 'alarm-information', 'panel_type'); ?></div>
             <div class="col-md-6">
@@ -192,6 +179,20 @@
             </div>
         </div>
 
+        <div class="row form_line field-custom-name-container" <?= isCustomerFieldEnabled($companyFormSetting, 'alarm-information', 'account_cost') == 0 ? 'style="display:none;"' : ''; ?>>
+            <div class="col-md-6"><?= getCustomerFieldValue($companyFormSetting, 'alarm-information', 'account_cost'); ?></div>
+            <div class="col-md-6">
+                <input type="text" class="form-control" name="account_cost" id="account_cost" value="<?= $alarm_info ? ($alarm_info->account_cost !=0 ? $alarm_info->account_cost : '') : '';  ?>"/>
+            </div>
+        </div>
+
+        <div class="row form_line field-custom-name-container" <?= isCustomerFieldEnabled($companyFormSetting, 'alarm-information', 'pass_thru_cost') == 0 ? 'style="display:none;"' : ''; ?>>
+            <div class="col-md-6"><?= getCustomerFieldValue($companyFormSetting, 'alarm-information', 'pass_thru_cost'); ?></div>
+            <div class="col-md-6">
+                <input type="text" class="form-control" name="pass_thru_cost" id="pass_thru_cost" value="<?= $alarm_info ? ($alarm_info->pass_thru_cost !=0 ? $alarm_info->pass_thru_cost : '') : '';  ?>"/>
+            </div>
+        </div>
+
         <div class="row form_line field-custom-name-container" <?= isCustomerFieldEnabled($companyFormSetting, 'alarm-information', 'otps') == 0 ? 'style="display:none;"' : ''; ?>>
             <div class="col-md-6"><?= getCustomerFieldValue($companyFormSetting, 'alarm-information', 'otps'); ?></div>
             <div class="col-md-6">
@@ -213,20 +214,6 @@
             </div>
         </div>
 
-        <div class="row form_line field-custom-name-container" <?= isCustomerFieldEnabled($companyFormSetting, 'alarm-information', 'account_cost') == 0 ? 'style="display:none;"' : ''; ?>>
-            <div class="col-md-6"><?= getCustomerFieldValue($companyFormSetting, 'alarm-information', 'account_cost'); ?></div>
-            <div class="col-md-6">
-                <input type="text" class="form-control" name="account_cost" id="account_cost" value="<?= $alarm_info ? ($alarm_info->account_cost !=0 ? $alarm_info->account_cost : '') : '';  ?>"/>
-            </div>
-        </div>
-
-        <div class="row form_line field-custom-name-container" <?= isCustomerFieldEnabled($companyFormSetting, 'alarm-information', 'pass_thru_cost') == 0 ? 'style="display:none;"' : ''; ?>>
-            <div class="col-md-6"><?= getCustomerFieldValue($companyFormSetting, 'alarm-information', 'pass_thru_cost'); ?></div>
-            <div class="col-md-6">
-                <input type="text" class="form-control" name="pass_thru_cost" id="pass_thru_cost" value="<?= $alarm_info ? ($alarm_info->pass_thru_cost !=0 ? $alarm_info->pass_thru_cost : '') : '';  ?>"/>
-            </div>
-        </div>
-
         <hr>
         <div class="row form_line field-custom-name-container" <?= isCustomerFieldEnabled($companyFormSetting, 'alarm-information', 'dealer') == 0 ? 'style="display:none;"' : ''; ?>>
             <div class="col-md-6"><?= getCustomerFieldValue($companyFormSetting, 'alarm-information', 'dealer'); ?></div>
@@ -236,6 +223,12 @@
                     <option <?php if(isset($alarm_info)){ if($alarm_info->dealer == "Alarm.com"){ echo 'selected'; } } ?> value="Alarm.com">Alarm.com</option>
                     <option <?php if(isset($alarm_info)){ if($alarm_info->dealer == "AlarmNet"){ echo 'selected'; } } ?> value="AlarmNet">AlarmNet</option>
                 </select>
+            </div>
+        </div>
+        <div class="row form_line field-custom-name-container" <?= isCustomerFieldEnabled($companyFormSetting, 'alarm-information', 'alarm_customer_id') == 0 ? 'style="display:none;"' : ''; ?>>
+            <div class="col-md-6"><?= getCustomerFieldValue($companyFormSetting, 'alarm-information', 'alarm_customer_id'); ?></div>
+            <div class="col-md-6">
+                <input type="text" class="form-control" name="alarm_customer_id" id="alarm_customer_id" value="<?php if(isset($alarm_info)){ echo $alarm_info->alarm_customer_id; } ?>"/>
             </div>
         </div>
         <div class="row form_line field-custom-name-container" <?= isCustomerFieldEnabled($companyFormSetting, 'alarm-information', 'alarm_login') == 0 ? 'style="display:none;"' : ''; ?>>
@@ -249,19 +242,13 @@
                 ?>
                 <input type="text" class="form-control" name="alarm_login" id="alarm_login" value="<?= $alarm_login; ?>"/>
             </div>
-        </div>
-        <div class="row form_line field-custom-name-container" <?= isCustomerFieldEnabled($companyFormSetting, 'alarm-information', 'alarm_customer_id') == 0 ? 'style="display:none;"' : ''; ?>>
-            <div class="col-md-6"><?= getCustomerFieldValue($companyFormSetting, 'alarm-information', 'alarm_customer_id'); ?></div>
-            <div class="col-md-6">
-                <input type="text" class="form-control" name="alarm_customer_id" id="alarm_customer_id" value="<?php if(isset($alarm_info)){ echo $alarm_info->alarm_customer_id; } ?>"/>
-            </div>
-        </div>
-        <div class="row form_line field-custom-name-container" <?= isCustomerFieldEnabled($companyFormSetting, 'alarm-information', 'alarm_cs_account') == 0 ? 'style="display:none;"' : ''; ?>>
+        </div>        
+        <!-- <div class="row form_line field-custom-name-container" <?= isCustomerFieldEnabled($companyFormSetting, 'alarm-information', 'alarm_cs_account') == 0 ? 'style="display:none;"' : ''; ?>>
             <div class="col-md-6"><?= getCustomerFieldValue($companyFormSetting, 'alarm-information', 'alarm_cs_account'); ?></div>
             <div class="col-md-6">
                 <input type="text" class="form-control" name="alarm_cs_account" id="alarm_cs_account" value="<?php if(isset($alarm_info)){ echo $alarm_info->alarm_cs_account; } ?>"/>
             </div>
-        </div>
+        </div> -->
     </div>
 </div>
 

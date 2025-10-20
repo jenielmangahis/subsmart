@@ -228,7 +228,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                   <div class="col-md-6 col-12" style="font-size:16px;">
                       <h4 class="title-border">FROM :</h4>
                       <h4><i class="bx bx-buildings"></i> <?= $company->business_name; ?></h4>
-                      <div class="col-xl-5 ml-0 pl-0">
+                      <div>
                         <span class="ul-text"><?php echo $company->street .'<br />'.$company->city .', '.$company->state .' '.$company->zip; ?></span><br>                        
                         <span class=""><i class='bx bx-envelope'></i> Email: <?= $company->business_email; ?><br />
                         <span class=""><i class='bx bx-phone'></i> Phone: <?= formatPhoneNumber($company->office_phone); ?></span>
@@ -237,18 +237,19 @@ defined('BASEPATH') or exit('No direct script access allowed');
                   <div class="col-md-6 col-12" style="font-size:16px;">
                       <h4 class="title-border">TO :</h4>
                       <h4><i class="bx bx-buildings"></i>  <?= $customer->first_name . ' ' . $customer->last_name; ?></h4>
-                      <div class="">
+                      <div>
                         <span class=""><?= $customer->mail_add . '<br />' . $customer->city.', '. $customer->state .' '. $customer->zip_code;  ?></span><br />
                         <span class=""><i class='bx bx-envelope'></i> Email: <?= $customer->email; ?><br />
                         <span class=""><i class='bx bx-phone'></i> Phone:<?= formatPhoneNumber($customer->phone_m); ?><br />
                       </div>
                   </div>
-                </div>
+                </div>                
                 <div class="row mt-4">
+                  <?php if($contacts) { ?>
                   <div class="col-12 col-md-6">
                     <h6 class="title-border">ADDITIONAL CONTACTS:</h6>
                     <div class="">
-                      <?php if($contacts) { ?>
+                      
                       <?php foreach($contacts as $cont){ ?>
                         <?php 
                           $contact_name = "---";
@@ -261,11 +262,8 @@ defined('BASEPATH') or exit('No direct script access allowed');
                         <h4 style="font-size:18px;"><i class='bx bx-user-circle'></i> <?= $contact_name; ?></h4>
                         <span class=""><i class="bx bx-phone"></i> <?= formatPhoneNumber($cont->phone); ?></span><br /><br />
                       <?php } ?>
-                      <?php } else { ?>
-                        <h4><?= 'None'; ?></h4>
-                      <?php } ?>
-                    </div>
                   </div>
+                  <?php } ?>
                   <div class="col-12 col-md-12">
                     <h6 class="title-border">TERMS AND CONDITIONS :</h6>
                     <span class="workorder-box"><?= $workorder->terms_and_conditions ?? "None"; ?></span>
@@ -410,9 +408,13 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                 $qty = $item->qty > 0 ? $item->qty : 0;
                                 $total_cost = $item->price > 0 ? $item->price : 0;
                                 if( $total_cost > 0 ){
-                                  $unit_cost  = $total_cost / $qty;
+                                  if($qty != 0) {
+                                    $unit_cost = $total_cost / $qty;
+                                  } else {
+                                    $unit_cost = 0;
+                                  }
                                 }else{
-                                  $unit_cost  = 0;
+                                  $unit_cost = 0;
                                 }
                               ?>
                               <tr class="table-items__tr">

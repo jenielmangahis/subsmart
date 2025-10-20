@@ -887,6 +887,7 @@ class Workorder_model extends MY_Model
         $this->db->select('*');
 		$this->db->from('contacts');
 		$this->db->where('customer_id', $customer_id);
+        $this->db->where('name !=', '');
 		$query = $this->db->get();
 		return $query->result();
     }
@@ -2358,6 +2359,13 @@ class Workorder_model extends MY_Model
     public function save_work_order_attachments($data)
     {
         $vendor = $this->db->insert('work_order_attachments', $data);
+	    $insert_id = $this->db->insert_id();
+		return  $insert_id;
+    }
+
+    public function save_work_order_photo($data)
+    {
+        $vendor = $this->db->insert('work_orders_photo', $data);
 	    $insert_id = $this->db->insert_id();
 		return  $insert_id;
     }

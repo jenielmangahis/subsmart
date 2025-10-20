@@ -58,10 +58,18 @@
         <div class="row form_line" <?= isCustomerFieldEnabled($companyFormSetting, 'office-use-information', 'fk_sales_rep_office') == 0 ? 'style="display:none;"' : ''; ?>> 
             <div class="col-md-6"><?= getCustomerFieldValue($companyFormSetting, 'office-use-information', 'fk_sales_rep_office'); ?></div>
             <div class="col-md-6">
+                <?php 
+
+                    $fk_sales_rep_office = $office_info->fk_sales_rep_office ?? 0;
+                    if( $fk_sales_rep_office == 0 && $woSubmittedLatest ){
+                        $fk_sales_rep_office = $woSubmittedLatest->employee_id;
+                    } 
+                    
+                ?>
                 <select id="fk_sales_rep_office" name="fk_sales_rep_office" data-customer-source="dropdown" class="input_select" >
                     <option value="">Select</option>
                     <?php foreach ($users as $user): ?>
-                        <option <?php if(isset($office_info)){ echo $office_info->fk_sales_rep_office ==  $user->id ? 'selected' : ''; } ?> value="<?= $user->id; ?>"><?= $user->FName.' '.$user->LName; ?></option>
+                        <option <?= $user->id == $fk_sales_rep_office ? 'selected="selected"' : ''; ?> value="<?= $user->id; ?>"><?= $user->FName.' '.$user->LName; ?></option>
                         <?= $user->id ?>    
                     <?php endforeach ?>
                 </select>
@@ -77,20 +85,18 @@
                     <?php endforeach ?>
                 </select>
             </div>
-        </div>
-        <?php 
-            $install_date = '';
-            if( $office_info && strtotime($office_info->install_date) > 0 ){
-                $install_date = date("m/d/Y", strtotime($office_info->install_date));
-            }
-        ?>
-        <div class="row form_line" <?= isCustomerFieldEnabled($companyFormSetting, 'office-use-information', 'install_date') == 0 || $install_date == '' ? 'style="display:none;"' : ''; ?>>
+        </div>        
+        <div class="row form_line" <?= isCustomerFieldEnabled($companyFormSetting, 'office-use-information', 'install_date') == 0 ? 'style="display:none;"' : ''; ?>>
             <div class="col-md-6"><?= getCustomerFieldValue($companyFormSetting, 'office-use-information', 'install_date'); ?></div>
             <div class="col-md-6">
                 <?php 
-                    $install_date = '';
+                    $install_date = '';            
                     if( $office_info && strtotime($office_info->install_date) > 0 ){
                         $install_date = date("m/d/Y", strtotime($office_info->install_date));
+                    }else{
+                        if( $woSubmittedLatest && strtotime($woSubmittedLatest->install_date) > 0 ){
+                            $install_date = date("m/d/Y",strtotime($woSubmittedLatest->install_date));
+                        }
                     }
                 ?>
                 <input data-type="office_info_install_date" type="text" class="form-control date_picker" name="install_date" id="" value="<?= $install_date; ?>"/>

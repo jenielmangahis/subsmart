@@ -2,6 +2,22 @@
     <div class="nsm-card-header">
         <div class="nsm-card-title">
             <span><i class='bx bx-fw bx-credit-card'></i>Billing Information</span>
+            <?php 
+                $recurring_end_date = date("Y-m-d");
+                $current_date = date("Y-m-d");
+                if( strtotime($billing_info->recurring_end_date) > 0 ){
+                    $recurring_end_date = date("Y-m-d", strtotime($billing_info->recurring_end_date));
+                }
+
+                $is_recurring_active = '';
+                if( $recurring_end_date > $current_date ){ 
+                    $is_recurring_active = 'checked';
+                }
+            ?>
+            <div class="form-check form-switch float-end">
+                <input class="form-check-input" type="checkbox" role="switch" id="chkRecurringActive" <?= $is_recurring_active; ?> readonly>
+                <label class="form-check-label" for="chkRecurringActive">Recurring Subscription</label>
+            </div>
         </div>
     </div>
     <div class="nsm-card-content"><hr>
@@ -198,7 +214,13 @@
                 Next Billing Date
             </div>
             <div class="col-md-6">
-                <input type="text" class="form-control" value="<?= date("m/d/Y", strtotime($billing_info->next_billing_date)); ?>" disabled="" />
+                <?php 
+                    $next_billing_date = $billing_info->next_billing_date;
+                    if( strtotime($billing_info->next_billing_date) > 0 ){
+                        $next_billing_date = date("m/d/Y", strtotime($billing_info->next_billing_date));
+                    }
+                ?>
+                <input type="text" class="form-control" value="<?= $next_billing_date; ?>" disabled="" />
             </div>
         </div> 
         <?php } ?>
@@ -218,12 +240,12 @@
             <div class="col-md-6">
                 <div class="input-group">
                     <div class="input-group-prepend">
-                        <span class="input-group-text" style="width:35px;" id="">%</span>
+                        <span class="input-group-text" style="width:35px;" id="">$</span>
                     </div>
                     <input type="number" step="any" class="form-control" name="payment_fee" value="<?= isset($billing_info) ? $billing_info->payment_fee : '0.00'; ?>">
                 </div>
             </div>
-        </div>      
+        </div>   
         <?php if(isset($billing_info)): ?>
             <!-- <a href="<?= base_url('customer/subscription_new/'.$this->uri->segment(3)) ?>">
                 <button type="button" class="nsm-button primary"><span class="fa fa-plus"></span> Add Subscription</button>

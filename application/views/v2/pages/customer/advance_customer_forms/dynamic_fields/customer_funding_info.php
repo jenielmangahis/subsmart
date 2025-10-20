@@ -1,4 +1,10 @@
-<div class="nsm-card primary" id="funding-information-container">
+<?php 
+    $is_container_hidden = '';
+    if( isset($alarm_info) && $alarm_info->acct_type == 'In-House' ){
+        $is_container_hidden = 'style="display:none;"';
+    }
+?>
+<div class="nsm-card primary" id="funding-information-container" <?= $is_container_hidden; ?>>
     <div class="nsm-card-header">
         <div class="nsm-card-title">
             <span><i class="bx bx-fw bx-user"></i>Funding Information</span>
@@ -25,6 +31,18 @@
                     <option <?php if(isset($office_info)){ if($office_info->post_install_survey == "Fail"){ echo 'selected'; } } ?> value="Fail">Fail</option>
                     <option <?php if(isset($office_info)){ if($office_info->post_install_survey == "Pending"){ echo 'selected'; } } ?> value="Pending">Pending</option>
                 </select>
+            </div>
+        </div>
+        <div class="row form_line field-custom-name-container" <?= isCustomerFieldEnabled($companyFormSetting, 'alarm-information', 'mcn') == 0 ? 'style="display:none;"' : ''; ?>>
+            <div class="col-md-7"><?= getCustomerFieldValue($companyFormSetting, 'alarm-information', 'mcn'); ?></div>
+            <div class="col-md-5">
+                <input type="text" class="form-control" name="mcn" id="mcn" value="<?php if(isset($alarm_info)){ echo $alarm_info->mcn !=0 ? $alarm_info->mcn : ''; } ?>"/>
+            </div>
+        </div>
+        <div class="row form_line field-custom-name-container" <?= isCustomerFieldEnabled($companyFormSetting, 'alarm-information', 'scn') == 0 ? 'style="display:none;"' : ''; ?>>
+            <div class="col-md-7"><?= getCustomerFieldValue($companyFormSetting, 'alarm-information', 'scn'); ?></div>
+            <div class="col-md-5">
+                <input type="text" class="form-control" name="scn" id="scn" value="<?php if(isset($alarm_info)){ echo $alarm_info->scn !=0 ? $alarm_info->scn : ''; } ?>"/>
             </div>
         </div>
         <hr>
