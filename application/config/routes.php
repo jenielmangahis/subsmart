@@ -115,6 +115,7 @@ $route['customer/_send_email_ledger'] = 'Customer/ajax_send_email_ledger';
 $route['customer/_delete_lead_type'] = 'Customer/ajax_delete_lead_type';
 $route['customer/_archive_selected_leads'] = 'Customer/ajax_archive_selected_leads';
 $route['customer/_archive_lead'] = 'Customer/ajax_archive_lead';
+$route['customer/_payment_method_images'] = 'Customer/ajax_payment_method_images';
 
 // Credit Bureau
 $route['credit_bureau/list'] = 'Credit_Bureau/index';

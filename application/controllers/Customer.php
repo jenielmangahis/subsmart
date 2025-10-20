@@ -2772,8 +2772,10 @@ class Customer extends MY_Controller
         $this->load->model('CustomerStatementClaim_model');
         $this->load->model('CustomerSignature_model');
         $this->load->model('Business_model');
+        $this->load->model('CustomerGroup_model');
         $this->load->model('Invoice_model', 'invoice_model');
         $this->load->library('wizardlib');                
+
         $alarm_api_helper = new AlarmApi();
 
         if(!checkRoleCanAccessModule('customer-dashboard', 'read')){
@@ -2826,16 +2828,19 @@ class Customer extends MY_Controller
                     $assignedUser = $this->Users_model->getUserByID($office_info->technician);
                 }
 
+                $profile_info = $this->customer_ad_model->get_data_by_id('prof_id', $id, 'acs_profile');
+                $customerGroup = $this->CustomerGroup_model->getById($profile_info->customer_group_id);
+                $alarm_info    = $this->customer_ad_model->get_data_by_id('fk_prof_id', $id, 'acs_alarm');
                 $this->page_data['assignedUser'] = $assignedUser;
                 $this->page_data['commission'] = $this->customer_ad_model->getTotalCommission($id);
                 $this->page_data['cust_invoices'] = $this->invoice_model->getAllByCustomerId($id);
-                $profile_info = $this->customer_ad_model->get_data_by_id('prof_id', $id, 'acs_profile');
                 $this->page_data['profile_info'] = $profile_info;
+                $this->page_data['customerGroup'] = $customerGroup;
                 $this->page_data['log_info'] = $this->customer_ad_model->getCustomerActivityLogs($id);
                 $this->page_data['access_info'] = $this->customer_ad_model->get_data_by_id('fk_prof_id', $id, 'acs_access');
                 $this->page_data['office_info'] = $office_info;
                 $this->page_data['billing_info'] = $this->customer_ad_model->get_data_by_id('fk_prof_id', $id, 'acs_billing');
-                $this->page_data['alarm_info'] = $this->customer_ad_model->get_data_by_id('fk_prof_id', $id, 'acs_alarm');
+                $this->page_data['alarm_info'] = $alarm_info;
                 $this->page_data['audit_info'] = $this->customer_ad_model->get_data_by_id('fk_prof_id', $id, 'acs_audit_import');
                 // $this->page_data['minitab'] = $this->uri->segment(5);
                 //$this->page_data['task_info'] = $this->taskhub_model->getAllNotCompletedTasksByCustomerId($id);
@@ -2884,9 +2889,7 @@ class Customer extends MY_Controller
                 }
 
                 $alarmCustomerDetails = $alarm_api_helper->searchAlarmCustomer($nameKeyword, $fuzzyKeyword);
-                $this->page_data['alarm_info'] = $alarmCustomerDetails;
-
-
+                $this->page_data['alarm_info_api'] = $alarmCustomerDetails;
 
                 // $this->page_data['esign_documents'] = $this->getCustomerGeneratedEsigns($id);
             } else {
@@ -2922,18 +2925,18 @@ class Customer extends MY_Controller
 
             //Alarm
             $alarm_customer_info = [];
-            if( $customer->alarm_id > 0 ){
-                $alarmApi  = new AlarmApi();
-                $token     = $alarmApi->generateToken();    
-                if( $token['token'] ){
-                    $customerAlarm = $alarmApi->getCustomerInformation($customer->alarm_id, [], $token['token']);
-                    if( $customerAlarm['customer'] ){                        
-                        $alarm_customer_info['dealer']     = $alarmApi->getDealerInformation($customerAlarm['customer']->dealerId, $token['token']);                    
-                        $alarm_customer_info['customer']   = $customerAlarm['customer'];
-                        $alarm_customer_info['equipments'] = $alarmApi->getCustomerEquipmentList($customer->alarm_id, $token['token']);
-                    }                    
-                }                
-            }
+            // if( $customer->alarm_id > 0 ){
+            //     $alarmApi  = new AlarmApi();
+            //     $token     = $alarmApi->generateToken();    
+            //     if( $token['token'] ){
+            //         $customerAlarm = $alarmApi->getCustomerInformation($customer->alarm_id, [], $token['token']);
+            //         if( $customerAlarm['customer'] ){                        
+            //             $alarm_customer_info['dealer']     = $alarmApi->getDealerInformation($customerAlarm['customer']->dealerId, $token['token']);                    
+            //             $alarm_customer_info['customer']   = $customerAlarm['customer'];
+            //             $alarm_customer_info['equipments'] = $alarmApi->getCustomerEquipmentList($customer->alarm_id, $token['token']);
+            //         }                    
+            //     }                
+            // }
 
             $ringCentralAccount = $this->RingCentralAccounts_model->getByCompanyId($cid);
             $twilioAccount  = $this->TwilioAccounts_model->getByCompanyId($cid);
@@ -13451,5 +13454,17 @@ class Customer extends MY_Controller
         $post = $this->input->post();
         $this->page_data['item_details'] = $this->customer_ad_model->get_customer_item_details($post['customer_id']);
         $this->load->view('v2/pages/customer/ajax_load_item_details', $this->page_data);
+    }
+
+    public function ajax_payment_method_images()
+    {
+        $this->load->model('AcsCustomerDocument_model');
+
+        $post = $this->input->post();
+        if( $post['customer_id'] > 0 ){
+            $documents = $this->AcsCustomerDocument_model->getAllByCustomerIdAndDocumentType($post['customer_id'], 'payment_method');
+            $this->page_data['documents'] = $documents;
+            $this->load->view('v2/pages/customer/ajax_payment_method_images', $this->page_data);
+        }
     }
 }
