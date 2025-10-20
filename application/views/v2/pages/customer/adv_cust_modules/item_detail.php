@@ -115,7 +115,7 @@
                     <div class="equipmentCategories table-responsive d-flex">
                         <div class="equipmentItem text-center px-3 mb-2" equipment-type="notes">
                             <span class="opacity-50">
-                                <i class="<?php echo $equipmentIcons[notes]; ?>"></i>
+                                <i class="<?php echo $equipmentIcons['notes']; ?>"></i>
                                 <br>
                                 <small class="fw-bold">Notes</small>
                             </span>
@@ -143,49 +143,49 @@
                         </div>
                         <div class="equipmentItem text-center px-3 mb-2" equipment-type="peripheral">
                             <span class="opacity-50">
-                                <i class="<?php echo $equipmentIcons[peripheral]; ?>"></i>
+                                <i class="<?php echo $equipmentIcons['peripheral']; ?>"></i>
                                 <br>
                                 <small class="fw-bold">Perif</small>
                             </span>
                         </div>
                         <div class="equipmentItem text-center px-3 mb-2" equipment-type="video">
                             <span class="opacity-50">
-                                <i class="<?php echo $equipmentIcons[video]; ?>"></i>
+                                <i class="<?php echo $equipmentIcons['video']; ?>"></i>
                                 <br>
                                 <small class="fw-bold">Video</small>
                             </span>
                         </div>
                         <div class="equipmentItem text-center px-3 mb-2" equipment-type="access_point">
                             <span class="opacity-50">
-                                <i class="<?php echo $equipmentIcons[access_point]; ?>"></i>
+                                <i class="<?php echo $equipmentIcons['access_point']; ?>"></i>
                                 <br>
                                 <small class="fw-bold">AP</small>
                             </span>
                         </div>
                         <div class="equipmentItem text-center px-3 mb-2" equipment-type="zwave">
                             <span class="opacity-50">
-                                <i class="<?php echo $equipmentIcons[zwave]; ?>"></i>
+                                <i class="<?php echo $equipmentIcons['zwave']; ?>"></i>
                                 <br>
                                 <small class="fw-bold">ZWave</small>
                             </span>
                         </div>
                         <div class="equipmentItem text-center px-3 mb-2" equipment-type="liftmaster">
                             <span class="opacity-50">
-                                <i class="<?php echo $equipmentIcons[liftmaster]; ?>"></i>
+                                <i class="<?php echo $equipmentIcons['liftmaster']; ?>"></i>
                                 <br>
                                 <small class="fw-bold">LiftMaster</small>
                             </span>
                         </div>
                         <div class="equipmentItem text-center px-3 mb-2" equipment-type="geo">
                             <span class="opacity-50">
-                                <i class="<?php echo $equipmentIcons[geo]; ?>"></i>
+                                <i class="<?php echo $equipmentIcons['geo']; ?>"></i>
                                 <br>
                                 <small class="fw-bold">Geo</small>
                             </span>
                         </div>
                         <div class="equipmentItem text-center px-3 mb-2" equipment-type="voice">
                             <span class="opacity-50">
-                                <i class="<?php echo $equipmentIcons[voice]; ?>"></i>
+                                <i class="<?php echo $equipmentIcons['voice']; ?>"></i>
                                 <br>
                                 <small class="fw-bold">Voice</small>
                             </span>
@@ -200,7 +200,7 @@
                         <div class="collapse show" id="communicationCollapse">
                             <div class="px-3 border-top">
                                 <div class="d-flex align-items-center mt-3 mb-3 gap-3">
-                                    <i class="<?php echo $equipmentIcons[communication]; ?> fs-4 text-muted"></i>
+                                    <i class="<?php echo $equipmentIcons['communication']; ?> fs-4 text-muted"></i>
                                     <div class="d-flex flex-column">
                                         <small class="text-muted upperEquipmentDetail"><?php echo $alarm_info['modeminfo_network']; ?></small>
                                         <strong class="text-muted">Cellular</strong>
@@ -220,7 +220,7 @@
                         <div class="collapse show" id="panelCollapse">
                             <div class="px-3 border-top">
                                 <div class="d-flex align-items-center mt-3 mb-3 gap-3">
-                                    <i class="<?php echo $equipmentIcons[panel]; ?> fs-4 text-muted"></i>
+                                    <i class="<?php echo $equipmentIcons['panel']; ?> fs-4 text-muted"></i>
                                     <div class="d-flex flex-column">
                                         <small class="text-muted upperEquipmentDetail"><?php echo $alarm_info['panel_version']; ?></small>
                                         <strong class="text-muted panelDeviceName">Panel</strong>
@@ -333,7 +333,7 @@
                         sensorHTML += `
                             <div class="px-3 border-top">
                                 <div class="d-flex align-items-center mt-3 mb-3 gap-3">
-                                    <i class="<?php echo $equipmentIcons[sensor]; ?> fs-4 text-muted"></i>
+                                    <i class="<?php echo $equipmentIcons['sensor']; ?> fs-4 text-muted"></i>
                                     <div class="d-flex flex-column">
                                         <small class="text-muted upperEquipmentDetail">${sensorDevice[index].deviceName}</small>
                                         <strong class="text-muted">${sensorDevice[index].webSiteDeviceName}</strong>
@@ -362,7 +362,7 @@
                         peripheralHTML += `
                             <div class="px-3 border-top">
                                 <div class="d-flex align-items-center mt-3 mb-3 gap-3">
-                                    <i class="<?php echo $equipmentIcons[peripheral]; ?> fs-4 text-muted"></i>
+                                    <i class="<?php echo $equipmentIcons['peripheral']; ?> fs-4 text-muted"></i>
                                     <div class="d-flex flex-column">
                                         <small class="text-muted upperEquipmentDetail">${peripheralDevice[index].deviceName}</small>
                                         <strong class="text-muted">${peripheralDevice[index].webSiteDeviceName}</strong>
@@ -394,7 +394,7 @@
                         videoHTML += `
                             <div class="px-3 border-top">
                                 <div class="d-flex align-items-center mt-3 mb-3 gap-3">
-                                    <i class="<?php echo $equipmentIcons[video]; ?> fs-4 text-muted"></i>
+                                    <i class="<?php echo $equipmentIcons['video']; ?> fs-4 text-muted"></i>
                                     <div class="d-flex flex-column">
                                         <small class="text-muted upperEquipmentDetail">${deviceName}</small>
                                         <strong class="text-muted">${videoDevice[index].webSiteDeviceName}</strong>
@@ -426,7 +426,7 @@
                         access_pointHTML += `
                             <div class="px-3 border-top">
                                 <div class="d-flex align-items-center mt-3 mb-3 gap-3">
-                                    <i class="<?php echo $equipmentIcons[access_point]; ?> fs-4 text-muted"></i>
+                                    <i class="<?php echo $equipmentIcons['access_point']; ?> fs-4 text-muted"></i>
                                     <div class="d-flex flex-column">
                                         <small class="text-muted upperEquipmentDetail">${deviceName}</small>
                                         <strong class="text-muted">${access_pointDevice[index].webSiteDeviceName}</strong>
@@ -458,7 +458,7 @@
                         zwaveHTML += `
                             <div class="px-3 border-top">
                                 <div class="d-flex align-items-center mt-3 mb-3 gap-3">
-                                    <i class="<?php echo $equipmentIcons[zwave]; ?> fs-4 text-muted"></i>
+                                    <i class="<?php echo $equipmentIcons['zwave']; ?> fs-4 text-muted"></i>
                                     <div class="d-flex flex-column">
                                         <small class="text-muted upperEquipmentDetail">${deviceName}</small>
                                         <strong class="text-muted">${zwaveDevice[index].webSiteDeviceName}</strong>
@@ -490,7 +490,7 @@
                         liftmasterHTML += `
                             <div class="px-3 border-top">
                                 <div class="d-flex align-items-center mt-3 mb-3 gap-3">
-                                    <i class="<?php echo $equipmentIcons[liftmaster]; ?> fs-4 text-muted"></i>
+                                    <i class="<?php echo $equipmentIcons['liftmaster']; ?> fs-4 text-muted"></i>
                                     <div class="d-flex flex-column">
                                         <small class="text-muted upperEquipmentDetail">${deviceName}</small>
                                         <strong class="text-muted">${liftmasterDevice[index].webSiteDeviceName}</strong>
@@ -522,7 +522,7 @@
                         geoHTML += `
                             <div class="px-3 border-top">
                                 <div class="d-flex align-items-center mt-3 mb-3 gap-3">
-                                    <i class="<?php echo $equipmentIcons[geo]; ?> fs-4 text-muted"></i>
+                                    <i class="<?php echo $equipmentIcons['geo']; ?> fs-4 text-muted"></i>
                                     <div class="d-flex flex-column">
                                         <small class="text-muted upperEquipmentDetail">${deviceName}</small>
                                         <strong class="text-muted">${geoDevice[index].webSiteDeviceName}</strong>
@@ -551,7 +551,7 @@
                         voiceHTML += `
                             <div class="px-3 border-top">
                                 <div class="d-flex align-items-center mt-3 mb-3 gap-3">
-                                    <i class="<?php echo $equipmentIcons[voice]; ?> fs-4 text-muted"></i>
+                                    <i class="<?php echo $equipmentIcons['voice']; ?> fs-4 text-muted"></i>
                                     <div class="d-flex flex-column">
                                         <small class="text-muted upperEquipmentDetail">${voiceDevice[index].deviceName}</small>
                                         <strong class="text-muted">${voiceDevice[index].webSiteDeviceName}</strong>
