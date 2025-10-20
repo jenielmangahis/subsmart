@@ -12,6 +12,10 @@
 .payment-method-container .content-title{
     font-size:13px;
 }
+.purple-label{    
+    color: #6a4a86;
+    font-weight:bold;
+}
 </style>
 <div class="row page-content g-0">
     <div class="col-12 mb-3">

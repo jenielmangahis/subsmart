@@ -5897,3 +5897,12 @@ function formatCustomerId($customer_id){
 
     return $customer_id;
 }
+
+function isAdmin(){
+    $is_admin = false;
+    if (logged('user_type') == 7){
+        $is_admin = true;
+    }
+
+    return $is_admin;
+}

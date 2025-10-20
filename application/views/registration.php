@@ -145,11 +145,11 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 		margin-right: 10px;
 	}	
 	.terms{
-		overflow-y: scroll;
+		/* overflow-y: scroll;
 		height: 500px;
 		width: 100%;
 		border: 1px solid #DDD;
-		padding: 10px;
+		padding: 10px; */
 	}
 	.terms-heading{
 		display: inline-block;

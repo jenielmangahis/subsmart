@@ -100,7 +100,7 @@
                         </ul>
 
                         <div class="mt-5">
-                            <label class="content-title">Calendar Event Color</label>
+                            <label class="content-title setting-header mb-2">Calendar Event Color</label>
                             <label class="content-subtitle mb-2" style="display:block;width: 100%;">
                                 Define event color to easily identity an event.
                                 <a class="nsm-button primary btn-add-event-color" href="javascript:void(0);" style="float:right;font-size: 11px;"><i class='bx bx-plus'></i> Add Event Color</a>
@@ -121,6 +121,22 @@
                                     </li>
                                     <?php $row_count++; ?>
                                 <?php } ?>
+                            </ul>
+                        </div>
+
+                        <div class="mt-5">
+                            <label class="content-title setting-header mb-2">Calendar Appointment Number</label>
+                            <label class="content-subtitle mb-2" style="display:block;width: 100%;">
+                                Set the prefix and the next auto-generated number.
+                            </label>
+                            <div class="row g-2">
+                                <div class="col-12 col-md-3">
+                                    <input <?= $disabled; ?> type="text" placeholder="Prefix" name="prefix" class="nsm-field form-control" value="" required="" />
+                                </div>
+                                <div class="col-12 col-md-9">
+                                    <input <?= $disabled; ?>  type="text" placeholder="Next Number" name="base" class="nsm-field form-control" value="" required="" />
+                                </div>
+                            </div>
                             </ul>
                         </div>
 
