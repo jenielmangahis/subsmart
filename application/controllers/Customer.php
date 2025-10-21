@@ -2765,8 +2765,8 @@ class Customer extends MY_Controller
     }
 
     public function module($id = null)
-    {        
-        $this->load->helper(array('sms_helper', 'alarm_api_helper'));        
+    {   
+        $this->load->helper(array('sms_helper', 'alarm_api_helper', 'paypal_helper'));        
         $this->load->model('Clients_model');
         $this->load->model('taskhub_model');
         $this->load->model('CustomerStatementClaim_model');
@@ -13654,4 +13654,28 @@ class Customer extends MY_Controller
 
         echo json_encode($return);
     }    
+
+    public function ajax_capture_payment_form()
+    {        
+        // Stripe SDK
+        include APPPATH . 'libraries/stripe/init.php';  
+
+        $post = $this->input->post();
+        $total_cost = $post['processing_fee'] + $post['payment_amount'];
+        $stripe_amount  = number_format(($total_cost*100) , 0, '', '');
+
+        $stripe = new Stripe\StripeClient(STRIPE_SECRET_KEY);
+        $result = $stripe->paymentIntents->create([
+            'amount' => $stripe_amount,
+            'currency' => 'usd',
+            'automatic_payment_methods' => ['enabled' => true],
+        ]);
+
+        $stripe_client_secret = $result->client_secret;
+        $this->page_data['total_cost'] = $total_cost;
+        $this->page_data['processing_fee'] = $post['processing_fee'];
+        $this->page_data['payment_amount'] = $post['payment_amount'];
+        $this->page_data['stripe_client_secret']    = $stripe_client_secret;
+        $this->load->view('v2/pages/customer/ajax_capture_payment_form', $this->page_data);
+    }
 }
