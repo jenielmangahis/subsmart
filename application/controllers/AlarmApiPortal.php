@@ -448,8 +448,6 @@ class AlarmApiPortal extends MY_Controller {
         echo json_encode($groupedDevices);
     }
 
-
-
     public function searchAlarmCustomer()
     {
         $this->load->helper(['alarm_api_helper']);
