@@ -13569,4 +13569,57 @@ class Customer extends MY_Controller
         $return = ['balance' => $balance];
         echo json_encode($return);
     }
+
+    public function ajax_upload_payment_method_image()
+    {
+        $this->load->model('AcsCustomerDocument_model');
+
+        $is_success = 1;
+        $msg = 'Cannot save data';
+
+        $post = $this->input->post();
+        $document = $_FILES['admin_image'];        
+
+        $filePath = FCPATH . (implode(DIRECTORY_SEPARATOR, ['uploads', 'customerdocuments', $post['customer_id']]) . DIRECTORY_SEPARATOR);
+        if (!file_exists($filePath)) {
+            mkdir($filePath, 0777, true);
+        }
+
+        $maxSizeInMB = 8;
+        if ($document['size'] > self::ONE_MB * $maxSizeInMB) {
+            $msg = "Maximum file size is less than {$maxSizeInMB}MB";   
+            $is_success = 0;         
+        }
+
+        if( $is_success ){
+            $tempName = $document['tmp_name'];
+            $fileName = $document['name'];
+            $fileExtension = pathinfo($fileName, PATHINFO_EXTENSION);
+            $fileName = uniqid($post['customer_id']) . str_replace('.tmp', '', basename($tempName)) . '.' . $fileExtension;
+            $data = [
+                'file_name' => $fileName,
+                'customer_id' => $post['customer_id'],
+                'document_type' => 'payment_method',
+                'document_label' => 'Payment Method',
+                'is_predefined' => 1,
+                'date_created' => date("Y-m-d H:i:s")
+            ];
+
+            $this->AcsCustomerDocument_model->create($data);
+
+            $is_success = 1;
+            $msg = '';
+
+            //Activity Logs
+            $activity_name = 'Company Reason : Created company reason ' . $post['company_reason']; 
+            createActivityLog($activity_name);
+        }
+ 
+        $return = [
+            'is_success' => $is_success,
+            'msg' => $msg
+        ];
+
+        echo json_encode($return);
+    }
 }
