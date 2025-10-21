@@ -2645,7 +2645,7 @@ function total_invoice_amount($invoices)
         // if ($invoice->invoice_totals) {
             // $totals = unserialize($invoice->invoice_totals);
             // $grand_total += floatval($totals['grand_total']);
-            $grand_total += intval($invoice->grand_total);
+            $grand_total += floatval($invoice->grand_total);
         // }
     }
 
@@ -5884,4 +5884,25 @@ function extractCustomerAddressNumber($addressString) {
         return $matches[0]; 
     }
     return null; 
+}
+
+function formatCustomerId($customer_id){ 
+
+    if (logged('user_type') != 7 && $customer_id != '') {
+        $maskedCharacter = '*';
+        $remainingString = substr($customer_id, 2);
+        $maskedPrefix = str_repeat($maskedCharacter, 2);
+        $customer_id = $maskedPrefix . $remainingString;
+    }
+
+    return $customer_id;
+}
+
+function isAdmin(){
+    $is_admin = false;
+    if (logged('user_type') == 7){
+        $is_admin = true;
+    }
+
+    return $is_admin;
 }

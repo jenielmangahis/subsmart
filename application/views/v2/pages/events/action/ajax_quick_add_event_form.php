@@ -119,6 +119,9 @@
     .autocomplete-container {
         position: relative;
     }
+    .geoapify-autocomplete-input {     
+        width: 100% !important;
+    }
 </style>
 <div class="row page-content g-0">        
     <div class="col-lg-12 mb-3">
@@ -131,53 +134,33 @@
                     <hr>
                     <div class="nsm-card-content">
                         <div class="row mb-3">
-                            <div class="col-lg-12">
+                            <div class="col-6">
                                 <div class="form-group">
                                     <div class="row g-3 align-items-center mb-3">
-                                        <div class="col-lg-2">
+                                        <div class="col-2">
                                             <h6>From:</h6>
                                         </div>
-                                        <div class="col-lg-5">
+                                        <div class="col-5">
                                             <input required type="date" name="start_date" id="start_date" class="form-control" value="<?= date("Y-m-d", strtotime($default_date)); ?>">
                                         </div>
-                                        <div class="col-lg-5">
-                                            <select required id="start_time" name="start_time" class="form-control">
-                                                <option value selected disabled>Start time</option>
-                                                <?php for($x=0;$x<time_availability(0,TRUE);$x++){ ?>
-                                                <option value="<?php echo time_availability($x); ?>"><?php echo time_availability($x); ?></option>
-                                                <?php } ?>
-                                            </select>
+                                        <div class="col-5">
+                                            <input type="time" name="start_time" class="form-control" />
                                         </div>
                                     </div>
                                     <div class="row g-3 align-items-center">
-                                        <div class="col-lg-2">
+                                        <div class="col-2">
                                             <h6>To:</h6>
                                         </div>
-                                        <div class="col-lg-5">
+                                        <div class="col-5">
                                             <input required type="date" name="end_date" id="end_date" class="form-control mr-2" value="<?= date("Y-m-d", strtotime($default_date)) ?>">
                                         </div>
-                                        <div class="col-lg-5">
-                                            <select required id="end_time" name="end_time" class="form-control">
-                                                <option value selected disabled>End time</option>
-                                                <?php for($x=0;$x<time_availability(0,TRUE);$x++){ ?>
-                                                <option value="<?php echo time_availability($x); ?>"><?php echo time_availability($x); ?></option>
-                                                <?php } ?>
-                                            </select>
+                                        <div class="col-5">
+                                            <input type="time" name="end_time" class="form-control" />
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                        <div class="row mb-3">
-                            <div class="col-lg-12">
-                                <div class="form-group">
-                                    <h6>Attendees</h6>
-                                    <select required id="event_employee_id" name="employee_id[]" class="form-control" multiple="multiple"></select>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row mb-3">
-                            <div class="col-lg-12">
+                            <div class="col-6">
                                 <div class="color-box-custom">
                                     <h6>Event Color on Calendar</h6>
                                     <ul id="EVENT_COLOR_LIST">
@@ -197,6 +180,14 @@
                         </div>
                         <div class="row mb-3">
                             <div class="col-lg-12">
+                                <div class="form-group">
+                                    <h6>Attendees</h6>
+                                    <select required id="event_employee_id" name="employee_id[]" class="form-control" multiple="multiple"></select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-12 col-md-6">
                                 <h6>Customer Reminder Notification</h6>
                                 <select required id="customer_reminder" name="customer_reminder_notification" class="form-control">
                                         <?php foreach($optionsCustomerNotifications as $key => $value){ ?>
@@ -204,9 +195,7 @@
                                         <?php } ?>     
                                 </select>
                             </div>
-                        </div>
-                        <div class="row mb-3">
-                            <div class="col-lg-12">
+                            <div class="col-12 col-md-6">
                                 <h6>Time Zone</h6>                                
                                 <select required id="inputState" name="timezone" class="form-control">                                    
                                     <?php foreach (config_item('calendar_timezone') as $key => $zone) { ?>
@@ -218,28 +207,28 @@
                             </div>
                         </div>
                         <div class="row mb-3">
-                            <div class="col-lg-12">
+                            <div class="col-12">
                                 <h6>Location</h6>
                                 <div id="autocomplete" class="autocomplete-container"></div>
                                 <input required id="event_address" value="" name="event_address" class="form-control" type="hidden" placeholder="Enter a location" />
                             </div>
                         </div>
                         <div class="row mb-3">
-                            <div class="col-lg-12">
+                            <div class="col-12">
                                 <h6>URL Link</h6>
                                 <input required type="url" name="url_link" placeholder="https://www.domain.com" class="form-control checkDescription" value="">
                             </div>
                         </div>
                         <div class="row mb-3">
-                            <div class="col-lg-12">
+                            <div class="col-12">
                                 <h6>Private Notes</h6>
                                 <textarea required name="private_notes" cols="50" style="width: 100%;margin-bottom: 8px;height:54px;" id="note_txt" class="form-control input"></textarea>
                             </div>
                         </div>
 
                         <div class="row mb-3">
-                            <div class="col-lg-6 mb-3">
-                                <h6>Event Type</h6><a class="SHORTCUT_LINK" href="<?php echo base_url('events/event_types'); ?>">+ Manage Event Type</a>
+                            <div class="col-6 mb-3">
+                                <h6>Event Type</h6>
                                 <select required id="event_type_option" name="event_types" class="form-control">
                                     <option selected hidden disabled value>- Select Event Type -</option>
                                     <?php if(!empty($job_types)): ?>
@@ -249,8 +238,8 @@
                                     <?php endif; ?>
                                 </select>
                             </div>
-                            <div class="col-lg-6 mb-3">
-                                <h6>Event Tag</h6><a class="SHORTCUT_LINK" href="<?php echo base_url('events/event_tags'); ?>">+ Manage Event Tag</a>
+                            <div class="col-6 mb-3">
+                                <h6>Event Tag</h6>
                                 <select required id="event_tags_option" name="event_tags" class="form-control">
                                     <option selected hidden disabled value>- Select Event Tag -</option>
                                     <?php if(!empty($job_tags)): ?>
@@ -262,7 +251,7 @@
                             </div>
                         </div>
                         <div class="row mb-3">
-                            <div class="col-lg-12">
+                            <div class="col-12">
                                 <h6>Description of Event</h6>
                                 <textarea required name="event_description" class="form-control"></textarea>
                             </div>

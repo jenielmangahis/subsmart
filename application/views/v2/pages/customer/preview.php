@@ -1,5 +1,4 @@
 <?php include viewPath('v2/includes/header'); ?>
-
 <div class="row page-content g-0">
     <div class="col-12">
         <div class="nsm-page">
@@ -226,16 +225,23 @@
                         </div>
                     </div>
                 </div>
-                <div class="row">
+                <div class="row cards-container" data-masonry='{"percentPosition": true }'>
                     <div class="col-12 col-md-4 mb-2">
                         <?php include viewPath('v2/pages/customer/advance_customer_forms/preview_customer_info'); ?>
                     </div>                    
                     <div class="col-12 col-md-4 mb-2">
-                        <?php include viewPath('v2/pages/customer/advance_customer_forms/preview_office_info'); ?>
                         <?php include viewPath('v2/pages/customer/advance_customer_forms/preview_funding_info'); ?>
                     </div>
-                    <div class="col-12 col-md-4 mb-2">
+                     <div class="col-12 col-md-4 mb-2">
                        <?php include viewPath('v2/pages/customer/advance_customer_forms/preview_alarm_info'); ?>
+                    </div>
+                    <?php if( logged('industry_type') != 'Alarm Industry' ){ ?>
+                    <div class="col-12 col-md-4 mb-2">
+                        <?php include viewPath('v2/pages/customer/advance_customer_forms/preview_billing_info'); ?>                        
+                    </div>
+                    <?php } ?>
+                    <div class="col-12 col-md-4 mb-2">
+                        <?php include viewPath('v2/pages/customer/advance_customer_forms/preview_office_info'); ?>                        
                     </div>
                     <?php if( logged('industry_type') != 'Alarm Industry' ){ ?>
                     <div class="col-12 col-md-4 mb-2">
@@ -251,6 +257,7 @@
     </div>
 </div>
 
+<script src="<?=base_url('assets/js/v2/masonry.pkgd.min.js');?>"></script>
 <script src="<?=base_url('assets/js/customer/components/FieldCustomName.js');?>"></script>
 <script src="<?= base_url("assets/js/printThis.js") ?>"></script> 
 

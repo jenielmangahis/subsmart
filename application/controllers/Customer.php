@@ -2772,8 +2772,10 @@ class Customer extends MY_Controller
         $this->load->model('CustomerStatementClaim_model');
         $this->load->model('CustomerSignature_model');
         $this->load->model('Business_model');
+        $this->load->model('CustomerGroup_model');
         $this->load->model('Invoice_model', 'invoice_model');
         $this->load->library('wizardlib');                
+
         $alarm_api_helper = new AlarmApi();
 
         if(!checkRoleCanAccessModule('customer-dashboard', 'read')){
@@ -2826,16 +2828,19 @@ class Customer extends MY_Controller
                     $assignedUser = $this->Users_model->getUserByID($office_info->technician);
                 }
 
+                $profile_info = $this->customer_ad_model->get_data_by_id('prof_id', $id, 'acs_profile');
+                $customerGroup = $this->CustomerGroup_model->getById($profile_info->customer_group_id);
+                $alarm_info    = $this->customer_ad_model->get_data_by_id('fk_prof_id', $id, 'acs_alarm');
                 $this->page_data['assignedUser'] = $assignedUser;
                 $this->page_data['commission'] = $this->customer_ad_model->getTotalCommission($id);
                 $this->page_data['cust_invoices'] = $this->invoice_model->getAllByCustomerId($id);
-                $profile_info = $this->customer_ad_model->get_data_by_id('prof_id', $id, 'acs_profile');
                 $this->page_data['profile_info'] = $profile_info;
+                $this->page_data['customerGroup'] = $customerGroup;
                 $this->page_data['log_info'] = $this->customer_ad_model->getCustomerActivityLogs($id);
                 $this->page_data['access_info'] = $this->customer_ad_model->get_data_by_id('fk_prof_id', $id, 'acs_access');
                 $this->page_data['office_info'] = $office_info;
                 $this->page_data['billing_info'] = $this->customer_ad_model->get_data_by_id('fk_prof_id', $id, 'acs_billing');
-                $this->page_data['alarm_info'] = $this->customer_ad_model->get_data_by_id('fk_prof_id', $id, 'acs_alarm');
+                $this->page_data['alarm_info'] = $alarm_info;
                 $this->page_data['audit_info'] = $this->customer_ad_model->get_data_by_id('fk_prof_id', $id, 'acs_audit_import');
                 // $this->page_data['minitab'] = $this->uri->segment(5);
                 //$this->page_data['task_info'] = $this->taskhub_model->getAllNotCompletedTasksByCustomerId($id);
@@ -2876,17 +2881,14 @@ class Customer extends MY_Controller
                     strpos($profile_info->status, 'Active w/RAR') !== false ||
                     strpos($profile_info->status, 'Active w/RMR') !== false ||
                     strpos($profile_info->status, 'Active w/RQR') !== false ||
-                    strpos($profile_info->status, 'Active w/RYR') !== false ||
-                    strpos($profile_info->status, 'Inactive w/RMM') !== false
+                    strpos($profile_info->status, 'Active w/RYR') !== false
                 ) {
                     $nameKeyword = "{$profile_info->first_name} {$profile_info->last_name}";
                     $fuzzyKeyword = "{$profile_info->email} {$profile_info->phone_h} {$profile_info->mail_add} {$profile_info->county} {$profile_info->state} {$profile_info->zip_code} {$profile_info->country} {$profile_info->subdivision}";
                 }
 
                 $alarmCustomerDetails = $alarm_api_helper->searchAlarmCustomer($nameKeyword, $fuzzyKeyword);
-                $this->page_data['alarm_info'] = $alarmCustomerDetails;
-
-
+                $this->page_data['alarmcom_info'] = $alarmCustomerDetails;
 
                 // $this->page_data['esign_documents'] = $this->getCustomerGeneratedEsigns($id);
             } else {
@@ -2922,18 +2924,18 @@ class Customer extends MY_Controller
 
             //Alarm
             $alarm_customer_info = [];
-            if( $customer->alarm_id > 0 ){
-                $alarmApi  = new AlarmApi();
-                $token     = $alarmApi->generateToken();    
-                if( $token['token'] ){
-                    $customerAlarm = $alarmApi->getCustomerInformation($customer->alarm_id, [], $token['token']);
-                    if( $customerAlarm['customer'] ){                        
-                        $alarm_customer_info['dealer']     = $alarmApi->getDealerInformation($customerAlarm['customer']->dealerId, $token['token']);                    
-                        $alarm_customer_info['customer']   = $customerAlarm['customer'];
-                        $alarm_customer_info['equipments'] = $alarmApi->getCustomerEquipmentList($customer->alarm_id, $token['token']);
-                    }                    
-                }                
-            }
+            // if( $customer->alarm_id > 0 ){
+            //     $alarmApi  = new AlarmApi();
+            //     $token     = $alarmApi->generateToken();    
+            //     if( $token['token'] ){
+            //         $customerAlarm = $alarmApi->getCustomerInformation($customer->alarm_id, [], $token['token']);
+            //         if( $customerAlarm['customer'] ){                        
+            //             $alarm_customer_info['dealer']     = $alarmApi->getDealerInformation($customerAlarm['customer']->dealerId, $token['token']);                    
+            //             $alarm_customer_info['customer']   = $customerAlarm['customer'];
+            //             $alarm_customer_info['equipments'] = $alarmApi->getCustomerEquipmentList($customer->alarm_id, $token['token']);
+            //         }                    
+            //     }                
+            // }
 
             $ringCentralAccount = $this->RingCentralAccounts_model->getByCompanyId($cid);
             $twilioAccount  = $this->TwilioAccounts_model->getByCompanyId($cid);
@@ -13526,4 +13528,65 @@ class Customer extends MY_Controller
         $this->page_data['item_details'] = $this->customer_ad_model->get_customer_item_details($post['customer_id']);
         $this->load->view('v2/pages/customer/ajax_load_item_details', $this->page_data);
     }
+
+    public function saveCustomerEquipment()
+    {
+        $input = $this->input->post();
+
+        $equipmentData = [
+            'customer_id' => $input['addEquipmentCustomerId'] ?? null,
+            'equipment'   => $input['addEquipmentName'] ?? null,
+            'category'    => $input['addEquipmentCategory'] ?? null,
+            'device_type' => $input['addEquipmentDeviceType'] ?? null,
+            'serial_no'   => $input['addEquipmentSerialNo'] ?? null,
+            'model_no'    => $input['addEquipmentModelNo'] ?? null,
+            'qty'         => $input['addEquipmentQty'] ?? null,
+            'status'      => $input['addEquipmentStatus'] ?? null,
+        ];
+
+        $inserted = $this->general->add_($equipmentData, 'customer_equipment');
+
+        echo ($inserted) ? 1 : 0;
+    }
+
+    public function getCustomerEquipment()
+    {
+        $customer_id = $this->input->post('customer_id');
+
+        $this->db->select('customer_equipment.id, customer_equipment.customer_id, customer_equipment.equipment, customer_equipment.category, customer_equipment.device_type, customer_equipment.serial_no, customer_equipment.model_no, customer_equipment.qty, customer_equipment.status, customer_equipment.date_created, customer_equipment.date_updated');
+        $this->db->from('customer_equipment');
+        $this->db->where('customer_equipment.customer_id', "$customer_id");
+        $query = $this->db->get();
+        $data = $query->result();
+
+        echo json_encode($data);
+    }
+
+    public function ajax_ledger_balance_amount()
+    {
+        $this->load->model('Payment_records_model');
+        $this->load->model('Invoice_model');
+        
+        $post = $this->input->post();
+        
+        $invoices   = $this->Invoice_model->getAllByCustomerIdAndCompanyId($post['customer_id'], $company_id);
+        $g_total_payment = 0;
+        $g_total_income  = 0;
+        foreach( $invoices as $invoice ){
+            $payments = $this->Payment_records_model->getAllByInvoiceId($invoice->id);            
+            $total_payment = 0;
+            $payment_method = '---';
+            foreach( $payments as $p ){
+                $total_payment += $p->invoice_amount;
+            }
+
+            $g_total_income += $invoice->grand_total;
+            $g_total_payment += $total_payment;
+        }
+        
+        $balance = $g_total_income - $g_total_payment;
+
+        $return = ['balance' => $balance];
+        echo json_encode($return);
+    }    
 }

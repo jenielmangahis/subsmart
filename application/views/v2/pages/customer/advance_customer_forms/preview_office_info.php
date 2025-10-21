@@ -40,6 +40,12 @@
                 <label class="content-subtitle"><?= isset($office_info) && !empty($office_info->credit_score) ?  $office_info->credit_score : '---' ?></label>
             </div>
             <div class="col-12 col-md-6">
+                <label class="content-subtitle fw-bold">Verification</label>
+            </div>
+            <div class="col-12 col-md-6">
+                <label class="content-subtitle"><?= isset($office_info) && !empty($office_info->verification) ?  $office_info->verification : '---' ?></label>
+            </div>
+            <div class="col-12 col-md-6">
                 <label class="content-subtitle fw-bold">Pay History</label>
             </div>
             <div class="col-12 col-md-6">
@@ -114,13 +120,7 @@
             </div>
             <div class="col-12 col-md-6">
                 <label class="content-subtitle"><?= isset($office_info) && !empty($office_info->lead_source) ?  $office_info->lead_source : '---' ?></label>
-            </div>
-            <div class="col-12 col-md-6">
-                <label class="content-subtitle fw-bold">Verification</label>
-            </div>
-            <div class="col-12 col-md-6">
-                <label class="content-subtitle"><?= isset($office_info) && !empty($office_info->verification) ?  $office_info->verification : '---' ?></label>
-            </div>
+            </div>            
             <?php 
                 $is_container_hidden = '';
                 if( isset($alarm_info) && $alarm_info->acct_type == 'In-House' ){

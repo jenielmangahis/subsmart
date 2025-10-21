@@ -41,7 +41,17 @@
                 </select>
             </div>
         </div>
-
+        <div class="row form_line" <?= isCustomerFieldEnabled($companyFormSetting, 'office-use-information', 'verification') == 0 ? 'style="display:none;"' : ''; ?>>
+            <div class="col-md-6"><?= getCustomerFieldValue($companyFormSetting, 'office-use-information', 'verification'); ?></div>
+            <div class="col-md-6">
+                <select id="verification" name="verification" data-customer-source="dropdown" class="input_select" >
+                    <option <?php if(isset($office_info)){ if($office_info->verification == "TrunsUnion"){ echo 'selected'; } } ?> value="TransUnion">TransUnion</option>
+                    <option <?php if(isset($office_info)){ if($office_info->verification == "Experian"){ echo 'selected'; } } ?>  value="Experian">Experian </option>
+                    <option <?php if(isset($office_info)){ if($office_info->verification == "Equifax"){ echo 'selected'; } } ?>  value="Equifax">Equifax  </option>
+                    <option <?php if(isset($office_info)){ if($office_info->verification == "Others"){ echo 'selected'; } } ?>  value="Others">Others  </option>
+                </select>
+            </div>
+        </div>     
         <div class="row form_line" <?= isCustomerFieldEnabled($companyFormSetting, 'office-use-information', 'pay_history') == 0 ? 'style="display:none;"' : ''; ?>>
             <div class="col-md-6"><?= getCustomerFieldValue($companyFormSetting, 'office-use-information', 'pay_history'); ?></div>
             <div class="col-md-6">
@@ -59,12 +69,10 @@
             <div class="col-md-6"><?= getCustomerFieldValue($companyFormSetting, 'office-use-information', 'fk_sales_rep_office'); ?></div>
             <div class="col-md-6">
                 <?php 
-
                     $fk_sales_rep_office = $office_info->fk_sales_rep_office ?? 0;
                     if( $fk_sales_rep_office == 0 && $woSubmittedLatest ){
                         $fk_sales_rep_office = $woSubmittedLatest->employee_id;
                     } 
-                    
                 ?>
                 <select id="fk_sales_rep_office" name="fk_sales_rep_office" data-customer-source="dropdown" class="input_select" >
                     <option value="">Select</option>
@@ -133,18 +141,7 @@
                     ?>
                 </select>
             </div>
-        </div>
-        <div class="row form_line" <?= isCustomerFieldEnabled($companyFormSetting, 'office-use-information', 'verification') == 0 ? 'style="display:none;"' : ''; ?>>
-            <div class="col-md-6"><?= getCustomerFieldValue($companyFormSetting, 'office-use-information', 'verification'); ?></div>
-            <div class="col-md-6">
-                <select id="verification" name="verification" data-customer-source="dropdown" class="input_select" >
-                    <option <?php if(isset($office_info)){ if($office_info->verification == "TrunsUnion"){ echo 'selected'; } } ?> value="TransUnion">TransUnion</option>
-                    <option <?php if(isset($office_info)){ if($office_info->verification == "Experian"){ echo 'selected'; } } ?>  value="Experian">Experian </option>
-                    <option <?php if(isset($office_info)){ if($office_info->verification == "Equifax"){ echo 'selected'; } } ?>  value="Equifax">Equifax  </option>
-                    <option <?php if(isset($office_info)){ if($office_info->verification == "Others"){ echo 'selected'; } } ?>  value="Others">Others  </option>
-                </select>
-            </div>
-        </div>        
+        </div>           
         <!--<div class="row">
             <div class="col-md-6">
                 Rep Tiered Upfront Bonus

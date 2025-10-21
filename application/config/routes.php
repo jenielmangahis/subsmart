@@ -115,6 +115,9 @@ $route['customer/_send_email_ledger'] = 'Customer/ajax_send_email_ledger';
 $route['customer/_delete_lead_type'] = 'Customer/ajax_delete_lead_type';
 $route['customer/_archive_selected_leads'] = 'Customer/ajax_archive_selected_leads';
 $route['customer/_archive_lead'] = 'Customer/ajax_archive_lead';
+$route['customer/_payment_method_images'] = 'Customer/ajax_payment_method_images';
+
+$route['customer/_ledger_invoice'] = 'Customer/ajax_customer_ledger_invoice';
 
 $route['customer/_ledger_invoice'] = 'Customer/ajax_customer_ledger_invoice';
 
@@ -2302,6 +2305,7 @@ $route['customers/_archive_selected_customers'] = 'Customer/ajax_archive_selecte
 $route['customers/_with_selected_add_to_favorites'] = 'Customer/ajax_with_selected_add_to_favorites';
 $route['customers/_delete_all_archived_customers'] = 'Customer/ajax_delete_all_archived_customers';
 $route['customer/leads/export_list'] = 'Customer/customer_leads_export';
+$route['customer/_ledger_balance_amount'] = 'Customer/ajax_ledger_balance_amount';
 
 //Benchmark for Testing
 $route['benchmark/test_customer_subscription'] = 'Benchmark/test_customer_subscription';

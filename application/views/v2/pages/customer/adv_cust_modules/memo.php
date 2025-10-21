@@ -2,7 +2,7 @@
     <div class="nsm-card nsm-grid">
         <div class="nsm-card-header d-block">
             <div class="nsm-card-title">
-                <span>Memo</span>
+                <span>Notes</span>
             </div>
         </div>
         <div class="nsm-card-content">
@@ -12,7 +12,7 @@
                         <textarea name="memo_txt" id="memo_txt" disabled readonly class="nsm-field form-control" rows="7"><?= isset($profile_info) ? $profile_info->notes : ''; ?></textarea>
                         <div class="memo-update-tools mt-3 text-end" style="display: none;">
                             <button class="nsm-button btn-sm m-0 me-2" id="save_memo">
-                                Save Memo
+                                Save Notes
                             </button>
                             <button class="nsm-button btn-sm error m-0" id="memo_cancel">
                                 Cancel
@@ -25,12 +25,12 @@
                         <div class="row g-2">
                             <div class="col-12 col-md-4">
                                 <button role="button" class="nsm-button w-100 ms-0" id="edit_memo">
-                                    <i class='bx bx-fw bx-edit'></i> Edit Memo
+                                    <i class='bx bx-fw bx-edit'></i> Edit Notes
                                 </button>
                             </div>
                             <div class="col-12 col-md-4">
                                 <button role="button" class="nsm-button w-100 ms-0" id="clear_memo">
-                                    <i class='bx bx-fw bx-eraser'></i> Clear Memo
+                                    <i class='bx bx-fw bx-eraser'></i> Clear Notes
                                 </button>
                             </div>
                             <div class="col-12 col-md-4">

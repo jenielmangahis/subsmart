@@ -188,12 +188,19 @@ div#controls div#call-controls div#volume-indicators > div {
 #CUSTOMER_LOG_TABLE.dataTable, #CUSTOMER_LOG_TABLE.dataTable th, #CUSTOMER_LOG_TABLE.dataTable td {
     box-sizing: border-box;
 }
+.balance-red{
+    color : #721c24;
+}
+.balance-green{
+    color:#155724;
+}
 </style>
 <div class="col-12 col-md-4" data-id="<?= $id ?>" id="<?= $id ?>">
     <div class="nsm-card nsm-grid">
         <div class="nsm-card-header d-block">
             <div class="nsm-card-title">
                 <span>Profile</span>
+                <span class="float-end">Balance : <span id="customer-balance-amount">$0.00</span></span>
             </div>
         </div>
         <div class="nsm-card-content">
@@ -209,8 +216,12 @@ div#controls div#call-controls div#volume-indicators > div {
                                 ?>
                                 </span>
                             <?php else: ?>
-                                <span><?= ucwords($profile_info->first_name[0]) . ucwords($profile_info->last_name[0]) ?></span>
-                            <?php endif; ?>
+                                <?php 
+                                    $profile_info->first_name = trim($profile_info->first_name);
+                                    $profile_info->last_name  = trim($profile_info->last_name);
+                                ?>
+                                <span><?= ucwords(trim($profile_info->first_name[0])) . ucwords(trim($profile_info->last_name[0])) ?></span>
+                            <?php endif; ?>                            
                         </div>
 
                         <div class="row w-100">
@@ -221,8 +232,8 @@ div#controls div#call-controls div#volume-indicators > div {
                                     <?php else: ?>
                                         <?= $profile_info->first_name . ' ' . $profile_info->last_name ?>
                                     <?php endif; ?>    
-                                </span>
-                                <span class="content-subtitle d-block"><?= $profile_info->email ?></span>
+                                </span>                                
+                                <span class="content-subtitle d-block mt-1" style="font-size:14px;">ID# : <?= formatCustomerId($profile_info->customer_no) ?> </span>
                             </div>
                             <div class="col-12 col-md-6 text-end">
                                 <?php
@@ -244,12 +255,62 @@ div#controls div#call-controls div#volume-indicators > div {
                                         break;
                                 endswitch;
                                 ?>
-                                <span class="nsm-badge <?= $badge ?>"><?= !is_null($profile_info->status) ? $profile_info->status : 'Pending'; ?></span>
-                                <span class="content-subtitle d-block"><?= formatPhoneNumber($profile_info->phone_m); ?></span>
+                                <span class="nsm-badge <?= $badge ?>"><?= $profile_info->status != '' ? $profile_info->status : 'Pending'; ?></span>                                
                             </div>
                         </div>
                     </div>
                 </div>
+            </div>
+            <div class="row pt-1 mt-5">
+                <div class="col-4 mb-1">
+                    <h6><i class='bx bx-calendar'></i> Date of Birth</h6>
+                    <p class="text-muted"><?= $profile_info->date_of_birth != '' && strtotime($profile_info->date_of_birth) > 0 ? date("m/d/Y",strtotime($profile_info->date_of_birth)) : '---'; ?></p>
+                </div>
+                <div class="col-4 mb-1">
+                    <h6><i class='bx bx-mobile-alt' ></i> Phone #</h6>
+                    <p class="text-muted"><?= $profile_info->phone_m != '' ? formatPhoneNumber($profile_info->phone_m) : '---'; ?></p>
+                </div>
+                <div class="col-4 mb-1">
+                    <h6><i class='bx bx-envelope'></i> Email Address</h6>
+                    <p class="text-muted"><?= $profile_info->email != '' ? $profile_info->email : '---'; ?></p>
+                </div>
+                <div class="col-4 mb-1">
+                    <h6><i class='bx bx-id-card'></i> CS Account #</h6>
+                    <p class="text-muted"><?= $alarm_info->alarm_cs_account != '' ? $alarm_info->alarm_cs_account : '---'; ?></p>
+                </div>
+                <div class="col-4 mb-1">
+                    <h6><i class='bx bx-id-card'></i> SSN</h6>
+                    <p class="text-muted">
+                        <?php 
+                            if (logged('user_type') == 7) {
+                                if ($profile_info->ssn) {
+                                    $ssn = $profile_info->ssn; 
+                                } else {
+                                    $ssn = "&mdash;";
+                                }
+                            }else{
+                                if ($profile_info->ssn) {
+                                    $ssn = maskString($profile_info->ssn); 
+                                    //$ssn = $profile_info->ssn; 
+                                } else {
+                                    $ssn = "---";
+                                }
+                            }
+                            echo $ssn;
+                        ?>
+                    </p>
+                </div>
+                <div class="col-4 mb-1">
+                    <h6><i class='bx bx-id-card'></i> Customer Group</h6>
+                    <p class="text-muted"><?= $customerGroup ? $customerGroup->name : '---'; ?></p>
+                </div>
+                <div class="col-12 mb-1">
+                    <h6><i class='bx bx-map-pin'></i> Address</h6>
+                    <p class="text-muted" style="margin-bottom:1px;"><?= $profile_info->mail_add; ?></p>
+                    <p class="text-muted"><?= $profile_info->city . ', ' . $profile_info->state . ' ' . $profile_info->zip_code; ?></p>
+                </div>                
+            </div>
+            <div class="row mt-5">
                 <div class="col-12 col-md-5">
                     <a role="button" class="nsm-button btn-sm m-0 me-2" onclick="window.open('<?= base_url('/customer/preview/'.$profile_info->prof_id) ?>', '_blank', 'location=yes,height=1080,width=1500,scrollbars=yes,status=yes');">
                         View Profile
@@ -257,26 +318,8 @@ div#controls div#call-controls div#volume-indicators > div {
                     <a role="button" class="nsm-button btn-sm m-0 me-2"  onclick="window.open('<?= base_url('/customer/add_advance/'.$profile_info->prof_id) ?>', '_blank', 'location=yes,height=1080,width=1500,scrollbars=yes,status=yes');">
                         Edit Profile
                     </a>
-                    <a role="button" class="nsm-button btn-sm m-0 me-2" id="btn-customer-signature">
-                        Signature
-                    </a>
-                </div>                
-                <div class="col-12 col-md-7 text-end">
-                    <div class="form-check d-inline-block me-3">
-                        <input class="form-check-input" type="checkbox" value="1" id="notify_by_sms" name="notify_by_sms">
-                        <label class="form-check-label" for="notify_by_sms">
-                            Notify by SMS
-                        </label>
-                    </div>
-                    <div class="form-check d-inline-block">
-                        <input class="form-check-input" type="checkbox" value="1" id="notify_by_email" name="notify_by_email">
-                        <label class="form-check-label" for="notify_by_email">
-                            Notify by Email
-                        </label>
-                    </div>
-                </div>
-                
-                <div class="col-12 col-md-12">
+                </div>  
+                <div class="col-12 col-md-12 mt-4">
                     <div class="nsm-card">
                         <div class="nsm-card-header d-block">
                             <div class="nsm-card-title">
@@ -313,6 +356,18 @@ div#controls div#call-controls div#volume-indicators > div {
                     </div>
                 </div>
 
+            </div>
+            <div class="row mt-5">
+                    <div class="col-12 col-md-6">
+                        <button class="nsm-button primary w-100 ms-0 mt-2" onclick="window.open('<?= base_url('customer/credit_industry/' . $this->uri->segment(3)); ?>', '_blank', 'location=yes,height=1080,width=1500,scrollbars=yes,status=yes');">
+                            <i class='bx bx-fw bx-calendar-edit' ></i> Schedule Service
+                        </button>
+                    </div>
+                    <div class="col-12 col-md-6">
+                        <button class="nsm-button primary w-100 ms-0 mt-2" onclick="window.open('<?= base_url('invoice/add?cus_id=' . $customer_id); ?>', '_blank', 'location=yes,height=1080,width=1500,scrollbars=yes,status=yes');">
+                            <i class='bx bx-plus bx-fw'></i> Create Invoice
+                        </button>
+                    </div>
             </div>
         </div>
     </div>
@@ -423,6 +478,31 @@ $(document).ready(function() {
         initSignatureModal(); 
         $('#modal-customer-signature').modal('show');
     });
+
+    load_customer_ledger_balance_amount();
+    function load_customer_ledger_balance_amount(){
+        let customer_id = "<?= $cus_id; ?>";
+        let url = base_url + 'customer/_ledger_balance_amount';
+        $.ajax({
+            type: "POST",
+            url: url,
+            data: {
+                customer_id: customer_id
+            },
+            dataType:'json',
+            success: function(result) {
+                let ledger_balance = parseFloat(result.balance);
+                if( ledger_balance > 0 ){                    
+                    $('#customer-balance-amount').addClass('balance-red').html('$' + ledger_balance.toFixed(2));
+                }else{
+                    $('#customer-balance-amount').addClass('balance-green').html('$' + ledger_balance.toFixed(2));
+                }
+            },
+            beforeSend: function(){
+                $('#customer-balance-amount').html('<span class="bx bx-loader bx-spin"></span>');
+            }
+        });
+    }
 
     function initSignatureModal() {
         const $modal = document.getElementById('modal-customer-signature');
