@@ -296,6 +296,33 @@
         </div>
     </div>
 </div>
+
+<div class="modal fade nsm-modal fade" id="modal-alarm-share-employee" tabindex="-1" aria-labelledby="modal-alarm-share-employee-modal_label" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header">
+                <span class="modal-title content-title">Share Alarm Information to Employees</span>
+                <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
+            </div>
+            <div class="modal-body">
+                <form id="frm-alarm-share-to-employees" method="POST">
+                    <div class="row g-3">
+                        <div class="col-md-12 form-group">
+                            <label for="ticket-appointment-user" class="block-label"><b>Share to</b></label>
+                            <select class="form-control nsm-field form-select" name="users[]" id="alarm-share-to-users" multiple="multiple" required>
+                            </select>
+                        </div>  
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="nsm-button" data-bs-dismiss="modal">Cancel</button>
+                <button type="submit" class="nsm-button primary" id="update-appointment-btn" form="frm-alarm-share-to-employees">Send</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <div class="modal fade nsm-modal fade" id="modal-view-alarm-customer-info" data-source="" tabindex="-1" aria-labelledby="modal-quick-view-upcoming-schedule-label" aria-hidden="true">
     <div class="modal-dialog modal-lg modal-dialog-centered">        
         <div class="modal-content">
@@ -342,7 +369,60 @@ $(function(){
     });
 
     $('#btn-share-to-employees').on('click', function(){
+        $('#modal-alarm-share-employee').modal('show');
+    });
 
+    $('#alarm-share-to-users').select2({
+        ajax: {
+            url: base_url + 'autocomplete/_company_users',
+            dataType: 'json',
+            delay: 250,                
+            data: function(params) {
+                return {
+                    q: params.term,
+                    page: params.page
+                };
+            },
+            processResults: function(data, params) {
+                params.page = params.page || 1;
+
+                return {
+                    results: data,
+                };
+            },
+            /*formatResult: function(item) {
+                return '<div>' + item.FName + ' ' + item.LName + '<br />test<small>' + item.email + '</small></div>';
+            },*/
+            cache: true
+        },
+        dropdownParent: $("#modal-alarm-share-employee"),
+        placeholder: 'Select Users',
+        minimumInputLength: 0,
+        templateResult: formatRepoUser,
+        templateSelection: formatRepoSelectionUser
+    });
+
+    function formatRepoUser(repo) {
+        if (repo.loading) {
+            return repo.text;
+        }
+
+        // var $container = $(
+        //     '<div><div class="autocomplete-left"><img class="autocomplete-img" src="' + repo.user_image + '" /></div><div class="autocomplete-right">' + repo.FName + ' ' + repo.LName + '<br /><small>' + repo.email + '</small></div></div>'
+        // );
+        var $container = $(
+            '<div>' + repo.FName + ' ' + repo.LName + '<br /><small>' + repo.email + '</small></div></div>'
+        );
+
+        return $container;
+    }
+
+    function formatRepoSelectionUser(repo) {
+        return (repo.FName) ? repo.FName + ' ' + repo.LName : repo.text;
+    }
+
+    $('#frm-alarm-share-to-employees').on('submit', function(e){
+        e.preventDefault();
     });
 
     $('.btn-alarm-api-system-check').on('click', function(){
