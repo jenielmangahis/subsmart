@@ -2228,10 +2228,11 @@ $route['tickets/_delete_plan_type'] = 'Tickets/ajax_delete_plan_type';
 
 //Customer Dashboard
 $route['customer/download_document/(:any)?'] = 'CustomerDashboardQuickActions/downloadDocument/$1';
-$route['customer/_delete_client_agreement']  = 'CustomerDashboardQuickActions/ajaxDeleteClientAgreement';
+$route['customer/_delete_client_agreement']  = 'CustomerDashboardQuickActions/ajaxDeleteCustomerDocument';
 $route['customer/_get_document_archives']  = 'CustomerDashboardQuickActions/ajaxGetDocumentArchives';
 $route['customer/_restore_archived_document']  = 'CustomerDashboardQuickActions/ajaxRestoreArchivedDocument';
 $route['customer/_save_signature']  = 'Customer/ajax_save_signature';
+$route['customer/_delete_site_photos']  = 'CustomerDashboardQuickActions/ajaxDeleteCustomerDocument';
 
 //Customer
 $route['customer/_restore_archived']    = 'Customer/ajax_restore_archived';
