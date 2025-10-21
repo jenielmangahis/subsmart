@@ -2881,15 +2881,14 @@ class Customer extends MY_Controller
                     strpos($profile_info->status, 'Active w/RAR') !== false ||
                     strpos($profile_info->status, 'Active w/RMR') !== false ||
                     strpos($profile_info->status, 'Active w/RQR') !== false ||
-                    strpos($profile_info->status, 'Active w/RYR') !== false ||
-                    strpos($profile_info->status, 'Inactive w/RMM') !== false
+                    strpos($profile_info->status, 'Active w/RYR') !== false
                 ) {
                     $nameKeyword = "{$profile_info->first_name} {$profile_info->last_name}";
                     $fuzzyKeyword = "{$profile_info->email} {$profile_info->phone_h} {$profile_info->mail_add} {$profile_info->county} {$profile_info->state} {$profile_info->zip_code} {$profile_info->country} {$profile_info->subdivision}";
                 }
 
                 $alarmCustomerDetails = $alarm_api_helper->searchAlarmCustomer($nameKeyword, $fuzzyKeyword);
-                $this->page_data['alarm_info_api'] = $alarmCustomerDetails;
+                $this->page_data['alarmcom_info'] = $alarmCustomerDetails;
 
                 // $this->page_data['esign_documents'] = $this->getCustomerGeneratedEsigns($id);
             } else {
@@ -13530,6 +13529,39 @@ class Customer extends MY_Controller
         $this->load->view('v2/pages/customer/ajax_load_item_details', $this->page_data);
     }
 
+    public function saveCustomerEquipment()
+    {
+        $input = $this->input->post();
+
+        $equipmentData = [
+            'customer_id' => $input['addEquipmentCustomerId'] ?? null,
+            'equipment'   => $input['addEquipmentName'] ?? null,
+            'category'    => $input['addEquipmentCategory'] ?? null,
+            'device_type' => $input['addEquipmentDeviceType'] ?? null,
+            'serial_no'   => $input['addEquipmentSerialNo'] ?? null,
+            'model_no'    => $input['addEquipmentModelNo'] ?? null,
+            'qty'         => $input['addEquipmentQty'] ?? null,
+            'status'      => $input['addEquipmentStatus'] ?? null,
+        ];
+
+        $inserted = $this->general->add_($equipmentData, 'customer_equipment');
+
+        echo ($inserted) ? 1 : 0;
+    }
+
+    public function getCustomerEquipment()
+    {
+        $customer_id = $this->input->post('customer_id');
+
+        $this->db->select('customer_equipment.id, customer_equipment.customer_id, customer_equipment.equipment, customer_equipment.category, customer_equipment.device_type, customer_equipment.serial_no, customer_equipment.model_no, customer_equipment.qty, customer_equipment.status, customer_equipment.date_created, customer_equipment.date_updated');
+        $this->db->from('customer_equipment');
+        $this->db->where('customer_equipment.customer_id', "$customer_id");
+        $query = $this->db->get();
+        $data = $query->result();
+
+        echo json_encode($data);
+    }
+
     public function ajax_payment_method_images()
     {
         $this->load->model('AcsCustomerDocument_model');
@@ -13540,7 +13572,7 @@ class Customer extends MY_Controller
             $this->page_data['documents'] = $documents;
             $this->load->view('v2/pages/customer/ajax_payment_method_images', $this->page_data);
         }
-    }
+    }    
 
     public function ajax_ledger_balance_amount()
     {
@@ -13568,7 +13600,7 @@ class Customer extends MY_Controller
 
         $return = ['balance' => $balance];
         echo json_encode($return);
-    }
+    }    
 
     public function ajax_upload_payment_method_image()
     {
@@ -13621,5 +13653,5 @@ class Customer extends MY_Controller
         ];
 
         echo json_encode($return);
-    }
+    }    
 }
