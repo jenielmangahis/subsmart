@@ -11526,8 +11526,8 @@ class Workorder extends MY_Controller
                             $acsc_data = array(
                                 'customer_id'      => $customer_id,
                                 'file_name'        => $attachment_photo,
-                                'document_type'    => 'client_agreement',
-                                'document_label'   => 'Client Agreement',
+                                'document_type'    => 'site_photos',
+                                'document_label'   => 'Site Photos',
                                 'is_predefined'    => 0,
                                 'is_active'        => 1,
                                 'date_created'     => date("Y-m-d H:i:s")
