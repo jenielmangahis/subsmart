@@ -13562,6 +13562,18 @@ class Customer extends MY_Controller
         echo json_encode($data);
     }
 
+    public function ajax_payment_method_images()
+    {
+        $this->load->model('AcsCustomerDocument_model');
+
+        $post = $this->input->post();
+        if( $post['customer_id'] > 0 ){
+            $documents = $this->AcsCustomerDocument_model->getAllByCustomerIdAndDocumentType($post['customer_id'], 'payment_method');
+            $this->page_data['documents'] = $documents;
+            $this->load->view('v2/pages/customer/ajax_payment_method_images', $this->page_data);
+        }
+    }    
+
     public function ajax_ledger_balance_amount()
     {
         $this->load->model('Payment_records_model');
@@ -13587,6 +13599,59 @@ class Customer extends MY_Controller
         $balance = $g_total_income - $g_total_payment;
 
         $return = ['balance' => $balance];
+        echo json_encode($return);
+    }    
+
+    public function ajax_upload_payment_method_image()
+    {
+        $this->load->model('AcsCustomerDocument_model');
+
+        $is_success = 1;
+        $msg = 'Cannot save data';
+
+        $post = $this->input->post();
+        $document = $_FILES['admin_image'];        
+
+        $filePath = FCPATH . (implode(DIRECTORY_SEPARATOR, ['uploads', 'customerdocuments', $post['customer_id']]) . DIRECTORY_SEPARATOR);
+        if (!file_exists($filePath)) {
+            mkdir($filePath, 0777, true);
+        }
+
+        $maxSizeInMB = 8;
+        if ($document['size'] > self::ONE_MB * $maxSizeInMB) {
+            $msg = "Maximum file size is less than {$maxSizeInMB}MB";   
+            $is_success = 0;         
+        }
+
+        if( $is_success ){
+            $tempName = $document['tmp_name'];
+            $fileName = $document['name'];
+            $fileExtension = pathinfo($fileName, PATHINFO_EXTENSION);
+            $fileName = uniqid($post['customer_id']) . str_replace('.tmp', '', basename($tempName)) . '.' . $fileExtension;
+            $data = [
+                'file_name' => $fileName,
+                'customer_id' => $post['customer_id'],
+                'document_type' => 'payment_method',
+                'document_label' => 'Payment Method',
+                'is_predefined' => 1,
+                'date_created' => date("Y-m-d H:i:s")
+            ];
+
+            $this->AcsCustomerDocument_model->create($data);
+
+            $is_success = 1;
+            $msg = '';
+
+            //Activity Logs
+            $activity_name = 'Company Reason : Created company reason ' . $post['company_reason']; 
+            createActivityLog($activity_name);
+        }
+ 
+        $return = [
+            'is_success' => $is_success,
+            'msg' => $msg
+        ];
+
         echo json_encode($return);
     }    
 }
