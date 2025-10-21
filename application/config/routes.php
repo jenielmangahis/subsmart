@@ -2306,6 +2306,7 @@ $route['customers/_with_selected_add_to_favorites'] = 'Customer/ajax_with_select
 $route['customers/_delete_all_archived_customers'] = 'Customer/ajax_delete_all_archived_customers';
 $route['customer/leads/export_list'] = 'Customer/customer_leads_export';
 $route['customer/_ledger_balance_amount'] = 'Customer/ajax_ledger_balance_amount';
+$route['customer/_upload_payment_method_image'] = 'Customer/ajax_upload_payment_method_image';
 
 //Benchmark for Testing
 $route['benchmark/test_customer_subscription'] = 'Benchmark/test_customer_subscription';
