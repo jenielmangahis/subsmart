@@ -1228,6 +1228,8 @@ $route['workorder/view/(:num)'] = 'Workorder/view/$1';
 
 $route['workorder/estimate_convert_to_workorder/(:num)'] = 'Workorder/estimateConversionWorkorderV2/$1';
 $route['workorder/_save_estimate_convert_to_workorder'] = 'Workorder/ajax_save_estimate_convert_to_workorder';
+$route['workorder/_update_workorder_agreement'] = 'Workorder/ajax_update_workorder_agreement';
+
 $route['workorder/_permanently_delete_selected_attachment'] = 'Workorder/ajax_permanently_delete_selected_attachment';
 
 //Public view 
