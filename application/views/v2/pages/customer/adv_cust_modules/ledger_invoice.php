@@ -26,14 +26,20 @@
                         </div>
                         <div class="col-12 col-md-3">
                             <div class="nsm-counter h-100 p-3">
-                                <label class="content-title">$<?= get_customer_invoice_amount('pending', $cus_id); ?></label>
+                                <label class="content-title">$<?= get_customer_invoice_amount('outstanding', $cus_id); ?></label>
                                 <label class="content-subtitle">Outstanding</label>
                             </div>
                         </div>
                         <div class="col-12 col-md-3">
                             <div class="nsm-counter error h-100 p-3">
-                                <label class="content-title">$0</label>
+                                <label class="content-title">$<?= get_customer_invoice_amount('due', $cus_id); ?></label>
                                 <label class="content-subtitle">Past Due</label>
+                            </div>
+                        </div>
+                        <div class="col-12 col-md-3">
+                            <div class="nsm-counter error h-100 p-3">
+                                <label class="content-title">$<?= get_customer_invoice_amount('pending', $cus_id); ?></label>
+                                <label class="content-subtitle">Pending</label>
                             </div>
                         </div>
                     </div>
