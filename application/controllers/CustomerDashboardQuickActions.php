@@ -253,7 +253,7 @@ class CustomerDashboardQuickActions extends MYF_Controller
         }
 
         $document = $_FILES['document'];
-        ['document_type' => $documentType, 'customer_id' => $customerId, 'document_label' => $documentLabel, 'is_client_agreement_limit' => $isMaxClientAgreement] = $this->input->post();
+        ['document_type' => $documentType, 'customer_id' => $customerId, 'document_label' => $documentLabel, 'is_document_limit' => $isDocumentLimit] = $this->input->post();
 
         $filePath = $this->getCustomerDocumentPath($customerId);
 
@@ -275,7 +275,7 @@ class CustomerDashboardQuickActions extends MYF_Controller
         $currDocument = $this->db->get('acs_customer_documents')->row();
         $documentId = null;
 
-        if (!is_null($currDocument) && $documentType != 'client_agreement' ) {
+        if (!is_null($currDocument) && $documentType != 'client_agreement' && $documentType != 'site_photos' && $documentType != 'photo_id_copy' ) {
             if ($currDocument->file_name && file_exists($filePath . $currDocument->file_name)) {
                 unlink($filePath . $currDocument->file_name);
             }
@@ -285,7 +285,7 @@ class CustomerDashboardQuickActions extends MYF_Controller
             $documentId = $currDocument->id;
         } else {
 
-            if( $isMaxClientAgreement == 1 ){
+            if( ($documentType == 'client_agreement' && $isDocumentLimit == 1) || ($documentType == 'site_photos' && $isDocumentLimit == 1) ){
                 $this->db->where('customer_id', $customerId);
                 $this->db->where('document_type', $documentType);
                 $this->db->order_by('id', 'DESC');
@@ -363,6 +363,8 @@ class CustomerDashboardQuickActions extends MYF_Controller
 
     public function deleteCustomerDocument()
     {
+        $this->load->model('CustomerSignature_model');
+
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
             $this->respond(['success' => false]);
         }
@@ -370,15 +372,22 @@ class CustomerDashboardQuickActions extends MYF_Controller
         $payload = json_decode(file_get_contents('php://input'), true);
         ['document_type' => $documentType, 'customer_id' => $customerId] = $payload;
 
-        $filePath = $this->getCustomerDocumentPath($customerId);
+        if( $documentType != 'customer_signature' ){
+            $filePath = $this->getCustomerDocumentPath($customerId);
 
-        $this->db->where('customer_id', $customerId);
-        $this->db->where('document_type', $documentType);
-        $currDocument = $this->db->get('acs_customer_documents')->row();
+            $this->db->where('customer_id', $customerId);
+            $this->db->where('document_type', $documentType);
+            $currDocument = $this->db->get('acs_customer_documents')->row();
 
-        if( $currDocument ){
-            $this->db->where('id', $currDocument->id);
-            $this->db->update('acs_customer_documents', ['is_active' => 0]);
+            if( $currDocument ){
+                $this->db->where('id', $currDocument->id);
+                $this->db->update('acs_customer_documents', ['is_active' => 0]);
+            }
+        }else{
+            $customerSignature = $this->CustomerSignature_model->getByCustomerId($customerId);
+            if( $customerSignature ){
+                $this->CustomerSignature_model->delete($customerSignature->id);
+            }
         }
 
         $this->respond(['data' => null, 'deleted' => $payload]);
@@ -386,10 +395,10 @@ class CustomerDashboardQuickActions extends MYF_Controller
 
     public function downloadCustomerDocument()
     {
+        $this->load->model('CustomerSignature_model');
 
         $customerId = $this->input->get('customer_id', true);
         $documentTypes = explode(',', $this->input->get('document_type', true));
-
         $filePath = $this->getCustomerDocumentPath($customerId);
 
         if (in_array('esign', $documentTypes)) {
@@ -405,6 +414,20 @@ class CustomerDashboardQuickActions extends MYF_Controller
             $file = $generatedPDFPath;
             $fileName = explode('/', $generatedPDF->path);
             $fileName = 'esign_' . end(array_values($fileName));
+        }elseif( $documentTypes[0] == 'customer_signature' ){
+            $customerSignature = $this->CustomerSignature_model->getByCustomerId($customerId);
+            if( $customerSignature ){
+                $dataUri = $customerSignature->value; 
+                list($type, $data) = explode(';', $dataUri);
+                list(, $data)      = explode(',', $data);
+                list(, $mimeType)  = explode(':', $type);
+                $imageData = base64_decode($data);
+                header('Content-Type: ' . $mimeType);
+                header('Content-Disposition: attachment; filename="signature_image.png"'); // Adjust filename and extension
+                header('Content-Length: ' . strlen($imageData));
+                echo $imageData;
+                exit;
+            }
         } else {
             $this->db->where('customer_id', $customerId);
             $this->db->where('file_name IS NOT NULL', null, false);
@@ -637,6 +660,8 @@ class CustomerDashboardQuickActions extends MYF_Controller
 
     public function ajaxDeleteClientAgreement()
     {
+        $this->load->model('AcsCustomerDocument_model');
+        
         $is_success = 0;
         $msg = 'Cannot find data';
 
@@ -645,29 +670,46 @@ class CustomerDashboardQuickActions extends MYF_Controller
 
         $filePath = $this->getCustomerDocumentPath($customerId);
 
-        $this->db->where('id', $post['cdi']);
-        $document = $this->db->get('acs_customer_documents')->row();
-        
-        if( $document ){
+        $document = $this->AcsCustomerDocument_model->getById($post['cdi']);
+        if( $document && $document->company_id == $cid ){
+            if ($document->file_name && file_exists($filePath . $document->file_name)) {
+                unlink($filePath . $document->file_name);
+            }
 
-            $this->db->select('prof_id, company_id');
-            $this->db->where('prof_id', $document->customer_id);
-            $customer = $this->db->get('acs_profile')->row();
-
-            if( $customer->company_id == $cid ){
-                $this->db->where('id', $document->id);
-                $this->db->update('acs_customer_documents', ['is_active' => 0]);
+            $this->AcsCustomerDocument_model->delete($document->id);  
             
-                // if ($document->file_name && file_exists($filePath . $document->file_name)) {
-                //     unlink($filePath . $document->file_name);
-                // }
+            $is_success = 1;
+            $msg = '';
+        }
 
-                // $this->db->where('id', $post['cdi']);
-                // $this->db->delete('acs_customer_documents');
+        echo json_encode([
+            'is_success' => $is_success,
+            'msg' => $msg
+        ]);
+    }
 
-                $is_success = 1;
-                $msg = '';
-            } 
+    public function ajaxDeleteCustomerDocument()
+    {
+        $this->load->model('AcsCustomerDocument_model');
+        
+        $is_success = 0;
+        $msg = 'Cannot find data';
+
+        $cid = logged('company_id');
+        $post = $this->input->post();
+
+        $filePath = $this->getCustomerDocumentPath($customerId);
+
+        $document = $this->AcsCustomerDocument_model->getById($post['cdi']);
+        if( $document && $document->company_id == $cid ){
+            if ($document->file_name && file_exists($filePath . $document->file_name)) {
+                unlink($filePath . $document->file_name);
+            }
+
+            $this->AcsCustomerDocument_model->delete($document->id);  
+            
+            $is_success = 1;
+            $msg = '';
         }
 
         echo json_encode([
@@ -686,6 +728,22 @@ class CustomerDashboardQuickActions extends MYF_Controller
         $clientAgreements = $this->db->get('acs_customer_documents')->result();
         
         $total = count($clientAgreements);
+        //$total = 3;
+        echo json_encode([
+            'total' => $total
+        ]);
+    }
+
+    public function customerTotalSitePhotos()
+    {
+        $cid = logged('company_id');
+        $post = $this->input->post();
+
+        $this->db->where('customer_id', $post['cid']);
+        $this->db->where('document_type', 'site_photos');
+        $sitePhotos = $this->db->get('acs_customer_documents')->result();
+        
+        $total = count($sitePhotos);
         //$total = 3;
         echo json_encode([
             'total' => $total
