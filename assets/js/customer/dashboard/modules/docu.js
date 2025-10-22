@@ -33,7 +33,7 @@ async function onClickDelete() {
   const $deleteBtn = $wrapper.querySelector("[data-action=delete]");
   const dataType   = $deleteBtn.getAttribute('data-type');
   const prevText = $deleteBtn.textContent;
-  const result = await api.deleteConfirmation();
+  const result = await api.deleteConfirmation(dataType);
   if( result ){
     $deleteBtn.textContent = "Deleting...";
     $deleteBtn.setAttribute("disabled", true);
@@ -90,16 +90,42 @@ $fileInput.addEventListener("change", async function () {
     }    
 
     try {
-      const maxClientAgreement = await api.fetchCustomerTotalClientAgreement(getCustomerId());
-      if( maxClientAgreement.total >= 3 ){
-        const result = await api.clientAgreementMaxUploadConfirmation();
-        if( result ){
-          payload.is_client_agreement_limit = 1;
+      if( dataType == 'client_agreement' ){
+        const maxClientAgreement = await api.fetchCustomerTotalClientAgreement(getCustomerId());
+        if( maxClientAgreement.total >= 10 ){
+          const result = await api.clientAgreementMaxUploadConfirmation();
+          if( result ){
+            payload.is_document_limit = 1;
+            await api.uploadCustomerDocument(payload);
+            const $buttons = $wrapper.querySelector(".buttons");
+            $buttons.classList.add("has-document");
+            location.reload();
+          }      
+        }else{
+          payload.is_document_limit = 0;
           await api.uploadCustomerDocument(payload);
           const $buttons = $wrapper.querySelector(".buttons");
           $buttons.classList.add("has-document");
           location.reload();
-        }      
+        }
+      }else if( dataType == 'site_photos' ){
+        const maxSitePhotos = await api.fetchCustomerTotalSitePhotos(getCustomerId());
+        if( maxSitePhotos.total >= 10 ){
+          const result = await api.sitePhotosMaxUploadConfirmation();
+          if( result ){
+            payload.is_document_limit = 1;
+            await api.uploadCustomerDocument(payload);
+            const $buttons = $wrapper.querySelector(".buttons");
+            $buttons.classList.add("has-document");
+            location.reload();
+          }      
+        }else{
+          payload.is_document_limit = 0;
+          await api.uploadCustomerDocument(payload);
+          const $buttons = $wrapper.querySelector(".buttons");
+          $buttons.classList.add("has-document");
+          location.reload();
+        }
       }else{
         payload.is_client_agreement_limit = 0;
         await api.uploadCustomerDocument(payload);
@@ -107,6 +133,7 @@ $fileInput.addEventListener("change", async function () {
         $buttons.classList.add("has-document");
         location.reload();
       }
+      
       
     } catch (error) {
       $chkBox.checked = false;
