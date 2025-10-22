@@ -302,7 +302,7 @@ div#controls div#call-controls div#volume-indicators > div {
                 </div>
                 <div class="col-4 mb-1">
                     <h6><i class='bx bx-id-card'></i> Customer Group</h6>
-                    <p class="text-muted"><?= $customerGroup ? $customerGroup->name : '---'; ?></p>
+                    <p class="text-muted"><?= $customerGroup ? $customerGroup->title : '---'; ?></p>
                 </div>
                 <div class="col-12 mb-1">
                     <h6><i class='bx bx-map-pin'></i> Address</h6>
