@@ -133,35 +133,32 @@
                     </div>
                 </div>
             </div>            
-            <hr />
             <?php include viewPath('v2/pages/customer/adv_cust_modules/billing'); ?>      
             <?php if( isAdmin() && in_array(logged('company_id'), adi_company_ids()) ){ ?>
-                <hr />
                 <?php include viewPath('v2/pages/customer/adv_cust_modules/payment_method_images'); ?>      
             <?php } ?>
             <div class="row g-1">                
-                    <?php if( isAdmin() && in_array(logged('company_id'), adi_company_ids()) ){ ?>
-                    <div class="col-12 col-md-6">
-                        <button type="button" id="btn-billing-upload-payment-method" class="nsm-button primary w-100 ms-0 mt-3">
-                            <i class='bx bx-fw bx-upload'></i> Upload Image
-                        </button>
-                    </div>
-                    <div class="col-12 col-md-6">
-                        <button type="button" id="btn-billing-capture-payment" class="nsm-button primary w-100 ms-0 mt-3">
-                            <i class='bx bx-fw bx-dollar-circle' ></i> Capture Payment
-                        </button>
-                    </div>
-                    <?php } ?>
-                    <div class="col-12 col-md-6">
-                    <button role="button" class="nsm-button primary w-100 ms-0 mt-3" onclick="window.open('<?= base_url('customer/activities/'.$profile_info->prof_id) ?>', '_blank', 'location=yes,height=1080,width=1500,scrollbars=yes,status=yes');">
-                         <i class='bx bx-fw bx-history'></i> History Log
+                <?php if( isAdmin() && in_array(logged('company_id'), adi_company_ids()) ){ ?>
+                <div class="col-12 col-md-6">
+                    <button type="button" id="btn-billing-upload-payment-method" class="nsm-button primary w-100 ms-0 mt-3">
+                        <i class='bx bx-fw bx-upload'></i> Upload Image
                     </button>
-                    </div>
-                    <div class="col-12 col-md-6">
+                </div>
+                <div class="col-12 col-md-6">
+                    <button type="button" id="btn-billing-capture-payment" class="nsm-button primary w-100 ms-0 mt-3">
+                        <i class='bx bx-fw bx-dollar-circle' ></i> Capture Payment
+                    </button>
+                </div>
+                <?php } ?>
+                <div class="col-12 col-md-6">
+                    <button role="button" class="nsm-button primary w-100 ms-0 mt-3" onclick="window.open('<?= base_url('customer/activities/'.$profile_info->prof_id) ?>', '_blank', 'location=yes,height=1080,width=1500,scrollbars=yes,status=yes');">
+                        <i class='bx bx-fw bx-history'></i> History Log
+                    </button>
+                </div>
+                <div class="col-12 col-md-6">
                     <button role="button" class="nsm-button primary w-100 ms-0 mt-3" onclick="window.open('<?= base_url('/customer/add_advance/' . $profile_info->prof_id) ?>', '_blank', 'location=yes,height=1080,width=1500,scrollbars=yes,status=yes');">
                         <i class='bx bx-fw bx-message-square-edit'></i> View/Edit Module
                     </button>
-                    </div>
                 </div>
             </div>
         </div>
@@ -234,10 +231,7 @@
                 </div>
             </div>
         </div>
-
     </div>
-</div>
-
 </div>
 <?php if( isAdmin() ){ ?>
 <script src="https://js.stripe.com/v3/"></script>

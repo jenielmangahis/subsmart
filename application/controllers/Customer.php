@@ -2770,10 +2770,10 @@ class Customer extends MY_Controller
         $this->load->model('Clients_model');
         $this->load->model('taskhub_model');
         $this->load->model('CustomerStatementClaim_model');
-        $this->load->model('CustomerSignature_model');
         $this->load->model('Business_model');
         $this->load->model('CustomerGroup_model');
         $this->load->model('Invoice_model', 'invoice_model');
+        $this->load->model('CustomerSignature_model');
         $this->load->library('wizardlib');                
 
         $alarm_api_helper = new AlarmApi();
@@ -2863,18 +2863,38 @@ class Customer extends MY_Controller
 
                 $this->db->where('is_active', 1);
                 $this->db->where('customer_id', $id);
-                $customerDocuments = $this->db->get('acs_customer_documents')->result_array();
-                
+                $customerDocuments = $this->db->get('acs_customer_documents')->result_array();               
+                            
                 $customer_client_agreements = array_filter($customerDocuments, function($doc){
                     if( $doc['document_type'] == 'client_agreement' ){
                         return $doc;
                     }
                 });
 
+                $customer_site_photos = array_filter($customerDocuments, function($doc){
+                    if( $doc['document_type'] == 'site_photos' ){
+                        return $doc;
+                    }
+                });
+
+                $customer_photo_id_copy = array_filter($customerDocuments, function($doc){
+                    if( $doc['document_type'] == 'photo_id_copy' ){
+                        return $doc;
+                    }
+                });
+                
+                $customerSignature = $this->CustomerSignature_model->getByCustomerId($id);
+                $total_customer_documents = count($customerDocuments);
+                if( $customerSignature ){
+                    $total_customer_documents += 1;
+                }    
+
                 $this->page_data['customer_client_agreements'] = $customer_client_agreements;
+                $this->page_data['total_customer_documents'] = $total_customer_documents;
+                $this->page_data['customer_site_photos'] = $customer_site_photos;
+                $this->page_data['customer_photo_id_copy'] = $customer_photo_id_copy;
                 $this->page_data['customer_documents'] = $customerDocuments;
-
-
+                $this->page_data['customerSignature'] = $customerSignature;
                 
                 // search Alarm.com customer
                 if (
