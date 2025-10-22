@@ -14,7 +14,7 @@
         <div class="nsm-card-header d-block">
             <div class="nsm-card-title">
                 <span>Documents</span>
-                <span class="float-end">Total : <?= $total_customer_documents; ?></span>
+                <span class="float-end">Total : <?= $total_customer_documents > 0 ? $total_customer_documents : '0'; ?></span>
             </div>
             <label class="nsm-subtitle">Issued/Received</label>
         </div>
