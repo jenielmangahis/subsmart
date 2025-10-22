@@ -1,3 +1,4 @@
+<hr />
 <div class="d-block mb-4 mt-4">
     <span style="font-size:18px; font-weight:bold;">Images</span>
 </div>
