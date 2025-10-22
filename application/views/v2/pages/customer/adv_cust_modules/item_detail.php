@@ -1,3 +1,42 @@
+<div class="col-12 col-md-4">
+    <div class="nsm-card nsm-grid">
+        <div class="nsm-card-header d-block">
+            <div class="nsm-card-title">
+                <span>Item Details</span>
+            </div>
+        </div>
+        <div class="nsm-card-content">
+            <div class="row g-3">
+                <div class="col-md-12">
+                    <div id="customer-items-container"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    $(function() {
+        load_customer_items();
+
+        function load_customer_items(){
+            let customer_id = '<?= $customer_profile_id; ?>';
+            $.ajax({
+                type: "POST",
+                url: base_url + "customer/_load_item_details", 
+                data: {customer_id : customer_id},
+                success: function(html)
+                {
+                    $('#customer-items-container').html(html)
+                },
+                beforeSend: function(){
+                    $('#customer-items-container').html('<span class="bx bx-loader bx-spin"></span>');
+                }
+            });
+        }
+        $("#job-items-table").nsmPagination();
+    });
+</script>
+
 <!-- Icon Library -->
 <?php 
     $equipmentIcons = [
@@ -16,7 +55,7 @@
     ];
 
     // echo '<pre>';
-    // print_r($alarm_info_api);
+    // print_r($alarmcom_info);
     // echo '</pre>';
 ?>
 <style>
@@ -58,12 +97,16 @@
         display: none;
     }
 
-    .addNewEquipment,
-    .cancelAddNewEquipment {
+    .addEquipmentButton,
+    .cancelAddEquipmentButton,
+    .cancelEditEquipmentButton,
+    .equipmentCategories,
+    .editdEquipmentButton {
         border-color: lightgray;
     }
-    
-    .addEquipmentSave {
+
+    .addEquipmentSave,
+    .editEquipmentSave {
         background: #6a4a86;
         border: 1px solid #6a4a86;
     }
@@ -77,7 +120,7 @@
         width: unset !important;
     }
 
-    .nsmartBadgeEquipment {
+    .equipmentItemBadge {
         background: #6a4a86 !important;
         border: 1px solid #6a4a86 !important;
         padding: 2.5px;
@@ -85,12 +128,13 @@
         top: 13px;
         width: unset !important;
     }
+
 </style>
 <div class="col-12 col-md-4">
     <div class="nsm-card nsm-grid">
         <div class="nsm-card-header d-block">
             <div class="nsm-card-title">
-                <span>Equipments</span>
+                <span>Equipment</span>
                 <button class="btn btn-primary float-end opacity-50 btn-sm equipmentWidgetRefreshButton"><small>REFRESH</small></button>
             </div>
         </div>
@@ -202,8 +246,11 @@
                                     </div>
                                     <div class="equipmentSerial ms-auto text-end">
                                         <strong class="text-muted mx-1"><?php echo $alarmcom_info['modeminfo_imei']; ?></strong>
-                                        <span class="text-success"><i class="fas fa-check-circle"></i></span>
+                                        <span class="text-success opacity-75"><i class="fas fa-circle"></i></span>
                                     </div>
+                                    <!-- <div class="equipmentEditItem ms-auto text-end display_none">
+                                        <button class="btn btn-light editdEquipmentButton text-muted mx-1" type="button"></button>
+                                    </div> -->
                                 </div>
                             </div>
                         </div>
@@ -222,7 +269,7 @@
                                     </div>
                                     <div class="equipmentSerial ms-auto text-end">
                                         <strong class="text-muted mx-1 panelDeviceId">127</strong>
-                                        <span class="text-success"><i class="fas fa-check-circle"></i></span>
+                                        <span class="text-success opacity-75"><i class="fas fa-circle"></i></span>
                                     </div>
                                 </div>
                             </div>
@@ -292,19 +339,28 @@
                 </div>
                 <div class="col-lg-12"><hr></div>
                 <div class="col-lg-12">
-                    <button class="btn btn-light addNewEquipment w-100" type="button"><i class="fas fa-plus text-muted"></i>&ensp;Add New Item</button>
-                    <div class="addNewEquipmentContainer display_none">
+                    <button class="btn btn-light addEquipmentButton w-100" type="button"><i class="fas fa-plus text-muted"></i>&ensp;Add New Item</button>
+                    <div class="addEquipmentContainer display_none">
                         <h5 class="fw-bold">Add New Item</h5>
-                        <form class="addNewEquipmentForm">
+                        <form class="addEquipmentForm">
                             <div class="row">
                                 <div class="col-lg-12 d-none">
                                     <input type="hidden" class="form-control" name="addEquipmentCustomerId" value="<?php echo $profile_info->prof_id; ?>" required>
                                 </div>
-                                <div class="col-lg-8 mb-3">
+                                <div class="col-lg-8 mb-3 addCategoryContainer">
                                     <label class="form-label fw-xnormal">Category</label>
-                                    <input type="text" class="form-control" name="addEquipmentCategory" required>
+                                    <select class="form-select" name="addEquipmentCategory" required>
+                                        <option value="" selected disabled hidden>&mdash;</option>
+                                        <option value="dvr">Digital Video Recorder</option>
+                                        <option value="nvr">Network Video Recorder</option>
+                                        <option value="pers">Personal Emergency Response System</option>
+                                    </select>
                                 </div>  
-                                <div class="col-lg-4 mb-3">
+                                <div class="col-lg-5 mb-3 display_none addQRCodeContainer">
+                                    <label class="form-label fw-xnormal">NAV QR Code</label>
+                                    <input type="file" class="form-control" name="addEquipmentQRCode">
+                                </div>
+                                <div class="col-lg-4 mb-3 addDeviceTypeContainer">
                                     <label class="form-label fw-xnormal">Device Type</label>
                                     <select class="form-select" name="addEquipmentDeviceType" required>
                                         <option value="" selected disabled hidden>&mdash;</option>
@@ -321,30 +377,106 @@
                                         <option value="other">Other</option>
                                     </select>
                                 </div>
-                                <div class="col-lg-5 mb-3">
+                                <div class="col-lg-6 mb-3 addSerialNoContainer">
                                     <label class="form-label fw-xnormal">Serial No.</label>
                                     <input type="text" class="form-control" name="addEquipmentSerialNo" required>
                                 </div>
-                                <div class="col-lg-5 mb-3">
+                                <div class="col-lg-6 mb-3 addModelNoContainer">
                                     <label class="form-label fw-xnormal">Model No.</label>
                                     <input type="text" class="form-control" name="addEquipmentModelNo" required>
                                 </div>
-                                <div class="col-lg-2 mb-3">
-                                    <label class="form-label fw-xnormal">Qty</label>
-                                    <input type="number" class="form-control" name="addEquipmentQty" required min="0">
-                                </div>
-                                <div class="col-lg-9 mb-3">
+                                <div class="col-lg-7 mb-3 addNameContainer">
                                     <label class="form-label fw-xnormal">Name</label>
                                     <input type="text" class="form-control" name="addEquipmentName" required>
                                 </div>
-                                <div class="col-lg-3 mb-3">
+                                <div class="col-lg-2 mb-3 addQtyContainer">
+                                    <label class="form-label fw-xnormal">Qty</label>
+                                    <input type="number" class="form-control" name="addEquipmentQty" required min="0" value="1">
+                                </div>
+                                <div class="col-lg-3 mb-3 addStatusContainer">
                                     <label class="form-label fw-xnormal">Status</label>
-                                    <input type="text" class="form-control" name="addEquipmentStatus" required>
+                                    <select class="form-select" name="addEquipmentStatus" required>
+                                        <option value="active" selected>Active</option>
+                                        <option value="inactive">Inactive</option>
+                                    </select>
                                 </div>
                                 <div class="col-lg-12">
                                     <div class="float-end mt-1">
-                                        <button class="btn btn-light cancelAddNewEquipment mx-1" type="button">Cancel</button>
+                                        <button class="btn btn-light cancelAddEquipmentButton mx-1" type="button">Cancel</button>
                                         <button type="submit" class="btn btn-primary fw-bold addEquipmentSave"><i class="fas fa-file-import"></i>&ensp;Save</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="editEquipmentContainer display_none">
+                        <h5 class="fw-bold">Edit Item</h5>
+                        <form class="editEquipmentForm">
+                            <div class="row">
+                                <div class="col-lg-12 d-none">
+                                    <input type="hidden" class="form-control" name="editEquipmentCustomerId" value="<?php echo $profile_info->prof_id; ?>" required>
+                                    <input type="hidden" class="form-control" name="editEquipmentId" required>
+                                </div>
+                                <div class="col-lg-8 mb-3 editCategoryContainer">
+                                    <label class="form-label fw-xnormal">Category</label>
+                                    <select class="form-select" name="editEquipmentCategory" required>
+                                        <option value="" selected disabled hidden>&mdash;</option>
+                                        <option value="dvr">Digital Video Recorder</option>
+                                        <option value="nvr">Network Video Recorder</option>
+                                        <option value="pers">Personal Emergency Response System</option>
+                                    </select>
+                                </div>  
+                                <div class="col-lg-5 mb-3 display_none editQRCodeContainer">
+                                    <label class="form-label fw-xnormal">NAV QR Code</label>
+                                    <input type="file" class="form-control" name="editEquipmentQRCode">
+                                </div>
+                                <div class="col-lg-4 mb-3 editDeviceTypeContainer">
+                                    <label class="form-label fw-xnormal">Device Type</label>
+                                    <select class="form-select" name="editEquipmentDeviceType" required>
+                                        <option value="" selected disabled hidden>&mdash;</option>
+                                        <option value="communication">Communication</option>
+                                        <option value="panel">Panel</option>
+                                        <option value="sensor">Sensor</option>
+                                        <option value="peripheral">Peripheral</option>
+                                        <option value="video">Video</option>
+                                        <option value="access_point">Access Point</option>
+                                        <option value="zwave">Z-Wave</option>
+                                        <option value="liftmaster">Lift Master</option>
+                                        <option value="geo">Geo</option>
+                                        <option value="voice">Voice</option>
+                                        <option value="other">Other</option>
+                                    </select>
+                                </div>
+                                <div class="col-lg-6 mb-3 editSerialNoContainer">
+                                    <label class="form-label fw-xnormal">Serial No.</label>
+                                    <input type="text" class="form-control" name="editEquipmentSerialNo" required>
+                                </div>
+                                <div class="col-lg-6 mb-3 editModelNoContainer">
+                                    <label class="form-label fw-xnormal">Model No.</label>
+                                    <input type="text" class="form-control" name="editEquipmentModelNo" required>
+                                </div>
+                                <div class="col-lg-7 mb-3 editNameContainer">
+                                    <label class="form-label fw-xnormal">Name</label>
+                                    <input type="text" class="form-control" name="editEquipmentName" required>
+                                </div>
+                                <div class="col-lg-2 mb-3 editQtyContainer">
+                                    <label class="form-label fw-xnormal">Qty</label>
+                                    <input type="number" class="form-control" name="editEquipmentQty" required min="0" value="1">
+                                </div>
+                                <div class="col-lg-3 mb-3 editStatusContainer">
+                                    <label class="form-label fw-xnormal">Status</label>
+                                    <select class="form-select" name="editEquipmentStatus" required>
+                                        <option value="active" selected>Active</option>
+                                        <option value="inactive">Inactive</option>
+                                    </select>
+                                </div>
+                                <div class="col-lg-12">
+                                    <div class="float-start mt-1">
+                                        <button type="button" class="btn btn-danger fw-bold removeEquipmentButton opacity-75"><i class="fas fa-trash"></i></button>
+                                    </div>
+                                    <div class="float-end mt-1">
+                                        <button class="btn btn-light cancelEditEquipmentButton mx-1" type="button">Cancel</button>
+                                        <button type="submit" class="btn btn-primary fw-bold editEquipmentSave"><i class="fas fa-save"></i>&ensp;Update</button>
                                     </div>
                                 </div>
                             </div>
@@ -356,6 +488,9 @@
     </div>
 </div>
 <script>
+    var equipmentIcons = <?php echo json_encode($equipmentIcons); ?>;
+    var deviceTypes = Object.keys(equipmentIcons).filter(key => key !== 'notes');
+
     function formDisabler(selector, state) {
         const element = $(selector);
         const submitButton = element.find('button[type="submit"]');
@@ -380,275 +515,86 @@
         $.ajax({
             url: `${window.origin}/AlarmApiPortal/searchAlarmEquipment`,
             type: "POST",
-            data: {
-                customer_id: `${customer_id}`,
-            },
+            data: { customer_id: `${customer_id}` },
             beforeSend: function() {
                 $('.equipmentAccordion').hide();
                 $('.equipmentLoader').fadeIn('fast');
-                $('.equipmentWidgetRefreshButton').removeClass('btn-primary').addClass('btn-secondary').attr('disabled', true).html('<i class="fas fa-spinner fa-pulse"></i>');
             },
             success: function(response) {
                 const equipmentDetails = JSON.parse(response);
 
-                // Panel Device
-                const panelDevice = equipmentDetails.panel
+                const panelDevice = equipmentDetails.panel || [];
                 const panelDeviceCount = panelDevice.length;
-                const panelDeviceName = panelDevice[0].webSiteDeviceName;
-                const panelDeviceId = panelDevice[0].deviceId;
                 if (panelDeviceCount > 0) {
+                    const panelDeviceName = panelDevice[0].webSiteDeviceName;
+                    const panelDeviceId = panelDevice[0].deviceId;
                     $('.panelDeviceCount').text(`(${panelDeviceCount})`);
                     $('.panelDeviceName').text(panelDeviceName);
                     $('.panelDeviceId').text(panelDeviceId);
                 } else {
                     $('.panelDeviceCount').text(`(0)`).addClass('fw-normal text-muted');
                 }
-        
-                // Sensor Device
-                const sensorDevice = equipmentDetails.sensor
-                const sensorDeviceCount = sensorDevice.length;
-                if (sensorDeviceCount > 0) {
-                    let sensorHTML = "";
-                    for (let index = 0; index < sensorDeviceCount; index++) {
-                        sensorHTML += `
-                            <div class="px-3 border-top position-relative">
-                                <div class="d-flex align-items-center mt-3 mb-3 gap-3">
-                                    <i class="<?php echo $equipmentIcons['sensor']; ?> fs-4 text-muted"></i>
-                                    <div class="d-flex flex-column">
-                                        <small class="text-muted upperEquipmentDetail">${sensorDevice[index].deviceName}&ensp;<span class="badge bg-primary opacity-50 alarmcomBadgeEquipment">alarm.com</span></small>
-                                        <strong class="text-muted">${sensorDevice[index].webSiteDeviceName}</strong>
+
+                const renderDevices = (type, devices) => {
+                    const count = devices.length;
+                    const icon = equipmentIcons[type] || equipmentIcons['other'];
+                    const collapseID = `#${type}Collapse`;
+                    const countSelector = `.${type}DeviceCount`;
+
+                    if (count > 0) {
+                        let html = "";
+                        devices.forEach(device => {
+                            const deviceId = device.mac || device.deviceId;
+                            const deviceName =
+                                device.videoDeviceModel ||
+                                device.access_pointDeviceModel ||
+                                device.zwaveDeviceModel ||
+                                device.liftmasterDeviceModel ||
+                                device.geoDeviceModel ||
+                                device.deviceName;
+
+                            html += `
+                                <div class="px-3 border-top position-relative">
+                                    <div class="d-flex align-items-center mt-3 mb-3 gap-3">
+                                        <i class="${icon} fs-4 text-muted"></i>
+                                        <div class="d-flex flex-column">
+                                            <small class="text-muted upperEquipmentDetail">
+                                                ${deviceName}&ensp;
+                                                <span class="badge bg-primary opacity-50 alarmcomBadgeEquipment">alarm.com</span>
+                                            </small>
+                                            <strong class="text-muted">${device.webSiteDeviceName}</strong>
+                                        </div>
+                                        <div class="equipmentSerial ms-auto text-end">
+                                            <strong class="text-muted mx-1">${deviceId}</strong>
+                                            <span class="text-success opacity-75"><i class="fas fa-circle"></i></span>
+                                        </div>
                                     </div>
-                                    <div class="equipmentSerial ms-auto text-end">
-                                        <strong class="text-muted mx-1">${sensorDevice[index].deviceId}</strong>
-                                        <span class="text-success"><i class="fas fa-check-circle"></i></span>
-                                    </div>
-                                </div>
-                            </div> 
-                        `;
+                                </div>`;
+                        });
+
+                        $(collapseID).html(html);
+                        $(countSelector).text(`(${count})`).removeClass('fw-normal text-muted');
+                    } else {
+                        $(collapseID).html('');
+                        $(countSelector).text(`(0)`).addClass('fw-normal text-muted');
                     }
-                    $('#sensorCollapse').html( `${sensorHTML}`);
-                    $('.sensorDeviceCount').text(`(${sensorDeviceCount})`);
-                } else {
-                    $('.sensorDeviceCount').text(`(0)`).addClass('fw-normal text-muted');
-                }
-           
-                // Peripheral Device
-                const peripheralDevice = equipmentDetails.peripheral
-                const peripheralDeviceCount = peripheralDevice.length;
-                if (peripheralDeviceCount > 0) {
-                    let peripheralHTML = "";
-                    for (let index = 0; index < peripheralDeviceCount; index++) {
-                        peripheralHTML += `
-                            <div class="px-3 border-top position-relative">
-                                <div class="d-flex align-items-center mt-3 mb-3 gap-3">
-                                    <i class="<?php echo $equipmentIcons['peripheral']; ?> fs-4 text-muted"></i>
-                                    <div class="d-flex flex-column">
-                                        <small class="text-muted upperEquipmentDetail">${peripheralDevice[index].deviceName}&ensp;<span class="badge bg-primary opacity-50 alarmcomBadgeEquipment">alarm.com</span></small>
-                                        <strong class="text-muted">${peripheralDevice[index].webSiteDeviceName}</strong>
-                                    </div>
-                                    <div class="equipmentSerial ms-auto text-end">
-                                        <strong class="text-muted mx-1">${peripheralDevice[index].deviceId}</strong>
-                                        <span class="text-success"><i class="fas fa-check-circle"></i></span>
-                                    </div>
-                                </div>
-                            </div> 
-                        `;
-                    }
-                    $('#peripheralCollapse').html( `${peripheralHTML}`);
-                    $('.peripheralDeviceCount').text(`(${peripheralDeviceCount})`);
-                } else {
-                    $('.peripheralDeviceCount').text(`(0)`).addClass('fw-normal text-muted');
-                }
+                };
 
-                // Video Device
-                const videoDevice = equipmentDetails.video
-                const videoDeviceCount = videoDevice.length;
-                if (videoDeviceCount > 0) {
-                    let videoHTML = "";
-                    for (let index = 0; index < videoDeviceCount; index++) {
-                        let deviceId = (videoDevice[index].mac) ? videoDevice[index].mac : videoDevice[index].deviceId;
-                        let deviceName = (videoDevice[index].videoDeviceModel) ? videoDevice[index].videoDeviceModel : videoDevice[index].deviceName;
-
-                        videoHTML += `
-                            <div class="px-3 border-top position-relative">
-                                <div class="d-flex align-items-center mt-3 mb-3 gap-3">
-                                    <i class="<?php echo $equipmentIcons['video']; ?> fs-4 text-muted"></i>
-                                    <div class="d-flex flex-column">
-                                        <small class="text-muted upperEquipmentDetail">${deviceName}&ensp;<span class="badge bg-primary opacity-50 alarmcomBadgeEquipment">alarm.com</span></small>
-                                        <strong class="text-muted">${videoDevice[index].webSiteDeviceName}</strong>
-                                    </div>
-                                    <div class="equipmentSerial ms-auto text-end">
-                                        <strong class="text-muted mx-1">${deviceId}</strong>
-                                        <span class="text-success"><i class="fas fa-check-circle"></i></span>
-                                    </div>
-                                </div>
-                            </div> 
-                        `;
-                    }
-                    $('#videoCollapse').html( `${videoHTML}`);
-                    $('.videoDeviceCount').text(`(${videoDeviceCount})`);
-                } else {
-                    $('.videoDeviceCount').text(`(0)`).addClass('fw-normal text-muted');
-                }
-
-                // Access Point & Chimes Device
-                const access_pointDevice = equipmentDetails.access_point
-                const access_pointDeviceCount = access_pointDevice.length;
-                if (access_pointDeviceCount > 0) {
-                    let access_pointHTML = "";
-                    for (let index = 0; index < access_pointDeviceCount; index++) {
-                        let deviceId = (access_pointDevice[index].mac) ? access_pointDevice[index].mac : access_pointDevice[index].deviceId;
-                        let deviceName = (access_pointDevice[index].access_pointDeviceModel) ? access_pointDevice[index].access_pointDeviceModel : access_pointDevice[index].deviceName;
-
-                        access_pointHTML += `
-                            <div class="px-3 border-top position-relative">
-                                <div class="d-flex align-items-center mt-3 mb-3 gap-3">
-                                    <i class="<?php echo $equipmentIcons['access_point']; ?> fs-4 text-muted"></i>
-                                    <div class="d-flex flex-column">
-                                        <small class="text-muted upperEquipmentDetail">${deviceName}&ensp;<span class="badge bg-primary opacity-50 alarmcomBadgeEquipment">alarm.com</span></small>
-                                        <strong class="text-muted">${access_pointDevice[index].webSiteDeviceName}</strong>
-                                    </div>
-                                    <div class="equipmentSerial ms-auto text-end">
-                                        <strong class="text-muted mx-1">${deviceId}</strong>
-                                        <span class="text-success"><i class="fas fa-check-circle"></i></span>
-                                    </div>
-                                </div>
-                            </div> 
-                        `;
-                    }
-                    $('#access_pointCollapse').html( `${access_pointHTML}`);
-                    $('.access_pointDeviceCount').text(`(${access_pointDeviceCount})`);
-                } else {
-                    $('.access_pointDeviceCount').text(`(0)`).addClass('fw-normal text-muted');
-                }
-
-                // Z-Wave Device
-                const zwaveDevice = equipmentDetails.zwave
-                const zwaveDeviceCount = zwaveDevice.length;
-                if (zwaveDeviceCount > 0) {
-                    let zwaveHTML = "";
-                    for (let index = 0; index < zwaveDeviceCount; index++) {
-                        let deviceId = (zwaveDevice[index].mac) ? zwaveDevice[index].mac : zwaveDevice[index].deviceId;
-                        let deviceName = (zwaveDevice[index].zwaveDeviceModel) ? zwaveDevice[index].zwaveDeviceModel : zwaveDevice[index].deviceName;
-
-                        zwaveHTML += `
-                            <div class="px-3 border-top position-relative">
-                                <div class="d-flex align-items-center mt-3 mb-3 gap-3">
-                                    <i class="<?php echo $equipmentIcons['zwave']; ?> fs-4 text-muted"></i>
-                                    <div class="d-flex flex-column">
-                                        <small class="text-muted upperEquipmentDetail">${deviceName}&ensp;<span class="badge bg-primary opacity-50 alarmcomBadgeEquipment">alarm.com</span></small>
-                                        <strong class="text-muted">${zwaveDevice[index].webSiteDeviceName}</strong>
-                                    </div>
-                                    <div class="equipmentSerial ms-auto text-end">
-                                        <strong class="text-muted mx-1">${deviceId}</strong>
-                                        <span class="text-success"><i class="fas fa-check-circle"></i></span>
-                                    </div>
-                                </div>
-                            </div> 
-                        `;
-                    }
-                    $('#zwaveCollapse').html( `${zwaveHTML}`);
-                    $('.zwaveDeviceCount').text(`(${zwaveDeviceCount})`);
-                } else {
-                    $('.zwaveDeviceCount').text(`(0)`).addClass('fw-normal text-muted');
-                }
-
-                // Lift Master Device
-                const liftmasterDevice = equipmentDetails.liftmaster
-                const liftmasterDeviceCount = liftmasterDevice.length;
-                if (liftmasterDeviceCount > 0) {
-                    let liftmasterHTML = "";
-                    for (let index = 0; index < liftmasterDeviceCount; index++) {
-                        let deviceId = (liftmasterDevice[index].mac) ? liftmasterDevice[index].mac : liftmasterDevice[index].deviceId;
-                        let deviceName = (liftmasterDevice[index].liftmasterDeviceModel) ? liftmasterDevice[index].liftmasterDeviceModel : liftmasterDevice[index].deviceName;
-
-                        liftmasterHTML += `
-                            <div class="px-3 border-top position-relative">
-                                <div class="d-flex align-items-center mt-3 mb-3 gap-3">
-                                    <i class="<?php echo $equipmentIcons['liftmaster']; ?> fs-4 text-muted"></i>
-                                    <div class="d-flex flex-column">
-                                        <small class="text-muted upperEquipmentDetail">${deviceName}&ensp;<span class="badge bg-primary opacity-50 alarmcomBadgeEquipment">alarm.com</span></small>
-                                        <strong class="text-muted">${liftmasterDevice[index].webSiteDeviceName}</strong>
-                                    </div>
-                                    <div class="equipmentSerial ms-auto text-end">
-                                        <strong class="text-muted mx-1">${deviceId}</strong>
-                                        <span class="text-success"><i class="fas fa-check-circle"></i></span>
-                                    </div>
-                                </div>
-                            </div> 
-                        `;
-                    }
-                    $('#liftmasterCollapse').html( `${liftmasterHTML}`);
-                    $('.liftmasterDeviceCount').text(`(${liftmasterDeviceCount})`);
-                } else {
-                    $('.liftmasterDeviceCount').text(`(0)`).addClass('fw-normal text-muted');
-                }
-
-                // Geo Device
-                const geoDevice = equipmentDetails.geo
-                const geoDeviceCount = geoDevice.length;
-                if (geoDeviceCount > 0) {
-                    let geoHTML = "";
-                    for (let index = 0; index < geoDeviceCount; index++) {
-                        let deviceId = (geoDevice[index].mac) ? geoDevice[index].mac : geoDevice[index].deviceId;
-                        let deviceName = (geoDevice[index].geoDeviceModel) ? geoDevice[index].geoDeviceModel : geoDevice[index].deviceName;
-
-                        geoHTML += `
-                            <div class="px-3 border-top position-relative">
-                                <div class="d-flex align-items-center mt-3 mb-3 gap-3">
-                                    <i class="<?php echo $equipmentIcons['geo']; ?> fs-4 text-muted"></i>
-                                    <div class="d-flex flex-column">
-                                        <small class="text-muted upperEquipmentDetail">${deviceName}&ensp;<span class="badge bg-primary opacity-50 alarmcomBadgeEquipment">alarm.com</span></small>
-                                        <strong class="text-muted">${geoDevice[index].webSiteDeviceName}</strong>
-                                    </div>
-                                    <div class="equipmentSerial ms-auto text-end">
-                                        <strong class="text-muted mx-1">${deviceId}</strong>
-                                        <span class="text-success"><i class="fas fa-check-circle"></i></span>
-                                    </div>
-                                </div>
-                            </div> 
-                        `;
-                    }
-                    $('#geoCollapse').html( `${geoHTML}`);
-                    $('.geoDeviceCount').text(`(${geoDeviceCount})`);
-                } else {
-                    $('.geoDeviceCount').text(`(0)`).addClass('fw-normal text-muted');
-                }
-
-                // Voice Device
-                const voiceDevice = equipmentDetails.voice
-                const voiceDeviceCount = voiceDevice.length;
-                if (voiceDeviceCount > 0) {
-                    let voiceHTML = "";
-                    for (let index = 0; index < voiceDeviceCount; index++) {
-                        voiceHTML += `
-                            <div class="px-3 border-top position-relative">
-                                <div class="d-flex align-items-center mt-3 mb-3 gap-3">
-                                    <i class="<?php echo $equipmentIcons['voice']; ?> fs-4 text-muted"></i>
-                                    <div class="d-flex flex-column">
-                                        <small class="text-muted upperEquipmentDetail">${voiceDevice[index].deviceName}&ensp;<span class="badge bg-primary opacity-50 alarmcomBadgeEquipment">alarm.com</span></small>
-                                        <strong class="text-muted">${voiceDevice[index].webSiteDeviceName}</strong>
-                                    </div>
-                                    <div class="equipmentSerial ms-auto text-end">
-                                        <strong class="text-muted mx-1">${voiceDevice[index].deviceId}</strong>
-                                        <span class="text-success"><i class="fas fa-check-circle"></i></span>
-                                    </div>
-                                </div>
-                            </div> 
-                        `;
-                    }
-                    $('#voiceCollapse').html( `${voiceHTML}`);
-                    $('.voiceDeviceCount').text(`(${voiceDeviceCount})`);
-                } else {
-                    $('.voiceDeviceCount').text(`(0)`).addClass('fw-normal text-muted');
-                }
+                renderDevices('sensor', equipmentDetails.sensor || []);
+                renderDevices('peripheral', equipmentDetails.peripheral || []);
+                renderDevices('video', equipmentDetails.video || []);
+                renderDevices('access_point', equipmentDetails.access_point || []);
+                renderDevices('zwave', equipmentDetails.zwave || []);
+                renderDevices('liftmaster', equipmentDetails.liftmaster || []);
+                renderDevices('geo', equipmentDetails.geo || []);
+                renderDevices('voice', equipmentDetails.voice || []);
+                getCustomerEquipment("<?php echo $profile_info->prof_id; ?>");
 
                 $('.equipmentAccordion').fadeIn('fast');
                 $('.equipmentLoader').hide();
                 $('.equipmentWidgetRefreshButton').removeClass('btn-secondary').addClass('btn-primary').removeAttr('disabled').html('<small>REFRESH</small>');
-                getCustomerEquipment("<?php echo $profile_info->prof_id; ?>");
             },
-            error: function(jqXHR, textStatus, errorThrown) {
+            error: function() {
                 $('.equipmentAccordion').fadeIn('fast');
                 $('.equipmentLoader').hide();
                 $('.equipmentWidgetRefreshButton').removeClass('btn-secondary').addClass('btn-primary').removeAttr('disabled').html('<small>REFRESH</small>');
@@ -660,69 +606,50 @@
         $.ajax({
             type: "POST",
             url: `${window.origin}/Customer/getCustomerEquipment`,
-            data: {
-                customer_id: `${customer_id}`,
-            },
+            data: { customer_id: `${customer_id}` },
             success: function (response) {
                 const data = JSON.parse(response);
-                $('.nsmartracEquipmentContainer').remove();
-                data.forEach(item => {
-                    let icon = "";
+                $('.equipmentItemContainer').remove();
 
-                    switch (item.device_type) {
-                        case 'communication':
-                            icon = "<?php echo $equipmentIcons['communication']; ?>";
-                            break;
-                        case 'panel':
-                            icon = "<?php echo $equipmentIcons['panel']; ?>";
-                            break;
-                        case 'sensor':
-                            icon = "<?php echo $equipmentIcons['sensor']; ?>";
-                            break;
-                        case 'peripheral':
-                            icon = "<?php echo $equipmentIcons['peripheral']; ?>";
-                            break;
-                        case 'video':
-                            icon = "<?php echo $equipmentIcons['video']; ?>";
-                            break;
-                        case 'access_point':
-                            icon = "<?php echo $equipmentIcons['access_point']; ?>";
-                            break;
-                        case 'zwave':
-                            icon = "<?php echo $equipmentIcons['zwave']; ?>";
-                            break;
-                        case 'liftmaster':
-                            icon = "<?php echo $equipmentIcons['liftmaster']; ?>";
-                            break;
-                        case 'geo':
-                            icon = "<?php echo $equipmentIcons['geo']; ?>";
-                            break;
-                        case 'voice':
-                            icon = "<?php echo $equipmentIcons['voice']; ?>";
-                            break;
-                        case 'other':
-                            icon = "<?php echo $equipmentIcons['other']; ?>";
-                            break;
-                    }
+                data.forEach(item => {
+                    const type = item.device_type || 'other';
+                    const icon = equipmentIcons[type] || equipmentIcons['other'];
+                    const collapseID = `#${type}Collapse`;
+                    const countSelector = `.${type}DeviceCount`;
 
                     const html = `
-                        <div class="px-3 border-top position-relative nsmartracEquipmentContainer">
+                        <div class="px-3 border-top position-relative equipmentItemContainer" data-id="${item.id}">
                             <div class="d-flex align-items-center mt-3 mb-3 gap-3">
                                 <i class="${icon} fs-4 text-muted"></i>
                                 <div class="d-flex flex-column">
-                                    <small class="text-muted upperEquipmentDetail">${item.model_no}&ensp;<span class="badge bg-primary opacity-50 nsmartBadgeEquipment">nsmartrac</span></small>
-                                    <strong class="text-muted">${item.equipment}</strong>
+                                    <small class="text-muted upperEquipmentDetail">
+                                        ${item.model_no}&ensp;
+                                        <span class="badge bg-primary opacity-50 equipmentItemBadge">nsmartrac</span>
+                                    </small>
+                                    <strong class="text-muted">
+                                        ${item.equipment}&ensp;
+                                        <small class="fw-normal">
+                                            <a class="text-decoration-none editEquipmentButton" href="javascript:void(0)" equipment_id="${item.id}" category="${item.category}" device_type="${item.device_type}" serial_no="${item.serial_no}" model_no="${item.model_no}" qty="${item.qty}" equipment_name="${item.equipment}" status="${item.status}">
+                                                <i class="fas fa-edit opacity-75"></i> Edit
+                                            </a>
+                                        </small>
+                                    </strong>
                                 </div>
                                 <div class="equipmentSerial ms-auto text-end">
                                     <strong class="text-muted mx-1">${item.serial_no}</strong>
-                                    <span class="text-success"><i class="fas fa-check-circle"></i></span>
+                                    ${
+                                        item.status === 'inactive'
+                                        ? `<span class="text-danger opacity-75"><i class="fas fa-circle"></i></span>`
+                                        : `<span class="text-success opacity-75"><i class="fas fa-circle"></i></span>`
+                                    }
                                 </div>
                             </div>
                         </div>
                     `;
 
-                    $(`#${item.device_type}Collapse`).prepend($(html).hide().fadeIn('fast')).collapse('show');
-                    $(`.${item.device_type}DeviceCount`).text(`(${$(`#${item.device_type}Collapse .px-3.border-top.position-relative`).length})`).removeClass('fw-normal text-muted');
+                    $(collapseID).prepend($(html).hide().fadeIn('fast')).collapse('show');
+                    const count = $(`${collapseID} .px-3.border-top.position-relative`).length;
+                    $(countSelector).text(`(${count})`).removeClass('fw-normal text-muted');
                 });
             },
             error: function (xhr, status, error) {
@@ -732,59 +659,26 @@
     }
 
     $(document).ready(function () {
-        getAlarmEquipmentDetails("<?php echo $alarmcom_info['customer_id']; ?>");
+        $('.equipmentWidgetRefreshButton').click();
     });
 
     $(document).on('click', '.equipmentWidgetRefreshButton', function() {
-        getAlarmEquipmentDetails("<?php echo $alarmcom_info['customer_id']; ?>");
+        $(this).removeClass('btn-primary').addClass('btn-secondary').attr('disabled', true).html('<i class="fas fa-spinner fa-pulse"></i>');
+        try {
+            getAlarmEquipmentDetails("<?php echo $alarmcom_info['customer_id']; ?>");
+        } catch (error) { }
     });
 
     $(document).on('click', '.equipmentItem', function () {
         const equipment_type = $(this).attr('equipment-type');
+        const targetAccordion = $(`.equipmentAccordion[equipment-type="${equipment_type}"]`);
+
         if ($(this).hasClass('equipmentItemSelected')) {
             $('.equipmentAccordion').fadeIn('fast');
             $('.equipmentItem').removeClass('equipmentItemSelected');
         } else {    
             $('.equipmentAccordion').hide();
-
-            switch (equipment_type) {
-                case "notes":
-                    $('.equipmentAccordion[equipment-type="notes"]').fadeIn('fast');
-                    break;
-                case "communication":
-                    $('.equipmentAccordion[equipment-type="communication"]').fadeIn('fast');
-                    break;
-                case "panel":
-                    $('.equipmentAccordion[equipment-type="panel"]').fadeIn('fast');
-                    break;
-                case "sensor":
-                    $('.equipmentAccordion[equipment-type="sensor"]').fadeIn('fast');
-                    break;
-                case "peripheral":
-                    $('.equipmentAccordion[equipment-type="peripheral"]').fadeIn('fast');
-                    break;
-                case "video":
-                    $('.equipmentAccordion[equipment-type="video"]').fadeIn('fast');
-                    break;
-                case "access_point":
-                    $('.equipmentAccordion[equipment-type="access_point"]').fadeIn('fast');
-                    break;
-                case "zwave":
-                    $('.equipmentAccordion[equipment-type="zwave"]').fadeIn('fast');
-                    break;
-                case "liftmaster":
-                    $('.equipmentAccordion[equipment-type="liftmaster"]').fadeIn('fast');
-                    break;
-                case "geo":
-                    $('.equipmentAccordion[equipment-type="geo"]').fadeIn('fast');
-                    break;
-                case "voice":
-                    $('.equipmentAccordion[equipment-type="voice"]').fadeIn('fast');
-                    break;
-                 case "other":
-                    $('.equipmentAccordion[equipment-type="other"]').fadeIn('fast');
-                    break;
-            }
+            targetAccordion.fadeIn('fast');
 
             $('.equipmentItem').removeClass('equipmentItemSelected');
             $(this).addClass('equipmentItemSelected');
@@ -792,277 +686,182 @@
     });
     
     $('.equipmentSearchBar').on('input', function () {
-        const query = $(this).val().toLowerCase();
+        const query = $(this).val().trim().toLowerCase();
+
+        if (!query) {
+            $('.equipmentAccordion').fadeIn('fast');
+            $('.equipmentAccordion .px-3').fadeIn('fast');
+            return;
+        }
 
         $('.equipmentAccordion').each(function () {
-            let matchFound = false;
+            const accordion = $(this);
+            const items = accordion.find('.px-3');
+            let hasMatch = false;
 
-            $(this).find('.px-3').each(function () {
+            items.each(function () {
                 const text = $(this).text().toLowerCase();
-                if (text.includes(query)) {
-                    $(this).fadeIn('fast');
-                    matchFound = true;
-                } else {
-                    $(this).fadeOut('fast');
-                }
+                const match = text.includes(query);
+
+                $(this).toggle(match);
+                if (match) hasMatch = true;
             });
 
-            if (matchFound) {
-                $(this).fadeIn('fast');
-            } else {
-                $(this).fadeOut('fast');
-            }
+            accordion.toggle(hasMatch);
         });
     });
 
-    $(document).on('click', '.addNewEquipment', function() {
-        $('.addNewEquipment').hide();
-        $('.addNewEquipmentContainer').fadeIn('fast');
-    });
-    $(document).on('click', '.cancelAddNewEquipment', function() {
-        $('.addNewEquipment').fadeIn('fast');
-        $('.addNewEquipmentContainer').hide();
+    $(document).on('click', '.addEquipmentButton', function() {
+        $('.addEquipmentButton').hide();
+        $('.addEquipmentContainer').fadeIn('fast');
+        $('.editEquipmentContainer').hide();
     });
 
-    $('.addNewEquipmentForm').on('submit', function (e) {
+    $(document).on('click', '.cancelAddEquipmentButton', function() {
+        $('.addEquipmentButton').fadeIn('fast');
+        $('.addEquipmentContainer').hide();
+        $('.editEquipmentContainer').hide();
+    });
+
+    $(document).on('click', '.editEquipmentButton', function () {
+        $('.addEquipmentButton').hide();
+        $('.addEquipmentContainer').hide();
+        $('.editEquipmentContainer').fadeIn('fast');
+        
+        const equipmentData = {
+            id: $(this).attr('equipment_id'),
+            category: $(this).attr('category'),
+            device_type: $(this).attr('device_type'),
+            serial_no: $(this).attr('serial_no'),
+            model_no: $(this).attr('model_no'),
+            qty: $(this).attr('qty'),
+            equipment_name: $(this).attr('equipment_name'),
+            status: $(this).attr('status')
+        };
+
+        const form = $('.editEquipmentForm');
+        form.find('input, select').val(null);
+        form.find('[name="editEquipmentId"]').val(equipmentData.id);
+        form.find('[name="editEquipmentCategory"]').val(equipmentData.category).trigger('change');
+        form.find('[name="editEquipmentDeviceType"]').val(equipmentData.device_type).trigger('change');
+        form.find('[name="editEquipmentSerialNo"]').val(equipmentData.serial_no);
+        form.find('[name="editEquipmentModelNo"]').val(equipmentData.model_no);
+        form.find('[name="editEquipmentName"]').val(equipmentData.equipment_name);
+        form.find('[name="editEquipmentQty"]').val(equipmentData.qty);
+        form.find('[name="editEquipmentStatus"]').val(equipmentData.status);
+
+        const removeButton = $('.removeEquipmentButton');
+        removeButton.attr({
+            'equipment_id': equipmentData.id,
+            'equipment_name': equipmentData.equipment_name,
+            'device_type': equipmentData.device_type
+        });
+
+        const container = $('.editEquipmentContainer');
+        $('html, body').animate({
+            scrollTop: container.offset().top - 500
+        }, 300, function () {
+            container.attr('tabindex', -1).focus();
+        });
+    });
+
+    $(document).on('click', '.cancelEditEquipmentButton', function() {
+        $('.addEquipmentButton').fadeIn('fast');
+        $('.addEquipmentContainer').hide();
+        $('.editEquipmentContainer').hide();
+    });
+
+    $(document).on('submit', '.addEquipmentForm', function (e) {
         e.preventDefault();
-        const addNewEquipmentForm = $(this);
-        let addNewEquipmentFormData = new FormData(this);
-        let category = addNewEquipmentFormData.get('addEquipmentCategory');
-        let device_type = addNewEquipmentFormData.get('addEquipmentDeviceType');
-        let serial_no = addNewEquipmentFormData.get('addEquipmentSerialNo');
-        let model_no = addNewEquipmentFormData.get('addEquipmentModelNo');
-        let qty = addNewEquipmentFormData.get('addEquipmentQty');
-        let equipment_name = addNewEquipmentFormData.get('addEquipmentName');
-        let status = addNewEquipmentFormData.get('addEquipmentStatus');
 
-        $.ajax({
-            type: "POST",
-            url: `${window.origin}/Customer/saveCustomerEquipment`,
-            data: addNewEquipmentFormData,
-            processData: false,
-            contentType: false,
-            beforeSend: function () {
-                formDisabler(addNewEquipmentForm, true);
-            },
-            success: function (response) {
-                if (response == 1) {
-                    switch (device_type) {
-                        case 'communication':
-                            let communicationHTML = `
-                                <div class="px-3 border-top position-relative nsmartracEquipmentContainer">
-                                    <div class="d-flex align-items-center mt-3 mb-3 gap-3">
-                                        <i class="<?php echo $equipmentIcons['communication']; ?> fs-4 text-muted"></i>
-                                        <div class="d-flex flex-column">
-                                            <small class="text-muted upperEquipmentDetail">${model_no}&ensp;<span class="badge bg-primary opacity-50 nsmartBadgeEquipment">nsmartrac</span></small>
-                                            <strong class="text-muted">${equipment_name}</strong>
-                                        </div>
-                                        <div class="equipmentSerial ms-auto text-end">
-                                            <strong class="text-muted mx-1">${serial_no}</strong>
-                                            <span class="text-success"><i class="fas fa-check-circle"></i></span>
-                                        </div>
-                                    </div>
-                                </div> 
-                            `;
-                            $('#communicationCollapse').prepend( `${communicationHTML}`).collapse('show');
-                            $(`.communicationDeviceCount`).text(`(${$(`#communicationCollapse .px-3.border-top.position-relative`).length})`).removeClass('fw-normal text-muted');
-                            break;
-                        case 'panel':
-                            let panelHTML = `
-                                <div class="px-3 border-top position-relative nsmartracEquipmentContainer">
-                                    <div class="d-flex align-items-center mt-3 mb-3 gap-3">
-                                        <i class="<?php echo $equipmentIcons['panel']; ?> fs-4 text-muted"></i>
-                                        <div class="d-flex flex-column">
-                                            <small class="text-muted upperEquipmentDetail">${model_no}&ensp;<span class="badge bg-primary opacity-50 nsmartBadgeEquipment">nsmartrac</span></small>
-                                            <strong class="text-muted">${equipment_name}</strong>
-                                        </div>
-                                        <div class="equipmentSerial ms-auto text-end">
-                                            <strong class="text-muted mx-1">${serial_no}</strong>
-                                            <span class="text-success"><i class="fas fa-check-circle"></i></span>
-                                        </div>
-                                    </div>
-                                </div> 
-                            `;
-                            $('#panelCollapse').prepend( `${panelHTML}`).collapse('show');
-                            $(`.panelDeviceCount`).text(`(${$(`#panelCollapse .px-3.border-top.position-relative`).length})`).removeClass('fw-normal text-muted');
-                            break;
-                        case 'sensor':
-                            let sensorHTML = `
-                                <div class="px-3 border-top position-relative nsmartracEquipmentContainer">
-                                    <div class="d-flex align-items-center mt-3 mb-3 gap-3">
-                                        <i class="<?php echo $equipmentIcons['sensor']; ?> fs-4 text-muted"></i>
-                                        <div class="d-flex flex-column">
-                                            <small class="text-muted upperEquipmentDetail">${model_no}&ensp;<span class="badge bg-primary opacity-50 nsmartBadgeEquipment">nsmartrac</span></small>
-                                            <strong class="text-muted">${equipment_name}</strong>
-                                        </div>
-                                        <div class="equipmentSerial ms-auto text-end">
-                                            <strong class="text-muted mx-1">${serial_no}</strong>
-                                            <span class="text-success"><i class="fas fa-check-circle"></i></span>
-                                        </div>
-                                    </div>
-                                </div> 
-                            `;
-                            $('#sensorCollapse').prepend( `${sensorHTML}`).collapse('show');
-                            $(`.sensorDeviceCount`).text(`(${$(`#sensorCollapse .px-3.border-top.position-relative`).length})`).removeClass('fw-normal text-muted');
-                            break;
-                        case 'peripheral':
-                            let peripheralHTML = `
-                                <div class="px-3 border-top position-relative nsmartracEquipmentContainer">
-                                    <div class="d-flex align-items-center mt-3 mb-3 gap-3">
-                                        <i class="<?php echo $equipmentIcons['peripheral']; ?> fs-4 text-muted"></i>
-                                        <div class="d-flex flex-column">
-                                            <small class="text-muted upperEquipmentDetail">${model_no}&ensp;<span class="badge bg-primary opacity-50 nsmartBadgeEquipment">nsmartrac</span></small>
-                                            <strong class="text-muted">${equipment_name}</strong>
-                                        </div>
-                                        <div class="equipmentSerial ms-auto text-end">
-                                            <strong class="text-muted mx-1">${serial_no}</strong>
-                                            <span class="text-success"><i class="fas fa-check-circle"></i></span>
-                                        </div>
-                                    </div>
-                                </div> 
-                            `;
-                            $('#peripheralCollapse').prepend( `${peripheralHTML}`).collapse('show');
-                            $(`.peripheralDeviceCount`).text(`(${$(`#peripheralCollapse .px-3.border-top.position-relative`).length})`).removeClass('fw-normal text-muted');
-                            break;
-                        case 'video':
-                            let videoHTML = `
-                                <div class="px-3 border-top position-relative nsmartracEquipmentContainer">
-                                    <div class="d-flex align-items-center mt-3 mb-3 gap-3">
-                                        <i class="<?php echo $equipmentIcons['video']; ?> fs-4 text-muted"></i>
-                                        <div class="d-flex flex-column">
-                                            <small class="text-muted upperEquipmentDetail">${model_no}&ensp;<span class="badge bg-primary opacity-50 nsmartBadgeEquipment">nsmartrac</span></small>
-                                            <strong class="text-muted">${equipment_name}</strong>
-                                        </div>
-                                        <div class="equipmentSerial ms-auto text-end">
-                                            <strong class="text-muted mx-1">${serial_no}</strong>
-                                            <span class="text-success"><i class="fas fa-check-circle"></i></span>
-                                        </div>
-                                    </div>
-                                </div> 
-                            `;
-                            $('#videoCollapse').prepend( `${videoHTML}`).collapse('show');
-                            $(`.videoDeviceCount`).text(`(${$(`#videoCollapse .px-3.border-top.position-relative`).length})`).removeClass('fw-normal text-muted');
-                            break;
-                        case 'access_point':
-                            let access_pointHTML = `
-                                <div class="px-3 border-top position-relative nsmartracEquipmentContainer">
-                                    <div class="d-flex align-items-center mt-3 mb-3 gap-3">
-                                        <i class="<?php echo $equipmentIcons['access_point']; ?> fs-4 text-muted"></i>
-                                        <div class="d-flex flex-column">
-                                            <small class="text-muted upperEquipmentDetail">${model_no}&ensp;<span class="badge bg-primary opacity-50 nsmartBadgeEquipment">nsmartrac</span></small>
-                                            <strong class="text-muted">${equipment_name}</strong>
-                                        </div>
-                                        <div class="equipmentSerial ms-auto text-end">
-                                            <strong class="text-muted mx-1">${serial_no}</strong>
-                                            <span class="text-success"><i class="fas fa-check-circle"></i></span>
-                                        </div>
-                                    </div>
-                                </div> 
-                            `;
-                            $('#access_pointCollapse').prepend( `${access_pointHTML}`).collapse('show');
-                            $(`.access_pointDeviceCount`).text(`(${$(`#access_pointCollapse .px-3.border-top.position-relative`).length})`).removeClass('fw-normal text-muted');
-                            break;
-                        case 'zwave':
-                            let zwaveHTML = `
-                                <div class="px-3 border-top position-relative nsmartracEquipmentContainer">
-                                    <div class="d-flex align-items-center mt-3 mb-3 gap-3">
-                                        <i class="<?php echo $equipmentIcons['zwave']; ?> fs-4 text-muted"></i>
-                                        <div class="d-flex flex-column">
-                                            <small class="text-muted upperEquipmentDetail">${model_no}&ensp;<span class="badge bg-primary opacity-50 nsmartBadgeEquipment">nsmartrac</span></small>
-                                            <strong class="text-muted">${equipment_name}</strong>
-                                        </div>
-                                        <div class="equipmentSerial ms-auto text-end">
-                                            <strong class="text-muted mx-1">${serial_no}</strong>
-                                            <span class="text-success"><i class="fas fa-check-circle"></i></span>
-                                        </div>
-                                    </div>
-                                </div> 
-                            `;
-                            $('#zwaveCollapse').prepend( `${zwaveHTML}`).collapse('show');
-                            $(`.zwaveDeviceCount`).text(`(${$(`#zwaveCollapse .px-3.border-top.position-relative`).length})`).removeClass('fw-normal text-muted');
-                            break;
-                        case 'liftmaster':
-                            let liftmasterHTML = `
-                                <div class="px-3 border-top position-relative nsmartracEquipmentContainer">
-                                    <div class="d-flex align-items-center mt-3 mb-3 gap-3">
-                                        <i class="<?php echo $equipmentIcons['liftmaster']; ?> fs-4 text-muted"></i>
-                                        <div class="d-flex flex-column">
-                                            <small class="text-muted upperEquipmentDetail">${model_no}&ensp;<span class="badge bg-primary opacity-50 nsmartBadgeEquipment">nsmartrac</span></small>
-                                            <strong class="text-muted">${equipment_name}</strong>
-                                        </div>
-                                        <div class="equipmentSerial ms-auto text-end">
-                                            <strong class="text-muted mx-1">${serial_no}</strong>
-                                            <span class="text-success"><i class="fas fa-check-circle"></i></span>
-                                        </div>
-                                    </div>
-                                </div> 
-                            `;
-                            $('#liftmasterCollapse').prepend( `${liftmasterHTML}`).collapse('show');
-                            $(`.liftmasterDeviceCount`).text(`(${$(`#liftmasterCollapse .px-3.border-top.position-relative`).length})`).removeClass('fw-normal text-muted');
-                            break;
-                        case 'geo':
-                            let geoHTML = `
-                                <div class="px-3 border-top position-relative nsmartracEquipmentContainer">
-                                    <div class="d-flex align-items-center mt-3 mb-3 gap-3">
-                                        <i class="<?php echo $equipmentIcons['geo']; ?> fs-4 text-muted"></i>
-                                        <div class="d-flex flex-column">
-                                            <small class="text-muted upperEquipmentDetail">${model_no}&ensp;<span class="badge bg-primary opacity-50 nsmartBadgeEquipment">nsmartrac</span></small>
-                                            <strong class="text-muted">${equipment_name}</strong>
-                                        </div>
-                                        <div class="equipmentSerial ms-auto text-end">
-                                            <strong class="text-muted mx-1">${serial_no}</strong>
-                                            <span class="text-success"><i class="fas fa-check-circle"></i></span>
-                                        </div>
-                                    </div>
-                                </div> 
-                            `;
-                            $('#geoCollapse').prepend( `${geoHTML}`).collapse('show');
-                            $(`.geoDeviceCount`).text(`(${$(`#geoCollapse .px-3.border-top.position-relative`).length})`).removeClass('fw-normal text-muted');
-                            break;
-                        case 'voice':
-                            let voiceHTML = `
-                                <div class="px-3 border-top position-relative nsmartracEquipmentContainer">
-                                    <div class="d-flex align-items-center mt-3 mb-3 gap-3">
-                                        <i class="<?php echo $equipmentIcons['voice']; ?> fs-4 text-muted"></i>
-                                        <div class="d-flex flex-column">
-                                            <small class="text-muted upperEquipmentDetail">${model_no}&ensp;<span class="badge bg-primary opacity-50 nsmartBadgeEquipment">nsmartrac</span></small>
-                                            <strong class="text-muted">${equipment_name}</strong>
-                                        </div>
-                                        <div class="equipmentSerial ms-auto text-end">
-                                            <strong class="text-muted mx-1">${serial_no}</strong>
-                                            <span class="text-success"><i class="fas fa-check-circle"></i></span>
-                                        </div>
-                                    </div>
-                                </div> 
-                            `;
-                            $('#voiceCollapse').prepend( `${voiceHTML}`).collapse('show');
-                            $(`.voiceDeviceCount`).text(`(${$(`#voiceCollapse .px-3.border-top.position-relative`).length})`).removeClass('fw-normal text-muted');
-                            break;
-                        case 'other':
-                            let otherHTML = `
-                                <div class="px-3 border-top position-relative nsmartracEquipmentContainer">
-                                    <div class="d-flex align-items-center mt-3 mb-3 gap-3">
-                                        <i class="<?php echo $equipmentIcons['other']; ?> fs-4 text-muted"></i>
-                                        <div class="d-flex flex-column">
-                                            <small class="text-muted upperEquipmentDetail">${model_no}&ensp;<span class="badge bg-primary opacity-50 nsmartBadgeEquipment">nsmartrac</span></small>
-                                            <strong class="text-muted">${equipment_name}</strong>
-                                        </div>
-                                        <div class="equipmentSerial ms-auto text-end">
-                                            <strong class="text-muted mx-1">${serial_no}</strong>
-                                            <span class="text-success"><i class="fas fa-check-circle"></i></span>
-                                        </div>
-                                    </div>
-                                </div> 
-                            `;
-                            $('#otherCollapse').prepend( `${otherHTML}`).collapse('show');
-                            $(`.otherDeviceCount`).text(`(${$(`#otherCollapse .px-3.border-top.position-relative`).length})`).removeClass('fw-normal text-muted');
-                            break;
-                    }
+        const addEquipmentForm = $(this);
+        let addEquipmentFormData = new FormData(this);
+        let category = addEquipmentFormData.get('addEquipmentCategory');
+        let device_type = addEquipmentFormData.get('addEquipmentDeviceType');
+        let serial_no = addEquipmentFormData.get('addEquipmentSerialNo');
+        let model_no = addEquipmentFormData.get('addEquipmentModelNo');
+        let qty = addEquipmentFormData.get('addEquipmentQty');
+        let equipment_name = addEquipmentFormData.get('addEquipmentName');
+        let status = addEquipmentFormData.get('addEquipmentStatus');
+        let qrFile = addEquipmentFormData.get('addEquipmentQRCode');
 
-                    $('.addNewEquipment').fadeIn('fast');
-                    $('.addNewEquipmentContainer').hide();
-                    addNewEquipmentForm.find('input, select').val(null);
-                } else {
+        if (qrFile && qrFile.size > 5 * 1024 * 1024) {
+            Swal.fire({
+                icon: "warning",
+                title: "QR Code Too Large",
+                html: "Please upload a QR code file smaller than 5MB.",
+                showConfirmButton: true,
+                confirmButtonText: "Okay",
+            });
+            return false;
+        }
+
+        function submitForm() {
+            $.ajax({
+                type: "POST",
+                url: `${window.origin}/Customer/saveCustomerEquipment`,
+                data: addEquipmentFormData,
+                processData: false,
+                contentType: false,
+                beforeSend: function () {
+                    formDisabler(addEquipmentForm, true);
+                },
+                success: function (response) {
+                    const item_id = response;
+
+                    deviceTypes.forEach(type => {
+                        if (device_type === type) {
+
+                            const iconClass = equipmentIcons[type] || '';
+                            const collapseID = `#${type}Collapse`;
+                            const countSelector = `.${type}DeviceCount`;
+
+                            const html = `
+                                <div class="px-3 border-top position-relative equipmentItemContainer" data-id="${item_id}">
+                                    <div class="d-flex align-items-center mt-3 mb-3 gap-3">
+                                        <i class="${iconClass} fs-4 text-muted"></i>
+                                        <div class="d-flex flex-column">
+                                            <small class="text-muted upperEquipmentDetail">
+                                                ${model_no}&ensp;
+                                                <span class="badge bg-primary opacity-50 equipmentItemBadge">nsmartrac</span>
+                                            </small>
+                                            <strong class="text-muted">
+                                                ${equipment_name}&ensp;
+                                                <small class="fw-normal">
+                                                    <a class="text-decoration-none editEquipmentButton" href="javascript:void(0)" equipment_id="${item_id}" category="${category}" device_type="${device_type}" serial_no="${serial_no}" model_no="${model_no}" qty="${qty}" equipment_name="${equipment_name}" status="${status}">
+                                                        <i class="fas fa-edit opacity-75"></i> Edit
+                                                    </a>
+                                                </small>
+                                            </strong>
+                                        </div>
+                                        <div class="equipmentSerial ms-auto text-end">
+                                            <strong class="text-muted mx-1">${serial_no}</strong>
+                                            ${
+                                                status === 'inactive'
+                                                ? `<span class="text-danger opacity-75"><i class="fas fa-circle"></i></span>`
+                                                : `<span class="text-success opacity-75"><i class="fas fa-circle"></i></span>`
+                                            }
+                                        </div>
+                                    </div>
+                                </div>
+                            `;
+
+                            $(collapseID).prepend(html).collapse('show');
+
+                            const count = $(`${collapseID} .px-3.border-top.position-relative`).length;
+                            $(countSelector).text(`(${count})`).removeClass('fw-normal text-muted');
+                        }
+                    });
+
+                    $('.addEquipmentButton').fadeIn('fast');
+                    $('.addEquipmentContainer').hide();
+                    addEquipmentForm.find('input, select').val(null);
+                    $('input[name="addEquipmentQty"]').val(1);
+                    $('select[name="addEquipmentStatus"]').val('active');
+                    formDisabler(addEquipmentForm, false);
+                },
+                error: function () {
+                    formDisabler(addEquipmentForm, false);
                     Swal.fire({
                         icon: "error",
                         title: "Network Error!",
@@ -1070,20 +869,281 @@
                         showConfirmButton: true,
                         confirmButtonText: "Okay",
                     });
-                }
+                },
+            });
+        }
 
-                formDisabler(addNewEquipmentForm, false);
-            },
-            error: function (xhr, status, error) {
-                formDisabler(addNewEquipmentForm, false);
-                Swal.fire({
-                    icon: "error",
-                    title: "Network Error!",
-                    html: "An unexpected error occurred. Please try again!",
-                    showConfirmButton: true,
-                    confirmButtonText: "Okay",
+        if (qrFile) {
+            const reader = new FileReader();
+            reader.onload = function () {
+                addEquipmentFormData.set('addEquipmentQRCodeBase64', reader.result.split(',')[1]);
+                submitForm();
+            };
+            reader.readAsDataURL(qrFile);
+        } else {
+            addEquipmentFormData.delete('addEquipmentQRCodeBase64');
+            submitForm();
+        }
+    });
+
+    $(document).on('submit', '.editEquipmentForm', function(e) {
+        e.preventDefault();
+
+        const editForm = $(this);
+        let editFormData = new FormData(this);
+
+        let equipment_id = editFormData.get('editEquipmentId');
+        let category = editFormData.get('editEquipmentCategory');
+        let device_type = editFormData.get('editEquipmentDeviceType');
+        let serial_no = editFormData.get('editEquipmentSerialNo');
+        let model_no = editFormData.get('editEquipmentModelNo');
+        let qty = editFormData.get('editEquipmentQty');
+        let equipment_name = editFormData.get('editEquipmentName');
+        let status = editFormData.get('editEquipmentStatus');
+        let qrFile = editFormData.get('editEquipmentQRCode');
+
+        if (qrFile && qrFile.size > 5 * 1024 * 1024) {
+            Swal.fire({
+                icon: "warning",
+                title: "QR Code Too Large",
+                html: "Please upload a QR code file smaller than 5MB.",
+                showConfirmButton: true,
+                confirmButtonText: "Okay",
+            });
+            return false;
+        }
+
+        function submitForm() {
+            $.ajax({
+                type: "POST",
+                url: `${window.origin}/Customer/updateCustomerEquipment`,
+                data: editFormData,
+                processData: false,
+                contentType: false,
+                beforeSend: function() {
+                    formDisabler(editForm, true);
+                },
+                success: function(response) {
+                    formDisabler(editForm, false);
+                    const item_id = equipment_id;
+                    const iconClass = equipmentIcons[device_type] || '';
+                    const itemContainer = $(`.equipmentItemContainer[data-id="${item_id}"]`);
+                    const oldDeviceType = itemContainer.closest('.collapse').attr('id')?.replace('Collapse', '') || '';
+                    const newDeviceType = device_type;
+                    const newCollapseID = `#${newDeviceType}Collapse`;
+                    const newCountSelector = `.${newDeviceType}DeviceCount`;
+                    const updatedHTML = `
+                        <div class="px-3 border-top position-relative equipmentItemContainer" data-id="${item_id}">
+                            <div class="d-flex align-items-center mt-3 mb-3 gap-3">
+                                <i class="${iconClass} fs-4 text-muted"></i>
+                                <div class="d-flex flex-column">
+                                    <small class="text-muted upperEquipmentDetail">
+                                        ${model_no}&ensp;
+                                        <span class="badge bg-primary opacity-50 equipmentItemBadge">nsmartrac</span>
+                                    </small>
+                                    <strong class="text-muted">
+                                        ${equipment_name}&ensp;
+                                        <small class="fw-normal">
+                                            <a class="text-decoration-none editEquipmentButton" href="javascript:void(0)" equipment_id="${item_id}" category="${category}" device_type="${device_type}" serial_no="${serial_no}" model_no="${model_no}" qty="${qty}" equipment_name="${equipment_name}" status="${status}">
+                                                <i class="fas fa-edit opacity-75"></i> Edit
+                                            </a>
+                                        </small>
+                                    </strong>
+                                </div>
+                                <div class="equipmentSerial ms-auto text-end">
+                                    <strong class="text-muted mx-1">${serial_no}</strong>
+                                    ${
+                                        status === 'inactive'
+                                        ? `<span class="text-danger opacity-75"><i class="fas fa-circle"></i></span>`
+                                        : `<span class="text-success opacity-75"><i class="fas fa-circle"></i></span>`
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                    
+                    if (oldDeviceType !== newDeviceType) {
+                        itemContainer.remove();
+                        $(newCollapseID).prepend(updatedHTML).collapse('show');
+
+                        const oldCountSelector = `.${oldDeviceType}DeviceCount`;
+                        const oldCount = $(`#${oldDeviceType}Collapse .px-3.border-top.position-relative`).length;
+                        $(oldCountSelector).text(`(${oldCount})`);
+
+                        if (oldCount === 0) {
+                            $(oldCountSelector).addClass('fw-normal text-muted');
+                        }
+
+                        const newCountSelector = `.${newDeviceType}DeviceCount`;
+                        const newCount = $(`#${newDeviceType}Collapse .px-3.border-top.position-relative`).length;
+                        $(newCountSelector).text(`(${newCount})`).removeClass('fw-normal text-muted');
+                    } else {
+                        itemContainer.html($(updatedHTML).html());
+
+                        const countSelector = `.${newDeviceType}DeviceCount`;
+                        const count = $(`#${newDeviceType}Collapse .px-3.border-top.position-relative`).length;
+                        $(countSelector).text(`(${count})`);
+
+                        if (count === 0) {
+                            $(countSelector).addClass('fw-normal text-muted');
+                        } else {
+                            $(countSelector).removeClass('fw-normal text-muted');
+                        }
+                    }
+
+                    $('.editEquipmentContainer').hide();
+                    $('.addEquipmentButton').fadeIn('fast');
+                },
+                error: function() {
+                    formDisabler(editForm, false);
+                    Swal.fire({
+                        icon: "error",
+                        title: "Network Error!",
+                        html: "Please check your connection and try again.",
+                        showConfirmButton: true,
+                    });
+                }
+            });
+        }
+
+        if (qrFile && qrFile.size > 0) {
+            const reader = new FileReader();
+            reader.onload = function() {
+                editFormData.set('editEquipmentQRCodeBase64', reader.result.split(',')[1]);
+                submitForm();
+            };
+            reader.readAsDataURL(qrFile);
+        } else {
+            editFormData.delete('editEquipmentQRCodeBase64');
+            submitForm();
+        }
+    });
+
+    $(document).on('click', '.removeEquipmentButton', function() {
+        const button = $(this);
+        const equipment_id = button.attr('equipment_id');
+        const equipment_name = button.attr('equipment_name');
+        const device_type = button.attr('device_type');
+
+        Swal.fire({
+            icon: "warning",
+            title: "Remove Equipment",
+            html: `Are you sure you want to remove <strong class="text-muted">${equipment_name}</strong>?`,
+            showCancelButton: true,
+            confirmButtonText: "Proceed",
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $.ajax({
+                    type: "POST",
+                    url: `${window.origin}/Customer/removeCustomerEquipment`,
+                    data: {
+                        id: equipment_id
+                    },
+                    dataType: "JSON",
+                    beforeSend: function() {
+                        Swal.fire({
+                            icon: "info",
+                            title: "Removing Equipment",
+                            html: "Please wait while the process is running...",
+                            allowOutsideClick: false,
+                            allowEscapeKey: false,
+                            didOpen: () => Swal.showLoading(),
+                        });
+                    },
+                    success: function(response) {
+                        const container = $(`.equipmentItemContainer[data-id="${equipment_id}"]`);
+                        const collapse = container.closest('.collapse');
+                        const deviceType = collapse.attr('id')?.replace('Collapse', '');
+                        const countSelector = `.${deviceType}DeviceCount`;
+
+                        container.fadeOut(300, function() {
+                            $(this).remove();
+
+                            const count = $(`#${deviceType}Collapse .px-3.border-top.position-relative`).length;
+                            $(countSelector).text(`(${count})`);
+
+                            if (count === 0) {
+                                $(countSelector).addClass('fw-normal text-muted');
+                            } else {
+                                $(countSelector).removeClass('fw-normal text-muted');
+                            }
+                        });
+
+                        Swal.fire({
+                            icon: "success",
+                            title: "Equipment Removed!",
+                            html: `<strong class='text-primary'>${equipment_name}</strong> has been successfully removed.`,
+                            showConfirmButton: true,
+                            confirmButtonText: "Okay",
+                        });
+
+                        $('.editEquipmentContainer').hide();
+                        $('.addEquipmentButton').fadeIn('fast');
+                    },
+                    error: function() {
+                        Swal.fire({
+                            icon: "error",
+                            title: "Network Error!",
+                            html: "Please check your connection and try again.",
+                            showConfirmButton: true,
+                            confirmButtonText: "Okay",
+                        });
+                    }
                 });
-            },
+            }
         });
+    });
+
+    $(document).on('change', 'select[name="addEquipmentCategory"]', function() {
+        const value = $(this).val();
+        switch (value) {
+            case 'dvr':
+                $('select[name="addEquipmentDeviceType"]').val('video');
+                $('.addCategoryContainer').removeClass('col-lg-8').addClass('col-lg-7');
+                $('.addSerialNoContainer, .addModelNoContainer').removeClass('col-lg-6').addClass('col-lg-4');
+                $('.addQRCodeContainer').fadeIn('fast');
+                $('input[ name="addEquipmentQRCode"]').attr('required', true);
+                break;
+            case 'nvr':
+                $('select[name="addEquipmentDeviceType"]').val('video');
+                $('.addCategoryContainer').removeClass('col-lg-7').addClass('col-lg-8');
+                $('.addSerialNoContainer, .addModelNoContainer').removeClass('col-lg-4').addClass('col-lg-6');
+                $('.addQRCodeContainer').hide();
+                $('input[ name="addEquipmentQRCode"]').removeAttr('required');
+                break;
+            case 'pers':
+                $('select[name="addEquipmentDeviceType"]').val('other');
+                $('.addCategoryContainer').removeClass('col-lg-7').addClass('col-lg-8');
+                $('.addSerialNoContainer, .addModelNoContainer').removeClass('col-lg-4').addClass('col-lg-6');
+                $('.addQRCodeContainer').hide();
+                $('input[ name="addEquipmentQRCode"]').removeAttr('required');
+                break;
+        }
+    });
+
+    $(document).on('change', 'select[name="editEquipmentCategory"]', function() {
+        const value = $(this).val();
+        switch (value) {
+            case 'dvr':
+                $('select[name="editEquipmentDeviceType"]').val('video');
+                $('.editCategoryContainer').removeClass('col-lg-8').addClass('col-lg-7');
+                $('.editSerialNoContainer, .editModelNoContainer').removeClass('col-lg-6').addClass('col-lg-4');
+                $('.editQRCodeContainer').fadeIn('fast');
+                break;
+            case 'nvr':
+                $('select[name="editEquipmentDeviceType"]').val('video');
+                $('.editCategoryContainer').removeClass('col-lg-7').addClass('col-lg-8');
+                $('.editSerialNoContainer, .editModelNoContainer').removeClass('col-lg-4').addClass('col-lg-6');
+                $('.editQRCodeContainer').hide();
+                $('input[ name="editEquipmentQRCode"]').removeAttr('required');
+                break;
+            case 'pers':
+                $('select[name="editEquipmentDeviceType"]').val('other');
+                $('.editCategoryContainer').removeClass('col-lg-7').addClass('col-lg-8');
+                $('.editSerialNoContainer, .editModelNoContainer').removeClass('col-lg-4').addClass('col-lg-6');
+                $('.editQRCodeContainer').hide();
+                $('input[ name="editEquipmentQRCode"]').removeAttr('required');
+                break;
+        }
     });
 </script>
