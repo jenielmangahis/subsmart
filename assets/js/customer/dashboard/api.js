@@ -1,3 +1,4 @@
+//export const prefixURL = "http://127.0.0.1/ci/nsmart_v2";
 export const prefixURL = "";
 
 export function getActions() {
@@ -61,6 +62,19 @@ export async function fetchCustomerTotalClientAgreement(cid){
   return response.json();
 }
 
+export async function fetchCustomerTotalSitePhotos(cid){
+  const data = new FormData();
+  data.append("cid", cid);
+  const response = await fetch(`${prefixURL}/CustomerDashboardQuickActions/customerTotalSitePhotos`, {
+    method: "POST",
+    body: data,
+    headers: {
+      accepts: "application/json",
+    },
+  });
+  return response.json();
+}
+
 export async function clientAgreementMaxUploadConfirmation() {
   const alert =  await Swal.fire({
     title: 'Max Client Agreement',
@@ -73,10 +87,27 @@ export async function clientAgreementMaxUploadConfirmation() {
   return !!(alert.value && alert.value === true);
 }
 
-export async function deleteConfirmation() {
+export async function sitePhotosMaxUploadConfirmation() {
+  const alert =  await Swal.fire({
+    title: 'Max Site Photos',
+    text: `Continue uploading will overwrite recent saved data.`,
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonText: 'Proceed',
+    cancelButtonText: 'Cancel'
+  });
+  return !!(alert.value && alert.value === true);
+}
+
+export async function deleteConfirmation(dataType) {
+  let document = 'document';
+  if( dataType == 'customer_signature' ){
+    document = 'signature';
+  }
+
   const alert =  await Swal.fire({
     title: 'Delete Document',
-    text: `Continue deleting selected document?`,
+    text: `Continue deleting selected ${document}?`,
     icon: 'question',
     showCancelButton: true,
     confirmButtonText: 'Proceed',
