@@ -415,37 +415,7 @@ div#controls div#call-controls div#volume-indicators > div {
     </div>
   </div>
 </div>
-<!-- Customer Signature -->
-<div class="modal fade nsm-modal" tabindex="-1" role="dialog" id="modal-customer-signature">
-  <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title">Customer Signature</h5>
-        <button type="button" class="close" data-dismiss="modal" data-bs-dismiss="modal" aria-label="Close">
-          <i class="bx bx-fw bx-x m-0"></i>
-        </button>
-      </div>
-      <div class="modal-body">
-        <div id="signature-pad-container">
-            <div class="canvas-wrapper">
-                <canvas></canvas>
-                <span class="canvas-placeholder">sign here</span>
-            </div>
 
-            <div class="d-flex justify-content-end">
-                <a class="link nsm-button default" href="#" data-action="clear">Clear</a>
-            </div>
-        </div>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="nsm-button primary" id="btn-save-signature" data-action="save">Save</button>
-        <button type="button" class="nsm-button" data-dismiss="modal" data-bs-dismiss="modal">Close</button>
-      </div>
-    </div>
-  </div>
-</div>
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/FitText.js/1.2.0/jquery.fittext.min.js" integrity="sha512-e2WVdoOGqKU97DHH6tYamn+eAwLDpyHKqPy4uSv0aGlwDXZKGwyS27sfiIUT8gpZ88/Lr4UZpbRt93QkGRgpug==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
 <script type="text/javascript">
 $(document).ready(function() {
@@ -472,11 +442,6 @@ $(document).ready(function() {
 
         count++
         }
-    });
-
-    $('#btn-customer-signature').on('click', function(){            
-        initSignatureModal(); 
-        $('#modal-customer-signature').modal('show');
     });
 
     load_customer_ledger_balance_amount();

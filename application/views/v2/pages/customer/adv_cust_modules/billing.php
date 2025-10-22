@@ -1,4 +1,3 @@
-<hr />
 <div class="d-block mb-4">
     <span style="font-size:18px; font-weight:bold;">Billing</span>
     <?php 

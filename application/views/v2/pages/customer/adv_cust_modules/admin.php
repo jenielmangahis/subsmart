@@ -133,8 +133,10 @@
                     </div>
                 </div>
             </div>            
+            <hr />
             <?php include viewPath('v2/pages/customer/adv_cust_modules/billing'); ?>      
             <?php if( isAdmin() && in_array(logged('company_id'), adi_company_ids()) ){ ?>
+                <hr />
                 <?php include viewPath('v2/pages/customer/adv_cust_modules/payment_method_images'); ?>      
             <?php } ?>
             <div class="row g-1">                
@@ -163,77 +165,77 @@
                 </div>
             </div>
         </div>
-    </div>
 
-    <div class="modal fade nsm-modal fade" id="modal-admin-upload-image" tabindex="-1" aria-labelledby="modal-admin-upload-image-modal_label" aria-hidden="true">
-        <div class="modal-dialog modal-md modal-dialog-centered modal-dialog-scrollable">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <span class="modal-title content-title">Upload Image</span>
-                    <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
-                </div>
-                <div class="modal-body">
-                    <form id="frm-admin-upload-image" method="POST">
-                        <div class="row g-3">
-                            <div class="col-md-12 form-group">
-                                <label for="admin-image" class="block-label"><b>Image</b></label>
-                                <input type="file" class="form-control" name="image" id="admin-image" accept="image/*" />
-                            </div>  
-                        </div>
-                    </form>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="nsm-button" data-bs-dismiss="modal">Cancel</button>
-                    <button type="submit" class="nsm-button primary" id="btn-admin-upload-image" form="frm-admin-upload-image">Save</button>
+        <div class="modal fade nsm-modal fade" id="modal-admin-upload-image" tabindex="-1" aria-labelledby="modal-admin-upload-image-modal_label" aria-hidden="true">
+            <div class="modal-dialog modal-md modal-dialog-centered modal-dialog-scrollable">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <span class="modal-title content-title">Upload Image</span>
+                        <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
+                    </div>
+                    <div class="modal-body">
+                        <form id="frm-admin-upload-image" method="POST">
+                            <div class="row g-3">
+                                <div class="col-md-12 form-group">
+                                    <label for="admin-image" class="block-label"><b>Image</b></label>
+                                    <input type="file" class="form-control" name="image" id="admin-image" accept="image/*" />
+                                </div>  
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="nsm-button" data-bs-dismiss="modal">Cancel</button>
+                        <button type="submit" class="nsm-button primary" id="btn-admin-upload-image" form="frm-admin-upload-image">Save</button>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
 
-    <div class="modal fade nsm-modal fade" id="modal-admin-capture-payment" tabindex="-1" aria-labelledby="modal-admin-capture-payment_label" aria-hidden="true">
-        <div class="modal-dialog modal-md modal-dialog-centered modal-dialog-scrollable">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <span class="modal-title content-title">Capture Payment</span>
-                    <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
-                </div>
-                <div class="modal-body">
-                    <form id="frm-admin-capture-payment" method="POST">
-                        <div class="row g-3" id="admin-capture-payment-step1">
-                            <div class="col-md-12 form-group">
-                                <label for="processing-fee" class="block-label"><b>Processing Fee</b></label>
-                                <div class="input-group">
-                                    <div class="input-group-text">$</div>
-                                    <input type="number" step="any" value="0" min="0" class="form-control" name="processing_fee" id="processing-fee" />
+        <div class="modal fade nsm-modal fade" id="modal-admin-capture-payment" tabindex="-1" aria-labelledby="modal-admin-capture-payment_label" aria-hidden="true">
+            <div class="modal-dialog modal-md modal-dialog-centered modal-dialog-scrollable">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <span class="modal-title content-title">Capture Payment</span>
+                        <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
+                    </div>
+                    <div class="modal-body">
+                        <form id="frm-admin-capture-payment" method="POST">
+                            <div class="row g-3" id="admin-capture-payment-step1">
+                                <div class="col-md-12 form-group">
+                                    <label for="processing-fee" class="block-label"><b>Processing Fee</b></label>
+                                    <div class="input-group">
+                                        <div class="input-group-text">$</div>
+                                        <input type="number" step="any" value="0" min="0" class="form-control" name="processing_fee" id="processing-fee" />
+                                    </div> 
+                                </div>  
+                                <div class="col-md-12 form-group">
+                                    <label for="payment-amount" class="block-label"><b>Amount</b></label>
+                                    <div class="input-group">
+                                        <div class="input-group-text">$</div>
+                                        <input type="number" step="any" value="0" min="0" class="form-control" name="payment_amount" id="payment-amount" />
+                                    </div>                                
                                 </div> 
-                            </div>  
-                            <div class="col-md-12 form-group">
-                                <label for="payment-amount" class="block-label"><b>Amount</b></label>
-                                <div class="input-group">
-                                    <div class="input-group-text">$</div>
-                                    <input type="number" step="any" value="0" min="0" class="form-control" name="payment_amount" id="payment-amount" />
-                                </div>                                
-                            </div> 
-                            <div class="col-md-12 form-group">
-                                <label for="payment-amount" class="block-label"><b>Total Amount</b></label>
-                                <div class="input-group">
-                                    <div class="input-group-text">$</div>
-                                    <input type="number" step="any" value="0" min="0" class="form-control" name="payment_total_amount" id="payment-total-amount" disabled readonly />
-                                </div>                                
-                            </div>  
-                        </div>                        
-                    </form>
-                    <div id="admin-capture-payment-step2"></div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="nsm-button" data-bs-dismiss="modal">Cancel</button>
-                    <button type="button" class="nsm-button primary" id="btn-admin-capture-payment-next">Next</button>
-                    <button type="button" class="nsm-button primary" id="btn-admin-capture-payment-back" style="display:none;">Back</button>
+                                <div class="col-md-12 form-group">
+                                    <label for="payment-amount" class="block-label"><b>Total Amount</b></label>
+                                    <div class="input-group">
+                                        <div class="input-group-text">$</div>
+                                        <input type="number" step="any" value="0" min="0" class="form-control" name="payment_total_amount" id="payment-total-amount" disabled readonly />
+                                    </div>                                
+                                </div>  
+                            </div>                        
+                        </form>
+                        <div id="admin-capture-payment-step2"></div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="nsm-button" data-bs-dismiss="modal">Cancel</button>
+                        <button type="button" class="nsm-button primary" id="btn-admin-capture-payment-next">Next</button>
+                        <button type="button" class="nsm-button primary" id="btn-admin-capture-payment-back" style="display:none;">Back</button>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
 
+    </div>
 </div>
 
 </div>
