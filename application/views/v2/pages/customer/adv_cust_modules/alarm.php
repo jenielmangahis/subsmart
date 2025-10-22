@@ -173,13 +173,21 @@
                             <span class="content-subtitle purple-label">
                                 <?= $alarm_info && $alarm_info->panel_type != '' ? $alarm_info->panel_type : '---'; ?>      
                             </span>
-                        </div>                                          
+                        </div>  
+                        <div class="col-12 col-md-6">
+                            <label class="content-title">Site Customer Type</label>
+                        </div>
+                        <div class="col-12 col-md-6">
+                            <span class="content-subtitle">
+                                <?= $alarm_info && $alarm_info->site_customer_type != '' ? $alarm_info->site_customer_type : '---'; ?>    
+                            </span>
+                        </div>                                         
                         <div class="col-12 col-md-6">
                             <label class="content-title">Secondary System Type</label>
                         </div>
                         <div class="col-12 col-md-6">
                             <span class="content-subtitle">
-                                ---
+                                <?= $alarm_info && $alarm_info->secondary_system_type != '' ? $alarm_info->secondary_system_type : '---'; ?>    
                             </span>
                         </div> 
 
@@ -188,7 +196,7 @@
                         </div>
                         <div class="col-12 col-md-6">
                             <span class="content-subtitle">
-                                ---
+                                <?= $alarm_info && $alarm_info->radio_serial_number != '' ? $alarm_info->radio_serial_number : '---'; ?>    
                             </span>
                         </div> 
 
@@ -197,7 +205,7 @@
                         </div>
                         <div class="col-12 col-md-6">
                             <span class="content-subtitle">
-                                ---
+                                <?= $alarm_info && $alarm_info->panel_location != '' ? $alarm_info->panel_location : '---'; ?>    
                             </span>
                         </div> 
 
@@ -206,7 +214,7 @@
                         </div>
                         <div class="col-12 col-md-6">
                             <span class="content-subtitle">
-                                ---
+                                <?= $alarm_info && $alarm_info->transformer_location != '' ? $alarm_info->transformer_location : '---'; ?>    
                             </span>
                         </div> 
 

@@ -11,7 +11,7 @@
     color: #fff;
     background-color: #28a745;
 }
-.badge{
+.esign-doc-container .badge{
     width: 95%;
     padding: 5px;
 }
@@ -27,7 +27,7 @@
     vertical-align: top;
 }
 </style>
-<div class="nsm-page">
+<div class="nsm-page esign-doc-container">
     <div class="nsm-page-content">
         <div class="row">
             <div class="col-12">                

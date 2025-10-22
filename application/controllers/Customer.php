@@ -5157,6 +5157,11 @@ class Customer extends MY_Controller
         $input_alarm['pass_thru_cost']     = $input['pass_thru_cost'] ? $input['pass_thru_cost'] : '';
         $input_alarm['monthly_monitoring'] = $input['monthly_monitoring'] ? $input['monthly_monitoring'] : 0;
         $input_alarm['otps'] = $input['otps'] ? $input['otps'] : 0;
+        $input_alarm['site_customer_type']     = $input['site_customer_type'] ? $input['site_customer_type'] : '';
+        $input_alarm['secondary_system_type']     = $input['secondary_system_type'] ? $input['secondary_system_type'] : '';
+        $input_alarm['radio_serial_number']     = $input['radio_serial_number'] ? $input['radio_serial_number'] : '';
+        $input_alarm['panel_location']     = $input['panel_location'] ? $input['panel_location'] : '';
+        $input_alarm['transformer_location']     = $input['transformer_location'] ? $input['transformer_location'] : '';
 
         $check = [
             'where' => [
@@ -13754,5 +13759,15 @@ class Customer extends MY_Controller
         $this->page_data['payment_amount'] = $post['payment_amount'];
         $this->page_data['stripe_client_secret']    = $stripe_client_secret;
         $this->load->view('v2/pages/customer/ajax_capture_payment_form', $this->page_data);
+    }
+
+    public function ajax_financing_equipment_details()
+    {        
+        $post = $this->input->post();
+
+        $billing_info = $this->customer_ad_model->get_data_by_id('fk_prof_id', $post['customer_id'], 'acs_billing');
+        
+        $this->page_data['billing_info'] = $billing_info;
+        $this->load->view('v2/pages/customer/ajax_financing_equipment_details', $this->page_data);
     }
 }
