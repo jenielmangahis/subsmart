@@ -1,3 +1,6 @@
+<div class="d-block mb-4 mt-4">
+    <span style="font-size:18px; font-weight:bold;">Images</span>
+</div>
 <div class="mt-4 mb-4" id="img-payment-methods"></div>
 <script>
 $(function(){

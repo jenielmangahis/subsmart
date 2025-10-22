@@ -1228,7 +1228,7 @@ $route['workorder/view/(:num)'] = 'Workorder/view/$1';
 
 $route['workorder/estimate_convert_to_workorder/(:num)'] = 'Workorder/estimateConversionWorkorderV2/$1';
 $route['workorder/_save_estimate_convert_to_workorder'] = 'Workorder/ajax_save_estimate_convert_to_workorder';
-
+$route['workorder/_permanently_delete_selected_attachment'] = 'Workorder/ajax_permanently_delete_selected_attachment';
 
 //Public view 
 $route['work_order_view/(:any)/(:num)'] = 'Share_Link/public_view_v2/$1/$2';
@@ -2228,10 +2228,11 @@ $route['tickets/_delete_plan_type'] = 'Tickets/ajax_delete_plan_type';
 
 //Customer Dashboard
 $route['customer/download_document/(:any)?'] = 'CustomerDashboardQuickActions/downloadDocument/$1';
-$route['customer/_delete_client_agreement']  = 'CustomerDashboardQuickActions/ajaxDeleteClientAgreement';
+$route['customer/_delete_client_agreement']  = 'CustomerDashboardQuickActions/ajaxDeleteCustomerDocument';
 $route['customer/_get_document_archives']  = 'CustomerDashboardQuickActions/ajaxGetDocumentArchives';
 $route['customer/_restore_archived_document']  = 'CustomerDashboardQuickActions/ajaxRestoreArchivedDocument';
 $route['customer/_save_signature']  = 'Customer/ajax_save_signature';
+$route['customer/_delete_site_photos']  = 'CustomerDashboardQuickActions/ajaxDeleteCustomerDocument';
 
 //Customer
 $route['customer/_restore_archived']    = 'Customer/ajax_restore_archived';
@@ -2307,6 +2308,7 @@ $route['customers/_delete_all_archived_customers'] = 'Customer/ajax_delete_all_a
 $route['customer/leads/export_list'] = 'Customer/customer_leads_export';
 $route['customer/_ledger_balance_amount'] = 'Customer/ajax_ledger_balance_amount';
 $route['customer/_upload_payment_method_image'] = 'Customer/ajax_upload_payment_method_image';
+$route['customer/_capture_payment_form'] = 'Customer/ajax_capture_payment_form';
 
 //Benchmark for Testing
 $route['benchmark/test_customer_subscription'] = 'Benchmark/test_customer_subscription';

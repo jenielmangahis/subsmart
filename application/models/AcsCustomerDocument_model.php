@@ -33,9 +33,10 @@ class AcsCustomerDocument_model extends MY_Model
 
     public function getById($id)
     {
-        $this->db->select('*');
+        $this->db->select('acs_customer_documents.*, acs_profile.company_id');
         $this->db->from($this->table);
-        $this->db->where('id', $id);        
+        $this->db->join('acs_profile', 'acs_customer_documents.customer_id = acs_profile.prof_id', 'left');
+        $this->db->where('acs_customer_documents.id', $id);        
 
         $query = $this->db->get();
         return $query->row();

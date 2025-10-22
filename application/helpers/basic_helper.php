@@ -5899,7 +5899,7 @@ function formatCustomerId($customer_id){
 }
 
 function isAdmin(){
-    $is_admin = false;
+    $is_admin = true;
     if (logged('user_type') == 7){
         $is_admin = true;
     }

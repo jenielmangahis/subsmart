@@ -54,7 +54,7 @@
                                             </div>
                                             <div class="col-12 col-md-8 text-center text-md-start d-flex flex-column justify-content-center">
                                                 <h2 id="total_this_year">$<?= number_format($activeSubscriptions->total_amount_subscriptions,2,'.',','); ?></h2>
-                                                <span>TOTAL AMOUNT</span>
+                                                <span>TOTAL AMOUNT ACTIVE SUBSCRIPTIONS</span>
                                             </div>
                                         </div>
                                     </div>

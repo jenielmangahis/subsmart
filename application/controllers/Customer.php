@@ -2765,8 +2765,8 @@ class Customer extends MY_Controller
     }
 
     public function module($id = null)
-    {        
-        $this->load->helper(array('sms_helper', 'alarm_api_helper'));        
+    {   
+        $this->load->helper(array('sms_helper', 'alarm_api_helper', 'paypal_helper'));        
         $this->load->model('Clients_model');
         $this->load->model('taskhub_model');
         $this->load->model('CustomerStatementClaim_model');
@@ -13542,18 +13542,75 @@ class Customer extends MY_Controller
             'model_no'    => $input['addEquipmentModelNo'] ?? null,
             'qty'         => $input['addEquipmentQty'] ?? null,
             'status'      => $input['addEquipmentStatus'] ?? null,
+            'qr_code'     => $input['addEquipmentQRCodeBase64'] ?? null,
         ];
 
-        $inserted = $this->general->add_($equipmentData, 'customer_equipment');
+        $inserted = $this->general->add_return_id($equipmentData, 'customer_equipment');
 
-        echo ($inserted) ? 1 : 0;
+        echo json_encode($inserted);
     }
 
+    public function updateCustomerEquipment()
+    {
+        $input = $this->input->post();
+        $id = $input['editEquipmentId'] ?? null;
+
+        $data = [
+            'category'     => $input['editEquipmentCategory'] ?? '',
+            'device_type'  => $input['editEquipmentDeviceType'] ?? '',
+            'serial_no'    => $input['editEquipmentSerialNo'] ?? '',
+            'model_no'     => $input['editEquipmentModelNo'] ?? '',
+            'qty'          => $input['editEquipmentQty'] ?? '',
+            'equipment'    => $input['editEquipmentName'] ?? '',
+            'status'       => $input['editEquipmentStatus'] ?? '',
+            'date_updated' => date('Y-m-d H:i:s'),
+        ];
+
+        if (!empty($input['editEquipmentQRCodeBase64'])) {
+            $data['qr_code'] = $input['editEquipmentQRCodeBase64'];
+        }
+
+        $updated = $this->general->update_with_key($data, $id, 'customer_equipment');
+
+        echo json_encode($updated);
+    }
+
+    public function removeCustomerEquipment()
+    {
+        $input = $this->input->post();
+        $id = $input['id'] ?? null;
+
+        if (empty($id)) {
+            echo json_encode(['success' => false, 'message' => 'Missing equipment ID.']);
+            return;
+        }
+
+        $deleted = $this->general->delete_([
+            'table' => 'customer_equipment',
+            'where' => ['id' => $id]
+        ]);
+    
+        echo json_encode($deleted);
+    }
+
+    
     public function getCustomerEquipment()
     {
         $customer_id = $this->input->post('customer_id');
 
-        $this->db->select('customer_equipment.id, customer_equipment.customer_id, customer_equipment.equipment, customer_equipment.category, customer_equipment.device_type, customer_equipment.serial_no, customer_equipment.model_no, customer_equipment.qty, customer_equipment.status, customer_equipment.date_created, customer_equipment.date_updated');
+        $this->db->select('
+            customer_equipment.id,
+            customer_equipment.customer_id,
+            customer_equipment.equipment,
+            customer_equipment.category,
+            customer_equipment.device_type,
+            customer_equipment.serial_no,
+            customer_equipment.model_no,
+            customer_equipment.qty,
+            customer_equipment.status,
+            customer_equipment.date_created,
+            customer_equipment.date_updated
+        ');
         $this->db->from('customer_equipment');
         $this->db->where('customer_equipment.customer_id', "$customer_id");
         $query = $this->db->get();
@@ -13654,4 +13711,28 @@ class Customer extends MY_Controller
 
         echo json_encode($return);
     }    
+
+    public function ajax_capture_payment_form()
+    {        
+        // Stripe SDK
+        include APPPATH . 'libraries/stripe/init.php';  
+
+        $post = $this->input->post();
+        $total_cost = $post['processing_fee'] + $post['payment_amount'];
+        $stripe_amount  = number_format(($total_cost*100) , 0, '', '');
+
+        $stripe = new Stripe\StripeClient(STRIPE_SECRET_KEY);
+        $result = $stripe->paymentIntents->create([
+            'amount' => $stripe_amount,
+            'currency' => 'usd',
+            'automatic_payment_methods' => ['enabled' => true],
+        ]);
+
+        $stripe_client_secret = $result->client_secret;
+        $this->page_data['total_cost'] = $total_cost;
+        $this->page_data['processing_fee'] = $post['processing_fee'];
+        $this->page_data['payment_amount'] = $post['payment_amount'];
+        $this->page_data['stripe_client_secret']    = $stripe_client_secret;
+        $this->load->view('v2/pages/customer/ajax_capture_payment_form', $this->page_data);
+    }
 }

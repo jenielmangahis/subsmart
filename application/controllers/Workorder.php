@@ -1004,7 +1004,10 @@ class Workorder extends MY_Controller
             ),
             'select' => '*',
         );
-        
+
+        $workorder_attachments = $this->workorder_model->getworkorderAttachmentList($id);
+
+        $this->page_data['workorder_attachments'] = $workorder_attachments;
         $this->page_data['system_package_type'] = $this->general->get_data_with_param($spt_query);
         $this->page_data['lead_source'] = $this->workorder_model->getLeadSourceByCompanyId($company_id);
         
@@ -1067,12 +1070,12 @@ class Workorder extends MY_Controller
         $this->page_data['automation'] = $this->workorder_model->getenhanced_services_automation($id);
         $this->page_data['pers'] = $this->workorder_model->getenhanced_services_pers($id);
         $this->page_data['users_lists'] = $this->users_model->getAllUsersByCompanyID($company_id);
-        $this->page_data['agreeItem'] = $this->workorder_model->get_agree_items($id);
+        $this->page_data['agreeItems'] = $agreeItems = $this->workorder_model->get_agree_items($id);
         $this->page_data['agreeDetails'] = $this->workorder_model->get_agree_details($id);
         $this->page_data['payments'] = $this->workorder_model->get_payments_details($id);
         $this->page_data['customers'] = $this->workorder_model->getCustByComp($company_id);
         // agreeItem
-        
+
         $work = $this->workorder_model->getworkorder($id);
 
         $this->page_data['contacts'] = $this->workorder_model->get_contacts($work->customer_id);
@@ -11526,8 +11529,8 @@ class Workorder extends MY_Controller
                             $acsc_data = array(
                                 'customer_id'      => $customer_id,
                                 'file_name'        => $attachment_photo,
-                                'document_type'    => 'client_agreement',
-                                'document_label'   => 'Client Agreement',
+                                'document_type'    => 'site_photos',
+                                'document_label'   => 'Site Photos',
                                 'is_predefined'    => 0,
                                 'is_active'        => 1,
                                 'date_created'     => date("Y-m-d H:i:s")
@@ -15097,6 +15100,29 @@ class Workorder extends MY_Controller
 
         echo json_encode($return);
 	}
+
+    public function ajax_permanently_delete_selected_attachment()
+    {
+		$is_success = 0;
+        $msg    = 'Please select data';
+
+        $post = $this->input->post();
+        $id   = $post['id'];
+        if($id) {
+            $is_delete = $this->workorder_model->deleteAttachment($id);
+            if($is_delete) {
+                $is_success = 1;
+                $msg    = '';
+            }
+        }
+
+        $return = [
+            'is_success' => $is_success,
+            'msg' => $msg
+        ];
+        echo json_encode($return);
+
+    }
 }
 /* End of file Workorder.php */
 

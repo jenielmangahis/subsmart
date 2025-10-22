@@ -2689,7 +2689,6 @@ class Workorder_model extends MY_Model
         return true;
     }
 
-
     public function delete_payment_billing($customer_id)
     {
 
@@ -2698,7 +2697,6 @@ class Workorder_model extends MY_Model
         return true;
     }
 
-    
     public function getCustByComp($company_id)
     {
         $this->db->select('*');
@@ -2809,6 +2807,38 @@ class Workorder_model extends MY_Model
 
         $this->db->delete($this->table);
         return $this->db->affected_rows();
+    }
+
+    public function getworkorderAttachmentList( $id, $filters = array(), $sort = array() )
+    {        
+        $where = array(
+            'work_order_attachments.work_order_id' => $id
+        );
+
+        $this->db->select('work_order_attachments.*, acs_customer_documents.file_name AS filename');
+        $this->db->from('work_order_attachments');
+        $this->db->join('acs_customer_documents', 'work_order_attachments.document_id  = acs_customer_documents.id');
+		$this->db->where($where);
+
+        if( $filters['is_active'] != ''){
+            $this->db->where('acs_customer_documents.is_active', ucwords($filters['is_active']));
+        }
+
+        if( !empty($sort) ){
+            $this->db->order_by($sort['field'], strtoupper($sort['order']));
+        }else{
+            $this->db->order_by('id', 'DESC');    
+        }
+        
+        $query = $this->db->get();
+        return $query->result();
+    }    
+
+    public function deleteAttachment($id) 
+    {
+        $this->db->where('id',$id);
+        $this->db->delete('work_order_attachments');
+        return true;        
     }
 }
 
