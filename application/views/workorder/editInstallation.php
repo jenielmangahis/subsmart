@@ -86,8 +86,12 @@ tr {
                     <div class="col-12">
                         <div class="nsm-card primary">
                             <div class="nsm-card-header">
-                                <div class="nsm-card-title">
-                                    <span class="d-block">Header</span>
+                                <div class="nsm-card-title d-block">
+                                    <span class="d-block">Header
+                                        <div class="nsm-card-controls" style="float: right; font-size: 14px !important;">
+                                            <button type="button" id="" data-bs-toggle="modal" data-bs-target="#update_header_modal" class="nsm-button primary small text-end"><strong>Edit</strong></button>  
+                                        </div>                                        
+                                    </span>
                                     <div class="row">
                                         <div class="col-12 col-md-10">
                                             <!-- <label class="nsm-subtitle"> -->
@@ -1783,6 +1787,30 @@ $(".nsm-subtitle").html(function() {
                 });
             }
         });    
+
+    //Header
+        $("#form_update_header").on("submit", function(e) {
+            e.preventDefault();
+
+            var url = "<?php echo base_url('workorder/save_update_header'); ?>";
+            $.ajax({
+                type: 'POST',
+                url: url,
+                data: {
+                    id: $("#update_h_id").val(),
+                    content: CKEDITOR.instances['editor3'].getData()
+                },
+                success: function(result) {
+                    $("#update_header_modal").modal('hide');
+                    $("#header_text").html(CKEDITOR.instances['editor3'].getData());
+                    $('.save_update_header').html("Save");
+                },
+                beforeSend:function(){
+                    $('.save_update_header').html('<span class="bx bx-loader bx-spin"></span>');
+                }
+            });
+        });
+
 
     });
 
