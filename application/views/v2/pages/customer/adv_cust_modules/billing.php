@@ -1,21 +1,5 @@
-<div class="d-block mb-4">
-    <span style="font-size:18px; font-weight:bold;">Billing</span>
-    <?php 
-        $recurring_end_date = date("Y-m-d");
-        $current_date = date("Y-m-d");
-        if( strtotime($billing_info->recurring_end_date) > 0 ){
-            $recurring_end_date = date("Y-m-d", strtotime($billing_info->recurring_end_date));
-        }
-
-        $is_recurring_active = '';
-        if( $recurring_end_date > $current_date ){ 
-            $is_recurring_active = 'checked';
-        }
-    ?>
-    <div class="form-check form-switch float-end">
-        <input class="form-check-input" type="checkbox" role="switch" id="chkRecurringActive" <?= $is_recurring_active; ?> readonly>
-        <label class="form-check-label" for="chkRecurringActive">Recurring Subscription</label>
-    </div>
+<div class="d-block mb-4 mt-4">
+    <span style="font-size:18px; font-weight:bold;">Billing</span>    
 </div>
 <div class="clear"></div>
 <div class="row g-3 payment-method-container">

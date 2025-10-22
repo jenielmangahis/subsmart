@@ -3,6 +3,22 @@
         <div class="nsm-card-header d-block">
             <div class="nsm-card-title">
                 <span>Admin</span>
+                <?php 
+                    $recurring_end_date = date("Y-m-d");
+                    $current_date = date("Y-m-d");
+                    if( strtotime($billing_info->recurring_end_date) > 0 ){
+                        $recurring_end_date = date("Y-m-d", strtotime($billing_info->recurring_end_date));
+                    }
+
+                    $is_recurring_active = '';
+                    if( $recurring_end_date > $current_date ){ 
+                        $is_recurring_active = 'checked';
+                    }
+                ?>
+                <div class="form-check form-switch float-end">
+                    <input class="form-check-input" type="checkbox" role="switch" id="chkRecurringActive" <?= $is_recurring_active; ?> readonly>
+                    <label class="form-check-label" for="chkRecurringActive">Recurring Subscription</label>
+                </div>
             </div>
         </div>
         <div class="nsm-card-content">
@@ -133,6 +149,7 @@
                     </div>
                 </div>
             </div>            
+            <hr />
             <?php include viewPath('v2/pages/customer/adv_cust_modules/billing'); ?>      
             <?php if( isAdmin() && in_array(logged('company_id'), adi_company_ids()) ){ ?>
                 <?php include viewPath('v2/pages/customer/adv_cust_modules/payment_method_images'); ?>      
