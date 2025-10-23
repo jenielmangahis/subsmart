@@ -1973,6 +1973,7 @@ class Customer extends MY_Controller
         if( $customer ){
             $woSubmittedLatest = $this->Workorder_model->getRecentByCustomerIdAndStatus($customer->prof_id, 'Submitted');
             $jobFinishedLatest = $this->Jobs_model->getRecentByCustomerIdAndStatus($customer->prof_id, 'Finished');
+            $jobLatest         = $this->Jobs_model->getRecentByCustomerIdAndStatus($customer->prof_id, '');
             $recentDocfile     = $this->UserCustomerDocfile_model->getRecentDocfileByCustomerId($customer->prof_id);
             
 
@@ -1999,6 +2000,7 @@ class Customer extends MY_Controller
         $this->page_data['users'] = $this->users_model->getUsers();
         $this->page_data['woSubmittedLatest'] = $woSubmittedLatest;
         $this->page_data['jobFinishedLatest'] = $jobFinishedLatest;
+        $this->page_data['jobLatest'] = $jobLatest;
         $this->page_data['recentDocfile'] = $recentDocfile;
         $this->page_data['default_login_value'] = $default_login_value;
         $this->load->view('v2/pages/customer/preview', $this->page_data);
@@ -13638,37 +13640,6 @@ class Customer extends MY_Controller
         ');
         $this->db->from('customer_equipment');
         $this->db->where('customer_equipment.customer_id', "$customer_id");
-        $query = $this->db->get();
-        $data = $query->result();
-
-        echo json_encode($data);
-    }
-
-    public function updatePanelEquipmentLocation()
-    {
-        $input = $this->input->post();
-
-        $data = [
-            'customer_id'  => $input['customer_id'],
-            'panel'        => $input['panelLocation'],
-            'transformer'  => $input['transformerLocation'],
-        ];
-
-        $replace = $this->db->replace('panel_equipment_location', $data);
-
-        echo json_encode($replace);
-    }
-
-    public function getPanelLocation()
-    {
-        $customer_id = $this->input->post('customer_id');
-
-        $this->db->select('
-            panel_equipment_location.panel,
-            panel_equipment_location.transformer
-        ');
-        $this->db->from('panel_equipment_location');
-        $this->db->where('panel_equipment_location.customer_id', "$customer_id");
         $query = $this->db->get();
         $data = $query->result();
 
