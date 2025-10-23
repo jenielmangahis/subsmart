@@ -1,7 +1,7 @@
 <?php 
     $is_container_hidden = '';
     if( isset($alarm_info) && $alarm_info->acct_type == 'In-House' ){
-        $is_container_hidden = 'style="display:none;"';
+        //$is_container_hidden = 'style="display:none;"';
     }   
 ?>
 <div class="nsm-card primary" id="funding-information-cointainer" <?= $is_container_hidden; ?>>
@@ -10,9 +10,66 @@
             <div class="col-12">
                 <div class="nsm-card-title">
                     <span><i class="bx bx-fw bx-user"></i>Funding Information</span>
+                    <div class="form-check float-end">
+                        <input class="form-check-input" type="checkbox" value="1" id="chk-preview-show-financing-equipment">
+                        <label class="form-check-label" for="chk-preview-show-financing-equipment">
+                            <b>Financing Equipment</b>
+                        </label>
+                    </div>
                     <hr />
                 </div>
             </div>
+        </div>
+        <div class="row g-1" id="preview-financing-equipment" style="display:none;">
+            <div class="col-12 col-md-6">
+                <label class="content-subtitle fw-bold">Finance Amount</label>
+            </div>
+            <div class="col-12 col-md-6">
+                <label class="content-subtitle">$<?= $billing_info->finance_amount != "" ? number_format((float)$billing_info->finance_amount, 2, '.', ',') : '0.00' ?></label>
+            </div>
+            <div class="col-12 col-md-6">
+                <label class="content-subtitle fw-bold">Recurring Start Date</label>
+            </div>
+            <div class="col-12 col-md-6">
+                <?php 
+                    $recurring_start_date = '---';
+                    if( $billing_info && strtotime($billing_info->recurring_start_date) > 0 ){
+                        $recurring_start_date = date("m/d/Y", strtotime($billing_info->recurring_start_date));
+                    }
+                ?>
+                <label class="content-subtitle"><?= $recurring_start_date; ?></label>
+            </div>
+            <div class="col-12 col-md-6">
+                <label class="content-subtitle fw-bold">Recurring End Date</label>
+            </div>
+            <div class="col-12 col-md-6">
+                <?php 
+                    $recurring_end_date = '---';
+                    if( $billing_info && strtotime($billing_info->recurring_end_date) > 0 ){
+                        $recurring_end_date = date("m/d/Y", strtotime($billing_info->recurring_end_date));
+                    }
+                ?>
+                <label class="content-subtitle"><?= $recurring_end_date; ?></label>
+            </div>
+            <div class="col-12 col-md-6">
+                <label class="content-subtitle fw-bold">Transaction Amount</label>
+            </div>
+            <div class="col-12 col-md-6">
+                <label class="content-subtitle">$<?= !empty($billing_info->transaction_amount) ?  number_format((float)$billing_info->transaction_amount, 2, '.', ',') : number_format((float)$billing_info->mmr, 2, '.', ',')?></label>
+            </div>
+            <div class="col-12 col-md-6">
+                <label class="content-subtitle fw-bold">Transaction Category</label>
+            </div>
+            <div class="col-12 col-md-6">
+                <label class="content-subtitle"><?= !empty($billing_info->transaction_category) ?  $billing_info->transaction_category : '---' ?></label>
+            </div>
+            <div class="col-12 col-md-6">
+                <label class="content-subtitle fw-bold">Frequency</label>
+            </div>
+            <div class="col-12 col-md-6">
+                <label class="content-subtitle"><?= !empty($billing_info->frequency) ?  $billing_info->frequency . ' months' : '---' ?></label>
+            </div>
+            <div class="col-12"><hr></div>
         </div>
         <div class="row g-1">
             <div class="row p-0 field-custom-name-container">
@@ -288,6 +345,10 @@
                     <label class="content-subtitle">$<?= !empty($office_info->purchase_discount) ? number_format((float)$office_info->purchase_discount,2,'.',',') : '0.00';?></label>
                 </div>
             </div>
-        </div>
+            <div class="col-12"><hr></div>
+            <div class="col-12 mt-5">
+                <button type="button" class="nsm-button primary w-100" onclick="location.href='<?= base_url('customer/subscription/' . $this->uri->segment(3)) ?>'">Capture Now</button>
+            </div>
+        </div>        
     </div>
 </div>

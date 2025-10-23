@@ -279,6 +279,14 @@
             document.execCommand("copy");
         });
 
+        $('#chk-preview-show-financing-equipment').on('change', function(){
+            if( $(this).is(':checked') ){
+                $('#preview-financing-equipment').show();
+            }else{
+                $('#preview-financing-equipment').hide();
+            }
+        });
+
         $("#printDivPreview").on("click", function(){
             $("#DivIdToPrint").printThis({
                 debug: false,              // show the iframe for debugging
