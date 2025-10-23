@@ -276,7 +276,7 @@ div#controls div#call-controls div#volume-indicators > div {
                 </div>
                 <div class="col-4 mb-1">
                     <h6><i class='bx bx-id-card'></i> CS Account #</h6>
-                    <p class="text-muted"><?= $alarm_info->alarm_cs_account != '' ? $alarm_info->alarm_cs_account : '---'; ?></p>
+                    <p class="text-muted"><?= $alarm_info->monitor_id != '' ? $alarm_info->monitor_id : '---'; ?></p>
                 </div>
                 <div class="col-4 mb-1">
                     <h6><i class='bx bx-id-card'></i> SSN</h6>

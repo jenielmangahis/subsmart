@@ -34,7 +34,7 @@
                                     if ($office_info->entered_by) {
                                         echo $office_info->entered_by; 
                                     } else {
-                                        echo "&mdash;";
+                                        echo "---";
                                     }
                                 ?>
                             </span>
@@ -48,7 +48,7 @@
                                     if ($office_info->time_entered) {
                                         echo $office_info->time_entered; 
                                     } else {
-                                        echo "&mdash;";
+                                        echo "---";
                                     }
                                 ?>
                             </span>
@@ -62,7 +62,7 @@
                                     if ($office_info->pre_install_survey) {
                                         echo $office_info->pre_install_survey; 
                                     } else {
-                                        echo "&mdash;";
+                                        echo "---";
                                     }
                                 ?>
                             </span>
@@ -76,7 +76,7 @@
                                     if ($office_info->post_install_survey) {
                                         echo $office_info->post_install_survey; 
                                     } else {
-                                        echo "&mdash;";
+                                        echo "---";
                                     }
                                 ?>
                             </span>
@@ -108,7 +108,7 @@
                                     if ($office_info->sales_date) {
                                         echo $office_info->sales_date; 
                                     } else {
-                                        echo "&mdash;";
+                                        echo "---";
                                     }
                                 ?>
                             </span>
@@ -122,14 +122,9 @@
                                     if ($office_info->fk_sales_rep_office) {
                                         echo getUser($office_info->fk_sales_rep_office); 
                                     } else {
-                                        echo "&mdash;";
+                                        echo "---";
                                     }
                                 ?>
-
-                                <?php
-                                    //$sales_rep = !empty($office_info->fk_sales_rep_office) ?  get_employee_name($office_info->fk_sales_rep_office) : '---';
-                                ?>
-                                <?php //$sales_rep->FName. ' ' . $sales_rep->LName; ?>
                             </span>
                         </div>                        
                         <div class="col-12 col-md-6">
@@ -141,7 +136,7 @@
                                     if ($office_info->technician) {
                                         echo getUser($office_info->technician);
                                     } else {
-                                        echo "&mdash;";
+                                        echo "---";
                                     }
                                 ?>
                             </span>
@@ -266,10 +261,7 @@
 <?php } ?>
 <script>
 $(function(){
-    <?php if( isAdmin() && in_array(logged('company_id'), adi_company_ids()) ){ ?>
-    $('#btn-billing-upload-payment-method').on('click', function(){
-        $('#modal-admin-upload-image').modal('show');
-    });
+    <?php if( isAdmin() && in_array(logged('company_id'), adi_company_ids()) ){ ?>    
 
     $('#btn-billing-capture-payment').on('click', function(){
         $('#modal-admin-capture-payment').modal('show');
@@ -343,54 +335,6 @@ $(function(){
         return payment_total_amount.toFixed(2);
         
     }
-
-    $('#frm-admin-upload-image').on('submit', function(){
-        event.preventDefault(); // Prevent default form submission
-
-        let customer_id = "<?= $customer_id; ?>";
-        let fileInput = $('#admin-image')[0];
-        let files = fileInput.files;
-
-        if (files.length > 0) {
-            let url = base_url + 'customer/_upload_payment_method_image';
-            let formData = new FormData();
-            formData.append('admin_image', files[0]); 
-            formData.append('customer_id', customer_id);
-
-            $.ajax({
-                url: url,
-                type: 'POST',
-                data: formData,
-                contentType: false,
-                processData: false, 
-                success: function(response) {
-                    $('#modal-admin-upload-image').modal('hide');
-                },
-                error: function(jqXHR, textStatus, errorThrown) {
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Error',
-                        text: 'Error uploading file: ' + textStatus,
-                    });
-                },
-                beforeSend: function(){
-                    Swal.fire({
-                        icon: "info",
-                        title: "Processing",
-                        html: "Please wait while the process is running...",
-                        allowOutsideClick: false,
-                        allowEscapeKey: false,
-                        showConfirmButton: false,
-                        didOpen: () => {
-                            Swal.showLoading();
-                        },
-                    });
-                }
-            });
-        } else {
-            alert('Please select a file to upload.');
-        }
-    });
     <?php } ?>
 });
 </script>

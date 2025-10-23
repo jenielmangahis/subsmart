@@ -12,7 +12,7 @@
             <div class="col-md-12">
                 <h5 class="mt-0 fw-bold">
                     <a role="button" class="text-decoration-none" href="javascript:void(0)" style="color:#6a4a86 !important">
-                        <?php echo "<i class='$icon'></i>&nbsp;&nbsp;$title"; ?> <button class="btn btn-success float-end opacity-50 btn-sm thumbnailRefreshButton <?php echo "refresh_thumbnail_$id"; ?>"><small>REFRESH</small></button>
+                        <?php echo "<i class='$icon'></i>&nbsp;&nbsp;$title"; ?> <button class="btn btn-primary float-end opacity-50 btn-sm thumbnailRefreshButton <?php echo "refresh_thumbnail_$id"; ?>"><small>REFRESH</small></button>
                     </a>
                     <div class="dropdown float-end thumbnailDropdownMenu display_none">
                         <a href="javascript:void(0)" class="dropdown-toggle text-decoration-none" data-bs-toggle="dropdown" aria-expanded="false">
@@ -283,10 +283,10 @@
     });
 
     $(document).on('click', '.<?php echo "refresh_thumbnail_$id"; ?>', function () {
-        $(this).removeClass('btn-success').addClass('btn-secondary').attr('disabled', true).html('<i class="fas fa-spinner fa-pulse"></i>');
+        $(this).removeClass('btn-primary').addClass('btn-secondary').attr('disabled', true).html('<i class="fas fa-spinner fa-pulse"></i>');
         $('.<?php echo "thumbnailFilter1_$id"; ?>').change();
         setTimeout(() => {
-            $(this).removeClass('btn-secondary').addClass('btn-success').removeAttr('disabled').html('<small>REFRESH</small>');
+            $(this).removeClass('btn-secondary').addClass('btn-primary').removeAttr('disabled').html('<small>REFRESH</small>');
         }, 3000);
     });
 </script>
