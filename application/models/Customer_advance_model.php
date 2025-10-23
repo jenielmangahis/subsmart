@@ -922,27 +922,33 @@ class Customer_advance_model extends MY_Model
 
     public function getTotalActiveSubscriptionsByCompanyId($company_id)
     {
-        $today = date('m/d/Y');
-        $this->db->select('COUNT(acs_billing.bill_id) AS total_records, SUM(acs_billing.mmr) AS total_amount_subscriptions');
-        $this->db->from('acs_billing');
-        $this->db->join('acs_profile', 'acs_billing.fk_prof_id = acs_profile.prof_id', 'left');
+        $dateFrom = date('1970-01-01');
+        $dateTo = date('Y-m-d');
+        $this->db->select('COUNT(acs_profile.prof_id) AS total_records, SUM(acs_billing.mmr) AS total_amount_subscriptions');
+        $this->db->from('acs_profile');
+        $this->db->join('acs_billing', 'acs_billing.fk_prof_id = acs_profile.prof_id', 'left');
         $this->db->where('acs_profile.company_id', $company_id);
-        $this->db->where('acs_billing.recurring_end_date >=', $today);        
+        $this->db->where('acs_profile.is_archived', 0);
+        $this->db->where("DATE_FORMAT(acs_billing.bill_start_date, '%Y-%m-%d') >=", $dateFrom);
+        $this->db->where("DATE_FORMAT(acs_billing.bill_start_date, '%Y-%m-%d') <=", $dateTo);
+        $this->db->where_in('acs_profile.status', ['Active w/RAR', 'Active w/RMR', 'Active w/RQR', 'Active w/RYR', 'Inactive w/RMM']);
         $query = $this->db->get();
-
         return $query->row();
     }
 
+        
     public function getTotalCompletedSubscriptionsByCompanyId($company_id)
     {
-        $today = date('m/d/Y');
-        $this->db->select('COUNT(acs_billing.bill_id) AS total_records, SUM(acs_billing.mmr) AS total_amount_subscriptions');
-        $this->db->from('acs_billing');
-        $this->db->join('acs_profile', 'acs_billing.fk_prof_id = acs_profile.prof_id', 'left');
+        $dateFrom = date('1970-01-01');
+        $dateTo = date('Y-m-d');
+        $this->db->select('COUNT(acs_profile.prof_id) AS total_records, SUM(acs_billing.mmr) AS total_amount_subscriptions');
+        $this->db->from('acs_profile');
+        $this->db->join('acs_billing', 'acs_billing.fk_prof_id = acs_profile.prof_id', 'left');
         $this->db->where('acs_profile.company_id', $company_id);
-        $this->db->where('acs_billing.recurring_end_date <=', $today);        
+        $this->db->where('acs_profile.is_archived', 0);
+        $this->db->where("DATE_FORMAT(acs_billing.recurring_end_date, '%Y-%m-%d') <=", $dateTo);
+        $this->db->where_in('acs_profile.status', ['Active w/RAR', 'Active w/RMR', 'Active w/RQR', 'Active w/RYR', 'Inactive w/RMM']);
         $query = $this->db->get();
-
         return $query->row();
     }
 

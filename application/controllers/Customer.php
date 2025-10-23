@@ -13681,7 +13681,7 @@ class Customer extends MY_Controller
 
         $post = $this->input->post();
         if( $post['customer_id'] > 0 ){
-            $documents = $this->AcsCustomerDocument_model->getAllByCustomerIdAndDocumentType($post['customer_id'], 'payment_method');
+            $documents = $this->AcsCustomerDocument_model->getAllByCustomerIdAndDocumentType($post['customer_id'], 'payment_details');
             $this->page_data['documents'] = $documents;
             $this->load->view('v2/pages/customer/ajax_payment_method_images', $this->page_data);
         }
@@ -13730,11 +13730,11 @@ class Customer extends MY_Controller
             mkdir($filePath, 0777, true);
         }
 
-        $maxSizeInMB = 8;
-        if ($document['size'] > self::ONE_MB * $maxSizeInMB) {
-            $msg = "Maximum file size is less than {$maxSizeInMB}MB";   
-            $is_success = 0;         
-        }
+        // $maxSizeInMB = 8;
+        // if ($document['size'] > self::ONE_MB * $maxSizeInMB) {
+        //     $msg = "Maximum file size is less than {$maxSizeInMB}MB";   
+        //     $is_success = 0;         
+        // }
 
         if( $is_success ){
             $tempName = $document['tmp_name'];
@@ -13744,19 +13744,21 @@ class Customer extends MY_Controller
             $data = [
                 'file_name' => $fileName,
                 'customer_id' => $post['customer_id'],
-                'document_type' => 'payment_method',
-                'document_label' => 'Payment Method',
+                'document_type' => 'payment_details',
+                'document_label' => 'Payment Details',
                 'is_predefined' => 1,
                 'date_created' => date("Y-m-d H:i:s")
             ];
 
             $this->AcsCustomerDocument_model->create($data);
 
+            move_uploaded_file($tempName, $filePath . $fileName);
+
             $is_success = 1;
             $msg = '';
 
             //Activity Logs
-            $activity_name = 'Company Reason : Created company reason ' . $post['company_reason']; 
+            $activity_name = 'Customer : Uploaded payment details ' . $fileName; 
             createActivityLog($activity_name);
         }
  

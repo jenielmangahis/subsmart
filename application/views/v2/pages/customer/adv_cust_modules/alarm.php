@@ -42,11 +42,11 @@
                             </span>
                         </div>  
                         <div class="col-12 col-md-6">
-                            <label class="content-title">Site Type</label>
+                            <label class="content-title">Site Customer Type</label>
                         </div>
                         <div class="col-12 col-md-6">
                             <span class="content-subtitle">
-                                ---
+                                <?= $profile_info->customer_type; ?>
                             </span>
                         </div>                                                                      
                         <div class="col-12 col-md-6">
@@ -98,7 +98,7 @@
                         </div>
                         <div class="col-12 col-md-6">
                             <span class="content-subtitle">
-                                <?= $alarm_info && $alarm_info->install_code != '' ? $alarm_info->install_code : '---'; ?>      
+                                <?= $alarm_info && $alarm_info->install_code != '' ? $alarm_info->install_code : '1423'; ?>      
                             </span>
                         </div>   
                         <div class="col-12 col-md-12">
@@ -173,15 +173,7 @@
                             <span class="content-subtitle purple-label">
                                 <?= $alarm_info && $alarm_info->panel_type != '' ? $alarm_info->panel_type : '---'; ?>      
                             </span>
-                        </div>  
-                        <div class="col-12 col-md-6">
-                            <label class="content-title">Site Customer Type</label>
-                        </div>
-                        <div class="col-12 col-md-6">
-                            <span class="content-subtitle">
-                                <?= $alarm_info && $alarm_info->site_customer_type != '' ? $alarm_info->site_customer_type : '---'; ?>    
-                            </span>
-                        </div>                                         
+                        </div>                                     
                         <div class="col-12 col-md-6">
                             <label class="content-title">Secondary System Type</label>
                         </div>

@@ -10,6 +10,7 @@
 }
 .img-signature{
     border:1px #e6e6e6 solid;
+    width:100%;
 }
 </style>
 <div class="col-12 col-md-4" data-id="<?= $id ?>" id="<?= $id ?>" module-id="profiledocuments">
@@ -251,7 +252,7 @@
                         </div>
                     </div>
                     <?php if( $customerSignature ){ ?>
-                        <div class="col-3 mt-2">
+                        <div class="col-8 col-md-4 mt-2">
                             <img class="img-signature img-thumbnail" src="<?= $customerSignature->value; ?>" />
                         </div>
                     <?php } ?>

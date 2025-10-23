@@ -41,7 +41,7 @@
                                             </div>
                                             <div class="col-12 col-md-9 text-center text-md-start d-flex flex-column justify-content-center">
                                                 <h2 id="total_this_year"><?= $completedSubscriptions->total_records; ?></h2>
-                                                <span>TOTAL COMPLETED SUBSCRIPTIONS</span>
+                                                <span>TOTAL ENDED SUBSCRIPTIONS</span>
                                             </div>
                                         </div>
                                     </div>
