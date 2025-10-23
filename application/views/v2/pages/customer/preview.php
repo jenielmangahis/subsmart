@@ -40,6 +40,13 @@
                         <div class="nsm-card">
                             <div class="nsm-card-content">
                                 <div class="row g-2">
+                                    <?php if( isMobile() ){ ?>
+                                    <div class="col-12 col-md-2">
+                                        <button type="button" class="nsm-button float-end" onclick="location.href='<?php echo base_url('customer/add_advance/' . $this->uri->segment(3)); ?>'">
+                                            <i class='bx bx-fw bx-user'></i> Edit Customer
+                                        </button>
+                                    </div>
+                                    <?php } ?>
                                     <div class="col-12 col-md-2">
                                         <label class="content-title d-inline-block">Account Number: <?= !empty($alarm_info->monitor_id) ? $alarm_info->monitor_id : '---'; ?></label>
                                     </div>
