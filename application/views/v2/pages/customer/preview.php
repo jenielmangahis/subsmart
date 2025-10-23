@@ -63,8 +63,11 @@
                                         <label class="content-title d-inline-block">Equipment: <?= !empty($alarm_info->equipment) ? $alarm_info->equipment : '---'; ?></label>
                                     </div>
                                     <div class="col-12 col-md-2">
-                                        <label class="content-title d-inline-block">Collections: <?= !empty($alarm_info->collections) ? $alarm_info->collections : '---'; ?></label>
+                                        <label class="content-title d-inline-block">Install Date: <?= $office_info && $office_info->install_date != '' ? date("m/d/Y",strtotime($office_info->install_date)) : '---'; ?></label>
                                     </div>
+                                    <!-- <div class="col-12 col-md-2">
+                                        <label class="content-title d-inline-block">Collections: <?= !empty($alarm_info->collections) ? $alarm_info->collections : '---'; ?></label>
+                                    </div> -->
                                 </div>
                             </div>
                         </div>
