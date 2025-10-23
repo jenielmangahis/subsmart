@@ -1,7 +1,7 @@
 <?php 
     $is_container_hidden = '';
     if( isset($alarm_info) && $alarm_info->acct_type == 'In-House' ){
-        //$is_container_hidden = 'style="display:none;"';
+        $is_container_hidden = 'style="display:none;"';
     }   
 ?>
 <div class="nsm-card primary" id="funding-information-cointainer" <?= $is_container_hidden; ?>>
