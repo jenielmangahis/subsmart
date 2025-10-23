@@ -1862,6 +1862,7 @@ $route['autocomplete/_company_instructions'] = 'Autocomplete/company_instruction
 $route['autocomplete/_company_job_tags'] = 'Autocomplete/company_job_tags';
 $route['autocomplete/_company_customer_lead'] = 'Autocomplete/company_customers_leads';
 $route['autocomplete/_company_customer_deal_labels'] = 'Autocomplete/company_customer_deal_labels';
+$route['autocomplete/_company_installer_codes'] = 'Autocomplete/company_installer_codes';
 
 // Quick Add
 $route['quick_add/_add_customer'] = 'Quick_Add/ajax_add_company_customer';
@@ -2104,6 +2105,10 @@ $route['before_after_photos/_delete_photos'] = 'Before_after_v2/ajax_delete_phot
 $route['before_after_photos/edit/(:num)'] = 'Before_after_v2/editPhoto/$1';
 $route['before_after_photos/_update_photos'] = 'Before_after_v2/ajax_update_photos';
 
+//Photo Gallery
+$route['photo_gallery'] = 'PhotoGallery/index';
+$route['photo_gallery/_upload_images'] = 'PhotoGallery/ajax_upload_images';
+
 //Files Vault
 $route['files_vault'] = 'Vault_v2/index_v2';
 $route['files_vault/_load_list'] = 'Vault_v2/ajax_load_list';
@@ -2312,6 +2317,7 @@ $route['customer/leads/export_list'] = 'Customer/customer_leads_export';
 $route['customer/_ledger_balance_amount'] = 'Customer/ajax_ledger_balance_amount';
 $route['customer/_upload_payment_method_image'] = 'Customer/ajax_upload_payment_method_image';
 $route['customer/_capture_payment_form'] = 'Customer/ajax_capture_payment_form';
+$route['customers/_create_installer_code'] = 'Customer/ajax_create_installer_code';
 
 //Benchmark for Testing
 $route['benchmark/test_customer_subscription'] = 'Benchmark/test_customer_subscription';
