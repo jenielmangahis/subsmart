@@ -284,8 +284,8 @@ class AlarmApiPortal extends MY_Controller {
                     "city" => $address["city"] ?? null,
                     "state" => $address["state"] ?? null,
                     "zip" => $address["zip"] ?? null,
-                    "panel_version" => getPanelDetails($entry["panelVersion"]),
-                    "modeminfo_network" => getNetworkDetails($modem_info["radioNetworkType"]),
+                    "panel_version" => getPanelDetails($entry["panelVersion"]) ?? null,
+                    "modeminfo_network" => getNetworkDetails($modem_info["radioNetworkType"]) ?? null,
                     "modeminfo_imei" => $modem_info["imei"] ?? null,
                     "join_date" => $entry["joinDate"] ?? null,
                 ];

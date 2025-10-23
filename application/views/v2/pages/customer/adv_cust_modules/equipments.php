@@ -1,4 +1,3 @@
-<!-- Icon Library -->
 <?php 
     $equipmentIcons = [
         "notes" => "fas fa-sticky-note",
@@ -62,12 +61,15 @@
     .cancelAddEquipmentButton,
     .cancelEditEquipmentButton,
     .equipmentCategories,
-    .editdEquipmentButton {
+    .editdEquipmentButton,
+    .updatePanelLocationButton,
+    .cancelEditPanelLocationButton {
         border-color: lightgray;
     }
 
     .addEquipmentSave,
-    .editEquipmentSave {
+    .editEquipmentSave,
+    .savePanelLocationButton {
         background: #6a4a86;
         border: 1px solid #6a4a86;
     }
@@ -90,6 +92,9 @@
         width: unset !important;
     }
 
+    .panelEquipmentLocation {
+        margin-top: -4px;
+    }
 </style>
 <div class="col-12 col-md-4">
     <div class="nsm-card nsm-grid">
@@ -195,45 +200,103 @@
                 <div class="col-lg-12">
                     <div class="equipmentAccordion display_none border rounded mb-2" equipment-type="communication">
                         <button class="btn w-100 text-start accordionButton text-muted" type="button" data-bs-toggle="collapse" data-bs-target="#communicationCollapse">
-                            <strong>Communication&ensp;<span class="communicationDeviceCount">(1)</span></strong>
+                            <strong>Communication&ensp;<?php echo ($alarmcom_info['modeminfo_network'] &&  $alarmcom_info['modeminfo_imei']) ? "<span class='communicationDeviceCount'>(1)</span>" : "<span class='communicationDeviceCount fw-normal text-muted'>(0)</span>"; ?></strong>
                         </button>
                         <div class="collapse" id="communicationCollapse">
-                            <div class="px-3 border-top position-relative">
-                                <div class="d-flex align-items-center mt-3 mb-3 gap-3">
-                                    <i class="<?php echo $equipmentIcons['communication']; ?> fs-4 text-muted"></i>
-                                    <div class="d-flex flex-column">
-                                        <small class="text-muted upperEquipmentDetail"><?php echo $alarmcom_info['modeminfo_network']; ?>&ensp;<span class="badge bg-primary opacity-50 alarmcomBadgeEquipment">alarm.com</span></small>
-                                        <strong class="text-muted">Cellular</strong>
-                                    </div>
-                                    <div class="equipmentSerial ms-auto text-end">
-                                        <strong class="text-muted mx-1"><?php echo $alarmcom_info['modeminfo_imei']; ?></strong>
-                                        <span class="text-success opacity-75"><i class="fas fa-circle"></i></span>
-                                    </div>
-                                    <!-- <div class="equipmentEditItem ms-auto text-end display_none">
-                                        <button class="btn btn-light editdEquipmentButton text-muted mx-1" type="button"></button>
-                                    </div> -->
-                                </div>
-                            </div>
+                            <?php 
+                                if ($alarmcom_info['modeminfo_network'] &&  $alarmcom_info['modeminfo_imei']) {
+                                    echo "
+                                        <div class='px-3 border-top position-relative'>
+                                            <div class='d-flex align-items-center mt-3 mb-3 gap-3'>
+                                                <i class='{$equipmentIcons[communication]} fs-4 text-muted'></i>
+                                                <div class='d-flex flex-column'>
+                                                    <small class='text-muted upperEquipmentDetail'>{$alarmcom_info[modeminfo_network]}&ensp;<span class='badge bg-primary opacity-50 alarmcomBadgeEquipment'>alarm.com</span></small>
+                                                    <strong class='text-muted'>Cellular</strong>
+                                                </div>
+                                                <div class='equipmentSerial ms-auto text-end'>
+                                                    <strong class='text-muted mx-1'>{$alarmcom_info[modeminfo_imei]}</strong>
+                                                    <span class='text-success opacity-75'><i class='fas fa-circle'></i></span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    ";
+                                }
+                            ?>
                         </div>
                     </div>
                     <div class="equipmentAccordion display_none border rounded mb-2" equipment-type="panel">
                         <button class="btn w-100 text-start accordionButton text-muted" type="button" data-bs-toggle="collapse" data-bs-target="#panelCollapse">
-                            <strong>Panel&ensp;<span class="panelDeviceCount">(1)</span></strong>
+                            <strong>Panel&ensp;<?php echo ($alarmcom_info['panel_version']) ? "<span class='panelDeviceCount'>(1)</span>" : "<span class='panelDeviceCount fw-normal text-muted'>(0)</span>"; ?></strong>
                         </button>
                         <div class="collapse" id="panelCollapse">
-                            <div class="px-3 border-top position-relative">
-                                <div class="d-flex align-items-center mt-3 mb-3 gap-3">
-                                    <i class="<?php echo $equipmentIcons['panel']; ?> fs-4 text-muted"></i>
-                                    <div class="d-flex flex-column">
-                                        <small class="text-muted upperEquipmentDetail"><?php echo $alarmcom_info['panel_version']; ?>&ensp;<span class="badge bg-primary opacity-50 alarmcomBadgeEquipment">alarm.com</span></small>
-                                        <strong class="text-muted panelDeviceName">Panel</strong>
-                                    </div>
-                                    <div class="equipmentSerial ms-auto text-end">
-                                        <strong class="text-muted mx-1 panelDeviceId">127</strong>
-                                        <span class="text-success opacity-75"><i class="fas fa-circle"></i></span>
-                                    </div>
-                                </div>
-                            </div>
+                            <?php 
+                                if ($alarmcom_info['panel_version']) {
+                                    echo "
+                                        <div class='px-3 border-top position-relative'>
+                                            <div class='d-flex align-items-center mt-3 mb-3 gap-3'>
+                                                <i class='{$equipmentIcons[panel]} fs-4 text-muted'></i>
+                                                <div class='d-flex flex-column'>
+                                                    <small class='text-muted upperEquipmentDetail'>{$alarmcom_info[panel_version]}&ensp;<span class='badge bg-primary opacity-50 alarmcomBadgeEquipment'>alarm.com</span></small>
+                                                    <strong class='text-muted panelDeviceName'>Panel</strong>
+                                                </div>
+                                                <div class='equipmentSerial ms-auto text-end'>
+                                                    <strong class='text-muted mx-1 panelDeviceId'>127</strong>
+                                                    <span class='text-success opacity-75'><i class='fas fa-circle'></i></span>
+                                                </div>
+                                            </div>
+                                            <div><hr></div>
+                                            <div>
+                                                <form class='updatePanelLocationForm'>
+                                                    <div class='row'>
+                                                        <div class='col-lg-12 d-none'>
+                                                            <input type='hidden' name='customer_id' value='{$profile_info->prof_id}'>
+                                                        </div>
+                                                        <div class='col-lg-6 mb-3'>
+                                                            <label class='form-label fw-xnormal'>Panel Location</label>
+                                                            <div class='text-muted panelEquipmentLocation'>-&ensp;<strong class='panelLocationLabel'>Not Specified</strong></div>
+                                                            <select class='form-select display_none' name='panelLocation' required>
+                                                                <option value='' selected disabled hidden>&mdash;</option>
+                                                                <option value='kitchen'>Kitchen</option>
+                                                                <option value='dining_room'>Dining Room</option>
+                                                                <option value='bedroom'>Bedroom</option>
+                                                                <option value='foyer'>Foyer</option>
+                                                                <option value='attic'>Attic</option>
+                                                                <option value='hallway'>Hallway</option>
+                                                                <option value='garage'>Garage</option>
+                                                                <option value='living_room'>Living Room</option>
+                                                            </select>
+                                                        </div>
+                                                        <div class='col-lg-6 mb-3'>
+                                                            <label class='form-label fw-xnormal'>Transformer Location</label>
+                                                            <div class='text-muted panelEquipmentLocation'>-&ensp;<strong class='transformerLocationLabel'>Not Specified</strong></div>
+                                                            <select class='form-select display_none' name='transformerLocation' required>
+                                                                <option value='' selected disabled hidden>&mdash;</option>
+                                                                <option value='kitchen'>Kitchen</option>
+                                                                <option value='dining_room'>Dining Room</option>
+                                                                <option value='bedroom'>Bedroom</option>
+                                                                <option value='foyer'>Foyer</option>
+                                                                <option value='attic'>Attic</option>
+                                                                <option value='hallway'>Hallway</option>
+                                                                <option value='garage'>Garage</option>
+                                                                <option value='living_room'>Living Room</option>
+                                                            </select>
+                                                        </div>
+                                                        <div class='col-lg-12 mb-3 updatePanelLocationButtonContainer'>
+                                                            <button class='btn btn-light updatePanelLocationButton' type='button'><i class='fas fa-edit text-muted'></i>&ensp;Set Locations</button>
+                                                        </div>
+                                                        <div class='col-lg-12 mb-3 updateCancelSaveLocationContainer display_none'>
+                                                            <div class='float-end mt-1'>
+                                                                <button class='btn btn-light cancelEditPanelLocationButton mx-1' type='button'>Cancel</button>
+                                                                <button type='submit' class='btn btn-primary fw-bold savePanelLocationButton'><i class='fas fa-save'></i>&ensp;Update</button>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    ";
+                                }
+                            ?>
                         </div>
                     </div>
                     <div class="equipmentAccordion display_none border rounded mb-2" equipment-type="sensor">
@@ -250,7 +313,7 @@
                     </div>
                     <div class="equipmentAccordion display_none border rounded mb-2" equipment-type="video">
                         <button class="btn w-100 text-start accordionButton text-muted" type="button" data-bs-toggle="collapse" data-bs-target="#videoCollapse">
-                            <strong>Video Device&ensp;<span class="videoDeviceCount">(0)</span></strong>
+                            <strong>Video&ensp;<span class="videoDeviceCount">(0)</span></strong>
                         </button>
                         <div class="collapse" id="videoCollapse"></div>
                     </div>
@@ -262,7 +325,7 @@
                     </div>
                     <div class="equipmentAccordion display_none border rounded mb-2" equipment-type="zwave">
                         <button class="btn w-100 text-start accordionButton text-muted" type="button" data-bs-toggle="collapse" data-bs-target="#zwaveCollapse">
-                            <strong>Z-Wave Device&ensp;<span class="zwaveDeviceCount">(0)</span></strong>
+                            <strong>Z-Wave&ensp;<span class="zwaveDeviceCount">(0)</span></strong>
                         </button>
                         <div class="collapse" id="zwaveCollapse"></div>
                     </div>
@@ -274,19 +337,19 @@
                     </div>
                     <div class="equipmentAccordion display_none border rounded mb-2" equipment-type="geo">
                         <button class="btn w-100 text-start accordionButton text-muted" type="button" data-bs-toggle="collapse" data-bs-target="#geoCollapse">
-                            <strong>Geo Device&ensp;<span class="geoDeviceCount">(0)</span></strong>
+                            <strong>Geo&ensp;<span class="geoDeviceCount">(0)</span></strong>
                         </button>
                         <div class="collapse" id="geoCollapse"></div>
                     </div>
                     <div class="equipmentAccordion display_none border rounded mb-2" equipment-type="voice">
                         <button class="btn w-100 text-start accordionButton text-muted" type="button" data-bs-toggle="collapse" data-bs-target="#voiceCollapse">
-                            <strong>Voice Device&ensp;<span class="voiceDeviceCount">(0)</span></strong>
+                            <strong>Voice&ensp;<span class="voiceDeviceCount">(0)</span></strong>
                         </button>
                         <div class="collapse" id="voiceCollapse"></div>
                     </div>
                     <div class="equipmentAccordion display_none border rounded" equipment-type="other">
                         <button class="btn w-100 text-start accordionButton text-muted" type="button" data-bs-toggle="collapse" data-bs-target="#otherCollapse">
-                            <strong>Other Device&ensp;<span class="otherDeviceCount fw-normal text-muted">(0)</span></strong>
+                            <strong>Other&ensp;<span class="otherDeviceCount fw-normal text-muted">(0)</span></strong>
                         </button>
                         <div class="collapse" id="otherCollapse"></div>
                     </div>
@@ -300,9 +363,9 @@
                 </div>
                 <div class="col-lg-12"><hr></div>
                 <div class="col-lg-12">
-                    <button class="btn btn-light addEquipmentButton w-100" type="button"><i class="fas fa-plus text-muted"></i>&ensp;Add New Item</button>
+                    <button class="btn btn-light addEquipmentButton w-100" type="button"><i class="fas fa-plus text-muted"></i>&ensp;New Equipment</button>
                     <div class="addEquipmentContainer display_none">
-                        <h5 class="fw-bold">Add New Item</h5>
+                        <h5 class="fw-bold">New Equipment</h5>
                         <form class="addEquipmentForm">
                             <div class="row">
                                 <div class="col-lg-12 d-none">
@@ -371,7 +434,7 @@
                         </form>
                     </div>
                     <div class="editEquipmentContainer display_none">
-                        <h5 class="fw-bold">Edit Item</h5>
+                        <h5 class="fw-bold">Edit Equipment</h5>
                         <form class="editEquipmentForm">
                             <div class="row">
                                 <div class="col-lg-12 d-none">
@@ -550,6 +613,7 @@
                 renderDevices('geo', equipmentDetails.geo || []);
                 renderDevices('voice', equipmentDetails.voice || []);
                 getCustomerEquipment("<?php echo $profile_info->prof_id; ?>");
+                getPanelLocation("<?php echo $profile_info->prof_id; ?>");
 
                 $('.equipmentAccordion').fadeIn('fast');
                 $('.equipmentLoader').hide();
@@ -619,8 +683,30 @@
         });
     }
 
+    function getPanelLocation(customer_id) {
+        $.ajax({
+            type: "POST",
+            url: `${window.origin}/Customer/getPanelLocation`,
+            data: {
+                customer_id: `${customer_id}`
+            },
+            beforeSend: function() {},
+            success: function(response) {
+                const data = JSON.parse(response)[0];
+                $('select[ name="panelLocation"]').val(`${data.panel}`);
+                $('select[ name="transformerLocation"]').val(`${data.transformer}`);
+                let panelLocation = $('select[name="panelLocation"] option:selected').text();
+                let transformerLocation = $('select[name="transformerLocation"] option:selected').text();
+                $('.panelLocationLabel').text(`${panelLocation}`);
+                $('.transformerLocationLabel').text(`${transformerLocation}`);
+            },
+            error: function() {}
+        });
+    }
+
     $(document).ready(function () {
         $('.equipmentWidgetRefreshButton').click();
+        getPanelLocation("<?php echo $profile_info->prof_id; ?>");
     });
 
     $(document).on('click', '.equipmentWidgetRefreshButton', function() {
@@ -1106,5 +1192,51 @@
                 $('input[ name="editEquipmentQRCode"]').removeAttr('required');
                 break;
         }
+    });
+
+    $(document).on('click', '.updatePanelLocationButton', function() {
+        $('.panelEquipmentLocation, .updatePanelLocationButtonContainer').hide();
+        $('select[ name="panelLocation"], select[ name="transformerLocation"], .updateCancelSaveLocationContainer').fadeIn('fast');
+    });
+
+    $(document).on('click', '.cancelEditPanelLocationButton', function() {
+        $('.panelEquipmentLocation, .updatePanelLocationButtonContainer').fadeIn('fast');
+        $('select[ name="panelLocation"], select[ name="transformerLocation"], .updateCancelSaveLocationContainer').hide();
+    });
+
+    $(document).on('submit', '.updatePanelLocationForm', function(e) {
+        e.preventDefault();
+
+        const updatePanelLocationForm = $(this);
+        let panelLocationFormData = new FormData(this);
+        let panelLocation = $('select[name="panelLocation"] option:selected').text();
+        let transformerLocation = $('select[name="transformerLocation"] option:selected').text();
+
+        $.ajax({
+            type: "POST",
+            url: `${window.origin}/Customer/updatePanelEquipmentLocation`,
+            data: panelLocationFormData,
+            processData: false,
+            contentType: false,
+            beforeSend: function() {
+                formDisabler(updatePanelLocationForm, true);
+            },
+            success: function(response) {
+                formDisabler(updatePanelLocationForm, false);
+                $('.panelLocationLabel').text(`${panelLocation}`);
+                $('.transformerLocationLabel').text(`${transformerLocation}`);
+                $('.panelEquipmentLocation, .updatePanelLocationButtonContainer').fadeIn('fast');
+                $('select[ name="panelLocation"], select[ name="transformerLocation"], .updateCancelSaveLocationContainer').hide();
+            },
+            error: function() {
+                formDisabler(updatePanelLocationForm, false);
+                Swal.fire({
+                    icon: "error",
+                    title: "Network Error!",
+                    html: "Please check your connection and try again.",
+                    showConfirmButton: true,
+                });
+            }
+        });
     });
 </script>

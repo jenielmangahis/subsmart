@@ -13644,6 +13644,37 @@ class Customer extends MY_Controller
         echo json_encode($data);
     }
 
+    public function updatePanelEquipmentLocation()
+    {
+        $input = $this->input->post();
+
+        $data = [
+            'customer_id'  => $input['customer_id'],
+            'panel'        => $input['panelLocation'],
+            'transformer'  => $input['transformerLocation'],
+        ];
+
+        $replace = $this->db->replace('panel_equipment_location', $data);
+
+        echo json_encode($replace);
+    }
+
+    public function getPanelLocation()
+    {
+        $customer_id = $this->input->post('customer_id');
+
+        $this->db->select('
+            panel_equipment_location.panel,
+            panel_equipment_location.transformer
+        ');
+        $this->db->from('panel_equipment_location');
+        $this->db->where('panel_equipment_location.customer_id', "$customer_id");
+        $query = $this->db->get();
+        $data = $query->result();
+
+        echo json_encode($data);
+    }
+
     public function ajax_payment_method_images()
     {
         $this->load->model('AcsCustomerDocument_model');
