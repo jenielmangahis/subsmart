@@ -8,13 +8,16 @@
     padding:7px;
     height:36px;
 }
+.img-signature{
+    border:1px #e6e6e6 solid;
+}
 </style>
 <div class="col-12 col-md-4" data-id="<?= $id ?>" id="<?= $id ?>" module-id="profiledocuments">
     <div class="nsm-card nsm-grid">
         <div class="nsm-card-header d-block">
             <div class="nsm-card-title">
                 <span>Documents</span>
-                <span class="float-end">Total : <?= $total_customer_documents; ?></span>
+                <span class="float-end">Total : <?= $total_customer_documents > 0 ? $total_customer_documents : '0'; ?></span>
             </div>
             <label class="nsm-subtitle">Issued/Received</label>
         </div>
@@ -247,6 +250,11 @@
                             </div>
                         </div>
                     </div>
+                    <?php if( $customerSignature ){ ?>
+                        <div class="col-3 mt-2">
+                            <img class="img-signature img-thumbnail" src="<?= $customerSignature->value; ?>" />
+                        </div>
+                    <?php } ?>
 
                     <div class="documents-loader d-flex align-items-center justify-content-center" style="padding-top: 1rem;display:none !important;">
                         <div class="spinner-border" role="status"></div>

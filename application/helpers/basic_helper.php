@@ -2624,11 +2624,15 @@ function get_customer_invoice_amount($type, $customer_id)
         case "year":
             $result = $CI->invoice_model->getByWhere(array('customer_id' => $customer_id, 'date_issued >=' => $start_date, 'date_issued <=' => $end_date));
             return total_invoice_amount($result);
-
-        case "pending":
-            $result = $CI->invoice_model->getByWhere(array('customer_id' => $customer_id, 'date_issued >=' => $start_date, 'date_issued <=' => $end_date, 'status' => 'Draft'));
+        case "outstanding":
+            $result = $CI->invoice_model->getByWhere(array('customer_id' => $customer_id, 'date_issued >=' => $start_date, 'date_issued <=' => $end_date, 'status' => 'Due'));
             return total_invoice_amount($result);
-
+        case "due":
+            $result = $CI->invoice_model->getByWhere(array('customer_id' => $customer_id, 'date_issued >=' => $start_date, 'date_issued <=' => $end_date, 'status' => 'Due'));
+            return total_invoice_amount($result);
+        case "pending":
+            $result = $CI->invoice_model->getByWhere(array('customer_id' => $customer_id, 'date_issued >=' => $start_date, 'date_issued <=' => $end_date, 'status !=' => 'Paid'));
+            return total_invoice_amount($result);
         default:
             $result = $CI->invoice_model->getByWhere(array('customer_id' => $customer_id, 'date_issued >=' => $start_date, 'date_issued <=' => $end_date, 'status !=' => 'Draft'));
             return total_invoice_amount($result);

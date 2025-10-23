@@ -1228,6 +1228,8 @@ $route['workorder/view/(:num)'] = 'Workorder/view/$1';
 
 $route['workorder/estimate_convert_to_workorder/(:num)'] = 'Workorder/estimateConversionWorkorderV2/$1';
 $route['workorder/_save_estimate_convert_to_workorder'] = 'Workorder/ajax_save_estimate_convert_to_workorder';
+$route['workorder/_update_workorder_agreement'] = 'Workorder/ajax_update_workorder_agreement';
+
 $route['workorder/_permanently_delete_selected_attachment'] = 'Workorder/ajax_permanently_delete_selected_attachment';
 
 //Public view 
@@ -1793,6 +1795,7 @@ $route['customer/export_customer'] = 'Customer/customer_export';
 $route['customer/export_customer_ledger'] = 'Customer/export_customer_ledger';
 $route['customer/_create_sales_area'] = 'Customer/ajax_create_sales_area';
 $route['customer/_load_item_details'] = 'Customer/ajax_load_item_details';
+$route['customer/_financing_equipment_details'] = 'Customer/ajax_financing_equipment_details';
 
 // Trac360
 $route['on-my-way-to-job'] = 'Job/update_jobs_status';

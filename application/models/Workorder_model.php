@@ -419,52 +419,44 @@ class Workorder_model extends MY_Model
         extract($data);
         $this->db->where('id', $id);
         $this->db->update('work_orders', array(
-            'security_number'       => $security_number,//
-            'phone_number'          => $phone_number,//
-            'mobile_number'         => $mobile_number,//
-            'email'                 => $email,//
-            'job_location'          => $job_location,//
-            'city'                  => $city,//
-            'state'                 => $state,//
-            'country'               => $country,//
-            'zip_code'              => $zip_code,//
-            'comments'              => $comments,//
-            'password'              => $password,//
-            
-            'date_issued'           => $date_issued,//
-            'payment_method'        => $payment_method,//
-            'payment_amount'        => $payment_amount,//
-            'terms_and_conditions'  => $terms_and_conditions,//
-
-            'subtotal'              => $subtotal,//
-            'taxes'                 => $taxes, //
-            'installation_cost'     => $installation_cost, //
-            'otp_setup'             => $otp_setup,//
-            'monthly_monitoring'    => $monthly_monitoring,//
-            'grand_total'           => $grand_total,//
-            'job_tags'              => $job_tags,//
-
-            'lead_source_id'        => $lead_source_id,//
-
-            'status'                => $status, //Added by Bryann Revina
-            //'agent_id'              => $agent_id, //Added by Bryann Revina
-
+            'security_number'       => $security_number,
+            'phone_number'          => $phone_number,
+            'mobile_number'         => $mobile_number,
+            'email'                 => $email,
+            'job_location'          => $job_location,
+            'city'                  => $city,
+            'state'                 => $state,
+            'country'               => $country,
+            'zip_code'              => $zip_code,
+            'comments'              => $comments,
+            'password'              => $password,
+            'date_issued'           => $date_issued,
+            'payment_method'        => $payment_method,
+            'payment_amount'        => $payment_amount,
+            'terms_and_conditions'  => $terms_and_conditions,
+            'subtotal'              => $subtotal,
+            'taxes'                 => $taxes,
+            'installation_cost'     => $installation_cost,
+            'otp_setup'             => $otp_setup,
+            'monthly_monitoring'    => $monthly_monitoring,
+            'grand_total'           => $grand_total,
+            'job_tags'              => $job_tags,
+            'lead_source_id'        => $lead_source_id,
+            'status'                => $status, 
             'company_representative_signature'      => $company_representative_signature,
             'company_representative_name'           => $company_representative_name,
             'primary_account_holder_signature'      => $primary_account_holder_signature,
             'primary_account_holder_name'           => $primary_account_holder_name,
             'secondary_account_holder_signature'    => $secondary_account_holder_signature,
             'secondary_account_holder_name'         => $secondary_account_holder_name,
-
-            'account_type'          => $account_type,//
-            'panel_type'            => $panel_type,//
-            'panel_communication'   => $panel_communication,//
-
-            'install_date'          => $install_date,//
-            'install_time'          => $install_time,//
-
-            'date_updated'                  => $date_updated,//
+            'account_type'          => $account_type,
+            'panel_type'            => $panel_type,
+            'panel_communication'   => $panel_communication,
+            'install_date'          => $install_date,
+            'install_time'          => $install_time,
+            'date_updated'          => $date_updated
         ));
+
         return true;
     }
 

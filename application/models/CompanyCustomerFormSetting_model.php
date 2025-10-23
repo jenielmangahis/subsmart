@@ -120,6 +120,11 @@ class CompanyCustomerFormSetting_model extends MY_Model
                 'alarm_login' => ['field_name' => 'Login', 'required' => 'yes', 'is_visible' => 'yes'],
                 'alarm_customer_id' => ['field_name' => 'Customer ID', 'required' => 'yes', 'is_visible' => 'yes'],
                 'alarm_cs_account' => ['field_name' => 'CS Account', 'required' => 'yes', 'is_visible' => 'yes'],                
+                'site_customer_type' => ['field_name' => 'Site / Customer Type', 'required' => 'yes', 'is_visible' => 'yes'],  
+                'secondary_system_type' => ['field_name' => 'Secondary System Type', 'required' => 'yes', 'is_visible' => 'yes'],
+                'radio_serial_number' => ['field_name' => 'Radio Serial Number', 'required' => 'yes', 'is_visible' => 'yes'],
+                'panel_location' => ['field_name' => 'Panel Location', 'required' => 'yes', 'is_visible' => 'yes'],
+                'transformer_location' => ['field_name' => 'Transformer Location', 'required' => 'yes', 'is_visible' => 'yes'],
             ],
             'solar-information' => [
                 'project_id' => ['field_name' => 'Project ID', 'required' => 'yes', 'is_visible' => 'yes'],

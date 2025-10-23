@@ -3,6 +3,22 @@
         <div class="nsm-card-header d-block">
             <div class="nsm-card-title">
                 <span>Admin</span>
+                <?php 
+                    $recurring_end_date = date("Y-m-d");
+                    $current_date = date("Y-m-d");
+                    if( strtotime($billing_info->recurring_end_date) > 0 ){
+                        $recurring_end_date = date("Y-m-d", strtotime($billing_info->recurring_end_date));
+                    }
+
+                    $is_recurring_active = '';
+                    if( $recurring_end_date > $current_date ){ 
+                        $is_recurring_active = 'checked';
+                    }
+                ?>
+                <div class="form-check form-switch float-end">
+                    <input class="form-check-input" type="checkbox" role="switch" id="chkRecurringActive" <?= $is_recurring_active; ?> readonly>
+                    <label class="form-check-label" for="chkRecurringActive">Recurring Subscription</label>
+                </div>
             </div>
         </div>
         <div class="nsm-card-content">
@@ -130,9 +146,19 @@
                                 ?>
                             </span>
                         </div>
+                        <div class="col-12 col-md-12">
+                            <div class="form-check float-end mt-4">
+                                <input class="form-check-input" type="checkbox" value="1" id="chk-show-financing-equipment">
+                                <label class="form-check-label" for="chk-show-financing-equipment">
+                                    <b>Financing Equipment</b>
+                                </label>
+                            </div>
+                        </div>
                     </div>
                 </div>
-            </div>            
+            </div>
+            <div id="admin-financing-equipment-container"></div>            
+            <hr />
             <?php include viewPath('v2/pages/customer/adv_cust_modules/billing'); ?>      
             <?php if( isAdmin() && in_array(logged('company_id'), adi_company_ids()) ){ ?>
                 <?php include viewPath('v2/pages/customer/adv_cust_modules/payment_method_images'); ?>      
@@ -270,6 +296,29 @@ $(function(){
 				$('#admin-capture-payment-step2').html('<span class="bx bx-loader bx-spin"></span> loading payment form...');
 			}
 		});
+    });
+
+    $('#chk-show-financing-equipment').on('change', function(){
+        
+        let url = base_url + 'customer/_financing_equipment_details'  
+        let customer_id = "<?= $customer_id; ?>";
+
+        if( $(this).is(':checked') ){
+            $.ajax({
+                type: "POST",
+                url: url,
+                data: {customer_id:customer_id},
+                success: function(o)
+                {	
+                    $('#admin-financing-equipment-container').html(o);
+                },
+                beforeSend:function(){
+                    $('#admin-financing-equipment-container').html('<span class="bx bx-loader bx-spin"></span>');
+                }
+            });
+        }else{
+            $('#admin-financing-equipment-container').html('');
+        }
     });
 
     $('#btn-admin-capture-payment-back').on('click', function(){

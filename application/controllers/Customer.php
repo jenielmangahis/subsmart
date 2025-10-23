@@ -5157,6 +5157,11 @@ class Customer extends MY_Controller
         $input_alarm['pass_thru_cost']     = $input['pass_thru_cost'] ? $input['pass_thru_cost'] : '';
         $input_alarm['monthly_monitoring'] = $input['monthly_monitoring'] ? $input['monthly_monitoring'] : 0;
         $input_alarm['otps'] = $input['otps'] ? $input['otps'] : 0;
+        $input_alarm['site_customer_type']     = $input['site_customer_type'] ? $input['site_customer_type'] : '';
+        $input_alarm['secondary_system_type']     = $input['secondary_system_type'] ? $input['secondary_system_type'] : '';
+        $input_alarm['radio_serial_number']     = $input['radio_serial_number'] ? $input['radio_serial_number'] : '';
+        $input_alarm['panel_location']     = $input['panel_location'] ? $input['panel_location'] : '';
+        $input_alarm['transformer_location']     = $input['transformer_location'] ? $input['transformer_location'] : '';
 
         $check = [
             'where' => [
@@ -13639,6 +13644,37 @@ class Customer extends MY_Controller
         echo json_encode($data);
     }
 
+    public function updatePanelEquipmentLocation()
+    {
+        $input = $this->input->post();
+
+        $data = [
+            'customer_id'  => $input['customer_id'],
+            'panel'        => $input['panelLocation'],
+            'transformer'  => $input['transformerLocation'],
+        ];
+
+        $replace = $this->db->replace('panel_equipment_location', $data);
+
+        echo json_encode($replace);
+    }
+
+    public function getPanelLocation()
+    {
+        $customer_id = $this->input->post('customer_id');
+
+        $this->db->select('
+            panel_equipment_location.panel,
+            panel_equipment_location.transformer
+        ');
+        $this->db->from('panel_equipment_location');
+        $this->db->where('panel_equipment_location.customer_id', "$customer_id");
+        $query = $this->db->get();
+        $data = $query->result();
+
+        echo json_encode($data);
+    }
+
     public function ajax_payment_method_images()
     {
         $this->load->model('AcsCustomerDocument_model');
@@ -13754,5 +13790,15 @@ class Customer extends MY_Controller
         $this->page_data['payment_amount'] = $post['payment_amount'];
         $this->page_data['stripe_client_secret']    = $stripe_client_secret;
         $this->load->view('v2/pages/customer/ajax_capture_payment_form', $this->page_data);
+    }
+
+    public function ajax_financing_equipment_details()
+    {        
+        $post = $this->input->post();
+
+        $billing_info = $this->customer_ad_model->get_data_by_id('fk_prof_id', $post['customer_id'], 'acs_billing');
+        
+        $this->page_data['billing_info'] = $billing_info;
+        $this->load->view('v2/pages/customer/ajax_financing_equipment_details', $this->page_data);
     }
 }

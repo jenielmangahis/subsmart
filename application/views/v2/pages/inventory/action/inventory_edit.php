@@ -81,7 +81,8 @@
                                             <select class="form-select" name="type" id="type" required>
                                                 <option <?php echo (stripos("$item->type", "Product") !== false) ? "selected" : ""; ?> value="Product">Product</option>
                                                 <option <?php echo (stripos("$item->type", "Service") !== false) ? "selected" : ""; ?> value="Service">Service</option>
-                                                <option <?php echo (stripos("$item->type", "QSP") !== false) ? "selected" : ""; ?> value="QSP">QSP</option>
+                                                <option <?php echo (stripos("$item->type", "Non Inventory") !== false) ? "selected" : ""; ?> value="Non Inventory">Non Inventory</option>
+                                                <option <?php echo (stripos("$item->type", "QSP") !== false) ? "selected" : ""; ?> value="QSP">QSP</option>                                                
                                             </select>
                                         </div>
                                         <div class="col-lg-3 mb-2">

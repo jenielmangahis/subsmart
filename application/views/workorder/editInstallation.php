@@ -80,14 +80,18 @@ tr {
     <div class="col-12">
         <div class="nsm-page">
             <div class="nsm-page-content">
-                <?php echo form_open_multipart('workorder/updateWorkorderAgreement', ['class' => 'form-validate', 'id' => 'form_new_adi_workorder', 'autocomplete' => 'off']); ?>
+                <?php echo form_open_multipart('workorder/updateWorkorderAgreement', ['class' => 'form-validate', 'id' => 'form_update_adi_workorder', 'autocomplete' => 'off']); ?>
                 <input type="hidden" name="status" value="<?= $workorder->status; ?>">
                 <div class="row g-3">
                     <div class="col-12">
                         <div class="nsm-card primary">
                             <div class="nsm-card-header">
-                                <div class="nsm-card-title">
-                                    <span class="d-block">Header</span>
+                                <div class="nsm-card-title d-block">
+                                    <span class="d-block">Header
+                                        <div class="nsm-card-controls" style="float: right; font-size: 14px !important;">
+                                            <button type="button" id="" data-bs-toggle="modal" data-bs-target="#update_header_modal" class="nsm-button primary small text-end"><strong>Edit</strong></button>  
+                                        </div>                                        
+                                    </span>
                                     <div class="row">
                                         <div class="col-12 col-md-10">
                                             <!-- <label class="nsm-subtitle"> -->
@@ -231,7 +235,7 @@ tr {
                                                             <input type="text" class="nsm-field form-control" name="item[]" value="<?php echo $default_item['name']; ?>">
                                                             <input type="hidden" name="dataValue[]">                                                       
                                                         </td>
-                                                        <td style="width: 10%"><input style="text-align:center;" type="text" class="nsm-field form-control allQty" name="qty[]" value="<?php echo !empty($default_item_data['qty']) ? $default_item_data['qty'] : 0; ?>"></td>
+                                                        <td style="width: 10%"><input style="text-align:center;" type="text" class="nsm-field form-control all-qty-field allQty" name="qty[]" value="<?php echo !empty($default_item_data['qty']) ? $default_item_data['qty'] : 0; ?>"></td>
                                                         <td style="width: 20%"><input style="text-align:center;" type="text" class="nsm-field form-control" name="existing[]"></td>
                                                         <td style="width: 20%"><input style="text-align:center;" type="text" class="nsm-field form-control" name="location[]"></td>
                                                         <td style="width: 15%"><input style="text-align:center;" type="text" class="nsm-field form-control all-price-field allprices" name="price[]" value="<?php echo !empty($default_item_data['price']) ? number_format($default_item_data['price'],2) : number_format(0,2); ?>"></td>
@@ -258,7 +262,7 @@ tr {
                                                             <input type="text" class="nsm-field form-control" name="item[]" value="<?php echo $default_item['name']; ?>">
                                                             <input type="hidden" name="dataValue[]">                                                        
                                                         </td>
-                                                        <td style="width: 10%"><input style="text-align:center;" type="text" class="nsm-field form-control allQty" value="<?php echo !empty($default_item_data['qty']) ? $default_item_data['qty'] : 0; ?>"></td>
+                                                        <td style="width: 10%"><input style="text-align:center;" type="text" class="nsm-field form-control all-qty-field allQty" name="qty[]" value="<?php echo !empty($default_item_data['qty']) ? $default_item_data['qty'] : 0; ?>"></td>
                                                         <td style="width: 20%"><input style="text-align:center;" type="text" class="nsm-field form-control" name="existing[]"></td>
                                                         <td style="width: 20%"><input style="text-align:center;" type="text" class="nsm-field form-control" name="location[]"></td>
                                                         <td style="width: 15%"><input style="text-align:center;" type="text" class="nsm-field form-control all-price-field allprices" name="price[]" value="<?php echo !empty($default_item_data['price']) ? number_format($default_item_data['price'],2) : number_format(0,2); ?>"></td>
@@ -280,7 +284,7 @@ tr {
                                                             <input type="text" class="nsm-field form-control" name="item[]" value="<?php echo $aitem->item; ?>">
                                                             <input type="hidden" name="dataValue[]">                                                        
                                                         </td>
-                                                        <td style="width: 10%"><input style="text-align:center;" type="text" class="nsm-field form-control allQty" name="qty[]" value="<?php echo !empty($aitem->qty) ? $aitem->qty : 0; ?>"></td>
+                                                        <td style="width: 10%"><input style="text-align:center;" type="text" class="nsm-field form-control all-qty-field allQty" name="qty[]" value="<?php echo !empty($aitem->qty) ? $aitem->qty : 0; ?>"></td>
                                                         <td style="width: 20%"><input style="text-align:center;" type="text" class="nsm-field form-control" name="existing[]"></td>
                                                         <td style="width: 20%"><input style="text-align:center;" type="text" class="nsm-field form-control" name="location[]"></td>
                                                         <td style="width: 15%"><input style="text-align:center;" type="text" class="nsm-field form-control all-price-field allprices" name="price[]" value="<?php echo !empty($aitem->price) ? number_format($aitem->price,2) : number_format(0,2); ?>"></td>
@@ -310,7 +314,7 @@ tr {
                                                             <input type="text" class="nsm-field form-control" name="item[]" value="<?php echo $default_enhance_service['name']; ?>">
                                                             <input type="hidden" name="dataValue[]">                                                        
                                                         </td>
-                                                        <td style="width: 10%"><input style="text-align:center;" type="text" class="nsm-field form-control allQty" name="qty[]" value="<?php echo !empty($default_es_data['qty']) ? $default_es_data['qty'] : 0; ?>"></td>
+                                                        <td style="width: 10%"><input style="text-align:center;" type="text" class="nsm-field form-control all-qty-field allQty" name="qty[]" value="<?php echo !empty($default_es_data['qty']) ? $default_es_data['qty'] : 0; ?>"></td>
                                                         <td style="width: 20%"><input style="text-align:center;" type="text" class="nsm-field form-control" name="existing[]"></td>
                                                         <td style="width: 20%"><input style="text-align:center;" type="text" class="nsm-field form-control" name="location[]"></td>
                                                         <td style="width: 15%"><input style="text-align:center;" type="text" class="nsm-field form-control all-price-field allprices" name="price[]" value="<?php echo !empty($default_es_data['price']) ? $default_es_data['price'] : number_format(0,2); ?>"></td>
@@ -337,7 +341,7 @@ tr {
                                                             <input type="text" class="nsm-field form-control" name="item[]" value="<?php echo $default_enhance_service['name']; ?>">
                                                             <input type="hidden" name="dataValue[]">                                                        
                                                         </td>
-                                                        <td style="width: 10%"><input style="text-align:center;" type="text" class="nsm-field form-control allQty" name="qty[]" value="<?php echo !empty($default_es_data['qty']) ? $default_es_data['qty'] : 0; ?>"></td>
+                                                        <td style="width: 10%"><input style="text-align:center;" type="text" class="nsm-field form-control all-qty-field allQty" name="qty[]" value="<?php echo !empty($default_es_data['qty']) ? $default_es_data['qty'] : 0; ?>"></td>
                                                         <td style="width: 20%"><input style="text-align:center;" type="text" class="nsm-field form-control" name="existing[]"></td>
                                                         <td style="width: 20%"><input style="text-align:center;" type="text" class="nsm-field form-control" name="location[]"></td>
                                                         <td style="width: 15%"><input style="text-align:center;" type="text" class="nsm-field form-control all-price-field allprices" name="price[]" value="<?php echo !empty($default_es_data['price']) ? $default_es_data['price'] : number_format(0,2); ?>"></td>
@@ -1092,6 +1096,7 @@ tr {
                                             <i class='bx bx-file' style="font-size:17px;position:relative;top:3px;"></i> <small><strong>Documents</strong></small>
                                         </div>
                                         <div class="col-12 col-md-8">
+                                            <input type="hidden" name="total_attachment_count" id="total-attachment-count" class="total-attachment-count" value="<?php echo $total_existing_attachments; ?>" />
                                             <a class="nsm-button btn-small" style="float:right;" id="btn-add-attachment" href="javascript:void(0);"><strong>+ Add File</strong></a>
                                         </div>
                                     </div>
@@ -1331,6 +1336,10 @@ $(".nsm-subtitle").html(function() {
             getTotalPrice();
         });
 
+        $(".all-qty-field").on("keyup", function() {
+            getTotalPrice();
+        });
+
         $('.check-one-field').on('change', function() {
             $('input[name="' + this.name + '"]').not(this).prop('checked', false);
             $('.checkedDataOne').val(this.value);
@@ -1361,7 +1370,7 @@ $(".nsm-subtitle").html(function() {
             $('.dcam_check').val(this.value);
         });
 
-        $("#form_new_adi_workorder").on("submit", function(e) {            
+        $("#form_new_adi_workorderOld").on("submit", function(e) {                     
             e.preventDefault();
             var url = "<?php echo base_url('workorder/updateWorkorderAgreement'); ?>";            
 
@@ -1375,11 +1384,6 @@ $(".nsm-subtitle").html(function() {
                 form_valid = 0;
                 form_err_msg = 'Cannot accept 0 total amount due';
             }
-
-            /*if( parseFloat(customer_id) <= 0 ){
-                form_valid = 0;
-                form_err_msg = 'Please select customer';
-            }*/
 
             if( form_valid == 1 ){
                 _this.find("button[type=submit]").html("Submitting");
@@ -1416,39 +1420,64 @@ $(".nsm-subtitle").html(function() {
                 });
             }
         });
+   
+        $("#form_update_adi_workorder").on("submit", function(e) {
+            let _this = $(this);
+            e.preventDefault();    
 
-        // $("#form_new_adi_workorder").on("submit", function(e) {
-        //     let _this = $(this);
-        //     e.preventDefault();
+            _this.find("button[type=submit]").html("Saving");
+            _this.find("button[type=submit]").prop("disabled", true);          
 
-        //     var url = "<?php //echo base_url('workorder/savenewWorkorderAgreement'); ?>";
-        //     _this.find("button[type=submit]").html("Submitting");
-        //     _this.find("button[type=submit]").prop("disabled", true);
-
-        //     $.ajax({
-        //         type: 'POST',
-        //         url: url,
-        //         data: _this.serialize(),
-        //         success: function(result) {
-        //             Swal.fire({
-        //                 title: 'Save Successful!',
-        //                 text: "Workorder has been saved successfully.",
-        //                 icon: 'success',
-        //                 showCancelButton: false,
-        //                 confirmButtonText: 'Okay'
-        //             }).then((result) => {
-        //                 if (result.value) {
-        //                     location.reload();
-        //                 }
-        //             });
-
-        //             _this.trigger("reset");
-
-        //             _this.find("button[type=submit]").html("Submit");
-        //             _this.find("button[type=submit]").prop("disabled", false);
-        //         },
-        //     });
-        // });
+            var url          = base_url + "workorder/_update_workorder_agreement";
+            let total_amount = $('#payment_amount_grand').val();      
+            
+            if( parseFloat(total_amount) <= 0 ){
+                form_valid = 0;
+                form_err_msg = 'Cannot accept 0 total amount due';
+            }            
+            
+            if( parseFloat(total_amount) <= 0 ){
+                form_err_msg = 'Cannot accept 0 total amount due';
+                Swal.fire({
+                icon: 'error',
+                    title: 'Error!',
+                    html: form_err_msg
+                });    
+                _this.find("button[type=submit]").html("Submit");
+                _this.find("button[type=submit]").prop("disabled", false);               
+            }        
+            
+            var post_data = new FormData(this);
+            $.ajax({
+                type: 'POST',
+                url: url,
+                data: post_data,
+                processData: false,
+                contentType: false,
+                dataType: "json",
+                success: function(result) {
+                    Swal.fire({
+                        title: 'Update Workorder Agreement',
+                        html: result.msg,
+                        icon: result.is_success == 1 ? 'success' : 'error',
+                        showCloseButton: false,
+                        showCancelButton: false,
+                        confirmButtonColor: '#2ca01c',
+                        confirmButtonText: 'Okay'
+                    }).then((res) => {
+                        if(res.isConfirmed) {
+                            if(result.is_success == 1) {
+                                _this.trigger("reset");
+                                window.location = base_url + "workorder";                        
+                            } else {
+                                _this.find("button[type=submit]").html("Submit");
+                                _this.find("button[type=submit]").prop("disabled", false);                             
+                            }
+                        }
+                    });
+                },
+            });        
+        });        
 
         $(".datepicker").datepicker({
             format: 'mm/dd/yyyy',
@@ -1656,16 +1685,15 @@ $(".nsm-subtitle").html(function() {
         $("#other_payment_area").addClass("d-none");
     }
 
-    function getTotalPrice() {
-        // alert('test');
+    function getTotalPriceOld() {
         let val2 = 0;
         $('.allprices').each(function() {
-
-            let a = $(this).val();
-
-            let c = $(this).val(numeral(a).format('0,0[.]00'));
+            const qtyFields = document.querySelectorAll('.allQty');
+            let qtyItem = qtyFields[key].value;
+            let a  = $(this).val();
+            let c  = $(this).val(numeral(a).format('0,0[.]00'));
             let am = $(this).val(a.replaceAll(",", ""));
-            val2 += (parseFloat(c.val()) || 0);
+            val2   += (parseFloat(c.val() * qtyItem) || 0);                
         });
 
         let installationCost = $('#installationCost').val();
@@ -1676,11 +1704,6 @@ $(".nsm-subtitle").html(function() {
         $('#equipmentCost').val(eq.toFixed(2));
         $('.equipment_cost').html(eq.toFixed(2));
 
-        //let ec = $('#equipmentCost').val();
-        // let grandtaxes = (parseFloat(ec) * (7.5 / 100));
-        // $('#salesTax').val(grandtaxes)
-        // let salesTax = $('#salesTax').val();
-        // $('.sales_tax_total').html(grandtaxes.toFixed(2));
         let ec = $('#equipmentCost').val();
         let salesTax   = parseFloat($('#salesTax').val());
         $('.sales_tax_total').html(salesTax.toFixed(2));
@@ -1693,6 +1716,46 @@ $(".nsm-subtitle").html(function() {
         $('#payment_amount').val(val3.toFixed(2));
     }
 
+    function getTotalPrice() {
+        let val2 = 0;
+        $('.allprices').each(function(key, index) {
+            const qtyFields = document.querySelectorAll('.allQty');
+            let qtyItem = qtyFields[key].value;
+            let a  = $(this).val();
+            let c  = $(this).val(numeral(a).format('0,0[.]00'));
+            let am = $(this).val(a.replaceAll(",", ""));
+            val2   += (parseFloat(c.val() * qtyItem) || 0);
+        });
+
+        let installationCost = $('#installationCost').val();
+        let otps = $('#otps').val();
+        let monthlyMonitoring = $('#monthlyMonitoring').val();
+
+        let eq = val2;
+        $('#equipmentCost').val(eq.toFixed(2));
+        $('.equipment_cost').html(eq.toFixed(2));
+
+        let ec = $('#equipmentCost').val();
+
+        let grandtaxes = (parseFloat(ec) * (7.5 / 100));
+        $('#salesTax').val(grandtaxes)
+        let salesTax = $('#salesTax').val();
+        $('.sales_tax_total').html(grandtaxes.toFixed(2));
+
+        let overAllTotal = parseFloat(val2) + parseFloat(salesTax) + parseFloat(installationCost) + parseFloat(otps) + parseFloat(monthlyMonitoring);
+
+        let val3 = overAllTotal;
+        if( isNaN(val3) ){
+            val3 = 0;
+        }
+
+        let val4 = $('#totalDue').html(val3.toFixed(2));
+
+        $('.totalDue').val(val3.toFixed(2));
+        $('#payment_amount_grand').val(val3.toFixed(2));
+        $('#payment_amount').val(val3.toFixed(2));
+    }    
+
     $(document).ready(function() {
 
         $(document).on('click', '.btn-remove-row-attachment', function(){
@@ -1700,15 +1763,21 @@ $(".nsm-subtitle").html(function() {
         });   
         
         $('#btn-add-attachment').on('click', function(){
+            var max_file_count = 10;
+            var total_existing_att = $("#total-attachment-count").val();
+            if(total_existing_att) {
+                var max_file_count = (10 - total_existing_att) + 1;
+            }
+
             var tableBody = $("#tbl-attachments tbody");
             let rowCount = $('#tbl-attachments > tbody > tr').length + 1;
-            if( rowCount < 10 ){
+
+            if( rowCount < max_file_count ){
                 let html = `
                 <tr>
                     <td><input class="form-control" type="file" name="attachments[]" /></td>
                     <td><a href="javascript:void(0);" data-id="${rowCount}" class="btn-remove-row-attachment nsm-button danger" style="line-height:35px;"><i class='bx bx-trash'></i></a></td>
                 </tr>`;
-
                 tableBody.append(html);
             }else{
                 Swal.fire({
@@ -1718,6 +1787,30 @@ $(".nsm-subtitle").html(function() {
                 });
             }
         });    
+
+    //Header
+        $("#form_update_header").on("submit", function(e) {
+            e.preventDefault();
+
+            var url = "<?php echo base_url('workorder/save_update_header'); ?>";
+            $.ajax({
+                type: 'POST',
+                url: url,
+                data: {
+                    id: $("#update_h_id").val(),
+                    content: CKEDITOR.instances['editor3'].getData()
+                },
+                success: function(result) {
+                    $("#update_header_modal").modal('hide');
+                    $("#header_text").html(CKEDITOR.instances['editor3'].getData());
+                    $('.save_update_header').html("Save");
+                },
+                beforeSend:function(){
+                    $('.save_update_header').html('<span class="bx bx-loader bx-spin"></span>');
+                }
+            });
+        });
+
 
     });
 

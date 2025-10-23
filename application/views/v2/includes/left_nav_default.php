@@ -219,7 +219,7 @@ echo 'active';
             <a href="<?php echo base_url('customer/subscriptions'); ?>">
                 <i class='bx bx-fw bx-user-pin'></i>&nbsp;&nbsp;Subscriptions
             </a>
-            <div id="sidebar-subscribers-counter" ></div>  1
+            <div id="sidebar-subscribers-counter" ></div>
         </li>
         <li class="<?php if ($page->title == 'Customer Groups') {
             echo 'selected';

@@ -77,7 +77,8 @@
                                             <strong>Item Type</strong>
                                             <select class="form-select" name="type" id="type" required>
                                                 <option value="Product">Product</option>
-                                                <!-- <option value="Service">Service</option> -->
+                                                <option value="Service">Service</option>
+                                                <option value="Non Inventory">Non Inventory</option>
                                                 <option value="QSP">QSP</option>
                                             </select>
                                         </div>
