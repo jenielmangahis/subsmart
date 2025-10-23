@@ -338,17 +338,6 @@
                 <div class="row p-0 field-custom-name-container">
                     <div class="col-12 col-md-6">
                         <label class="content-subtitle fw-bold">
-                            <field-custom-name readonly default="System Package Type" form="alarm_info"></field-custom-name>
-                        </label>
-                    </div>
-                    <div class="col-12 col-md-6">
-                        <label class="content-subtitle"><?= !empty($alarm_info->system_type) ? $alarm_info->system_type : '---'; ?></label>
-                    </div>
-                </div>
-
-                <div class="row p-0 field-custom-name-container">
-                    <div class="col-12 col-md-6">
-                        <label class="content-subtitle fw-bold">
                             <field-custom-name readonly default="Warranty Type" form="alarm_info"></field-custom-name>
                         </label>
                     </div>
@@ -356,9 +345,18 @@
                         <label class="content-subtitle"><?= !empty($alarm_info->warranty_type) ? $alarm_info->warranty_type : '---'; ?></label>
                     </div>
                 </div>
-
+                <!-- <div class="row p-0 field-custom-name-container">
+                    <div class="col-12 col-md-6">
+                        <label class="content-subtitle fw-bold">
+                            <field-custom-name readonly default="System Package Type" form="alarm_info"></field-custom-name>
+                        </label>
+                    </div>
+                    <div class="col-12 col-md-6">
+                        <label class="content-subtitle"><?= !empty($alarm_info->system_type) ? $alarm_info->system_type : '---'; ?></label>
+                    </div>
+                </div> -->
                 <div class="col-12 col-md-6">
-                    <label class="content-subtitle fw-bold">Communication Type</label>
+                    <label class="content-subtitle fw-bold">System Package Type</label>
                 </div>
                 <div class="col-12 col-md-6">
                     <label class="content-subtitle"><?= !empty($alarm_info->comm_type) ? $alarm_info->comm_type : '---'; ?></label>
