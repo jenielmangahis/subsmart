@@ -5164,6 +5164,17 @@ class Customer extends MY_Controller
         $input_alarm['radio_serial_number']     = $input['radio_serial_number'] ? $input['radio_serial_number'] : '';
         $input_alarm['panel_location']     = $input['panel_location'] ? $input['panel_location'] : '';
         $input_alarm['transformer_location']     = $input['transformer_location'] ? $input['transformer_location'] : '';
+        $input_alarm['dealer_number']     = $input['dealer_number'] ? $input['dealer_number'] : '';
+        $input_alarm['install_type']     = $input['install_type'] ? $input['install_type'] : '';
+        $input_alarm['service_provider']     = $input['service_provider'] ? $input['service_provider'] : '';
+        $input_alarm['dsl_voip']     = $input['dsl_voip'] ? $input['dsl_voip'] : '';
+        $input_alarm['contract_status']     = $input['contract_status'] ? $input['contract_status'] : '';
+        $input_alarm['csid_number']     = $input['csid_number'] ? $input['csid_number'] : '';
+        $input_alarm['panel_phone_number']     = $input['panel_phone_number'] ? $input['panel_phone_number'] : '';
+        $input_alarm['connection_type']     = $input['connection_type'] ? $input['connection_type'] : '';
+        $input_alarm['report_format']     = $input['report_format'] ? $input['report_format'] : '';
+        $input_alarm['receiver_phone_number']     = $input['receiver_phone_number'] ? $input['receiver_phone_number'] : '';
+        $input_alarm['master_code']     = $input['master_code'] ? $input['master_code'] : '';
 
         $check = [
             'where' => [
