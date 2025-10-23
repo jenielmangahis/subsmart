@@ -3809,6 +3809,7 @@ class Customer extends MY_Controller
         $this->load->model('Workorder_model');
         $this->load->model('Jobs_model');
         $this->load->model('UserCustomerDocfile_model');
+        $this->load->model('Payment_records_model');
 
         $this->hasAccessModule(9);
 
@@ -4060,6 +4061,14 @@ class Customer extends MY_Controller
             $default_login_value = $comb1 . $comb2 . $comb3;
 
         }
+
+        $default_total_pr = $this->Payment_records_model->getTotalRecurringPaymentsByCustomerId($userid);
+        $default_total_payment_recorded = 0;
+
+        if($default_total_pr && $default_total_pr->total_amount != '') {
+            $default_total_payment_recorded = $default_total_pr->total_amount;
+        }
+        $this->page_data['default_total_payment_recorded'] = $default_total_payment_recorded;
 
         $this->page_data['page']->title = 'Customers';
         $this->page_data['page']->parent = 'Customers';
@@ -4978,7 +4987,8 @@ class Customer extends MY_Controller
             $input_billing['transaction_amount'] = $input['transaction_amount'];
             $input_billing['transaction_category'] = $input['transaction_category'];
             $input_billing['frequency'] = $input['frequency']; // Subscription
-            $input_billing['billing_frequency'] = $input['bill_freq']; // Billing        
+            $input_billing['billing_frequency'] = $input['bill_freq']; // Billing   
+            $input_billing['payment_recorded'] = $input['payment_recorded'];
 
             $check = [
                 'where' => [
