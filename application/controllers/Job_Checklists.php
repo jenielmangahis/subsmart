@@ -23,15 +23,17 @@ class Job_Checklists extends MY_Controller
             show403Error();
             return false;
         }
+        
 
         $this->page_data['page']->title = 'Checklist';
         $this->page_data['page']->menu = 'job_checklists';
         $this->page_data['title'] = 'Checklist';
 
         $company_id = logged('company_id');
+        $jobChecklists       = $this->JobChecklist_model->getAllByCompanyId($company_id);
 
-        $jobChecklists = $this->JobChecklist_model->getAllByCompanyId($company_id);
-
+        $checklistAttachType = $this->JobChecklist_model->getAttachType();
+        $this->page_data['checklistAttachType'] = $checklistAttachType;        
         $this->page_data['jobChecklists'] = $jobChecklists;
         $this->load->view('v2/pages/job_checklists/index', $this->page_data);
     }
