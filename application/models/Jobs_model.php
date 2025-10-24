@@ -1397,12 +1397,17 @@ class Jobs_model extends MY_Model
         }        
     }
 
-    public function getRecentByCustomerIdAndStatus($customer_id, $staus)
+    public function getRecentByCustomerIdAndStatus($customer_id, $status = '')
     {        
         $this->db->select('*');
 		$this->db->from($this->table);        
 		$this->db->where('customer_id', $customer_id);
-        $this->db->where('status', $staus);
+        $this->db->where('is_archived', 0);
+        
+        if( $status != '' ){
+            $this->db->where('status', $staus);
+        }                
+
         $this->db->order_by('id', 'DESC');
         
         $query = $this->db->get();

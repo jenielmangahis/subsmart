@@ -38,6 +38,38 @@ class AcsProfile_model extends MY_Model
         return $query->result();
     }
 
+    public function getAllByCompanyIdIsNotArchived($company_id, $conditions = [], $filters = [])
+    {
+        $this->db->select('*');
+        $this->db->from($this->table);
+        $this->db->where('company_id', $company_id);
+        $this->db->where('first_name !=', '');
+        $this->db->where('last_name !=', '');
+        $this->db->where('is_archived', 0);
+
+        if (!empty($conditions)) {
+            foreach ($conditions as $c) {
+                if ($c['field'] != '' && $c['value'] != '') {
+                    $this->db->where($c['field'], $c['value']);
+                }
+            }
+        }
+
+        if (!empty($filters)) {
+            if ($filters['search'] != '') {
+                $this->db->group_start();
+                $this->db->like('CONCAT(first_name, " ", last_name)', $filters['search'], 'both');                
+                $this->db->group_end();
+            }
+        }
+
+        $this->db->order_by('first_name', 'ASC');
+
+        $query = $this->db->get();
+
+        return $query->result();
+    }
+
     public function getAllByCompanyIdAndCustomerGroups($company_id, $customer_groups = [], $conditions = [], $filters = [])
     {
         $this->db->select('*');

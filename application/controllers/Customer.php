@@ -88,7 +88,7 @@ class Customer extends MY_Controller
 
         $statusCounts['Active Subscription'] = 0;
 
-        $customers = $this->AcsProfile_model->getAllByCompanyId($company_id);
+        $customers = $this->AcsProfile_model->getAllByCompanyIdIsNotArchived($company_id);
         foreach ($customers as $c) {
             $status = trim($c->status);
             if (array_key_exists($status, $statusCounts)) {
@@ -190,7 +190,7 @@ class Customer extends MY_Controller
             'table' => 'customer_groups',
             'select' => '*',
         ];
-        $commercials = $this->company->getAllCommercialCustomers('',$company_id, 'Commercial','');
+        $commercials = $this->company->getAllCommercialCustomersIsNotArchived('',$company_id, 'Commercial','');
 
         $customerGroups = $this->customer_ad_model->getAllSettingsCustomerStatusByCompanyId($company_id);
         $statusCounts   = array();
@@ -805,7 +805,7 @@ class Customer extends MY_Controller
             'table' => 'customer_groups',
             'select' => '*',
         ];
-        $persons = $this->company->getAllCommercialCustomers('',$company_id, 'Residential','');
+        $persons = $this->company->getAllCommercialCustomersIsNotArchived('',$company_id, 'Residential','');
         $customerGroups = $this->customer_ad_model->getAllSettingsCustomerStatusByCompanyId($company_id);
 
         $statusCounts = array();
