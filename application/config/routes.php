@@ -2318,6 +2318,10 @@ $route['customer/_ledger_balance_amount'] = 'Customer/ajax_ledger_balance_amount
 $route['customer/_upload_payment_method_image'] = 'Customer/ajax_upload_payment_method_image';
 $route['customer/_capture_payment_form'] = 'Customer/ajax_capture_payment_form';
 $route['customers/_create_installer_code'] = 'Customer/ajax_create_installer_code';
+$route['customers/_update_installer_code'] = 'Customer/ajax_update_installer_code';
+$route['customers/_delete_installer_code'] = 'Customer/ajax_delete_installer_code';
+$route['customers/_delete_selected_installer_codes'] = 'Customer/ajax_delete_selected_installer_codes';
+$route['customer/settings_alarm_installer_codes'] = 'Customer/settings_alarm_installer_codes';
 
 //Benchmark for Testing
 $route['benchmark/test_customer_subscription'] = 'Benchmark/test_customer_subscription';
