@@ -270,9 +270,9 @@ a.btn-primary.btn-md {
                                 <a class="link-modal-open nsm-button btn-small" href="javascript:void(0);" id="btn-add-new-customer" data-bs-toggle="modal" data-bs-target="#quick-add-customer" style="float:right;">Add New</a>
                                 <select id="sel-customer_t" name="customer_id" data-customer-source="dropdown" required="" class="form-select searchable-dropdown" placeholder="Select">
                                     <option value="">- Select Customer -</option>
-                                    <?php foreach($customers as $c){ ?>                                        
-                                            <option value="<?= $c->prof_id; ?>"><?= $c->first_name . ' ' . $c->last_name; ?></option>
-                                    <?php } ?>
+                                    <?php if( $default_customer_id > 0 ){ ?>
+                                        <option value="<?= $default_customer_id; ?>" selected><?= $default_customer_name; ?></option>
+                                    <?php } ?>  
                                 </select>
                                 <div class="row">
                                     <div class="col-md-6" style="display: ;">
@@ -1648,6 +1648,11 @@ $(document).ready(function(){
         });
     });
 
+    <?php if( $default_customer_id > 0 ){ ?>
+        $('#sel-customer_t').click();
+        load_customer_data('<?= $default_customer_id; ?>');
+    <?php } ?>
+
     function load_customer_data(customer_id){
         $.ajax({
             type: "POST",
@@ -1705,6 +1710,12 @@ $(document).ready(function(){
                 $('#customer_city').val(customer_city);
                 $('#customer_address').val(customer_address);               
                 $('#service_location').val(service_location);
+
+                var map_source = 'http://maps.google.com/maps?q=' + service_location +
+                            '&output=embed';
+                var map_iframe = '<iframe id="TEMPORARY_MAP_VIEW" src="' + map_source +
+                    '" height="370" width="100%" style=""></iframe>';
+                $('.MAP_LOADER').hide().html(map_iframe).fadeIn('slow');
             },
             error: function(e) {
                 
