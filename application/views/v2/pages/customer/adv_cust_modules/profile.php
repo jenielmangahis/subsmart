@@ -359,7 +359,7 @@ div#controls div#call-controls div#volume-indicators > div {
             </div>
             <div class="row mt-5">
                     <div class="col-12 col-md-6">
-                        <button class="nsm-button primary w-100 ms-0 mt-2" onclick="window.open('<?= base_url('customer/credit_industry/' . $this->uri->segment(3)); ?>', '_blank', 'location=yes,height=1080,width=1500,scrollbars=yes,status=yes');">
+                        <button class="nsm-button primary w-100 ms-0 mt-2" onclick="window.open('<?= base_url('ticket/add?cus_id=' . $customer_id); ?>', '_blank', 'location=yes,height=1080,width=1500,scrollbars=yes,status=yes');">
                             <i class='bx bx-fw bx-calendar-edit' ></i> Schedule Service
                         </button>
                     </div>
