@@ -296,7 +296,7 @@ class Payment_records_model extends MY_Model
         $this->db->from($this->table);
         $this->db->join('invoices', 'invoices.id = payment_records.invoice_id','left');
 
-        $this->db->where('invoices.is_recurring', 1);
+        //$this->db->where('invoices.is_recurring', 1);
         $this->db->where('invoices.company_id', $company_id);
         $this->db->where('payment_records.company_id', $company_id);
         $this->db->where('payment_records.customer_id', $customer_id);
