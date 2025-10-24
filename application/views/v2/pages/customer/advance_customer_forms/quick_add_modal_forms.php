@@ -2,7 +2,7 @@
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
-                <span class="modal-title content-title" style="font-size: 17px;">Create Financing Category</span>
+                <span class="modal-title content-title" style="font-size: 17px;">Add Financing Category</span>
                 <button class="border-0 rounded mx-1" data-bs-dismiss="modal" style="cursor: pointer;"><i class="fas fa-times m-0 text-muted"></i></button>
             </div>
             <div class="modal-body">
@@ -36,7 +36,7 @@
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
-                <span class="modal-title content-title" style="font-size: 17px;">Create Transaction Category</span>
+                <span class="modal-title content-title" style="font-size: 17px;">Add Transaction Category</span>
                 <button class="border-0 rounded mx-1" data-bs-dismiss="modal" style="cursor: pointer;"><i class="fas fa-times m-0 text-muted"></i></button>
             </div>
             <div class="modal-body">
@@ -69,7 +69,7 @@
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
-                <span class="modal-title content-title" style="font-size: 17px;">Create Customer Status</span>
+                <span class="modal-title content-title" style="font-size: 17px;">Add Customer Status</span>
                 <button class="border-0 rounded mx-1" data-bs-dismiss="modal" style="cursor: pointer;"><i class="fas fa-times m-0 text-muted"></i></button>
             </div>
             <div class="modal-body">
@@ -97,7 +97,7 @@
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
-                <span class="modal-title content-title" style="font-size: 17px;">Create Customer Group</span>
+                <span class="modal-title content-title" style="font-size: 17px;">Add Customer Group</span>
                 <button class="border-0 rounded mx-1" data-bs-dismiss="modal" style="cursor: pointer;"><i class="fas fa-times m-0 text-muted"></i></button>
             </div>
             <div class="modal-body">
@@ -131,7 +131,7 @@
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
-                <span class="modal-title content-title" style="font-size: 17px;">Create Sales Area</span>
+                <span class="modal-title content-title" style="font-size: 17px;">Add Sales Area</span>
                 <button class="border-0 rounded mx-1" data-bs-dismiss="modal" style="cursor: pointer;"><i class="fas fa-times m-0 text-muted"></i></button>
             </div>
             <div class="modal-body">
@@ -159,7 +159,7 @@
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
-                <span class="modal-title content-title" style="font-size: 17px;">Create Rate Plan</span>
+                <span class="modal-title content-title" style="font-size: 17px;">Add Rate Plan</span>
                 <button class="border-0 rounded mx-1" data-bs-dismiss="modal" style="cursor: pointer;"><i class="fas fa-times m-0 text-muted"></i></button>
             </div>
             <div class="modal-body">
@@ -193,7 +193,7 @@
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
-                <span class="modal-title content-title" style="font-size: 17px;">Create System Package Type</span>
+                <span class="modal-title content-title" style="font-size: 17px;">Add System Package Type</span>
                 <button class="border-0 rounded mx-1" data-bs-dismiss="modal" style="cursor: pointer;"><i class="fas fa-times m-0 text-muted"></i></button>
             </div>
             <div class="modal-body">
@@ -221,7 +221,7 @@
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
-                <span class="modal-title content-title" style="font-size: 17px;">Create Activation Fee</span>
+                <span class="modal-title content-title" style="font-size: 17px;">Add Activation Fee</span>
                 <button class="border-0 rounded mx-1" data-bs-dismiss="modal" style="cursor: pointer;"><i class="fas fa-times m-0 text-muted"></i></button>
             </div>
             <div class="modal-body">
@@ -249,7 +249,7 @@
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
-                <span class="modal-title content-title" style="font-size: 17px;">Create Lender Type</span>
+                <span class="modal-title content-title" style="font-size: 17px;">Add Lender Type</span>
                 <button class="border-0 rounded mx-1" data-bs-dismiss="modal" style="cursor: pointer;"><i class="fas fa-times m-0 text-muted"></i></button>
             </div>
             <div class="modal-body">
@@ -277,7 +277,7 @@
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
-                <span class="modal-title content-title" style="font-size: 17px;">Create System Size</span>
+                <span class="modal-title content-title" style="font-size: 17px;">Add System Size</span>
                 <button class="border-0 rounded mx-1" data-bs-dismiss="modal" style="cursor: pointer;"><i class="fas fa-times m-0 text-muted"></i></button>
             </div>
             <div class="modal-body">
@@ -305,7 +305,7 @@
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
-                <span class="modal-title content-title" style="font-size: 17px;">Create Proposed Module</span>
+                <span class="modal-title content-title" style="font-size: 17px;">Add Proposed Module</span>
                 <button class="border-0 rounded mx-1" data-bs-dismiss="modal" style="cursor: pointer;"><i class="fas fa-times m-0 text-muted"></i></button>
             </div>
             <div class="modal-body">
@@ -333,7 +333,7 @@
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
-                <span class="modal-title content-title" style="font-size: 17px;">Create Proposed Inverter</span>
+                <span class="modal-title content-title" style="font-size: 17px;">Add Proposed Inverter</span>
                 <button class="border-0 rounded mx-1" data-bs-dismiss="modal" style="cursor: pointer;"><i class="fas fa-times m-0 text-muted"></i></button>
             </div>
             <div class="modal-body">
@@ -350,6 +350,34 @@
                         <button type="button" id="" class="nsm-button" data-bs-dismiss="modal">Close</button>
                         <button type="button" class="nsm-button btn-fixed-width" id="btn-manage-proposed-inverter">Manage</button>
                         <button type="submit" class="nsm-button primary btn-fixed-width" id="btn-save-proposed-inverter">Save</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="quick_add_installer_code" role="dialog">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <span class="modal-title content-title" style="font-size: 17px;">Add Installer Code</span>
+                <button class="border-0 rounded mx-1" data-bs-dismiss="modal" style="cursor: pointer;"><i class="fas fa-times m-0 text-muted"></i></button>
+            </div>
+            <div class="modal-body">
+                <form id="frm-quick-add-installer-code">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <label class="mb-2">Installer Code</label>
+                            <div class="input-group mb-3">
+                                <input type="text" name="installer_code" id="installer_code" value="" class="form-control" required="" autocomplete="off" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="d-flex justify-content-end">                        
+                        <button type="button" id="" class="nsm-button" data-bs-dismiss="modal">Close</button>
+                        <button type="button" class="nsm-button btn-fixed-width" id="btn-manage-installer-code">Manage</button>
+                        <button type="submit" class="nsm-button primary btn-fixed-width" id="btn-save-installer-code">Save</button>
                     </div>
                 </form>
             </div>

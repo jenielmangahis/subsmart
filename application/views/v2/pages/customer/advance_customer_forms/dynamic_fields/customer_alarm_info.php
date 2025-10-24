@@ -97,7 +97,7 @@
                     <option <?= isset($alarm_info) && $alarm_info->equipment == 'Not Installed' ?  'selected' : '';?> value="Not Installed">Not Installed</option>
                     <option <?= isset($alarm_info) && $alarm_info->equipment == 'Installed' ?  'selected' : '';?> value="Installed">Installed</option>
                     <option <?= isset($alarm_info) && $alarm_info->equipment == 'System Pulled' ?  'selected' : '';?> value="System Pulled">System Pulled</option>
-                </select>
+                </select>                
             </div>
         </div>
 
@@ -110,10 +110,15 @@
         <div class="row form_line field-custom-name-container" <?= isCustomerFieldEnabled($companyFormSetting, 'alarm-information', 'install_code') == 0 ? 'style="display:none;"' : ''; ?>>
             <div class="col-md-6"><?= getCustomerFieldValue($companyFormSetting, 'alarm-information', 'install_code'); ?></div>
             <div class="col-md-6">
-                <input type="text" class="form-control" name="install_code" id="install_code" value="<?php if(isset($alarm_info)){ echo $alarm_info->install_code ?  $alarm_info->install_code : '1423'; } ?>"/>
+                <select class="form-control" data-type="install_code" id="install_code" name="install_code">
+                    <?php if( $alarm_info && $alarm_info->install_code != '' ){ ?>
+                    <option value="<?= $alarm_info->install_code; ?>"><?= $alarm_info->install_code; ?></option>
+                    <?php } ?>
+                </select>   
+                <a href="javascript:void(0);" class="nsm-button btn-small" id="btn-quick-installer-code"><span class="fa fa-plus"></span> Add Installer Code</a>            
             </div>
         </div>
-        <div class="row form_line field-custom-name-container" <?= isCustomerFieldEnabled($companyFormSetting, 'alarm-information', 'panel_type') == 0 ? 'style="display:none;"' : ''; ?>>
+        <div class="row form_line field-custom-name-container mt-2" <?= isCustomerFieldEnabled($companyFormSetting, 'alarm-information', 'panel_type') == 0 ? 'style="display:none;"' : ''; ?>>
             <div class="col-md-6"><?= getCustomerFieldValue($companyFormSetting, 'alarm-information', 'panel_type'); ?></div>
             <div class="col-md-6">
                 <select name="panel_type" id="panel_type" class="input_select" data-value="<?= isset($alarm_info) ? $alarm_info->panel_type : "" ?>">
