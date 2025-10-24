@@ -3809,6 +3809,7 @@ class Customer extends MY_Controller
         $this->load->model('Workorder_model');
         $this->load->model('Jobs_model');
         $this->load->model('UserCustomerDocfile_model');
+        $this->load->model('AcsAlarmInstallerCode_model');
 
         $this->hasAccessModule(9);
 
@@ -3990,6 +3991,8 @@ class Customer extends MY_Controller
             }
         }  
 
+        $installerCodes =  $this->AcsAlarmInstallerCode_model->getAllByCompanyId(logged('company_id'));
+
         $this->page_data['customerGroups'] = $this->general->get_data_with_param($get_customer_groups);
         $this->page_data['rate_plans'] = $this->general->get_data_with_param($rate_plan_query);
         $this->page_data['system_package_types'] = $this->general->get_data_with_param($spt_query);
@@ -4080,6 +4083,7 @@ class Customer extends MY_Controller
         $this->page_data['jobFinishedLatest'] = $jobFinishedLatest;
         $this->page_data['recentDocfile'] = $recentDocfile;
         $this->page_data['default_login_value'] = $default_login_value;
+        $this->page_data['installerCodes'] = $installerCodes;
         //$this->load->view('v2/pages/customer/add', $this->page_data);
         $this->load->view('v2/pages/customer/add_dynamic_fields', $this->page_data);
     }
@@ -13784,5 +13788,50 @@ class Customer extends MY_Controller
         
         $this->page_data['billing_info'] = $billing_info;
         $this->load->view('v2/pages/customer/ajax_financing_equipment_details', $this->page_data);
+    }
+
+    public function ajax_create_installer_code()
+    {
+        $this->load->model('AcsAlarmInstallerCode_model');
+
+        if(!checkRoleCanAccessModule('customer-settings', 'write')){
+			show403Error();
+			return false;
+		}
+
+        $is_success = 0;
+        $msg = 'Cannot save data';
+        $installer_code_id = 0;
+        $installer_code = 0;
+
+        $company_id = logged('company_id');
+        $post = $this->input->post();
+
+        $isExists = $this->AcsAlarmInstallerCode_model->getByCodeAndCompanyId($post['installer_code'], $company_id);
+        if( $isExists ){
+            $msg = 'Installer code ' . $post['installer_code'] . ' already exists.';
+        }elseif( $post['installer_code'] == '' ){
+            $msg = 'Please enter installer code';
+        }else{
+            $data = [
+                'company_id' => $company_id,
+                'installer_code' => $post['installer_code'],
+                'date_created' => date("Y-m-d H:i:s"),
+                'date_updated' => date("Y-m-d H:i:s")
+            ];
+
+            $installer_code_id = $this->AcsAlarmInstallerCode_model->create($data);
+            $installer_code = $post['installer_code'];
+
+            //Activity Logs
+            $activity_name = 'Installer Code : Created ' . $post['installer_code']; 
+            createActivityLog($activity_name);
+
+            $is_success = 1;
+            $msg = '';
+        }
+
+        $return = ['is_success' => $is_success, 'msg' => $msg, 'installer_code_id' => $installer_code_id, 'installer_code' => $installer_code];
+        echo json_encode($return);
     }
 }

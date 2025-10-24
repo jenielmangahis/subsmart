@@ -292,6 +292,31 @@ class Autocomplete extends MY_Controller
         }
         die(json_encode($result));   
     }
+
+    public function company_installer_codes()
+    {
+        $this->load->model('AcsAlarmInstallerCode_model');
+
+        $search = $this->input->get('q');
+        $filter = ['search' => $search];
+        $cid    = logged('company_id');
+
+        if( $this->input->get('mobile') ){
+            $filter = ['mobile' => 1];
+        }
+
+        $installerCodes  = $this->AcsAlarmInstallerCode_model->getAllByCompanyId($cid, $filter); 
+
+        $result = array(); 
+        foreach($installerCodes as $ic){
+            $result[] = [
+                'id' => $ic->id,
+                'code' => $ic->installer_code
+            ];            
+        }
+        die(json_encode($result));   
+        
+    }
 }
 
 
