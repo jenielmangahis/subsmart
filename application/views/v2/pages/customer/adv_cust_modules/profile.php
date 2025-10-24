@@ -255,7 +255,8 @@ div#controls div#call-controls div#volume-indicators > div {
                                         break;
                                 endswitch;
                                 ?>
-                                <span class="nsm-badge <?= $badge ?>"><?= $profile_info->status != '' ? $profile_info->status : 'Pending'; ?></span>                                
+                                <span class="nsm-badge <?= $badge ?>"><?= $profile_info->status != '' ? $profile_info->status : 'Pending'; ?></span><br />
+                                MMR : $<?= $billing_info->mmr > 0 ? number_format($billing_info->mmr,2,'.',',') : 0.00 ?>                         
                             </div>
                         </div>
                     </div>
