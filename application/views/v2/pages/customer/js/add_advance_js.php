@@ -970,6 +970,46 @@
             });
         });
 
+        $('#btn-quick-installer-code').on('click', function(){
+            $('#frm-quick-add-installer-code')[0].reset();
+            $('#quick_add_installer_code').modal('show');
+        });
+
+        $('#frm-quick-add-installer-code').on('submit', function(e){
+            e.preventDefault();
+
+            $.ajax({
+                type: "POST",
+                url: base_url + 'customers/_create_installer_code',
+                dataType: 'json',
+                data: $('#frm-quick-add-installer-code').serialize(),
+                success: function(data) {    
+                    $('#btn-save-installer-code').html('Save');                   
+                    if (data.is_success) {
+                        $('#quick_add_installer_code').modal('hide');
+                        $('#install_code').append($('<option>', {
+                            value: data.installer_code,
+                            text: data.installer_code,
+                        }));
+                        $('#install_code').val(data.installer_code);
+                    }else{
+                        Swal.fire({
+                            title: 'Error',
+                            text: data.msg,
+                            icon: 'error',
+                            showCancelButton: false,
+                            confirmButtonText: 'Okay'
+                        }).then((result) => {
+                            
+                        });
+                    }
+                },
+                beforeSend: function() {
+                    $('#btn-save-installer-code').html('<span class="bx bx-loader bx-spin"></span>');
+                }
+            });
+        });
+
         $('#btn-quick-add-sales-area').on('click', function(){
             $('#frm-quick-add-sales-area')[0].reset();
             $('#quick_add_sales_area').modal('show');

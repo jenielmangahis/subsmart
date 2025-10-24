@@ -5172,8 +5172,7 @@ class Customer extends MY_Controller
         $input_alarm['account_cost']       = $input['account_cost'] ? $input['account_cost'] : 0;
         $input_alarm['pass_thru_cost']     = $input['pass_thru_cost'] ? $input['pass_thru_cost'] : '';
         $input_alarm['monthly_monitoring'] = $input['monthly_monitoring'] ? $input['monthly_monitoring'] : 0;
-        $input_alarm['otps'] = $input['otps'] ? $input['otps'] : 0;
-        $input_alarm['site_customer_type']     = $input['site_customer_type'] ? $input['site_customer_type'] : '';
+        $input_alarm['otps'] = $input['otps'] ? $input['otps'] : 0;        
         $input_alarm['secondary_system_type']     = $input['secondary_system_type'] ? $input['secondary_system_type'] : '';
         $input_alarm['radio_serial_number']     = $input['radio_serial_number'] ? $input['radio_serial_number'] : '';
         $input_alarm['panel_location']     = $input['panel_location'] ? $input['panel_location'] : '';
