@@ -194,6 +194,11 @@ div#controls div#call-controls div#volume-indicators > div {
 .balance-green{
     color:#155724;
 }
+.profile-mmr{
+    font-weight: bold;
+    font-size: 13px;
+    margin-right: 3px;
+}
 </style>
 <div class="col-12 col-md-4" data-id="<?= $id ?>" id="<?= $id ?>">
     <div class="nsm-card nsm-grid">
@@ -255,8 +260,8 @@ div#controls div#call-controls div#volume-indicators > div {
                                         break;
                                 endswitch;
                                 ?>
-                                <span class="nsm-badge <?= $badge ?>"><?= $profile_info->status != '' ? $profile_info->status : 'Pending'; ?></span><br />
-                                MMR : $<?= $billing_info->mmr > 0 ? number_format($billing_info->mmr,2,'.',',') : 0.00 ?>                         
+                                <span class="nsm-badge <?= $badge ?>"><?= $profile_info->status != '' ? $profile_info->status : 'Pending'; ?></span><br />                                
+                                <span class="profile-mmr">MMR : $<?= $billing_info->mmr > 0 ? number_format($billing_info->mmr,2,'.',',') : '0.00'; ?></span>       
                             </div>
                         </div>
                     </div>
