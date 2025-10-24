@@ -107,7 +107,11 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                 <div class="col-md-12">
                                     <label for="invoice_customer" class="bold">Customer</label>
                                     <a class="link-modal-open nsm-button btn-small" href="javascript:void(0);" id="btn-add-new-customer" data-bs-toggle="modal" data-bs-target="#quick-add-customer" style="float:right;">Add New</a>
-                                    <select name="customer_id" id="customer_id" class="form-select" required></select>
+                                    <select name="customer_id" id="customer_id" class="form-select" required>
+                                        <?php if( $defaultCustomer ){ ?>
+                                            <option value="<?= $defaultCustomer->prof_id; ?>"><?= $defaultCustomer->first_name . ' ' . $defaultCustomer->last_name; ?></option>
+                                        <?php } ?>
+                                    </select>
                                 </div>
                                 <div class="col-md-12 mt-4">
                                     <label class="bold">Customer email</label><br />
@@ -928,8 +932,12 @@ defined('BASEPATH') or exit('No direct script access allowed');
                 });
             });
 
-            $('#customer_id').change(function() {
-                var id = $(this).val();
+            <?php if( $default_cust_id > 0 ){ ?>                
+                load_customer_info();
+            <?php } ?>
+
+            function load_customer_info(){                
+                var id = $('#customer_id').val();                
                 $.ajax({
                     type: 'POST',
                     url: "<?php echo base_url(); ?>accounting/addLocationajax",
@@ -967,6 +975,10 @@ defined('BASEPATH') or exit('No direct script access allowed');
 
                     }
                 });
+            }
+
+            $('#customer_id').change(function() {
+                load_customer_info();
             });
 
             $(document).on('click', '.btn-use-other-address', function(){
