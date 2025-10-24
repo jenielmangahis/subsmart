@@ -48,6 +48,23 @@ class AcsAlarmInstallerCode_model extends MY_Model
         $query = $this->db->get();
         return $query->row();
     }
+
+    public function bulkDelete($ids = [], $filters = [])
+    {
+        if( count($ids) > 0 ){
+            $this->db->where_in('id', $ids);
+
+            if( $filters ){
+                foreach( $filters as $filter ){
+                    $this->db->where($filter['field'], $filter['value']);
+                }
+            }
+
+            $this->db->delete($this->table);
+        }        
+
+        return $this->db->affected_rows();
+    }
 }
 
 /* End of file AcsAlarmInstallerCode_model.php */
