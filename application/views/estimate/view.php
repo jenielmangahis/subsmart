@@ -163,11 +163,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                             <h4><i class='bx bx-user-pin'></i>  <?= $customer->first_name . ' ' . $customer->last_name; ?></h4>
                           </a>
                           <div class="">
-                            <?php if($estimate->job_location != null && $estimate->job_location != "") { ?>
-                              <span class=""><?php echo $estimate->job_location; ?></span><br />
-                            <?php }else{ ?>
-                              <span class=""><?= $customer->mail_add . ' ' . $customer->city.', '. $customer->state .' '. $customer->zip_code;  ?></span><br />
-                            <?php } ?>
+                            <span class=""><?= $customer->mail_add . ' ' . $customer->city.', '. $customer->state .' '. $customer->zip_code;  ?></span><br />
                             <span class=""><span class=""><?= $customer->email; ?></span><br />
                             <span class=""><span class=""><?= formatPhoneNumber($customer->phone_m); ?></span><br />
                           </div>

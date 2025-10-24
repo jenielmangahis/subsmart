@@ -242,7 +242,7 @@
                     <div class="input-group-prepend">
                         <span class="input-group-text" style="width:35px;" id="">$</span>
                     </div>
-                    <input type="number" step="any" class="form-control" name="payment_fee" value="<?= isset($billing_info) ? $billing_info->payment_fee : '0.00'; ?>">
+                    <input type="number" step="any" class="form-control" name="payment_recorded" value="<?= (isset($billing_info) && $billing_info->payment_recorded > 0) ? number_format($billing_info->payment_recorded,2) : number_format($default_total_payment_recorded,2); ?>">
                 </div>
             </div>
         </div>   

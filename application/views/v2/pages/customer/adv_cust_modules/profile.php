@@ -194,6 +194,11 @@ div#controls div#call-controls div#volume-indicators > div {
 .balance-green{
     color:#155724;
 }
+.profile-mmr{
+    font-weight: bold;
+    font-size: 13px;
+    margin-right: 3px;
+}
 </style>
 <div class="col-12 col-md-4" data-id="<?= $id ?>" id="<?= $id ?>">
     <div class="nsm-card nsm-grid">
@@ -255,7 +260,8 @@ div#controls div#call-controls div#volume-indicators > div {
                                         break;
                                 endswitch;
                                 ?>
-                                <span class="nsm-badge <?= $badge ?>"><?= $profile_info->status != '' ? $profile_info->status : 'Pending'; ?></span>                                
+                                <span class="nsm-badge <?= $badge ?>"><?= $profile_info->status != '' ? $profile_info->status : 'Pending'; ?></span><br />                                
+                                <span class="profile-mmr">MMR : $<?= $billing_info->mmr > 0 ? number_format($billing_info->mmr,2,'.',',') : '0.00'; ?></span>       
                             </div>
                         </div>
                     </div>
@@ -359,7 +365,7 @@ div#controls div#call-controls div#volume-indicators > div {
             </div>
             <div class="row mt-5">
                     <div class="col-12 col-md-6">
-                        <button class="nsm-button primary w-100 ms-0 mt-2" onclick="window.open('<?= base_url('customer/credit_industry/' . $this->uri->segment(3)); ?>', '_blank', 'location=yes,height=1080,width=1500,scrollbars=yes,status=yes');">
+                        <button class="nsm-button primary w-100 ms-0 mt-2" onclick="window.open('<?= base_url('ticket/add?cus_id=' . $customer_id); ?>', '_blank', 'location=yes,height=1080,width=1500,scrollbars=yes,status=yes');">
                             <i class='bx bx-fw bx-calendar-edit' ></i> Schedule Service
                         </button>
                     </div>

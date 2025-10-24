@@ -164,7 +164,7 @@
                                     <?php if (in_array('added', $enabled_table_headers)) { ?><th data-name="Added">Added</th><?php } ?>
                                     <?php if (in_array('sales_rep', $enabled_table_headers)) { ?><th data-name="Sales Rep">Sales Rep</th><?php } ?>
                                     <?php if (in_array('tech', $enabled_table_headers)) { ?><th data-name="Tech">Tech</th><?php } ?>
-                                    <?php if (in_array('plan_type', $enabled_table_headers)) { ?><th data-name="Plan Type">Plan Type</th><?php } ?>
+                                    <?php if (in_array('plan_type', $enabled_table_headers)) { ?><th data-name="Plan Type">Service Package</th><?php } ?>
                                     <?php if (in_array('rate_plan', $enabled_table_headers)) { ?><th data-name="Rate Plan">Rate Plan</th><?php } ?>
                                     <?php if (in_array('subscription_amount', $enabled_table_headers)) { ?><th data-name="<?php echo $companyId == 58 ? 'Proposed Payment' : 'Subscription Amount'; ?> "><?php echo $companyId == 58 ? 'Proposed Payment' : 'Subscription Amount'; ?> </th><?php } ?>
                                     <?php if (in_array('job_amount', $enabled_table_headers)) { ?><th data-name="<?php echo $companyId == 58 ? 'Proposed Solar' : 'Job Amount'; ?>"><?php echo $companyId == 58 ? 'Proposed Solar' : 'Job Amount'; ?></th><?php } ?>

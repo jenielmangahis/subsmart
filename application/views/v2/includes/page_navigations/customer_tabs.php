@@ -76,7 +76,7 @@
             </a>
         </li>
         <?php } ?>
-        <li class="<?php if($page->title == 'Sales Area' || $page->title == 'Lead Source' || $page->title == 'Lead Types' || $page->title == 'Rate Plans' || $page->title == 'Activation Fee' || $page->title == 'System Package Type' || $page->title == 'Headers' || $page->title == 'Financing Categories' || $page->title == 'Customer Status' || $page->title == 'Import Settings' || $page->title == 'Export Settings' || $page->title == 'Solar Lender Types' || $page->title == 'Solar System Size' || $page->title == 'Solar Proposed Modules' || $page->title == 'Form Settings' || $page->title == 'Creditors / Furnishers' || $page->title == 'Lost Reasons'): echo 'active'; endif; ?>">
+        <li class="<?php if($page->title == 'Sales Area' || $page->title == 'Lead Source' || $page->title == 'Lead Types' || $page->title == 'Rate Plans' || $page->title == 'Activation Fee' || $page->title == 'System Package Type' || $page->title == 'Headers' || $page->title == 'Financing Categories' || $page->title == 'Customer Status' || $page->title == 'Import Settings' || $page->title == 'Export Settings' || $page->title == 'Solar Lender Types' || $page->title == 'Solar System Size' || $page->title == 'Solar Proposed Modules' || $page->title == 'Form Settings' || $page->title == 'Creditors / Furnishers' || $page->title == 'Lost Reasons' || $page->title == 'Alarm Installer Codes'): echo 'active'; endif; ?>">
             <div class="dropdown" id="test_dropdown">
                 <a class="nsm-page-link dropdown-toggle" role="button" href="javascript:void(0);">
                     <i class='bx bx-fw bx-cog'></i>
@@ -93,6 +93,7 @@
                     <li><a class="dropdown-item" href="<?php echo base_url('customer/settings_system_package') ?>">System Package Type</a></li>
                     <li><a class="dropdown-item" href="<?= base_url('customer/settings_financing_categories') ?>">Financing Payment Categories</a></li>
                     <li><a class="dropdown-item" href="<?= base_url('creditor_furnisher/list') ?>">Creditors / Furnishers</a></li>
+                    <li><a class="dropdown-item" href="<?= base_url('customer/settings_alarm_installer_codes') ?>">Installer Codes</a></li>
                     <?php if( in_array(logged('company_id'), adi_company_ids()) ){ ?>
                         <li><a class="dropdown-item" href="<?php echo base_url('customer/settings_solar_lender_type') ?>">Solar Lender Types</a></li>
                         <li><a class="dropdown-item" href="<?php echo base_url('customer/settings_solar_system_size') ?>">Solar System Size</a></li>

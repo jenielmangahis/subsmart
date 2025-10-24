@@ -287,6 +287,26 @@ class Payment_records_model extends MY_Model
         $query = $this->db->get('payment_records');
         return $query->result();
     }
+
+    public function getTotalRecurringPaymentsByCustomerId($customer_id)
+    {
+        $company_id = logged('company_id');
+
+        $this->db->select('SUM(payment_records.invoice_amount) AS total_amount');
+        $this->db->from($this->table);
+        $this->db->join('invoices', 'invoices.id = payment_records.invoice_id','left');
+
+        //$this->db->where('invoices.is_recurring', 1);
+        $this->db->where('invoices.company_id', $company_id);
+        $this->db->where('payment_records.company_id', $company_id);
+        $this->db->where('payment_records.customer_id', $customer_id);
+        
+        $this->db->where('payment_records.is_void', 0);
+        
+        $query = $this->db->get();
+        return $query->row();
+    }
+
 }
 
 /* End of file Invoice_model.php */

@@ -5172,8 +5172,7 @@ class Customer extends MY_Controller
         $input_alarm['account_cost']       = $input['account_cost'] ? $input['account_cost'] : 0;
         $input_alarm['pass_thru_cost']     = $input['pass_thru_cost'] ? $input['pass_thru_cost'] : '';
         $input_alarm['monthly_monitoring'] = $input['monthly_monitoring'] ? $input['monthly_monitoring'] : 0;
-        $input_alarm['otps'] = $input['otps'] ? $input['otps'] : 0;
-        $input_alarm['site_customer_type']     = $input['site_customer_type'] ? $input['site_customer_type'] : '';
+        $input_alarm['otps'] = $input['otps'] ? $input['otps'] : 0;        
         $input_alarm['secondary_system_type']     = $input['secondary_system_type'] ? $input['secondary_system_type'] : '';
         $input_alarm['radio_serial_number']     = $input['radio_serial_number'] ? $input['radio_serial_number'] : '';
         $input_alarm['panel_location']     = $input['panel_location'] ? $input['panel_location'] : '';
@@ -13834,7 +13833,7 @@ class Customer extends MY_Controller
             $installer_code = $post['installer_code'];
 
             //Activity Logs
-            $activity_name = 'Installer Code : Created ' . $post['installer_code']; 
+            $activity_name = 'Installer Code : Created installer code ' . $post['installer_code']; 
             createActivityLog($activity_name);
 
             $is_success = 1;
@@ -13843,5 +13842,128 @@ class Customer extends MY_Controller
 
         $return = ['is_success' => $is_success, 'msg' => $msg, 'installer_code_id' => $installer_code_id, 'installer_code' => $installer_code];
         echo json_encode($return);
+    }
+
+    public function ajax_update_installer_code()
+    {
+        $this->load->model('AcsAlarmInstallerCode_model');
+
+        if(!checkRoleCanAccessModule('customer-settings', 'write')){
+			show403Error();
+			return false;
+		}
+
+        $is_success = 0;
+        $msg = 'Cannot find data';
+
+        $company_id = logged('company_id');
+        $post = $this->input->post();
+
+        $isCodeExists = $this->AcsAlarmInstallerCode_model->getByCodeAndCompanyId($post['installer_code'], $company_id);
+        if( $isCodeExists && $post['installer_code_id'] != $isCodeExists->id ){
+            $msg = 'Installer code ' . $post['installer_code'] . ' already exists.';
+        }elseif( $post['installer_code'] == '' ){
+            $msg = 'Please enter installer code';
+        }else{
+            $installerCode = $this->AcsAlarmInstallerCode_model->getByIdAndCompanyId($post['installer_code_id'], $company_id);
+            if( $installerCode ){
+                $data = [
+                    'installer_code' => $post['installer_code'],
+                    'date_updated' => date("Y-m-d H:i:s")
+                ];
+
+                $this->AcsAlarmInstallerCode_model->update($installerCode->id, $data);
+
+                //Activity Logs
+                $activity_name = 'Installer Code : Updated installer code ' . $post['installer_code']; 
+                createActivityLog($activity_name);
+
+                $is_success = 1;
+                $msg = '';
+            }
+            
+        }
+
+        $return = ['is_success' => $is_success, 'msg' => $msg];
+        echo json_encode($return);
+    }
+
+    public function ajax_delete_installer_code()
+    {
+        $this->load->model('AcsAlarmInstallerCode_model');
+
+        $is_success = 0;
+        $msg = 'Cannot find record';
+
+        $company_id = logged('company_id');
+        $post = $this->input->post();
+
+        $installerCode = $this->AcsAlarmInstallerCode_model->getByIdAndCompanyId($post['id'], $company_id);
+        if ($installerCode) {
+            $this->AcsAlarmInstallerCode_model->delete($installerCode->id);
+
+            //Activity Logs
+            $activity_name = 'Installer Code : Deleted installer code ' . $installerCode->installer_code; 
+            createActivityLog($activity_name);
+
+            $is_success = 1;
+            $msg = '';
+        }
+
+        $json_data = [
+            'is_success' => $is_success,
+            'msg' => $msg,
+        ];
+
+        echo json_encode($json_data);
+    }
+
+    public function ajax_delete_selected_installer_codes()
+	{
+		$this->load->model('AcsAlarmInstallerCode_model');
+
+		$is_success = 0;
+        $msg    = 'Please select data';
+
+        $company_id  = logged('company_id');
+        $post = $this->input->post();
+
+        if( $post['installerCodes'] ){
+
+            $filters[] = ['field' => 'company_id', 'value' => $company_id];
+            $total_deleted = $this->AcsAlarmInstallerCode_model->bulkDelete($post['installerCodes'], $filters);
+
+			//Activity Logs
+			$activity_name = 'Installer Code : Deleted ' .$total_deleted. ' installer code(s)'; 
+			createActivityLog($activity_name);
+
+            $is_success = 1;
+            $msg    = '';
+        }
+
+        $return = [
+            'is_success' => $is_success,
+            'msg' => $msg
+        ];
+
+        echo json_encode($return);
+	}
+
+    public function settings_alarm_installer_codes()
+    {
+        $this->load->model('AcsAlarmInstallerCode_model');
+
+        if(!checkRoleCanAccessModule('customer-settings', 'read')){
+			show403Error();
+			return false;
+		}
+
+        $company_id = logged('company_id');
+        $installerCodes = $this->AcsAlarmInstallerCode_model->getAllByCompanyId($company_id);
+
+        $this->page_data['installerCodes'] = $installerCodes;
+        $this->page_data['page']->title = 'Alarm Installer Codes';
+        $this->page_data['page']->parent = 'Customers';
+        $this->load->view('v2/pages/customer/settings_alarm_installer_codes', $this->page_data);
     }
 }

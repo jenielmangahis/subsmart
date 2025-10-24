@@ -44,12 +44,14 @@
                     <td class="show"><div class="table-row-icon"><i class="bx bx-receipt"></i></div></td>
                     <td class="fw-bold nsm-text-primary show">
                         <?= $estimate->estimate_number; ?><br />
-                        <small class="text-muted"><i class='bx bx-user-circle'></i> <?= $customer_name; ?></small>
+                        <small class="text-muted"><i class='bx bx-user-circle'></i> <?= $customer_name; ?></small><br />
+                        <small class="text-muted"><i class='bx bx-dollar-circle'></i> <?= $estimate->grand_total; ?></small>
                     </td>
                     <td class="show" style="width:5%;">
                         <div class="dropdown table-management">
                             <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown"><i class='bx bx-fw bx-dots-vertical-rounded'></i></a>
                             <ul class="dropdown-menu dropdown-menu-end">
+                                <li><a class="dropdown-item" href="<?php echo base_url('estimate/view/'.$estimate->id); ?>">View</a></li>   
                                 <li><a class="dropdown-item btn-restore-estimate" data-id="<?= $estimate->id; ?>" data-estimatenumber="<?= $estimate->estimate_number; ?>" href="javascript:void(0);">Restore</a></li>   
                                 <li><a class="dropdown-item btn-permanently-delete-estimate" data-id="<?= $estimate->id; ?>" data-estimatenumber="<?= $estimate->estimate_number; ?>" href="javascript:void(0);">Permanently Delete</a></li>   
                             </ul>

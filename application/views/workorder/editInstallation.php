@@ -580,7 +580,7 @@ tr {
                                 <div class="row g-3">
                                     <div class="col-12 col-md-6">
                                         <label class="content-subtitle fw-bold d-block mb-2">Installation Date</label>
-                                        <input type="text" name="installation_date" class="nsm-field form-control datepicker">
+                                        <input type="text" name="installation_date" value="<?php echo $workorder->install_date; ?>" class="nsm-field form-control datepicker">
                                     </div>
                                     <div class="col-12 col-md-6">
                                         <label class="content-subtitle fw-bold d-block mb-2">Install Time</label>
@@ -590,7 +590,7 @@ tr {
                                             <option value="12-2" <?php if($workorder->install_time == '12-2'){ echo 'selected'; } ?> >12-2</option>
                                             <option value="2-4 <?php if($workorder->install_time == '2-4'){ echo 'selected'; } ?> ">2-4</option>
                                             <option value="4-6" <?php if($workorder->install_time == '4-6'){ echo 'selected'; } ?> >4-6</option>
-                                        </select>
+                                        </select> 
                                     </div>
                                     <div class="col-12 col-md-4">
                                         <label class="content-subtitle fw-bold d-block mb-2">Payment Method</label>
@@ -1723,8 +1723,14 @@ $(".nsm-subtitle").html(function() {
             let qtyItem = qtyFields[key].value;
             let a  = $(this).val();
             let c  = $(this).val(numeral(a).format('0,0[.]00'));
+
             let am = $(this).val(a.replaceAll(",", ""));
-            val2   += (parseFloat(c.val() * qtyItem) || 0);
+
+            if(c.val() > 0 && qtyItem > 0) {
+                val2   += (parseFloat(c.val() * qtyItem) || 0);
+            }
+
+            console.log(val2);
         });
 
         let installationCost = $('#installationCost').val();
@@ -1732,6 +1738,7 @@ $(".nsm-subtitle").html(function() {
         let monthlyMonitoring = $('#monthlyMonitoring').val();
 
         let eq = val2;
+
         $('#equipmentCost').val(eq.toFixed(2));
         $('.equipment_cost').html(eq.toFixed(2));
 
