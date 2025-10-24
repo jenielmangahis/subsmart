@@ -1,4 +1,4 @@
-<div class="d-block mb-4 mt-4">
+<div class="d-block mb-4">
     <span style="font-size:18px; font-weight:bold;">Billing</span>    
 </div>
 <div class="clear"></div>
