@@ -1075,7 +1075,6 @@ class Workorder extends MY_Controller
         $this->page_data['agreeDetails'] = $this->workorder_model->get_agree_details($id);
         $this->page_data['payments'] = $this->workorder_model->get_payments_details($id);
         $this->page_data['customers'] = $this->workorder_model->getCustByComp($company_id);
-        // agreeItem
 
         $work = $this->workorder_model->getworkorder($id);
 
@@ -10637,6 +10636,8 @@ class Workorder extends MY_Controller
             $addQuery = $this->workorder_model->save_workorder($new_data);
 
             if( $addQuery > 0 ) {
+                $wo_id = $addQuery;
+                $addWorkOrderIdtoEstimate = $this->workorder_model->add_workorder_id_to_estimate($wo_id, !empty($this->input->post('estimate_id')) ? $this->input->post('estimate_id') : 0);
 
                 $customerDocFolderPath = "./uploads/customerdocuments/".$company_id."/";   
                 if (!file_exists($customerDocFolderPath)) {
@@ -10648,7 +10649,6 @@ class Workorder extends MY_Controller
                     mkdir($customerDocFolderPath2, 0777, true);
                 }                     
                 
-                $wo_id = $addQuery;
                 if(isset($_FILES['attachment_id']) && $_FILES['attachment_id']['tmp_name'] != '') {
                     $tmp_name  = $_FILES['attachment_id']['tmp_name'];
                     $extension = strtolower(end(explode('.',$_FILES['attachment_id']['name'])));
@@ -11450,6 +11450,10 @@ class Workorder extends MY_Controller
 
             $addQuery = $this->workorder_model->save_workorder($new_data);
             if( $addQuery > 0 ){
+
+                $wo_id = $addQuery;
+                $addWorkOrderIdtoEstimate = $this->workorder_model->add_workorder_id_to_estimate($wo_id, !empty($this->input->post('estimate_id')) ? $this->input->post('estimate_id') : 0);                
+
                 if( $workorderSettings ){
                     //Update workorder setting
                     $workorder_settings_data = array(

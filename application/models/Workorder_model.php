@@ -2362,6 +2362,14 @@ class Workorder_model extends MY_Model
 		return  $insert_id;
     }
 
+    public function add_workorder_id_to_estimate($w_id, $e_id) {        
+        $this->db->where('id', $e_id);
+        $this->db->update('estimates', array(
+            'work_order_id' => $w_id,
+        ));
+        return true;        
+    }
+
     public function save_office($data)
     {
         $vendor = $this->db->insert('acs_office', $data);
