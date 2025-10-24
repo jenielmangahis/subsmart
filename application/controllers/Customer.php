@@ -88,7 +88,7 @@ class Customer extends MY_Controller
 
         $statusCounts['Active Subscription'] = 0;
 
-        $customers = $this->AcsProfile_model->getAllByCompanyId($company_id);
+        $customers = $this->AcsProfile_model->getAllByCompanyIdIsNotArchived($company_id);
         foreach ($customers as $c) {
             $status = trim($c->status);
             if (array_key_exists($status, $statusCounts)) {
@@ -190,7 +190,7 @@ class Customer extends MY_Controller
             'table' => 'customer_groups',
             'select' => '*',
         ];
-        $commercials = $this->company->getAllCommercialCustomers('',$company_id, 'Commercial','');
+        $commercials = $this->company->getAllCommercialCustomersIsNotArchived('',$company_id, 'Commercial','');
 
         $customerGroups = $this->customer_ad_model->getAllSettingsCustomerStatusByCompanyId($company_id);
         $statusCounts   = array();
@@ -805,7 +805,7 @@ class Customer extends MY_Controller
             'table' => 'customer_groups',
             'select' => '*',
         ];
-        $persons = $this->company->getAllCommercialCustomers('',$company_id, 'Residential','');
+        $persons = $this->company->getAllCommercialCustomersIsNotArchived('',$company_id, 'Residential','');
         $customerGroups = $this->customer_ad_model->getAllSettingsCustomerStatusByCompanyId($company_id);
 
         $statusCounts = array();
@@ -1973,6 +1973,7 @@ class Customer extends MY_Controller
         if( $customer ){
             $woSubmittedLatest = $this->Workorder_model->getRecentByCustomerIdAndStatus($customer->prof_id, 'Submitted');
             $jobFinishedLatest = $this->Jobs_model->getRecentByCustomerIdAndStatus($customer->prof_id, 'Finished');
+            $jobLatest         = $this->Jobs_model->getRecentByCustomerIdAndStatus($customer->prof_id, '');
             $recentDocfile     = $this->UserCustomerDocfile_model->getRecentDocfileByCustomerId($customer->prof_id);
             
 
@@ -1999,6 +2000,7 @@ class Customer extends MY_Controller
         $this->page_data['users'] = $this->users_model->getUsers();
         $this->page_data['woSubmittedLatest'] = $woSubmittedLatest;
         $this->page_data['jobFinishedLatest'] = $jobFinishedLatest;
+        $this->page_data['jobLatest'] = $jobLatest;
         $this->page_data['recentDocfile'] = $recentDocfile;
         $this->page_data['default_login_value'] = $default_login_value;
         $this->load->view('v2/pages/customer/preview', $this->page_data);
@@ -3807,6 +3809,8 @@ class Customer extends MY_Controller
         $this->load->model('Workorder_model');
         $this->load->model('Jobs_model');
         $this->load->model('UserCustomerDocfile_model');
+        $this->load->model('Payment_records_model');
+        $this->load->model('AcsAlarmInstallerCode_model');
 
         $this->hasAccessModule(9);
 
@@ -3988,6 +3992,8 @@ class Customer extends MY_Controller
             }
         }  
 
+        $installerCodes =  $this->AcsAlarmInstallerCode_model->getAllByCompanyId(logged('company_id'));
+
         $this->page_data['customerGroups'] = $this->general->get_data_with_param($get_customer_groups);
         $this->page_data['rate_plans'] = $this->general->get_data_with_param($rate_plan_query);
         $this->page_data['system_package_types'] = $this->general->get_data_with_param($spt_query);
@@ -4059,6 +4065,14 @@ class Customer extends MY_Controller
 
         }
 
+        $default_total_pr = $this->Payment_records_model->getTotalRecurringPaymentsByCustomerId($userid);
+        $default_total_payment_recorded = 0;
+
+        if($default_total_pr && $default_total_pr->total_amount != '') {
+            $default_total_payment_recorded = $default_total_pr->total_amount;
+        }
+        $this->page_data['default_total_payment_recorded'] = $default_total_payment_recorded;
+
         $this->page_data['page']->title = 'Customers';
         $this->page_data['page']->parent = 'Customers';
         $this->page_data['customerAddress'] = $customerAddress;
@@ -4078,6 +4092,7 @@ class Customer extends MY_Controller
         $this->page_data['jobFinishedLatest'] = $jobFinishedLatest;
         $this->page_data['recentDocfile'] = $recentDocfile;
         $this->page_data['default_login_value'] = $default_login_value;
+        $this->page_data['installerCodes'] = $installerCodes;
         //$this->load->view('v2/pages/customer/add', $this->page_data);
         $this->load->view('v2/pages/customer/add_dynamic_fields', $this->page_data);
     }
@@ -4976,7 +4991,8 @@ class Customer extends MY_Controller
             $input_billing['transaction_amount'] = $input['transaction_amount'];
             $input_billing['transaction_category'] = $input['transaction_category'];
             $input_billing['frequency'] = $input['frequency']; // Subscription
-            $input_billing['billing_frequency'] = $input['bill_freq']; // Billing        
+            $input_billing['billing_frequency'] = $input['bill_freq']; // Billing   
+            $input_billing['payment_recorded'] = $input['payment_recorded'];
 
             $check = [
                 'where' => [
@@ -5162,6 +5178,17 @@ class Customer extends MY_Controller
         $input_alarm['radio_serial_number']     = $input['radio_serial_number'] ? $input['radio_serial_number'] : '';
         $input_alarm['panel_location']     = $input['panel_location'] ? $input['panel_location'] : '';
         $input_alarm['transformer_location']     = $input['transformer_location'] ? $input['transformer_location'] : '';
+        $input_alarm['dealer_number']     = $input['dealer_number'] ? $input['dealer_number'] : '';
+        $input_alarm['install_type']     = $input['install_type'] ? $input['install_type'] : '';
+        $input_alarm['service_provider']     = $input['service_provider'] ? $input['service_provider'] : '';
+        $input_alarm['dsl_voip']     = $input['dsl_voip'] ? $input['dsl_voip'] : '';
+        $input_alarm['contract_status']     = $input['contract_status'] ? $input['contract_status'] : '';
+        $input_alarm['csid_number']     = $input['csid_number'] ? $input['csid_number'] : '';
+        $input_alarm['panel_phone_number']     = $input['panel_phone_number'] ? $input['panel_phone_number'] : '';
+        $input_alarm['connection_type']     = $input['connection_type'] ? $input['connection_type'] : '';
+        $input_alarm['report_format']     = $input['report_format'] ? $input['report_format'] : '';
+        $input_alarm['receiver_phone_number']     = $input['receiver_phone_number'] ? $input['receiver_phone_number'] : '';
+        $input_alarm['master_code']     = $input['master_code'] ? $input['master_code'] : '';
 
         $check = [
             'where' => [
@@ -13644,37 +13671,6 @@ class Customer extends MY_Controller
         echo json_encode($data);
     }
 
-    public function updatePanelEquipmentLocation()
-    {
-        $input = $this->input->post();
-
-        $data = [
-            'customer_id'  => $input['customer_id'],
-            'panel'        => $input['panelLocation'],
-            'transformer'  => $input['transformerLocation'],
-        ];
-
-        $replace = $this->db->replace('panel_equipment_location', $data);
-
-        echo json_encode($replace);
-    }
-
-    public function getPanelLocation()
-    {
-        $customer_id = $this->input->post('customer_id');
-
-        $this->db->select('
-            panel_equipment_location.panel,
-            panel_equipment_location.transformer
-        ');
-        $this->db->from('panel_equipment_location');
-        $this->db->where('panel_equipment_location.customer_id', "$customer_id");
-        $query = $this->db->get();
-        $data = $query->result();
-
-        echo json_encode($data);
-    }
-
     public function ajax_payment_method_images()
     {
         $this->load->model('AcsCustomerDocument_model');
@@ -13802,5 +13798,50 @@ class Customer extends MY_Controller
         
         $this->page_data['billing_info'] = $billing_info;
         $this->load->view('v2/pages/customer/ajax_financing_equipment_details', $this->page_data);
+    }
+
+    public function ajax_create_installer_code()
+    {
+        $this->load->model('AcsAlarmInstallerCode_model');
+
+        if(!checkRoleCanAccessModule('customer-settings', 'write')){
+			show403Error();
+			return false;
+		}
+
+        $is_success = 0;
+        $msg = 'Cannot save data';
+        $installer_code_id = 0;
+        $installer_code = 0;
+
+        $company_id = logged('company_id');
+        $post = $this->input->post();
+
+        $isExists = $this->AcsAlarmInstallerCode_model->getByCodeAndCompanyId($post['installer_code'], $company_id);
+        if( $isExists ){
+            $msg = 'Installer code ' . $post['installer_code'] . ' already exists.';
+        }elseif( $post['installer_code'] == '' ){
+            $msg = 'Please enter installer code';
+        }else{
+            $data = [
+                'company_id' => $company_id,
+                'installer_code' => $post['installer_code'],
+                'date_created' => date("Y-m-d H:i:s"),
+                'date_updated' => date("Y-m-d H:i:s")
+            ];
+
+            $installer_code_id = $this->AcsAlarmInstallerCode_model->create($data);
+            $installer_code = $post['installer_code'];
+
+            //Activity Logs
+            $activity_name = 'Installer Code : Created ' . $post['installer_code']; 
+            createActivityLog($activity_name);
+
+            $is_success = 1;
+            $msg = '';
+        }
+
+        $return = ['is_success' => $is_success, 'msg' => $msg, 'installer_code_id' => $installer_code_id, 'installer_code' => $installer_code];
+        echo json_encode($return);
     }
 }

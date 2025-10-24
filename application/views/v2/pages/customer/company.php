@@ -595,8 +595,8 @@ var COMPANY_LIST_TABLE = $('#company-list').DataTable({
     "ordering": false,
     "processing": true,
     "serverSide": true,
-    "cache": true,
-    "stateSave": true,    
+    //"cache": true,
+    //"stateSave": true,    
     "pageLength": 10,
     "ajax": {
         "url": "<?= base_url('customer/getCompanyList'); ?>",

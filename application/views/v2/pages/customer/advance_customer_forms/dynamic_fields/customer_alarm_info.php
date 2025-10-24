@@ -179,13 +179,6 @@
             </div>
         </div>
 
-        <div class="row form_line field-custom-name-container" <?= isCustomerFieldEnabled($companyFormSetting, 'alarm-information', 'site_customer_type') == 0 ? 'style="display:none;"' : ''; ?>>
-            <div class="col-md-6"><?= getCustomerFieldValue($companyFormSetting, 'alarm-information', 'site_customer_type'); ?></div>
-            <div class="col-md-6">
-                <input type="text" class="form-control" name="site_customer_type" id="site_customer_type" value="<?= $alarm_info ? ($alarm_info->site_customer_type != '' ? $alarm_info->site_customer_type : '') : '';  ?>"/>
-            </div>
-        </div>
-
         <div class="row form_line field-custom-name-container" <?= isCustomerFieldEnabled($companyFormSetting, 'alarm-information', 'secondary_system_type') == 0 ? 'style="display:none;"' : ''; ?>>
             <div class="col-md-6"><?= getCustomerFieldValue($companyFormSetting, 'alarm-information', 'secondary_system_type'); ?></div>
             <div class="col-md-6">
@@ -211,6 +204,83 @@
             <div class="col-md-6"><?= getCustomerFieldValue($companyFormSetting, 'alarm-information', 'transformer_location'); ?></div>
             <div class="col-md-6">
                 <input type="text" class="form-control" name="transformer_location" id="transformer_location" value="<?= $alarm_info ? ($alarm_info->transformer_location != '' ? $alarm_info->transformer_location : '') : '';  ?>"/>
+            </div>
+        </div>
+
+        <div class="row form_line field-custom-name-container" <?= isCustomerFieldEnabled($companyFormSetting, 'alarm-information', 'dealer_number') == 0 ? 'style="display:none;"' : ''; ?>>
+            <div class="col-md-6"><?= getCustomerFieldValue($companyFormSetting, 'alarm-information', 'dealer_number'); ?></div>
+            <div class="col-md-6">
+                <input type="text" class="form-control" name="dealer_number" id="dealer_number" value="<?= $alarm_info ? ($alarm_info->dealer_number != '' ? $alarm_info->dealer_number : '') : '';  ?>"/>
+            </div>
+        </div>
+
+        <div class="row form_line field-custom-name-container" <?= isCustomerFieldEnabled($companyFormSetting, 'alarm-information', 'install_type') == 0 ? 'style="display:none;"' : ''; ?>>
+            <div class="col-md-6"><?= getCustomerFieldValue($companyFormSetting, 'alarm-information', 'install_type'); ?></div>
+            <div class="col-md-6">
+                <input type="text" class="form-control" name="install_type" id="install_type" value="<?= $alarm_info ? ($alarm_info->install_type != '' ? $alarm_info->install_type : '') : '';  ?>"/>
+            </div>
+        </div>
+
+        <div class="row form_line field-custom-name-container" <?= isCustomerFieldEnabled($companyFormSetting, 'alarm-information', 'service_provider') == 0 ? 'style="display:none;"' : ''; ?>>
+            <div class="col-md-6"><?= getCustomerFieldValue($companyFormSetting, 'alarm-information', 'service_provider'); ?></div>
+            <div class="col-md-6">
+                <input type="text" class="form-control" name="service_provider" id="service_provider" value="<?= $alarm_info ? ($alarm_info->service_provider != '' ? $alarm_info->service_provider : '') : '';  ?>"/>
+            </div>
+        </div>
+
+        <div class="row form_line field-custom-name-container" <?= isCustomerFieldEnabled($companyFormSetting, 'alarm-information', 'dsl_voip') == 0 ? 'style="display:none;"' : ''; ?>>
+            <div class="col-md-6"><?= getCustomerFieldValue($companyFormSetting, 'alarm-information', 'dsl_voip'); ?></div>
+            <div class="col-md-6">
+                <input type="text" class="form-control" name="dsl_voip" id="dsl_voip" value="<?= $alarm_info ? ($alarm_info->dsl_voip != '' ? $alarm_info->dsl_voip : '') : '';  ?>"/>
+            </div>
+        </div>
+
+        <div class="row form_line field-custom-name-container" <?= isCustomerFieldEnabled($companyFormSetting, 'alarm-information', 'contract_status') == 0 ? 'style="display:none;"' : ''; ?>>
+            <div class="col-md-6"><?= getCustomerFieldValue($companyFormSetting, 'alarm-information', 'contract_status'); ?></div>
+            <div class="col-md-6">
+                <input type="text" class="form-control" name="contract_status" id="contract_status" value="<?= $alarm_info ? ($alarm_info->contract_status != '' ? $alarm_info->contract_status : '') : '';  ?>"/>
+            </div>
+        </div>
+
+        <div class="row form_line field-custom-name-container" <?= isCustomerFieldEnabled($companyFormSetting, 'alarm-information', 'csid_number') == 0 ? 'style="display:none;"' : ''; ?>>
+            <div class="col-md-6"><?= getCustomerFieldValue($companyFormSetting, 'alarm-information', 'csid_number'); ?></div>
+            <div class="col-md-6">
+                <input type="text" class="form-control" name="csid_number" id="csid_number" value="<?= $alarm_info ? ($alarm_info->csid_number != '' ? $alarm_info->csid_number : '') : '';  ?>"/>
+            </div>
+        </div>
+
+        <div class="row form_line field-custom-name-container" <?= isCustomerFieldEnabled($companyFormSetting, 'alarm-information', 'panel_phone_number') == 0 ? 'style="display:none;"' : ''; ?>>
+            <div class="col-md-6"><?= getCustomerFieldValue($companyFormSetting, 'alarm-information', 'panel_phone_number'); ?></div>
+            <div class="col-md-6">
+                <input type="text" class="form-control" name="panel_phone_number" id="panel_phone_number" value="<?= $alarm_info ? ($alarm_info->panel_phone_number != '' ? $alarm_info->panel_phone_number : '') : '';  ?>"/>
+            </div>
+        </div>
+
+        <div class="row form_line field-custom-name-container" <?= isCustomerFieldEnabled($companyFormSetting, 'alarm-information', 'connection_type') == 0 ? 'style="display:none;"' : ''; ?>>
+            <div class="col-md-6"><?= getCustomerFieldValue($companyFormSetting, 'alarm-information', 'connection_type'); ?></div>
+            <div class="col-md-6">
+                <input type="text" class="form-control" name="connection_type" id="connection_type" value="<?= $alarm_info ? ($alarm_info->connection_type != '' ? $alarm_info->connection_type : '') : '';  ?>"/>
+            </div>
+        </div>
+
+        <div class="row form_line field-custom-name-container" <?= isCustomerFieldEnabled($companyFormSetting, 'alarm-information', 'report_format') == 0 ? 'style="display:none;"' : ''; ?>>
+            <div class="col-md-6"><?= getCustomerFieldValue($companyFormSetting, 'alarm-information', 'report_format'); ?></div>
+            <div class="col-md-6">
+                <input type="text" class="form-control" name="report_format" id="report_format" value="<?= $alarm_info ? ($alarm_info->report_format != '' ? $alarm_info->report_format : '') : '';  ?>"/>
+            </div>
+        </div>
+
+        <div class="row form_line field-custom-name-container" <?= isCustomerFieldEnabled($companyFormSetting, 'alarm-information', 'receiver_phone_number') == 0 ? 'style="display:none;"' : ''; ?>>
+            <div class="col-md-6"><?= getCustomerFieldValue($companyFormSetting, 'alarm-information', 'receiver_phone_number'); ?></div>
+            <div class="col-md-6">
+                <input type="text" class="form-control" name="receiver_phone_number" id="receiver_phone_number" value="<?= $alarm_info ? ($alarm_info->receiver_phone_number != '' ? $alarm_info->receiver_phone_number : '') : '';  ?>"/>
+            </div>
+        </div>
+
+        <div class="row form_line field-custom-name-container" <?= isCustomerFieldEnabled($companyFormSetting, 'alarm-information', 'master_code') == 0 ? 'style="display:none;"' : ''; ?>>
+            <div class="col-md-6"><?= getCustomerFieldValue($companyFormSetting, 'alarm-information', 'master_code'); ?></div>
+            <div class="col-md-6">
+                <input type="text" class="form-control" name="master_code" id="master_code" value="<?= $alarm_info ? ($alarm_info->master_code != '' ? $alarm_info->master_code : '') : '';  ?>"/>
             </div>
         </div>
 

@@ -5910,3 +5910,25 @@ function isAdmin(){
 
     return $is_admin;
 }
+
+function isMobile() {
+    if (empty($_SERVER['HTTP_USER_AGENT'])) {
+        return false; // No user agent, assume not mobile
+    }
+
+    $user_agent = $_SERVER['HTTP_USER_AGENT'];
+
+    // Check for common mobile device keywords
+    if (strpos($user_agent, 'Mobile') !== false ||
+        strpos($user_agent, 'Android') !== false ||
+        strpos($user_agent, 'Silk/') !== false ||
+        strpos($user_agent, 'Kindle') !== false ||
+        strpos($user_agent, 'BlackBerry') !== false ||
+        strpos($user_agent, 'Opera Mini') !== false ||
+        strpos($user_agent, 'Opera Mobi') !== false) {
+        return true;
+    } else {
+        return false;
+    }
+}
+?>

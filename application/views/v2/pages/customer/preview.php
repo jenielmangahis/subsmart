@@ -40,6 +40,13 @@
                         <div class="nsm-card">
                             <div class="nsm-card-content">
                                 <div class="row g-2">
+                                    <?php if( isMobile() ){ ?>
+                                    <div class="col-12 col-md-2">
+                                        <button type="button" class="nsm-button float-end" onclick="location.href='<?php echo base_url('customer/add_advance/' . $this->uri->segment(3)); ?>'">
+                                            <i class='bx bx-fw bx-user'></i> Edit Customer
+                                        </button>
+                                    </div>
+                                    <?php } ?>
                                     <div class="col-12 col-md-2">
                                         <label class="content-title d-inline-block">Account Number: <?= !empty($alarm_info->monitor_id) ? $alarm_info->monitor_id : '---'; ?></label>
                                     </div>
@@ -56,8 +63,11 @@
                                         <label class="content-title d-inline-block">Equipment: <?= !empty($alarm_info->equipment) ? $alarm_info->equipment : '---'; ?></label>
                                     </div>
                                     <div class="col-12 col-md-2">
-                                        <label class="content-title d-inline-block">Collections: <?= !empty($alarm_info->collections) ? $alarm_info->collections : '---'; ?></label>
+                                        <label class="content-title d-inline-block">Install Date: <?= $office_info && $office_info->install_date != '' ? date("m/d/Y",strtotime($office_info->install_date)) : '---'; ?></label>
                                     </div>
+                                    <!-- <div class="col-12 col-md-2">
+                                        <label class="content-title d-inline-block">Collections: <?= !empty($alarm_info->collections) ? $alarm_info->collections : '---'; ?></label>
+                                    </div> -->
                                 </div>
                             </div>
                         </div>
@@ -267,6 +277,14 @@
             var copyText = document.getElementById("sharableLink");
             copyText.select();
             document.execCommand("copy");
+        });
+
+        $('#chk-preview-show-financing-equipment').on('change', function(){
+            if( $(this).is(':checked') ){
+                $('#preview-financing-equipment').show();
+            }else{
+                $('#preview-financing-equipment').hide();
+            }
         });
 
         $("#printDivPreview").on("click", function(){

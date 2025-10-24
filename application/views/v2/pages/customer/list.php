@@ -626,8 +626,8 @@
             "ordering": false,
             "processing": true,
             "serverSide": true,
-            "cache": true,
-            "stateSave": true,
+            //"cache": true, //Cache save
+            //"stateSave": true, //Cache save
             // "order": [],
             "pageLength": 10,
             "ajax": {

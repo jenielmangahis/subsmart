@@ -425,8 +425,8 @@ var PERSON_LIST_TABLE = $('#person-list').DataTable({
     "ordering": false,
     "processing": true,
     "serverSide": true,
-    "cache": true,
-    "stateSave": true,    
+    //"cache": true,
+    //"stateSave": true,    
     "pageLength": 10,
     "ajax": {
         "url": "<?php echo base_url('customer/getPersonList'); ?>",

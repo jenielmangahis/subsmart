@@ -19,7 +19,7 @@
                 <label class="content-subtitle fw-bold">Time Entered</label>
             </div>
             <div class="col-12 col-md-6">
-                <label class="content-subtitle"><?= !empty($office_info->time_entered) ?  $office_info->time_entered : '---' ?></label>
+                <label class="content-subtitle"><?= !empty($office_info->time_entered) ?  date("h:i A", strtotime($office_info->time_entered)) : '---' ?></label>
             </div>
             <div class="col-12 col-md-6">
                 <label class="content-subtitle fw-bold">Sales Date</label>
@@ -107,13 +107,35 @@
                 <label class="content-subtitle fw-bold">Tech Arrival Time</label>
             </div>
             <div class="col-12 col-md-6">
-                <label class="content-subtitle"><?= isset($office_info) && !empty($office_info->tech_arrive_time) ?  $office_info->tech_arrive_time : '---' ?></label>
+                <label class="content-subtitle">
+                    <?php 
+                        $arrival_time = '---';
+                        if( $jobLatest && $jobLatest->job_start_time != '' ){
+                            $arrival_time = date("h:i A",strtotime($jobLatest->job_start_time));
+                        }elseif( $office_info ){
+                            $arrival_time = date("h:i A",strtotime($office_info->tech_arrive_time));
+                        }
+
+                        echo $arrival_time;
+                    ?>
+                </label>
             </div>
             <div class="col-12 col-md-6">
                 <label class="content-subtitle fw-bold">Tech Departure Time</label>
             </div>
             <div class="col-12 col-md-6">
-                <label class="content-subtitle"><?= isset($office_info) && !empty($office_info->tech_depart_time) ?  $office_info->tech_depart_time : '---' ?></label>
+                <label class="content-subtitle">
+                <?php 
+                        $departure_time = '---';
+                        if( $jobLatest && $jobLatest->finished_time != '' ){
+                            $departure_time = date("h:i A",strtotime($jobLatest->finished_time));
+                        }elseif( $office_info ){
+                            $departure_time = date("h:i A",strtotime($office_info->tech_depart_time));
+                        }
+
+                        echo $departure_time;
+                    ?>
+                </label>                
             </div>
             <div class="col-12 col-md-6">
                 <label class="content-subtitle fw-bold">Lead Source</label>
