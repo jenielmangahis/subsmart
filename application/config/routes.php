@@ -2329,7 +2329,11 @@ $route['customer/_edit_alarm_zone'] = 'Customer/ajax_edit_alarm_zone';
 $route['customer/_update_alarm_zones'] = 'Customer/ajax_update_alarm_zones';
 $route['customer/_delete_selected_zones'] = 'Customer/ajax_delete_selected_zones';
 $route['customer/export_zones_list/(:any)?'] = 'Customer/export_zones_list/$1';
-$route['customer/_customer_emergency_agencies'] = 'Customer/ajax_customer_emergency_agencies/$1';
+$route['customer/_customer_emergency_agencies'] = 'Customer/ajax_customer_emergency_agencies';
+$route['customer/_create_emergency_agencies'] = 'Customer/ajax_create_emergency_agencies';
+$route['customer/_delete_emergency_agency'] = 'Customer/ajax_delete_emergency_agency';
+$route['customer/_edit_emergency_agency'] = 'Customer/ajax_edit_emergency_agency';
+$route['customer/_update_emergency_agency'] = 'Customer/ajax_update_emergency_agency';
 
 //Benchmark for Testing
 $route['benchmark/test_customer_subscription'] = 'Benchmark/test_customer_subscription';
