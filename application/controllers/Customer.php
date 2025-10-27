@@ -13908,4 +13908,252 @@ class Customer extends MY_Controller
         $this->page_data['page']->parent = 'Customers';
         $this->load->view('v2/pages/customer/settings_alarm_installer_codes', $this->page_data);
     }
+
+    public function ajax_alarm_customer_zones()
+    {
+        $this->load->model('AcsAlarmZone_model');
+
+        $post = $this->input->post();
+        $company_id = logged('company_id');
+        $alarmZones = $this->AcsAlarmZone_model->getAllByCustomerId($post['customer_id']);
+
+        $this->page_data['alarmZones'] = $alarmZones;
+        $this->page_data['customer_id'] = $post['customer_id'];
+        $this->load->view('v2/pages/customer/ajax_alarm_customer_zones', $this->page_data);
+    }
+
+    public function ajax_create_alarm_zones()
+    {
+        $this->load->model('AcsAlarmZone_model');
+        $this->load->model('AcsProfile_model');
+
+		$is_success = 0;
+        $msg    = 'Cannot save data';
+
+        $company_id  = logged('company_id');
+        $post = $this->input->post();
+
+        $customer = $this->AcsProfile_model->getByProfId($post['customer_id']);
+        if( $customer && $customer->company_id == $company_id ){
+            $total_created = 0;
+            foreach($post['zone_id'] as $key => $value){
+                if( $value != '' ){
+                    $data = [
+                        'company_id' => $company_id,
+                        'customer_id' => $customer->prof_id,
+                        'zone_id' => $value ?? '',
+                        'type' => $post['zone_type'][$key] ?? '',
+                        'event_code' => $post['zone_event_code'][$key] ?? '',
+                        'location' => $post['zone_location'][$key] ?? '',
+                        'date_created' => date("Y-m-d H:i:s"),
+                        'date_updated' => date("Y-m-d H:i:s"),
+                    ];
+
+                    $this->AcsAlarmZone_model->create($data);
+
+                    $total_created++;
+                }
+                
+            }
+        }
+
+        if( $total_created > 0 ){
+            //Activity Logs
+            if( $total_created > 1 ){
+                $activity_name = 'Customer : Created ' . $total_created . ' zones for customer ' . $customer->first_name . ' ' . $customer->last_name;
+            }else{
+                $activity_name = 'Customer : Created ' . $total_created . ' zone for customer ' . $customer->first_name . ' ' . $customer->last_name;
+            }
+
+            createActivityLog($activity_name);
+
+            $is_success = 1;
+            $msg = '';
+        }else{
+            $msg = 'No data created.';
+        }
+
+        $return = [
+            'is_success' => $is_success,
+            'msg' => $msg
+        ];
+
+        echo json_encode($return);
+    }
+
+    public function ajax_delete_alarm_zone()
+    {
+        $this->load->model('AcsAlarmZone_model');
+
+		$is_success = 0;
+        $msg    = 'Cannot find data';
+
+        $company_id  = logged('company_id');
+        $post = $this->input->post();
+
+        $alarmZone = $this->AcsAlarmZone_model->getById($post['id']);
+        if( $alarmZone && $alarmZone->company_id == $company_id ){
+
+            $this->AcsAlarmZone_model->delete($alarmZone->id);
+
+            //Activity Logs
+            $activity_name = 'Customer : Deleted zone id ' . $alarmZone->zone_id; 
+
+            createActivityLog($activity_name);
+
+            $is_success = 1;
+            $msg = '';
+        }
+
+        $return = [
+            'is_success' => $is_success,
+            'msg' => $msg
+        ];
+
+        echo json_encode($return);
+    }
+
+    public function ajax_edit_alarm_zone()
+    {
+        $this->load->model('AcsAlarmZone_model');
+
+		$is_success = 0;
+        $msg    = 'Cannot find data';
+
+        $company_id  = logged('company_id');
+        $post = $this->input->post();
+
+        $alarmZone = $this->AcsAlarmZone_model->getById($post['zone_id']);
+        if( $alarmZone && $alarmZone->company_id == $company_id ){
+            $this->page_data['alarmZone'] = $alarmZone;
+            $this->load->view('v2/pages/customer/ajax_edit_alarm_zone', $this->page_data);
+        }
+    }
+
+    public function ajax_update_alarm_zones()
+    {
+        $this->load->model('AcsAlarmZone_model');
+
+		$is_success = 0;
+        $msg    = 'Cannot save data';
+
+        $company_id  = logged('company_id');
+        $post = $this->input->post();
+
+        $alarmZone = $this->AcsAlarmZone_model->getById($post['zid']);
+        if( $alarmZone && $alarmZone->company_id == $company_id ){
+            $data = [
+                'zone_id' => $post['zone_id'],
+                'type' => $post['zone_type'],
+                'event_code' => $post['zone_event_code'],
+                'location' => $post['zone_location'],
+                'date_updated' => date("Y-m-d H:i:s"),
+            ];
+
+            $this->AcsAlarmZone_model->update($alarmZone->id, $data);
+
+            //Activity Logs
+            $activity_name = 'Customer : Updated zone id ' . $post['zone_id'] . ' for customer ' . $alarmZone->first_name . ' ' . $alarmZone->last_name; 
+            createActivityLog($activity_name);
+
+            $is_success = 1;
+            $msg = '';
+        }
+
+        if( $total_created > 0 ){
+            
+        }else{
+            $msg = 'No data created.';
+        }
+
+        $return = [
+            'is_success' => $is_success,
+            'msg' => $msg
+        ];
+
+        echo json_encode($return);
+    }
+
+    public function ajax_delete_selected_zones()
+    {
+        $this->load->model('AcsAlarmZone_model');
+
+		$is_success = 0;
+        $msg    = 'Please select data';
+
+        $company_id  = logged('company_id');
+        $post = $this->input->post();
+
+        if( $post['alarmZones'] ){
+            $filter[] = ['field' => 'company_id', 'value' => $company_id];
+            $total_deleted = $this->AcsAlarmZone_model->bulkDelete($post['alarmZones'], $filter);
+
+            //Activity Logs
+            if( $total_deleted > 1 ){
+                $activity_name = 'Customer : Permanently deleted ' .$total_deleted. ' zones'; 
+            }else{
+                $activity_name = 'Customer : Permanently deleted ' .$total_deleted. ' zone'; 
+            }
+            
+            createActivityLog($activity_name);
+
+            $is_success = 1;
+            $msg    = '';
+        }
+
+        $return = [
+            'is_success' => $is_success,
+            'msg' => $msg
+        ];
+
+        echo json_encode($return);
+    }
+
+    public function export_zones_list($customer_id)
+    {
+        $this->load->model('users_model');
+		$this->load->model('roles_model');
+
+		$role_id = logged('role');
+		$cid     = logged('company_id');
+		$users = $this->users_model->getCompanyUsers($cid);
+
+		$delimiter = ",";
+		$time      = time();
+		$filename  = "users_list_" . $time . ".csv";
+
+		$f = fopen('php://memory', 'w');
+
+		$fields = array('Last Name', 'First Name', 'Role', 'Title', 'Email', 'Phone', 'Mobile', 'Address', 'City', 'State', 'Is Archived');
+		fputcsv($f, $fields, $delimiter);
+
+		if (!empty($users)) {
+			foreach ($users as $u) {
+				$csvData = array(
+					$u->LName,
+					$u->FName,
+					getUserType($u->user_type),
+					ucfirst($this->roles_model->getById($u->role)->title),
+					$u->email,
+					$u->phone,
+					$u->mobile,
+					$u->address,
+					$u->city,
+					$u->state,
+					$u->is_archived
+				);
+				fputcsv($f, $csvData, $delimiter);
+			}
+		} else {
+			$csvData = array('');
+			fputcsv($f, $csvData, $delimiter);
+		}
+
+		fseek($f, 0);
+
+		header('Content-Type: text/csv');
+		header('Content-Disposition: attachment; filename="' . $filename . '";');
+
+		fpassthru($f);
+    }
 }
