@@ -24,8 +24,8 @@
                 </ul>
             </div>
 
-            <div class="nsm-page-buttons page-button-container">  
-                <div class="btn-group nsm-main-buttons">
+            <div class="nsm-page-buttons" style="display:inline-block !important;">  
+                <div class="btn-group">
                     <button type="button" class="btn btn-nsm" id="btn-add-zone"><i class='bx bx-plus' style="position:relative;top:1px;"></i> Zone</button>
                     <button type="button" class="btn btn-nsm dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false">
                         <span class=""><i class='bx bx-chevron-down' ></i></span>
@@ -37,58 +37,54 @@
             </div>
         </div>
     </div>
-    <form id="frm-with-selected">
-        <table class="nsm-table" id="tbl-alarm-zones">
-            <thead>
-                <tr>
-                    <td class="table-icon text-center sorting_disabled">
-                        <input class="form-check-input select-all table-select" type="checkbox" name="id_selector" value="0" id="select-all">
-                    </td>
-                    <td class="table-icon"></td>
-                    <td data-name="Zone ID">Zone ID</td>
-                    <td data-name="Zone Type">Type</td>
-                    <td data-name="Event Code">Event Code</td>
-                    <td data-name="Location">Location</td>
-                    <td data-name="Manage" style="width:5%;"></td>
-                </tr>
-            </thead>
-            <tbody>
-                <?php if( $alarmZones ){ ?>
-                    <?php foreach( $alarmZones as $zone ){ ?>
-                        <tr>
-                            <td>
-                                <input class="form-check-input row-select table-select" name="alarmZones[]" type="checkbox" value="<?= $zone->id; ?>">
-                            </td>
-                            <td>
-                                <div class="table-row-icon">
-                                    <i class='bx bx-layer'></i>
-                                </div>
-                            </td>
-                            <td class="fw-bold nsm-text-primary"><?= $zone->zone_id; ?></td>
-                            <td class="fw-bold nsm-text-primary"><?= $zone->type; ?></td>
-                            <td class="fw-bold nsm-text-primary"><?= $zone->event_code; ?></td>
-                            <td class="fw-bold nsm-text-primary"><?= $zone->location; ?></td>
-                            <td>
-                                <div class="dropdown table-management">
-                                    <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown">
-                                        <i class='bx bx-fw bx-dots-vertical-rounded'></i>
-                                    </a>
-                                    <ul class="dropdown-menu dropdown-menu-end">
-                                        <li>
-                                            <a class="dropdown-item edit-zone-item" href="javascript:void(0);" data-id="<?= $zone->id; ?>">Edit</a>
-                                        </li>
-                                        <li>
-                                            <a class="dropdown-item delete-zone-item" href="javascript:void(0);" data-id="<?= $zone->id; ?>" data-value="<?= $zone->zone_id; ?>">Delete</a>
-                                        </li>
-                                    </ul>
-                                </div>
-                            </td>
-                        </tr>
+    <div class="nsm-page">
+    <div class="nsm-page-content">
+        <form id="frm-with-selected">
+            <table class="nsm-table w-100" id="tbl-alarm-zones">
+                <thead>
+                    <tr>
+                        <td class="table-icon text-center sorting_disabled show">
+                            <input class="form-check-input select-all table-select" type="checkbox" name="id_selector" value="0" id="select-all">
+                        </td>
+                        <td class="show" data-name="Zone ID">Zone ID</td>
+                        <td class="show" data-name="Zone Type">Type</td>
+                        <td class="show" data-name="Event Code">Event Code</td>
+                        <td class="show" data-name="Location">Location</td>
+                        <td class="show" data-name="Manage" style="width:5%;"></td>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php if( $alarmZones ){ ?>
+                        <?php foreach( $alarmZones as $zone ){ ?>
+                            <tr>
+                                <td class="show">
+                                    <input class="form-check-input row-select table-select" name="alarmZones[]" type="checkbox" value="<?= $zone->id; ?>">
+                                </td>
+                                <td class="fw-bold show nsm-text-primary"><?= $zone->zone_id; ?></td>
+                                <td class="show"><?= $zone->type; ?></td>
+                                <td class="show"><?= $zone->event_code; ?></td>
+                                <td class="show"><?= $zone->location; ?></td>
+                                <td class="show">     
+                                    <div class="dropdown table-management">
+                                        <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown"><i class='bx bx-fw bx-dots-vertical-rounded'></i></a>
+                                        <ul class="dropdown-menu dropdown-menu-end">
+                                            <li>
+                                                <a class="dropdown-item edit-zone-item" href="javascript:void(0);" data-id="<?= $zone->id; ?>">Edit</a>
+                                            </li>
+                                            <li>
+                                                <a class="dropdown-item delete-zone-item" href="javascript:void(0);" data-id="<?= $zone->id; ?>" data-value="<?= $zone->zone_id; ?>">Delete</a>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </td>
+                            </tr>
+                        <?php } ?>
                     <?php } ?>
-                <?php } ?>
-            </tbody>
-        </table>
-    </form>
+                </tbody>
+            </table>
+        </form>
+    </div>
+    </div>
 
     <div class="modal fade nsm-modal fade" id="modal-create-zone" tabindex="-1" aria-labelledby="modal-create-zone_label" aria-hidden="true">
         <div class="modal-dialog modal-lg modal-dialog-centered">
@@ -106,25 +102,25 @@
                         </div>                    
                         <div id="zone-inputs-container" class="d-block">
                             <div class="row">
-                                <div class="col-md-3">
+                                <div class="col-12 col-md-3">
                                     <div class="form-group mb-3">
                                         <label>Zone ID</label>
                                         <input type="text" class="form-control" name="zone_id[]" value="" placeholder="">
                                     </div>
                                 </div>
-                                <div class="col-md-3">
+                                <div class="col-12 col-md-3">
                                     <div class="form-group mb-3">
                                         <label>Type</label>
                                         <input type="text" class="form-control" name="zone_type[]" value="" placeholder="">
                                     </div>
                                 </div>
-                                <div class="col-md-3">
+                                <div class="col-12 col-md-3">
                                     <div class="form-group mb-3">
                                         <label>Event Code</label>
                                         <input type="text" class="form-control" name="zone_event_code[]" value="" placeholder="">
                                     </div>
                                 </div>
-                                <div class="col-md-3">
+                                <div class="col-12 col-md-3">
                                     <div class="form-group mb-3">
                                         <label>Location</label>
                                         <input type="text" class="form-control" name="zone_location[]" value="" placeholder="">
@@ -221,25 +217,26 @@ $(function(){
 
         let row_inputs = `
             <div class="row">
-                <div class="col-md-3">
+                <div class="col-12 col-md-12"><hr /></div>
+                <div class="col-12 col-md-3">
                     <div class="form-group mb-3">
                         <label>Zone ID</label>
                         <input type="text" class="form-control" name="zone_id[]" value="" placeholder="">
                     </div>
                 </div>
-                <div class="col-md-3">
+                <div class="col-12 col-md-3">
                     <div class="form-group mb-3">
                         <label>Type</label>
                         <input type="text" class="form-control" name="zone_type[]" value="" placeholder="">
                     </div>
                 </div>
-                <div class="col-md-3">
+                <div class="col-12 col-md-3">
                     <div class="form-group mb-3">
                         <label>Event Code</label>
                         <input type="text" class="form-control" name="zone_event_code[]" value="" placeholder="">
                     </div>
                 </div>
-                <div class="col-md-3">
+                <div class="col-12 col-md-3">
                     <div class="form-group mb-3">
                         <label>Location</label>
                         <div class="input-group mb-3">
