@@ -2328,7 +2328,7 @@ $route['customer/_delete_alarm_zone'] = 'Customer/ajax_delete_alarm_zone';
 $route['customer/_edit_alarm_zone'] = 'Customer/ajax_edit_alarm_zone';
 $route['customer/_update_alarm_zones'] = 'Customer/ajax_update_alarm_zones';
 $route['customer/_delete_selected_zones'] = 'Customer/ajax_delete_selected_zones';
-$route['customer/export_zones_list/(:any)?'] = 'Customer/ajax_delete_selected_zones/$1';
+$route['customer/export_zones_list/(:any)?'] = 'Customer/export_zones_list/$1';
 
 //Benchmark for Testing
 $route['benchmark/test_customer_subscription'] = 'Benchmark/test_customer_subscription';

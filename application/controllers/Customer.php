@@ -14111,36 +14111,28 @@ class Customer extends MY_Controller
 
     public function export_zones_list($customer_id)
     {
-        $this->load->model('users_model');
-		$this->load->model('roles_model');
-
-		$role_id = logged('role');
+        $this->load->model('AcsAlarmZone_model');
+		
 		$cid     = logged('company_id');
-		$users = $this->users_model->getCompanyUsers($cid);
+		$zones = $this->AcsAlarmZone_model->getAllByCustomerId($customer_id);
 
 		$delimiter = ",";
 		$time      = time();
-		$filename  = "users_list_" . $time . ".csv";
+		$filename  = "customer_zones_list_" . $time . ".csv";
 
 		$f = fopen('php://memory', 'w');
 
-		$fields = array('Last Name', 'First Name', 'Role', 'Title', 'Email', 'Phone', 'Mobile', 'Address', 'City', 'State', 'Is Archived');
+		$fields = array('Name', 'Zone ID', 'Type', 'Event Code', 'Location');
 		fputcsv($f, $fields, $delimiter);
 
-		if (!empty($users)) {
-			foreach ($users as $u) {
+		if (!empty($zones)) {
+			foreach ($zones as $z) {
 				$csvData = array(
-					$u->LName,
-					$u->FName,
-					getUserType($u->user_type),
-					ucfirst($this->roles_model->getById($u->role)->title),
-					$u->email,
-					$u->phone,
-					$u->mobile,
-					$u->address,
-					$u->city,
-					$u->state,
-					$u->is_archived
+					$z->first_name . ' ' . $z->last_name,
+					$z->zone_id,
+					$z->type,
+                    $z->event_code,
+                    $z->location
 				);
 				fputcsv($f, $csvData, $delimiter);
 			}

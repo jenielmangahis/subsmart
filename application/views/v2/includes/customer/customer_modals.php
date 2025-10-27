@@ -815,3 +815,60 @@
         </div>
     </div>
 </div>
+
+<div class="modal fade nsm-modal fade" id="modal-add-installer-code" tabindex="-1" aria-labelledby="modal-add-installer-code_label" aria-hidden="true">
+    <div class="modal-dialog modal-md modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <span class="modal-title content-title">Add Installer Code</span>
+                <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
+            </div>
+            <div class="modal-body">
+                <form id="frm-save-installer-code">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <label class="mb-2">Installer Code</label>
+                        <div class="input-group mb-3">
+                            <input type="text" name="installer_code" id="installer_code" value="" class="form-control" required="" autocomplete="off" />
+                        </div>
+                    </div>                 
+                </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="nsm-button" data-bs-dismiss="modal">Close</button>
+                <button type="submit" class="nsm-button primary" id="btn-save-installer-code" form="frm-save-installer-code">Save</button>
+            </div>
+            </form>                
+        </div>
+    </div>
+</div>
+
+<div class="modal fade nsm-modal fade" id="modal-edit-installer-code" tabindex="-1" aria-labelledby="modal-add-installer-code_label" aria-hidden="true">
+    <div class="modal-dialog modal-md modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <span class="modal-title content-title">Edit Installer Code</span>
+                <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
+            </div>
+            <div class="modal-body">
+                <form id="frm-update-installer-code">
+                <input type="hidden" name="installer_code_id" id="installer-code-id" value="" />
+                <div class="row">
+                    <div class="col-sm-12">
+                        <label class="mb-2">Installer Code</label>
+                        <div class="input-group mb-3">
+                            <input type="text" name="installer_code" id="edit-installer-code" value="" class="form-control" required="" autocomplete="off" />
+                        </div>
+                    </div>                 
+                </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="nsm-button" data-bs-dismiss="modal">Close</button>
+                <button type="submit" class="nsm-button primary" id="btn-update-installer-code" form="frm-update-installer-code">Save</button>
+            </div>
+            </form>                
+        </div>
+    </div>
+</div>
