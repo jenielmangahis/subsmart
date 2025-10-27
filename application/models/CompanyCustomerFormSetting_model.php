@@ -135,6 +135,7 @@ class CompanyCustomerFormSetting_model extends MY_Model
                 'report_format' => ['field_name' => 'Report Format', 'required' => 'no', 'is_visible' => 'yes'],
                 'receiver_phone_number' => ['field_name' => 'Receiver Phone Number', 'required' => 'no', 'is_visible' => 'yes'],
                 'master_code' => ['field_name' => 'Master Code', 'required' => 'no', 'is_visible' => 'yes'],
+                'site_type' => ['field_name' => 'Site Type', 'required' => 'no', 'is_visible' => 'yes'],
             ],
             'solar-information' => [
                 'project_id' => ['field_name' => 'Project ID', 'required' => 'yes', 'is_visible' => 'yes'],
@@ -243,10 +244,12 @@ class CompanyCustomerFormSetting_model extends MY_Model
             // ],
             'financing-schedule' => [
                 'finance_amount' => ['field_name' => 'Finance Amount', 'required' => 'yes', 'is_visible' => 'yes'],
+                'number_payment' => ['field_name' => 'Number of Payments', 'required' => 'yes', 'is_visible' => 'yes'],
                 'recurring_start_date' => ['field_name' => 'Payment Start Date', 'required' => 'yes', 'is_visible' => 'yes'],
                 'recurring_end_date' => ['field_name' => 'Payment End Date', 'required' => 'yes', 'is_visible' => 'yes'],
                 'transaction_category' => ['field_name' => 'Category', 'required' => 'yes', 'is_visible' => 'yes'],
                 'frequency' => ['field_name' => 'Billing Frequency', 'required' => 'yes', 'is_visible' => 'yes'],
+                'unpaid_amount' => ['field_name' => 'Current Balance', 'required' => 'yes', 'is_visible' => 'yes'],
             ]
             /*'Customer Profile' => [
                 'status' => ['field_name' => 'Status', 'required' => 'yes', 'is_visible' => 'yes'],

@@ -35,7 +35,7 @@
                         <?php 
                             $credit_card_num = '&mdash;';
                             if( $billing_info && $billing_info->credit_card_num != '' ){
-                                if (logged('user_type') == 7) {
+                                if ( isAdmin() ) {
                                     $credit_card_num = $billing_info->credit_card_num;
                                 }else{
                                     $credit_card_num = maskString($billing_info->credit_card_num);
@@ -87,7 +87,7 @@
                         <?php 
                             $check_num = '&mdash;';
                             if( $billing_info && $billing_info->check_num != '' ){
-                                if (logged('user_type') == 7) {
+                                if( isAdmin() ) {
                                     $check_num = $billing_info->check_num;
                                 }else{
                                     $check_num = maskString($billing_info->check_num);
@@ -135,7 +135,7 @@
                         <?php 
                             $acct_num = '&mdash;';
                             if( $billing_info && $billing_info->acct_num != '' ){
-                                if (logged('user_type') == 7) {
+                                if( isAdmin() ) {
                                     $acct_num = $billing_info->acct_num;
                                 }else{
                                     $acct_num = maskString($billing_info->acct_num);
@@ -171,7 +171,7 @@
                         <?php 
                             $acct_num = '&mdash;';
                             if( $billing_info && $billing_info->acct_num != '' ){
-                                if (logged('user_type') == 7) {
+                                if( isAdmin() ) {
                                     $acct_num = $billing_info->acct_num;
                                 }else{
                                     $acct_num = maskString($billing_info->acct_num);

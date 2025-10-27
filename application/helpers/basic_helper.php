@@ -5892,11 +5892,15 @@ function extractCustomerAddressNumber($addressString) {
 
 function formatCustomerId($customer_id){ 
 
-    if (logged('user_type') != 7 && $customer_id != '') {
-        $maskedCharacter = '*';
-        $remainingString = substr($customer_id, 2);
-        $maskedPrefix = str_repeat($maskedCharacter, 2);
-        $customer_id = $maskedPrefix . $remainingString;
+    if ( (logged('user_type') == 7 || logged('user_type') == 3) ) {
+        return $customer_id;        
+    }else{
+        if( $customer_id != '' ){
+            $maskedCharacter = '*';
+            $remainingString = substr($customer_id, 4);
+            $maskedPrefix = str_repeat($maskedCharacter, 4);
+            $customer_id = $maskedPrefix . $remainingString;
+        }        
     }
 
     return $customer_id;
@@ -5904,7 +5908,7 @@ function formatCustomerId($customer_id){
 
 function isAdmin(){
     $is_admin = true;
-    if (logged('user_type') == 7){
+    if (logged('user_type') == 7 || logged('user_type') == 3){
         $is_admin = true;
     }
 

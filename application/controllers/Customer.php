@@ -1047,12 +1047,14 @@ class Customer extends MY_Controller
                     $ratePlan = $this->RatePlan_model->getByAmountAndCompanyId($customer->mmr, logged('company_id'));
                     
                     $plan_type= 'Not Specified';
-                    if( $ratePlan ){
-                        $plan_type = $ratePlan->plan_name;
+                    if( $customer->comm_type != '' ){
+                        $plan_type = $customer->comm_type;
+                    }else{
+                        if( $ratePlan ){
+                            $plan_type = $ratePlan->plan_name;
+                        }
                     }
-                    // if( $customer->system_type != '' ){
-                    //     $plan_type= $customer->system_type;
-                    // }
+                        
                     array_push($data_arr, $plan_type);
                 }
                 if (in_array('rate_plan', $enabled_table_headers)) {
@@ -2579,7 +2581,7 @@ class Customer extends MY_Controller
         
         $accountingTerms = $this->AccountingTerm_model->getAllByCompanyId($company_id);
 
-        $financingCategories = $this->FinancingPaymentCategory_model->getAllByCompanyId($company_id);
+        $financingCategories = $this->FinancingPaymentCategory_model->getAllNonEquipmentByCompanyId($company_id);
         $this->page_data['financingCategories'] = $financingCategories; 
         
 		$keyword = '';
@@ -2616,7 +2618,7 @@ class Customer extends MY_Controller
             'select' => 'id,FName,LName',
         ];
         $this->page_data['logged_in_user'] = $this->general->get_data_with_param($get_login_user, false);
-        $financingCategories = $this->FinancingPaymentCategory_model->getAllByCompanyId($company_id);
+        $financingCategories = $this->FinancingPaymentCategory_model->getAllNonEquipmentByCompanyId($company_id);
         $this->page_data['financingCategories'] = $financingCategories;   
         $this->page_data['accountingTerms']     = $accountingTerms;
         $this->load->view('v2/pages/customer/subscription_new', $this->page_data);
@@ -2776,7 +2778,9 @@ class Customer extends MY_Controller
         $this->load->model('CustomerGroup_model');
         $this->load->model('Invoice_model', 'invoice_model');
         $this->load->model('CustomerSignature_model');
-        $this->load->library('wizardlib');                
+        $this->load->model('Workorder_model');
+        $this->load->model('Users_model');
+        $this->load->library('wizardlib');                        
 
         $alarm_api_helper = new AlarmApi();
 
@@ -2826,7 +2830,6 @@ class Customer extends MY_Controller
                 $office_info = $this->customer_ad_model->get_data_by_id('fk_prof_id', $id, 'acs_office');
                 $assignedUser = [];
                 if( $office_info ){
-                    $this->load->model('Users_model');
                     $assignedUser = $this->Users_model->getUserByID($office_info->technician);
                 }
 
@@ -2967,6 +2970,14 @@ class Customer extends MY_Controller
             $this->session->set_userdata('module_customer_id', $id);
 
             $companyInfo = $this->Business_model->getByCompanyId($cid);
+            $woLatest = $this->Workorder_model->getRecentByCustomerIdAndStatus($customer->prof_id, '');
+            $wo_created_by = '---';
+            if( $woLatest ){
+                $createdBy = $this->Users_model->getUserByID($woLatest->created_by);
+                if( $createdBy ){
+                    $wo_created_by = $createdBy->FName . ' ' . $createdBy->LName;
+                }
+            }
 
             $this->page_data['companyInfo']   = $companyInfo;
             $this->page_data['twilioAccount'] = $twilioAccount;
@@ -2986,6 +2997,8 @@ class Customer extends MY_Controller
             $this->page_data['alarm_customer_info'] = $alarm_customer_info;
             $this->page_data['statementClaim'] = $statementClaim;
             $this->page_data['customerSignature'] = $customerSignature;
+            $this->page_data['woLatest'] = $woLatest;
+            $this->page_data['wo_created_by'] = $wo_created_by;
             $this->load->view('v2/pages/customer/module', $this->page_data);
         }else{
             redirect('customer');
@@ -3811,6 +3824,9 @@ class Customer extends MY_Controller
         $this->load->model('UserCustomerDocfile_model');
         $this->load->model('Payment_records_model');
         $this->load->model('AcsAlarmInstallerCode_model');
+        $this->load->model('AcsAlarmSiteType_model');
+        $this->load->model('Business_model');
+        $this->load->model('Customer_model');
 
         $this->hasAccessModule(9);
 
@@ -3829,11 +3845,14 @@ class Customer extends MY_Controller
             if( $customer->company_id != $company_id) {
                 redirect('customer');
             }
+
+            $bilinfo = $this->customer_ad_model->get_data_by_id('fk_prof_id', $userid, 'acs_billing');
+
             $this->page_data['commission'] = $this->customer_ad_model->getTotalCommission($userid);
             $this->page_data['profile_info'] = $customer;
             $this->page_data['access_info'] = $this->customer_ad_model->get_data_by_id('fk_prof_id', $userid, 'acs_access');
             $this->page_data['office_info'] = $this->customer_ad_model->get_data_by_id('fk_prof_id', $userid, 'acs_office');
-            $this->page_data['billing_info'] = $bilinfo = $this->customer_ad_model->get_data_by_id('fk_prof_id', $userid, 'acs_billing');
+            $this->page_data['billing_info'] = $bilinfo;
             $this->page_data['alarm_info'] = $this->customer_ad_model->get_data_by_id('fk_prof_id', $userid, 'acs_alarm');
             $this->page_data['panel_type'] = $this->customer_ad_model->get_select_options('acs_alarm', 'panel_type');
 
@@ -4020,7 +4039,7 @@ class Customer extends MY_Controller
             }
         }
 
-        $financingCategories = $this->FinancingPaymentCategory_model->getAllByCompanyId($company_id);
+        $financingCategories = $this->FinancingPaymentCategory_model->getAllEquipmentByCompanyId($company_id);
 
         add_footer_js([
             'assets/js/customer/add_advance/add_advance.js',
@@ -4071,7 +4090,14 @@ class Customer extends MY_Controller
         if($default_total_pr && $default_total_pr->total_amount != '') {
             $default_total_payment_recorded = $default_total_pr->total_amount;
         }
-        $this->page_data['default_total_payment_recorded'] = $default_total_payment_recorded;
+
+        $siteTypes = $this->AcsAlarmSiteType_model->getAllByCompanyId($company_id);
+
+        $lastCustomer = $this->Customer_model->getLastCustomerByCompanyId($company_id);
+        $business = $this->Business_model->getByCompanyId($company_id);
+        $str_1 = strtoupper(substr($business->business_name, 0, 3));
+        $str_2 = $customer->prof_id ?? $lastCustomer->prof_id + 1;
+        $default_dealer_number = $str_1 . $str_2;
 
         $this->page_data['page']->title = 'Customers';
         $this->page_data['page']->parent = 'Customers';
@@ -4092,7 +4118,10 @@ class Customer extends MY_Controller
         $this->page_data['jobFinishedLatest'] = $jobFinishedLatest;
         $this->page_data['recentDocfile'] = $recentDocfile;
         $this->page_data['default_login_value'] = $default_login_value;
+        $this->page_data['default_total_payment_recorded'] = $default_total_payment_recorded;
         $this->page_data['installerCodes'] = $installerCodes;
+        $this->page_data['siteTypes'] = $siteTypes;
+        $this->page_data['default_dealer_number'] = $default_dealer_number;
         //$this->load->view('v2/pages/customer/add', $this->page_data);
         $this->load->view('v2/pages/customer/add_dynamic_fields', $this->page_data);
     }
@@ -4986,13 +5015,15 @@ class Customer extends MY_Controller
             $input_billing['account_note'] = $input['account_note'];
             $input_billing['confirmation'] = $input['confirmation'];
             $input_billing['finance_amount'] = $input['finance_amount'];
+            $input_billing['number_payment'] = $input['number_payment'] && $input['number_payment'] > 0 ? $input['number_payment'] : 0;
             $input_billing['recurring_start_date'] = $input['recurring_start_date'];
             $input_billing['recurring_end_date'] = $input['recurring_end_date'];
             $input_billing['transaction_amount'] = $input['transaction_amount'];
             $input_billing['transaction_category'] = $input['transaction_category'];
             $input_billing['frequency'] = $input['frequency']; // Subscription
-            $input_billing['billing_frequency'] = $input['bill_freq']; // Billing   
+            $input_billing['billing_frequency'] = $input['bill_freq'] ? $input['bill_freq'] : ''; // Billing   
             $input_billing['payment_recorded'] = $input['payment_recorded'];
+            $input_billing['unpaid_amount'] = $input['unpaid_amount'] && $input['unpaid_amount'] > 0 ? $input['unpaid_amount'] : 0;
 
             $check = [
                 'where' => [
@@ -5188,6 +5219,7 @@ class Customer extends MY_Controller
         $input_alarm['report_format']     = $input['report_format'] ? $input['report_format'] : '';
         $input_alarm['receiver_phone_number']     = $input['receiver_phone_number'] ? $input['receiver_phone_number'] : '';
         $input_alarm['master_code']     = $input['master_code'] ? $input['master_code'] : '';
+        $input_alarm['site_type']     = $input['site_type'] ? $input['site_type'] : '';
 
         $check = [
             'where' => [
@@ -13578,96 +13610,6 @@ class Customer extends MY_Controller
         $post = $this->input->post();
         $this->page_data['item_details'] = $this->customer_ad_model->get_customer_item_details($post['customer_id']);
         $this->load->view('v2/pages/customer/ajax_load_item_details', $this->page_data);
-    }
-
-    public function saveCustomerEquipment()
-    {
-        $input = $this->input->post();
-
-        $equipmentData = [
-            'customer_id' => $input['addEquipmentCustomerId'] ?? null,
-            'equipment'   => $input['addEquipmentName'] ?? null,
-            'category'    => $input['addEquipmentCategory'] ?? null,
-            'device_type' => $input['addEquipmentDeviceType'] ?? null,
-            'serial_no'   => $input['addEquipmentSerialNo'] ?? null,
-            'model_no'    => $input['addEquipmentModelNo'] ?? null,
-            'qty'         => $input['addEquipmentQty'] ?? null,
-            'status'      => $input['addEquipmentStatus'] ?? null,
-            'qr_code'     => $input['addEquipmentQRCodeBase64'] ?? null,
-        ];
-
-        $inserted = $this->general->add_return_id($equipmentData, 'customer_equipment');
-
-        echo json_encode($inserted);
-    }
-
-    public function updateCustomerEquipment()
-    {
-        $input = $this->input->post();
-        $id = $input['editEquipmentId'] ?? null;
-
-        $data = [
-            'category'     => $input['editEquipmentCategory'] ?? '',
-            'device_type'  => $input['editEquipmentDeviceType'] ?? '',
-            'serial_no'    => $input['editEquipmentSerialNo'] ?? '',
-            'model_no'     => $input['editEquipmentModelNo'] ?? '',
-            'qty'          => $input['editEquipmentQty'] ?? '',
-            'equipment'    => $input['editEquipmentName'] ?? '',
-            'status'       => $input['editEquipmentStatus'] ?? '',
-            'date_updated' => date('Y-m-d H:i:s'),
-        ];
-
-        if (!empty($input['editEquipmentQRCodeBase64'])) {
-            $data['qr_code'] = $input['editEquipmentQRCodeBase64'];
-        }
-
-        $updated = $this->general->update_with_key($data, $id, 'customer_equipment');
-
-        echo json_encode($updated);
-    }
-
-    public function removeCustomerEquipment()
-    {
-        $input = $this->input->post();
-        $id = $input['id'] ?? null;
-
-        if (empty($id)) {
-            echo json_encode(['success' => false, 'message' => 'Missing equipment ID.']);
-            return;
-        }
-
-        $deleted = $this->general->delete_([
-            'table' => 'customer_equipment',
-            'where' => ['id' => $id]
-        ]);
-    
-        echo json_encode($deleted);
-    }
-
-    
-    public function getCustomerEquipment()
-    {
-        $customer_id = $this->input->post('customer_id');
-
-        $this->db->select('
-            customer_equipment.id,
-            customer_equipment.customer_id,
-            customer_equipment.equipment,
-            customer_equipment.category,
-            customer_equipment.device_type,
-            customer_equipment.serial_no,
-            customer_equipment.model_no,
-            customer_equipment.qty,
-            customer_equipment.status,
-            customer_equipment.date_created,
-            customer_equipment.date_updated
-        ');
-        $this->db->from('customer_equipment');
-        $this->db->where('customer_equipment.customer_id', "$customer_id");
-        $query = $this->db->get();
-        $data = $query->result();
-
-        echo json_encode($data);
     }
 
     public function ajax_payment_method_images()

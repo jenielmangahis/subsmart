@@ -26,6 +26,7 @@
     .equipmentItem {
         margin: 1px;
         transition: background 0.2s ease;
+        white-space: nowrap;
     }
 
     .equipmentItem:hover {
@@ -95,9 +96,13 @@
     .panelEquipmentLocation {
         margin-top: -4px;
     }
+
+    .equipmentsContainer {
+        height: unset;
+    }
 </style>
 <div class="col-12 col-md-4">
-    <div class="nsm-card nsm-grid">
+    <div class="nsm-card nsm-grid equipmentsContainer">
         <div class="nsm-card-header d-block">
             <div class="nsm-card-title">
                 <span>Equipment</span>
@@ -113,84 +118,84 @@
                     <div class="equipmentCategories table-responsive d-flex">
                         <div class="equipmentItem text-center px-3 mb-2" equipment-type="notes">
                             <span class="opacity-50">
-                                <i class="<?php echo $equipmentIcons['notes']; ?>"></i>
+                                <i class="<?php echo $equipmentIcons['notes']; ?> fs-5 mb-2 mt-1"></i>
                                 <br>
                                 <small class="fw-bold">Notes</small>
                             </span>
                         </div>
                         <div class="equipmentItem text-center px-3 mb-2" equipment-type="communication">
                             <span class="opacity-50">
-                                <i class="<?php echo $equipmentIcons['communication']; ?>"></i>
+                                <i class="<?php echo $equipmentIcons['communication']; ?> fs-5 mb-2 mt-1"></i>
                                 <br>
-                                <small class="fw-bold">Comm</small>
+                                <small class="fw-bold">Communication</small>
                             </span>
                         </div>
                         <div class="equipmentItem text-center px-3 mb-2" equipment-type="panel">
                             <span class="opacity-50">
-                                <i class="<?php echo $equipmentIcons['panel']; ?>"></i>
+                                <i class="<?php echo $equipmentIcons['panel']; ?> fs-5 mb-2 mt-1"></i>
                                 <br>
                                 <small class="fw-bold">Panel</small>
                             </span>
                         </div>
                         <div class="equipmentItem text-center px-3 mb-2" equipment-type="sensor">
                             <span class="opacity-50">
-                                <i class="<?php echo $equipmentIcons['sensor']; ?>"></i>
+                                <i class="<?php echo $equipmentIcons['sensor']; ?> fs-5 mb-2 mt-1"></i>
                                 <br>
                                 <small class="fw-bold">Sensor</small>
                             </span>
                         </div>
                         <div class="equipmentItem text-center px-3 mb-2" equipment-type="peripheral">
                             <span class="opacity-50">
-                                <i class="<?php echo $equipmentIcons['peripheral']; ?>"></i>
+                                <i class="<?php echo $equipmentIcons['peripheral']; ?> fs-5 mb-2 mt-1"></i>
                                 <br>
-                                <small class="fw-bold">Perif</small>
+                                <small class="fw-bold">Peripheral</small>
                             </span>
                         </div>
                         <div class="equipmentItem text-center px-3 mb-2" equipment-type="video">
                             <span class="opacity-50">
-                                <i class="<?php echo $equipmentIcons['video']; ?>"></i>
+                                <i class="<?php echo $equipmentIcons['video']; ?> fs-5 mb-2 mt-1"></i>
                                 <br>
                                 <small class="fw-bold">Video</small>
                             </span>
                         </div>
                         <div class="equipmentItem text-center px-3 mb-2" equipment-type="access_point">
                             <span class="opacity-50">
-                                <i class="<?php echo $equipmentIcons['access_point']; ?>"></i>
+                                <i class="<?php echo $equipmentIcons['access_point']; ?> fs-5 mb-2 mt-1"></i>
                                 <br>
-                                <small class="fw-bold">AP</small>
+                                <small class="fw-bold">Access Point</small>
                             </span>
                         </div>
                         <div class="equipmentItem text-center px-3 mb-2" equipment-type="zwave">
                             <span class="opacity-50">
-                                <i class="<?php echo $equipmentIcons['zwave']; ?>"></i>
+                                <i class="<?php echo $equipmentIcons['zwave']; ?> fs-5 mb-2 mt-1"></i>
                                 <br>
-                                <small class="fw-bold">ZWave</small>
+                                <small class="fw-bold">Z-Wave</small>
                             </span>
                         </div>
                         <div class="equipmentItem text-center px-3 mb-2" equipment-type="liftmaster">
                             <span class="opacity-50">
-                                <i class="<?php echo $equipmentIcons['liftmaster']; ?>"></i>
+                                <i class="<?php echo $equipmentIcons['liftmaster']; ?> fs-5 mb-2 mt-1"></i>
                                 <br>
-                                <small class="fw-bold">LiftMaster</small>
+                                <small class="fw-bold">Lift Master</small>
                             </span>
                         </div>
                         <div class="equipmentItem text-center px-3 mb-2" equipment-type="geo">
                             <span class="opacity-50">
-                                <i class="<?php echo $equipmentIcons['geo']; ?>"></i>
+                                <i class="<?php echo $equipmentIcons['geo']; ?> fs-5 mb-2 mt-1"></i>
                                 <br>
                                 <small class="fw-bold">Geo</small>
                             </span>
                         </div>
                         <div class="equipmentItem text-center px-3 mb-2" equipment-type="voice">
                             <span class="opacity-50">
-                                <i class="<?php echo $equipmentIcons['voice']; ?>"></i>
+                                <i class="<?php echo $equipmentIcons['voice']; ?> fs-5 mb-2 mt-1"></i>
                                 <br>
                                 <small class="fw-bold">Voice</small>
                             </span>
                         </div>
                         <div class="equipmentItem text-center px-3 mb-2" equipment-type="other">
                             <span class="opacity-50">
-                                <i class="<?php echo $equipmentIcons['other']; ?>"></i>
+                                <i class="<?php echo $equipmentIcons['other']; ?> fs-5 mb-2 mt-1"></i>
                                 <br>
                                 <small class="fw-bold">Other</small>
                             </span>
@@ -630,7 +635,7 @@
     function getCustomerEquipment(customer_id) {
         $.ajax({
             type: "POST",
-            url: `${window.origin}/Customer/getCustomerEquipment`,
+            url: `${window.origin}/CustomerDashboardWidget/getCustomerEquipment`,
             data: { customer_id: `${customer_id}` },
             success: function (response) {
                 const data = JSON.parse(response);
@@ -686,7 +691,7 @@
     function getPanelLocation(customer_id) {
         $.ajax({
             type: "POST",
-            url: `${window.origin}/Customer/getPanelLocation`,
+            url: `${window.origin}/CustomerDashboardWidget/getPanelLocation`,
             data: {
                 customer_id: `${customer_id}`
             },
@@ -846,7 +851,7 @@
         function submitForm() {
             $.ajax({
                 type: "POST",
-                url: `${window.origin}/Customer/saveCustomerEquipment`,
+                url: `${window.origin}/CustomerDashboardWidget/saveCustomerEquipment`,
                 data: addEquipmentFormData,
                 processData: false,
                 contentType: false,
@@ -963,7 +968,7 @@
         function submitForm() {
             $.ajax({
                 type: "POST",
-                url: `${window.origin}/Customer/updateCustomerEquipment`,
+                url: `${window.origin}/CustomerDashboardWidget/updateCustomerEquipment`,
                 data: editFormData,
                 processData: false,
                 contentType: false,
@@ -1082,7 +1087,7 @@
             if (result.isConfirmed) {
                 $.ajax({
                     type: "POST",
-                    url: `${window.origin}/Customer/removeCustomerEquipment`,
+                    url: `${window.origin}/CustomerDashboardWidget/removeCustomerEquipment`,
                     data: {
                         id: equipment_id
                     },
@@ -1214,7 +1219,7 @@
 
         $.ajax({
             type: "POST",
-            url: `${window.origin}/Customer/updatePanelEquipmentLocation`,
+            url: `${window.origin}/CustomerDashboardWidget/updatePanelEquipmentLocation`,
             data: panelLocationFormData,
             processData: false,
             contentType: false,

@@ -17,6 +17,18 @@
                 </div>
             </div>
         </div>
+        <div class="row form_line" <?= isCustomerFieldEnabled($companyFormSetting, 'financing-schedule', 'number_payment') == 0 ? 'style="display:none;"' : ''; ?>>
+            <div class="col-md-6"><?= getCustomerFieldValue($companyFormSetting, 'financing-schedule', 'number_payment'); ?></div>
+            <div class="col-md-6">
+                <select data-type="number_payment" id="number_payment" name="number_payment" data-customer-source="dropdown" class="input_select form-select" >
+                    <option  value="0" selected="">Select</option>
+                    <?php for($x = 1; $x<=60; $x++){ ?>
+                        <?php $payment_string = $x > 1 ? 'Payments' : 'Payment'; ?>
+                        <option <?= $billing_info && $billing_info->number_payment == $x ? 'selected="selected"' : ''; ?> value="<?= $x; ?>"><?= $x; ?></option>
+                    <?php } ?>
+                </select>
+            </div>
+        </div>
         <div class="row form_line" <?= isCustomerFieldEnabled($companyFormSetting, 'financing-schedule', 'recurring_start_date') == 0 ? 'style="display:none;"' : ''; ?>>
             <div class="col-md-6"><?= getCustomerFieldValue($companyFormSetting, 'financing-schedule', 'recurring_start_date'); ?></div>
             <div class="col-md-6">
@@ -53,7 +65,18 @@
                 <a href="javascript:void(0);" class="nsm-button btn-small" id="btn-quick-add-financing-category"><span class="fa fa-plus"></span> Add Category</a>
             </div>
         </div>
-        <div class="row form_line" <?= isCustomerFieldEnabled($companyFormSetting, 'financing-schedule', 'frequency') == 0 ? 'style="display:none;"' : ''; ?>>
+        <div class="row form_line" <?= isCustomerFieldEnabled($companyFormSetting, 'financing-schedule', 'unpaid_amount') == 0 ? 'style="display:none;"' : ''; ?>>
+            <div class="col-md-6"><?= getCustomerFieldValue($companyFormSetting, 'financing-schedule', 'unpaid_amount'); ?></div>
+            <div class="col-md-6">
+                <div class="input-group">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" id="basic-addon1">$</span>
+                    </div>
+                    <input type="number" step="any" min="0" class="form-control" id="unpaid_amount" name="unpaid_amount"  value="<?= $billing_info && $billing_info->unpaid_amount > 0 ? $billing_info->unpaid_amount : '0' ?>">
+                </div>
+            </div>
+        </div>
+        <!-- <div class="row form_line" <?= isCustomerFieldEnabled($companyFormSetting, 'financing-schedule', 'frequency') == 0 ? 'style="display:none;"' : ''; ?>>
             <div class="col-md-6"><?= getCustomerFieldValue($companyFormSetting, 'financing-schedule', 'frequency'); ?></div>
             <div class="col-md-6">
                 <select data-type="subscription_frequency" id="frequency" name="frequency" data-customer-source="dropdown" class="input_select" >
@@ -67,6 +90,6 @@
                     <option <?php if(isset($billing_info)){ if($billing_info->frequency == "36"){echo "selected";} } ?> value="12">3 Years Prepaid</option>
                 </select>
             </div>
-        </div>          
+        </div>           -->
     </div>
 </div>
