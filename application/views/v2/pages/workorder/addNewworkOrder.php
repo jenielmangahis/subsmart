@@ -867,7 +867,7 @@
                             </div>
                             <div class="nsm-card-content">
                                 
-                                <div class="row signature_web lawas">
+                                <div class="row lawas"> <!-- Note: add this to class to hide signature container "signature_web"-->
                                     <div class="col-md-4">
                                     <h6>Company Representative Approval</h6> 
                                         <a class="nsm-button primary nsm-signature-button companySignature" href="javascript:void(0);">
