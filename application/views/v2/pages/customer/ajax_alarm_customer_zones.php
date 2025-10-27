@@ -45,10 +45,10 @@
                         <input class="form-check-input select-all table-select" type="checkbox" name="id_selector" value="0" id="select-all">
                     </td>
                     <td class="table-icon"></td>
-                    <td data-name="Name">Zone ID</td>
-                    <td data-name="Name">Type</td>
-                    <td data-name="Name">Event Code</td>
-                    <td data-name="Name">Location</td>
+                    <td data-name="Zone ID">Zone ID</td>
+                    <td data-name="Zone Type">Type</td>
+                    <td data-name="Event Code">Event Code</td>
+                    <td data-name="Location">Location</td>
                     <td data-name="Manage" style="width:5%;"></td>
                 </tr>
             </thead>
