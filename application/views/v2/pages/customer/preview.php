@@ -41,10 +41,13 @@
                             <div class="nsm-card-content">
                                 <div class="row g-2">
                                     <?php if( isMobile() ){ ?>
-                                    <div class="col-12 col-md-2">
+                                    <div class="col-12 col-md-2 mb-2">                                        
                                         <button type="button" class="nsm-button float-end" onclick="location.href='<?php echo base_url('customer/add_advance/' . $this->uri->segment(3)); ?>'">
                                             <i class='bx bx-fw bx-user'></i> Edit Customer
-                                        </button>
+                                        </button>                     
+                                        <button type="button" class="nsm-button float-end" onclick="location.href='<?php echo base_url('customer/module/' . $this->uri->segment(3)); ?>'">
+                                            <i class='bx bx-fw bx-tachometer'></i> Dashboard
+                                        </button>                   
                                     </div>
                                     <?php } ?>
                                     <div class="col-12 col-md-2">

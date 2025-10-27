@@ -52,6 +52,44 @@ class FinancingPaymentCategory_model extends MY_Model
         return $query->result();
     }
 
+    public function getAllEquipmentByCompanyId($cid, $conditions = [])
+    {
+        $this->db->select('*');
+        $this->db->from($this->table);
+        $this->db->where('type', 'Equipment');
+        $this->db->where('company_id', $cid);
+
+        if( !empty($conditions) ){
+            $this->db->group_start();            
+            foreach( $conditions as $c ){
+                $this->db->or_like($c['field'], $c['value']);    
+            }
+            $this->db->group_end();
+        }
+
+        $query = $this->db->get();
+        return $query->result();
+    }
+
+    public function getAllNonEquipmentByCompanyId($cid, $conditions = [])
+    {
+        $this->db->select('*');
+        $this->db->from($this->table);
+        $this->db->where('type', 'Non Equipment');
+        $this->db->where('company_id', $cid);
+
+        if( !empty($conditions) ){
+            $this->db->group_start();            
+            foreach( $conditions as $c ){
+                $this->db->or_like($c['field'], $c['value']);    
+            }
+            $this->db->group_end();
+        }
+
+        $query = $this->db->get();
+        return $query->result();
+    }
+
     public function getByNameAndCompanyId($name, $cid)
     {
         $this->db->select('*');

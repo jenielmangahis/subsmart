@@ -260,8 +260,10 @@ div#controls div#call-controls div#volume-indicators > div {
                                         break;
                                 endswitch;
                                 ?>
-                                <span class="nsm-badge <?= $badge ?>"><?= $profile_info->status != '' ? $profile_info->status : 'Pending'; ?></span><br />                                
-                                <span class="profile-mmr">MMR : $<?= $billing_info->mmr > 0 ? number_format($billing_info->mmr,2,'.',',') : '0.00'; ?></span>       
+                                <span class="nsm-badge <?= $badge ?>"><?= $profile_info->status != '' ? $profile_info->status : 'Pending'; ?></span><br />                         
+                                <?php if( $billing_info->mmr > 0 ){ ?>       
+                                    <span class="profile-mmr">MMR : $<?= $billing_info->mmr > 0 ? number_format($billing_info->mmr,2,'.',',') : '0.00'; ?></span>       
+                                <?php } ?>
                             </div>
                         </div>
                     </div>
@@ -288,7 +290,7 @@ div#controls div#call-controls div#volume-indicators > div {
                     <h6><i class='bx bx-id-card'></i> SSN</h6>
                     <p class="text-muted">
                         <?php 
-                            if (logged('user_type') == 7) {
+                            if ( isAdmin() ) {
                                 if ($profile_info->ssn) {
                                     $ssn = $profile_info->ssn; 
                                 } else {

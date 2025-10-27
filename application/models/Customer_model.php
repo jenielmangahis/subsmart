@@ -261,10 +261,20 @@ class Customer_model extends MY_Model
 
     public function getCustomer($customer_id)
     {
-
         $this->db->select('*');
         $this->db->from($this->table);
         $this->db->where('prof_id', $customer_id);
+
+        $query = $this->db->get();
+        return $query->row();
+    }
+
+    public function getLastCustomerByCompanyId($company_id)
+    {
+        $this->db->select('*');
+        $this->db->from($this->table);
+        $this->db->where('company_id', $company_id);
+        $this->db->order_by('prof_id', 'DESC');
 
         $query = $this->db->get();
         return $query->row();

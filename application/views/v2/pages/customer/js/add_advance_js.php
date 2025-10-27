@@ -139,6 +139,34 @@
         $("#invoice_term").select2({
             placeholder: ""
         });
+
+        $("#site_type").select2({
+            placeholder: "Select Site Type"
+        });
+
+        $("#install_type").select2({
+            placeholder: "Select Install Type"
+        });
+
+        $("#secondary_system_type").select2({
+            placeholder: "Select Secondary System Type"
+        });
+
+        $("#service_provider").select2({
+            placeholder: "Select Service Provider"
+        });
+
+        $("#dsl_voip").select2({
+            placeholder: "Select DSL VOIP"
+        });
+
+        $("#contract_status").select2({
+            placeholder: "Select Contract Status"
+        });
+
+        $("#connection_type").select2({
+            placeholder: "Select Connection Type"
+        });
     });
     $(function() {
         $("nav:first").addClass("closed");

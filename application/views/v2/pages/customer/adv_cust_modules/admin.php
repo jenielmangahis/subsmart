@@ -11,9 +11,12 @@
                     }
 
                     $is_recurring_active = '';
-                    if( $recurring_end_date > $current_date ){ 
+                    if( $billing_info && $billing_info->unpaid_amount > 0 ){
                         $is_recurring_active = 'checked';
                     }
+                    // if( $recurring_end_date > $current_date ){ 
+                    //     $is_recurring_active = 'checked';
+                    // }
                 ?>
                 <div class="form-check form-switch float-end">
                     <input class="form-check-input" type="checkbox" role="switch" id="chkRecurringActive" <?= $is_recurring_active; ?> readonly>
@@ -26,6 +29,12 @@
                 <div class="col-12 col-md-6">
                     <div class="row g-2">
                         <div class="col-12 col-md-6">
+                            <label class="content-title">Created Work Order</label>
+                        </div>
+                        <div class="col-12 col-md-6">
+                            <span class="content-subtitle"><?= $wo_created_by; ?></span>
+                        </div>
+                        <!-- <div class="col-12 col-md-6">
                             <label class="content-title">Entered by</label>
                         </div>
                         <div class="col-12 col-md-6">
@@ -38,53 +47,21 @@
                                     }
                                 ?>
                             </span>
-                        </div>
+                        </div> -->
                         <div class="col-12 col-md-6">
                             <label class="content-title">Time Entered</label>
                         </div>
                         <div class="col-12 col-md-6">
                             <span class="content-subtitle">
                                 <?php 
-                                    if ($office_info->time_entered) {
-                                        echo $office_info->time_entered; 
+                                    if ($office_info && $office_info->time_entered != '') {
+                                        echo date("h:i A",strtotime($office_info->time_entered)); 
                                     } else {
                                         echo "---";
                                     }
                                 ?>
                             </span>
-                        </div>                        
-                        <div class="col-12 col-md-6">
-                            <label class="content-title">Pre Survey</label>
-                        </div>
-                        <div class="col-12 col-md-6">
-                            <span class="content-subtitle">
-                                <?php 
-                                    if ($office_info->pre_install_survey) {
-                                        echo $office_info->pre_install_survey; 
-                                    } else {
-                                        echo "---";
-                                    }
-                                ?>
-                            </span>
-                        </div>
-                        <div class="col-12 col-md-6">
-                            <label class="content-title">Post Survey</label>
-                        </div>
-                        <div class="col-12 col-md-6">
-                            <span class="content-subtitle">
-                                <?php 
-                                    if ($office_info->post_install_survey) {
-                                        echo $office_info->post_install_survey; 
-                                    } else {
-                                        echo "---";
-                                    }
-                                ?>
-                            </span>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-12 col-md-6">
-                    <div class="row g-2">
+                        </div>     
                         <div class="col-12 col-md-6">
                             <label class="content-title">Language</label>
                         </div>
@@ -112,7 +89,11 @@
                                     }
                                 ?>
                             </span>
-                        </div>
+                        </div>                                           
+                    </div>
+                </div>
+                <div class="col-12 col-md-6">
+                    <div class="row g-2">                        
                         <div class="col-12 col-md-6">
                             <label class="content-title">Sales Rep</label>
                         </div>
@@ -141,6 +122,7 @@
                                 ?>
                             </span>
                         </div>
+                        <?php if( $billing_info && $billing_info->unpaid_amount > 0 ){ ?>
                         <div class="col-12 col-md-12">
                             <div class="form-check float-end mt-4">
                                 <input class="form-check-input" type="checkbox" value="1" id="chk-show-financing-equipment">
@@ -149,6 +131,7 @@
                                 </label>
                             </div>
                         </div>
+                        <?php } ?>
                     </div>
                 </div>
             </div>

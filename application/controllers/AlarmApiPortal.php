@@ -227,7 +227,7 @@ class AlarmApiPortal extends MY_Controller {
 
         $pageNumber = 1;
         $pageSize = 100;
-        $fields = ['customerId', 'loginName', 'firstName', 'lastName', 'email', 'phoneNumber', 'companyName', 'installAddress', 'panelVersion', 'modemInfo', 'joinDate'];
+        $fields = ['customerId', 'loginName', 'firstName', 'lastName', 'email', 'phoneNumber', 'companyName', 'installAddress', 'panelVersion', 'modemInfo', 'joinDate', 'servicePlanInfo'];
 
         $this->db->truncate('alarmcom_customers');
 
@@ -270,6 +270,7 @@ class AlarmApiPortal extends MY_Controller {
             foreach ($sample as $entry) {
                 $address = $entry['installAddress'] ?? [];
                 $modem_info = $entry['modemInfo'] ?? [];
+                $service_plan_info = $entry['servicePlanInfo'] ?? [];
 
                 $data = [
                     "customer_id" => $entry["customerId"],
@@ -288,6 +289,7 @@ class AlarmApiPortal extends MY_Controller {
                     "modeminfo_network" => getNetworkDetails($modem_info["radioNetworkType"]) ?? null,
                     "modeminfo_imei" => $modem_info["imei"] ?? null,
                     "join_date" => $entry["joinDate"] ?? null,
+                    "package_description" => $service_plan_info["packageDescription"] ?? null,
                 ];
 
                 $this->db->insert('alarmcom_customers', $data);
@@ -464,8 +466,16 @@ class AlarmApiPortal extends MY_Controller {
 
     public function testOnlyMethod()
     {
-        $this->load->helper(['alarm_dictionary_helper']);
-        echo getDeviceDetails(1);
+        $this->load->helper(['alarm_api_helper']);
+        $alarmApi = new AlarmApi();
+        $token = $alarmApi->generateAlarmToken();
+        $customer_id = $this->input->post('customer_id');
+
+        $customerDetails = $alarmApi->getAlarmCustomerInfo(21055492, $token);
+
+        echo '<pre>';
+        print_r($customerDetails);
+        echo '</pre>';
     }
 
 }

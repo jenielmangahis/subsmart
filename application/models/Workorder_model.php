@@ -1934,12 +1934,16 @@ class Workorder_model extends MY_Model
         return $query->result();
     }
 
-    public function getRecentByCustomerIdAndStatus($customer_id, $staus)
+    public function getRecentByCustomerIdAndStatus($customer_id, $status = '')
     {        
         $this->db->select('*');
 		$this->db->from($this->table);        
 		$this->db->where('customer_id', $customer_id);
-        $this->db->where('status', $staus);
+        
+        if( $status != '' ){
+            $this->db->where('status', $status);
+        }
+        
         $this->db->order_by('id', 'DESC');
 
         $query = $this->db->get();
