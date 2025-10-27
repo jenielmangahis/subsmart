@@ -150,6 +150,7 @@
                         <input type="hidden" name="zid" id="zone-id" value="" />
                         <div id="edit-zone-container"></div>
                     </form>
+                </div>
                 <div class="modal-footer">
                     <button type="button" class="nsm-button" data-bs-dismiss="modal">Close</button>
                     <button type="submit" class="nsm-button primary" id="btn-update-zones" form="frm-update-zones">Save</button>
