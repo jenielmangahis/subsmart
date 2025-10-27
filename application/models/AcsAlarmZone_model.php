@@ -10,7 +10,7 @@ class AcsAlarmZone_model extends MY_Model
         $this->db->select('acs_alarm_zones.*, acs_profile.first_name, acs_profile.last_name');
         $this->db->join('acs_profile', 'acs_alarm_zones.customer_id = acs_profile.prof_id', 'left');
         $this->db->from($this->table);
-        $this->db->where('acs_profile.company_id', $company_id);
+        $this->db->where('acs_alarm_zones.company_id', $company_id);
 
         $query = $this->db->get();
         return $query->result();
@@ -46,7 +46,7 @@ class AcsAlarmZone_model extends MY_Model
         $this->db->join('acs_profile', 'acs_alarm_zones.customer_id = acs_profile.prof_id', 'left');
         $this->db->from($this->table);
         $this->db->where('acs_alarm_zones.id', $id);
-        $this->db->where('acs_profile.company_id', $cid);
+        $this->db->where('acs_alarm_zones.company_id', $cid);
 
         $query = $this->db->get();
         return $query->row();
