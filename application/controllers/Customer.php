@@ -14060,12 +14060,6 @@ class Customer extends MY_Controller
             $msg = '';
         }
 
-        if( $total_created > 0 ){
-            
-        }else{
-            $msg = 'No data created.';
-        }
-
         $return = [
             'is_success' => $is_success,
             'msg' => $msg
@@ -14147,5 +14141,169 @@ class Customer extends MY_Controller
 		header('Content-Disposition: attachment; filename="' . $filename . '";');
 
 		fpassthru($f);
+    }
+
+    public function ajax_customer_emergency_agencies()
+    {
+        $this->load->model('AcsCustomerEmergencyAgency_model');
+
+		$is_success = 0;
+        $msg    = 'Cannot find data';
+
+        $company_id  = logged('company_id');
+        $post = $this->input->post();
+
+        $emergencyAgencies = $this->AcsCustomerEmergencyAgency_model->getAllByCustomerId($post['customer_id']);
+        $this->page_data['customer_id'] = $post['customer_id'];
+        $this->page_data['emergencyAgencies'] = $emergencyAgencies;
+        $this->load->view('v2/pages/customer/ajax_customer_emergency_agencies', $this->page_data);
+    }
+
+    public function ajax_create_emergency_agencies()
+    {
+        $this->load->model('AcsCustomerEmergencyAgency_model');
+        $this->load->model('AcsProfile_model');
+
+		$is_success = 0;
+        $msg    = 'Cannot save data';
+
+        $company_id  = logged('company_id');
+        $post = $this->input->post();
+
+        $customer = $this->AcsProfile_model->getByProfId($post['customer_id']);
+        if( $customer && $customer->company_id == $company_id ){
+            $total_created = 0;
+            foreach($post['agency'] as $key => $value){
+                if( $value != '' ){
+                    $data = [
+                        'company_id' => $company_id,
+                        'customer_id' => $customer->prof_id,
+                        'agency' => $value ?? '',
+                        'agency_phone' => $post['agency_phone'][$key] ?? '',
+                        'agency_name' => $post['agency_name'][$key] ?? '',
+                        'permit_number' => $post['permit_number'][$key] ?? '',
+                        'permit_exp' => $post['permit_exp'][$key] ?? '',
+                        'effective_date' => $post['effective_date'][$key] ?? '',
+                        'date_created' => date("Y-m-d H:i:s"),
+                        'date_updated' => date("Y-m-d H:i:s"),
+                    ];
+
+                    $this->AcsCustomerEmergencyAgency_model->create($data);
+                    $total_created++;
+                }
+            }
+        }
+
+        if( $total_created > 0 ){
+            //Activity Logs
+            if( $total_created > 1 ){
+                $activity_name = 'Customer : Created ' . $total_created . ' emergency agencies for customer ' . $customer->first_name . ' ' . $customer->last_name;
+            }else{
+                $activity_name = 'Customer : Created ' . $total_created . ' emergency agencies for customer ' . $customer->first_name . ' ' . $customer->last_name;
+            }
+
+            createActivityLog($activity_name);
+
+            $is_success = 1;
+            $msg = '';
+        }else{
+            $msg = 'No data created.';
+        }
+
+        $return = [
+            'is_success' => $is_success,
+            'msg' => $msg
+        ];
+
+        echo json_encode($return);
+    }
+
+    public function ajax_delete_emergency_agency()
+    {
+        $this->load->model('AcsCustomerEmergencyAgency_model');
+
+		$is_success = 0;
+        $msg    = 'Cannot find data';
+
+        $company_id  = logged('company_id');
+        $post = $this->input->post();
+
+        $emergencyAgency = $this->AcsCustomerEmergencyAgency_model->getById($post['id']);
+        if( $emergencyAgency && $emergencyAgency->company_id == $company_id ){
+
+            $this->AcsCustomerEmergencyAgency_model->delete($emergencyAgency->id);
+
+            //Activity Logs
+            $activity_name = 'Customer : Deleted emergency agency ' . $emergencyAgency->agency_name; 
+
+            createActivityLog($activity_name);
+
+            $is_success = 1;
+            $msg = '';
+        }
+
+        $return = [
+            'is_success' => $is_success,
+            'msg' => $msg
+        ];
+
+        echo json_encode($return);
+    }
+
+    public function ajax_edit_emergency_agency()
+    {
+        $this->load->model('AcsCustomerEmergencyAgency_model');
+
+		$is_success = 0;
+        $msg    = 'Cannot find data';
+
+        $company_id  = logged('company_id');
+        $post = $this->input->post();
+
+        $emergencyAgency = $this->AcsCustomerEmergencyAgency_model->getById($post['agency_id']);
+        if( $emergencyAgency && $emergencyAgency->company_id == $company_id ){
+            $this->page_data['emergencyAgency'] = $emergencyAgency;
+            $this->load->view('v2/pages/customer/ajax_edit_emergency_agency', $this->page_data);
+        }
+    }
+
+    public function ajax_update_emergency_agency()
+    {
+        $this->load->model('AcsCustomerEmergencyAgency_model');
+
+		$is_success = 0;
+        $msg    = 'Cannot save data';
+
+        $company_id  = logged('company_id');
+        $post = $this->input->post();
+
+        $emergencyAgency = $this->AcsCustomerEmergencyAgency_model->getById($post['zid']);
+        if( $emergencyAgency && $emergencyAgency->company_id == $company_id ){
+            $data = [
+                'agency' => $post['agency_code'],
+                'agency_phone' => $post['agency_phone'],
+                'agency_name' => $post['agency_name'],
+                'permit_number' => $post['permit_number'],
+                'permit_exp' => $post['permit_exp'],
+                'effective_date' => $post['effective_date'],
+                'date_updated' => date("Y-m-d H:i:s"),
+            ];
+
+            $this->AcsCustomerEmergencyAgency_model->update($emergencyAgency->id, $data);
+
+            //Activity Logs
+            $activity_name = 'Customer : Updated emegency agency name ' . $post['agency_name'] . ' for customer ' . $emergencyAgency->first_name . ' ' . $emergencyAgency->last_name; 
+            createActivityLog($activity_name);
+
+            $is_success = 1;
+            $msg = '';
+        }
+
+        $return = [
+            'is_success' => $is_success,
+            'msg' => $msg
+        ];
+
+        echo json_encode($return);
     }
 }
