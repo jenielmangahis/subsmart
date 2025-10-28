@@ -171,7 +171,7 @@
                         <?php 
                             $acct_num = '&mdash;';
                             if( $billing_info && $billing_info->acct_num != '' ){
-                                if( isAdmin() ) {
+                                if (isAdmin()) {
                                     $acct_num = $billing_info->acct_num;
                                 }else{
                                     $acct_num = maskString($billing_info->acct_num);

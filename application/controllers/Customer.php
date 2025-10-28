@@ -8717,6 +8717,7 @@ class Customer extends MY_Controller
                 customer_list_view.prof_id AS id,
                 customer_list_view.company_id AS company_id,
                 customer_list_view.customer_name AS name,
+                customer_list_view.profile_business_name AS business_name,
                 customer_list_view.profile_status AS status,
                 customer_list_view.profile_customer_type AS type,
                 CONCAT(customer_list_view.profile_mail_add, ' ', customer_list_view.profile_city, ', ', customer_list_view.profile_state, ' ', customer_list_view.profile_zip_code) AS address,

@@ -193,7 +193,9 @@
                         const collapseId = `${key}GroupCollapse`;
 
                         let rows = group.map(cust => {
-                            const name = cust.name ? cust.name : "Not Specified";
+                            const business_name = cust.business_name ? cust.business_name : "";
+                            const personal_name = cust.name ? cust.name : "Not Specified";
+                            const name = business_name !== "" ? business_name : personal_name;
                             const initials = name && name !== "Not Specified"
                                 ? name
                                     .split(" ")
