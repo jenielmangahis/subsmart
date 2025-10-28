@@ -8684,6 +8684,58 @@ class Customer extends MY_Controller
         $this->load->view('v2/pages/customer/subscription_list', $this->page_data);
     }
 
+    public function getActiveCustomerListByFilter()
+    {
+        $company_id = logged('company_id');
+
+        $status = $this->input->post('status');
+        $type = $this->input->post('type');
+
+        switch ($status) {
+            case 'all':
+                $statusFilter = "";
+                break;
+            case 'active':
+                $statusFilter = "AND customer_list_view.profile_status IN ('Active', 'Active w/RAR', 'Active w/RQR', 'Active w/RMR', 'Active w/RYR', 'Inactive w/RMM')";
+                break;
+        }
+
+        switch ($type) {
+            case 'all':
+                $typeFilter = "";
+            break;
+            case 'residential':
+                $typeFilter = "AND customer_list_view.profile_customer_type = 'Residential'";
+            break;
+            case 'commercial':
+                $typeFilter = "AND customer_list_view.profile_customer_type = 'Commercial'";
+            break;
+        }
+
+        $query = $this->db->query("
+            SELECT 
+                customer_list_view.prof_id AS id,
+                customer_list_view.company_id AS company_id,
+                customer_list_view.customer_name AS name,
+                customer_list_view.profile_status AS status,
+                customer_list_view.profile_customer_type AS type,
+                CONCAT(customer_list_view.profile_mail_add, ' ', customer_list_view.profile_city, ', ', customer_list_view.profile_state, ' ', customer_list_view.profile_zip_code) AS address,
+                customer_list_view.profile_email AS email,
+                customer_list_view.billing_bill_start_date AS bill_start,
+                customer_list_view.billing_bill_end_date AS bill_end,
+                customer_list_view.billing_mmr
+            FROM customer_list_view
+            WHERE customer_list_view.company_id = {$company_id}
+                {$statusFilter} 
+                {$typeFilter}
+            ORDER BY customer_list_view.customer_name ASC;
+        ");
+
+        $data = $query->result();
+
+        echo json_encode($data);
+    }
+
     public function ajax_load_active_subscriptions()
     {
         $this->load->model('Customer_advance_model');
@@ -13907,5 +13959,403 @@ class Customer extends MY_Controller
         $this->page_data['page']->title = 'Alarm Installer Codes';
         $this->page_data['page']->parent = 'Customers';
         $this->load->view('v2/pages/customer/settings_alarm_installer_codes', $this->page_data);
+    }
+
+    public function ajax_alarm_customer_zones()
+    {
+        $this->load->model('AcsAlarmZone_model');
+
+        $post = $this->input->post();
+        $company_id = logged('company_id');
+        $alarmZones = $this->AcsAlarmZone_model->getAllByCustomerId($post['customer_id']);
+
+        $this->page_data['alarmZones'] = $alarmZones;
+        $this->page_data['customer_id'] = $post['customer_id'];
+        $this->load->view('v2/pages/customer/ajax_alarm_customer_zones', $this->page_data);
+    }
+
+    public function ajax_create_alarm_zones()
+    {
+        $this->load->model('AcsAlarmZone_model');
+        $this->load->model('AcsProfile_model');
+
+		$is_success = 0;
+        $msg    = 'Cannot save data';
+
+        $company_id  = logged('company_id');
+        $post = $this->input->post();
+
+        $customer = $this->AcsProfile_model->getByProfId($post['customer_id']);
+        if( $customer && $customer->company_id == $company_id ){
+            $total_created = 0;
+            foreach($post['zone_id'] as $key => $value){
+                if( $value != '' ){
+                    $data = [
+                        'company_id' => $company_id,
+                        'customer_id' => $customer->prof_id,
+                        'zone_id' => $value ?? '',
+                        'type' => $post['zone_type'][$key] ?? '',
+                        'event_code' => $post['zone_event_code'][$key] ?? '',
+                        'location' => $post['zone_location'][$key] ?? '',
+                        'date_created' => date("Y-m-d H:i:s"),
+                        'date_updated' => date("Y-m-d H:i:s"),
+                    ];
+
+                    $this->AcsAlarmZone_model->create($data);
+
+                    $total_created++;
+                }
+                
+            }
+        }
+
+        if( $total_created > 0 ){
+            //Activity Logs
+            if( $total_created > 1 ){
+                $activity_name = 'Customer : Created ' . $total_created . ' zones for customer ' . $customer->first_name . ' ' . $customer->last_name;
+            }else{
+                $activity_name = 'Customer : Created ' . $total_created . ' zone for customer ' . $customer->first_name . ' ' . $customer->last_name;
+            }
+
+            createActivityLog($activity_name);
+
+            $is_success = 1;
+            $msg = '';
+        }else{
+            $msg = 'No data created.';
+        }
+
+        $return = [
+            'is_success' => $is_success,
+            'msg' => $msg
+        ];
+
+        echo json_encode($return);
+    }
+
+    public function ajax_delete_alarm_zone()
+    {
+        $this->load->model('AcsAlarmZone_model');
+
+		$is_success = 0;
+        $msg    = 'Cannot find data';
+
+        $company_id  = logged('company_id');
+        $post = $this->input->post();
+
+        $alarmZone = $this->AcsAlarmZone_model->getById($post['id']);
+        if( $alarmZone && $alarmZone->company_id == $company_id ){
+
+            $this->AcsAlarmZone_model->delete($alarmZone->id);
+
+            //Activity Logs
+            $activity_name = 'Customer : Deleted zone id ' . $alarmZone->zone_id; 
+
+            createActivityLog($activity_name);
+
+            $is_success = 1;
+            $msg = '';
+        }
+
+        $return = [
+            'is_success' => $is_success,
+            'msg' => $msg
+        ];
+
+        echo json_encode($return);
+    }
+
+    public function ajax_edit_alarm_zone()
+    {
+        $this->load->model('AcsAlarmZone_model');
+
+		$is_success = 0;
+        $msg    = 'Cannot find data';
+
+        $company_id  = logged('company_id');
+        $post = $this->input->post();
+
+        $alarmZone = $this->AcsAlarmZone_model->getById($post['zone_id']);
+        if( $alarmZone && $alarmZone->company_id == $company_id ){
+            $this->page_data['alarmZone'] = $alarmZone;
+            $this->load->view('v2/pages/customer/ajax_edit_alarm_zone', $this->page_data);
+        }
+    }
+
+    public function ajax_update_alarm_zones()
+    {
+        $this->load->model('AcsAlarmZone_model');
+
+		$is_success = 0;
+        $msg    = 'Cannot save data';
+
+        $company_id  = logged('company_id');
+        $post = $this->input->post();
+
+        $alarmZone = $this->AcsAlarmZone_model->getById($post['zid']);
+        if( $alarmZone && $alarmZone->company_id == $company_id ){
+            $data = [
+                'zone_id' => $post['zone_id'],
+                'type' => $post['zone_type'],
+                'event_code' => $post['zone_event_code'],
+                'location' => $post['zone_location'],
+                'date_updated' => date("Y-m-d H:i:s"),
+            ];
+
+            $this->AcsAlarmZone_model->update($alarmZone->id, $data);
+
+            //Activity Logs
+            $activity_name = 'Customer : Updated zone id ' . $post['zone_id'] . ' for customer ' . $alarmZone->first_name . ' ' . $alarmZone->last_name; 
+            createActivityLog($activity_name);
+
+            $is_success = 1;
+            $msg = '';
+        }
+
+        $return = [
+            'is_success' => $is_success,
+            'msg' => $msg
+        ];
+
+        echo json_encode($return);
+    }
+
+    public function ajax_delete_selected_zones()
+    {
+        $this->load->model('AcsAlarmZone_model');
+
+		$is_success = 0;
+        $msg    = 'Please select data';
+
+        $company_id  = logged('company_id');
+        $post = $this->input->post();
+
+        if( $post['alarmZones'] ){
+            $filter[] = ['field' => 'company_id', 'value' => $company_id];
+            $total_deleted = $this->AcsAlarmZone_model->bulkDelete($post['alarmZones'], $filter);
+
+            //Activity Logs
+            if( $total_deleted > 1 ){
+                $activity_name = 'Customer : Permanently deleted ' .$total_deleted. ' zones'; 
+            }else{
+                $activity_name = 'Customer : Permanently deleted ' .$total_deleted. ' zone'; 
+            }
+            
+            createActivityLog($activity_name);
+
+            $is_success = 1;
+            $msg    = '';
+        }
+
+        $return = [
+            'is_success' => $is_success,
+            'msg' => $msg
+        ];
+
+        echo json_encode($return);
+    }
+
+    public function export_zones_list($customer_id)
+    {
+        $this->load->model('AcsAlarmZone_model');
+		
+		$cid     = logged('company_id');
+		$zones = $this->AcsAlarmZone_model->getAllByCustomerId($customer_id);
+
+		$delimiter = ",";
+		$time      = time();
+		$filename  = "customer_zones_list_" . $time . ".csv";
+
+		$f = fopen('php://memory', 'w');
+
+		$fields = array('Name', 'Zone ID', 'Type', 'Event Code', 'Location');
+		fputcsv($f, $fields, $delimiter);
+
+		if (!empty($zones)) {
+			foreach ($zones as $z) {
+				$csvData = array(
+					$z->first_name . ' ' . $z->last_name,
+					$z->zone_id,
+					$z->type,
+                    $z->event_code,
+                    $z->location
+				);
+				fputcsv($f, $csvData, $delimiter);
+			}
+		} else {
+			$csvData = array('');
+			fputcsv($f, $csvData, $delimiter);
+		}
+
+		fseek($f, 0);
+
+		header('Content-Type: text/csv');
+		header('Content-Disposition: attachment; filename="' . $filename . '";');
+
+		fpassthru($f);
+    }
+
+    public function ajax_customer_emergency_agencies()
+    {
+        $this->load->model('AcsCustomerEmergencyAgency_model');
+
+		$is_success = 0;
+        $msg    = 'Cannot find data';
+
+        $company_id  = logged('company_id');
+        $post = $this->input->post();
+
+        $emergencyAgencies = $this->AcsCustomerEmergencyAgency_model->getAllByCustomerId($post['customer_id']);
+        $this->page_data['customer_id'] = $post['customer_id'];
+        $this->page_data['emergencyAgencies'] = $emergencyAgencies;
+        $this->load->view('v2/pages/customer/ajax_customer_emergency_agencies', $this->page_data);
+    }
+
+    public function ajax_create_emergency_agencies()
+    {
+        $this->load->model('AcsCustomerEmergencyAgency_model');
+        $this->load->model('AcsProfile_model');
+
+		$is_success = 0;
+        $msg    = 'Cannot save data';
+
+        $company_id  = logged('company_id');
+        $post = $this->input->post();
+
+        $customer = $this->AcsProfile_model->getByProfId($post['customer_id']);
+        if( $customer && $customer->company_id == $company_id ){
+            $total_created = 0;
+            foreach($post['agency'] as $key => $value){
+                if( $value != '' ){
+                    $data = [
+                        'company_id' => $company_id,
+                        'customer_id' => $customer->prof_id,
+                        'agency' => $value ?? '',
+                        'agency_phone' => $post['agency_phone'][$key] ?? '',
+                        'agency_name' => $post['agency_name'][$key] ?? '',
+                        'permit_number' => $post['permit_number'][$key] ?? '',
+                        'permit_exp' => $post['permit_exp'][$key] ?? '',
+                        'effective_date' => $post['effective_date'][$key] ?? '',
+                        'date_created' => date("Y-m-d H:i:s"),
+                        'date_updated' => date("Y-m-d H:i:s"),
+                    ];
+
+                    $this->AcsCustomerEmergencyAgency_model->create($data);
+                    $total_created++;
+                }
+            }
+        }
+
+        if( $total_created > 0 ){
+            //Activity Logs
+            if( $total_created > 1 ){
+                $activity_name = 'Customer : Created ' . $total_created . ' emergency agencies for customer ' . $customer->first_name . ' ' . $customer->last_name;
+            }else{
+                $activity_name = 'Customer : Created ' . $total_created . ' emergency agencies for customer ' . $customer->first_name . ' ' . $customer->last_name;
+            }
+
+            createActivityLog($activity_name);
+
+            $is_success = 1;
+            $msg = '';
+        }else{
+            $msg = 'No data created.';
+        }
+
+        $return = [
+            'is_success' => $is_success,
+            'msg' => $msg
+        ];
+
+        echo json_encode($return);
+    }
+
+    public function ajax_delete_emergency_agency()
+    {
+        $this->load->model('AcsCustomerEmergencyAgency_model');
+
+		$is_success = 0;
+        $msg    = 'Cannot find data';
+
+        $company_id  = logged('company_id');
+        $post = $this->input->post();
+
+        $emergencyAgency = $this->AcsCustomerEmergencyAgency_model->getById($post['id']);
+        if( $emergencyAgency && $emergencyAgency->company_id == $company_id ){
+
+            $this->AcsCustomerEmergencyAgency_model->delete($emergencyAgency->id);
+
+            //Activity Logs
+            $activity_name = 'Customer : Deleted emergency agency ' . $emergencyAgency->agency_name; 
+
+            createActivityLog($activity_name);
+
+            $is_success = 1;
+            $msg = '';
+        }
+
+        $return = [
+            'is_success' => $is_success,
+            'msg' => $msg
+        ];
+
+        echo json_encode($return);
+    }
+
+    public function ajax_edit_emergency_agency()
+    {
+        $this->load->model('AcsCustomerEmergencyAgency_model');
+
+		$is_success = 0;
+        $msg    = 'Cannot find data';
+
+        $company_id  = logged('company_id');
+        $post = $this->input->post();
+
+        $emergencyAgency = $this->AcsCustomerEmergencyAgency_model->getById($post['agency_id']);
+        if( $emergencyAgency && $emergencyAgency->company_id == $company_id ){
+            $this->page_data['emergencyAgency'] = $emergencyAgency;
+            $this->load->view('v2/pages/customer/ajax_edit_emergency_agency', $this->page_data);
+        }
+    }
+
+    public function ajax_update_emergency_agency()
+    {
+        $this->load->model('AcsCustomerEmergencyAgency_model');
+
+		$is_success = 0;
+        $msg    = 'Cannot save data';
+
+        $company_id  = logged('company_id');
+        $post = $this->input->post();
+
+        $emergencyAgency = $this->AcsCustomerEmergencyAgency_model->getById($post['zid']);
+        if( $emergencyAgency && $emergencyAgency->company_id == $company_id ){
+            $data = [
+                'agency' => $post['agency_code'],
+                'agency_phone' => $post['agency_phone'],
+                'agency_name' => $post['agency_name'],
+                'permit_number' => $post['permit_number'],
+                'permit_exp' => $post['permit_exp'],
+                'effective_date' => $post['effective_date'],
+                'date_updated' => date("Y-m-d H:i:s"),
+            ];
+
+            $this->AcsCustomerEmergencyAgency_model->update($emergencyAgency->id, $data);
+
+            //Activity Logs
+            $activity_name = 'Customer : Updated emegency agency name ' . $post['agency_name'] . ' for customer ' . $emergencyAgency->first_name . ' ' . $emergencyAgency->last_name; 
+            createActivityLog($activity_name);
+
+            $is_success = 1;
+            $msg = '';
+        }
+
+        $return = [
+            'is_success' => $is_success,
+            'msg' => $msg
+        ];
+
+        echo json_encode($return);
     }
 }

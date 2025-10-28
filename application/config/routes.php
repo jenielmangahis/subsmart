@@ -2322,6 +2322,18 @@ $route['customers/_update_installer_code'] = 'Customer/ajax_update_installer_cod
 $route['customers/_delete_installer_code'] = 'Customer/ajax_delete_installer_code';
 $route['customers/_delete_selected_installer_codes'] = 'Customer/ajax_delete_selected_installer_codes';
 $route['customer/settings_alarm_installer_codes'] = 'Customer/settings_alarm_installer_codes';
+$route['customer/_alarm_customer_zones'] = 'Customer/ajax_alarm_customer_zones';
+$route['customer/_create_alarm_zones'] = 'Customer/ajax_create_alarm_zones';
+$route['customer/_delete_alarm_zone'] = 'Customer/ajax_delete_alarm_zone';
+$route['customer/_edit_alarm_zone'] = 'Customer/ajax_edit_alarm_zone';
+$route['customer/_update_alarm_zones'] = 'Customer/ajax_update_alarm_zones';
+$route['customer/_delete_selected_zones'] = 'Customer/ajax_delete_selected_zones';
+$route['customer/export_zones_list/(:any)?'] = 'Customer/export_zones_list/$1';
+$route['customer/_customer_emergency_agencies'] = 'Customer/ajax_customer_emergency_agencies';
+$route['customer/_create_emergency_agencies'] = 'Customer/ajax_create_emergency_agencies';
+$route['customer/_delete_emergency_agency'] = 'Customer/ajax_delete_emergency_agency';
+$route['customer/_edit_emergency_agency'] = 'Customer/ajax_edit_emergency_agency';
+$route['customer/_update_emergency_agency'] = 'Customer/ajax_update_emergency_agency';
 
 //Benchmark for Testing
 $route['benchmark/test_customer_subscription'] = 'Benchmark/test_customer_subscription';

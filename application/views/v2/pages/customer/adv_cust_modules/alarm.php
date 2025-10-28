@@ -1,8 +1,14 @@
 <div class="col-12 col-md-4" data-id="<?= $id ?>" id="<?= $id ?>">
     <div class="nsm-card nsm-grid">
-        <div class="nsm-card-header d-block">
+        <div class="nsm-card-header d-block mb-4">
             <div class="nsm-card-title">
                 <span>Alarm</span>
+                <div class="form-check float-end">
+                    <input class="form-check-input" type="checkbox" value="1" id="chk-show-zones">
+                    <label class="form-check-label" for="chk-show-zones">
+                        <b>Zones</b>
+                    </label>
+                </div>
             </div>
         </div>
         <div class="nsm-card-content">
@@ -340,6 +346,7 @@
                     </div>
                 </div>
             </div>
+            <div id="alarm-zones-container"></div>   
             <?php if( $alarm_info && $alarm_info->acct_type != 'In-House' ){ ?>
                 <?php include viewPath('v2/pages/customer/adv_cust_modules/funding'); ?>    
             <?php } ?>
@@ -462,6 +469,32 @@ $(function(){
         $('#modal-alarm-share-employee').modal('show');
     });
 
+    $('#chk-show-zones').on('change', function(){
+        if( $(this).is(':checked') ){
+            load_customer_zones();
+        }else{
+            $('#alarm-zones-container').html('');
+        }
+        
+    });
+
+    function load_customer_zones(){
+        let url = base_url + 'customer/_alarm_customer_zones'  
+        let customer_id = "<?= $customer_id; ?>";
+        $.ajax({
+            type: "POST",
+            url: url,
+            data: {customer_id:customer_id},
+            success: function(o)
+            {	
+                $('#alarm-zones-container').html(o);
+            },
+            beforeSend:function(){
+                $('#alarm-zones-container').html('<span class="bx bx-loader bx-spin"></span>');
+            }
+        });
+    }
+
     $('#alarm-share-to-users').select2({
         ajax: {
             url: base_url + 'autocomplete/_company_users',
@@ -532,6 +565,173 @@ $(function(){
              }
           });
         }, 500);
+    });
+
+    $(document).on('submit', '#frm-save-zones', function(e){
+        e.preventDefault();
+
+        $.ajax({
+            url: base_url + 'customer/_create_alarm_zones',
+            type: "POST",
+            dataType: "json",
+            data: $('#frm-save-zones').serialize(),
+            success: function(data) {
+                $("#modal-create-zone").modal('hide');
+                $('#btn-save-zones').html('Save');
+
+                if (data.is_success == 1) {                  
+                    load_customer_zones();
+                } else {
+                    Swal.fire({
+                        showConfirmButton: false,
+                        timer: 2000,
+                        title: 'Failed',
+                        text: data.msg,
+                        icon: 'warning'
+                    });
+                }
+            },
+            beforeSend: function() {
+                $('#btn-save-zones').html('<span class="bx bx-loader bx-spin"></span>');
+            }
+        });
+    });
+
+    $(document).on('submit', '#frm-update-zones', function(e){
+        e.preventDefault();
+
+        $.ajax({
+            url: base_url + 'customer/_update_alarm_zones',
+            type: "POST",
+            dataType: "json",
+            data: $('#frm-update-zones').serialize(),
+            success: function(data) {
+                $("#modal-edit-zone").modal('hide');
+                $('#btn-update-zones').html('Save');
+
+                if (data.is_success == 1) {                  
+                    load_customer_zones();
+                } else {
+                    Swal.fire({
+                        showConfirmButton: false,
+                        timer: 2000,
+                        title: 'Failed',
+                        text: data.msg,
+                        icon: 'warning'
+                    });
+                }
+            },
+            beforeSend: function() {
+                $('#btn-update-zones').html('<span class="bx bx-loader bx-spin"></span>');
+            }
+        });
+    });
+
+    $(document).on("click", ".delete-zone-item", function() {
+        let id = $(this).attr('data-id');
+        let value = $(this).attr('data-value');
+
+        Swal.fire({
+            title: 'Delete Zone',
+            html: `Are you sure you want to zone id <b>${value}</b>?<br/><br/>Note : This cannot be undone.`,
+            icon: 'question',
+            confirmButtonText: 'Proceed',
+            showCancelButton: true,
+            cancelButtonText: "Cancel"
+        }).then((result) => {
+            if (result.value) {
+                $.ajax({
+                    type: 'POST',
+                    url: base_url + "customer/_delete_alarm_zone",
+                    data: {
+                        id: id
+                    },
+                    dataType: "json",
+                    success: function(result) {
+                        Swal.close();
+                        if (result.is_success) {
+                            load_customer_zones();
+                        } else {
+                            Swal.fire({
+                                title: 'Failed',
+                                text: result.msg,
+                                icon: 'error',
+                                showCancelButton: false,
+                                confirmButtonText: 'Okay'
+                            });
+                        }
+                    },
+                    beforeSend: function(){
+                        Swal.fire({
+                            icon: "info",
+                            title: "Processing",
+                            html: "Please wait while the process is running...",
+                            allowOutsideClick: false,
+                            allowEscapeKey: false,
+                            showConfirmButton: false,
+                            didOpen: () => {
+                                Swal.showLoading();
+                            },
+                        });
+                    }
+                });
+            }
+        });
+    });
+
+    $(document).on('click', '#with-selected-delete-zones', function(){
+        let total= $('#tbl-alarm-zones input[name="alarmZones[]"]:checked').length;
+        if( total <= 0 ){
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'Please select rows',
+            });
+        }else{
+            Swal.fire({
+                title: 'Delete Zones',
+                html: `Are you sure you want to delete selected rows?<br/><br/>Note : This cannot be undone.`,
+                icon: 'question',
+                confirmButtonText: 'Proceed',
+                showCancelButton: true,
+                cancelButtonText: "Cancel"
+            }).then((result) => {
+                if (result.value) {
+                    $.ajax({
+                        method: 'POST',
+                        url: base_url + 'customer/_delete_selected_zones',
+                        dataType: 'json',
+                        data: $('#frm-with-selected').serialize(),
+                        success: function(result) {          
+                            Swal.close();              
+                            if( result.is_success == 1 ) {
+                                load_customer_zones();
+                            } else {
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Error',
+                                    text: result.msg,
+                                });
+                            }
+                        },
+                        beforeSend: function(){
+                            Swal.fire({
+                                icon: "info",
+                                title: "Processing",
+                                html: "Please wait while the process is running...",
+                                allowOutsideClick: false,
+                                allowEscapeKey: false,
+                                showConfirmButton: false,
+                                didOpen: () => {
+                                    Swal.showLoading();
+                                },
+                            });
+                        }
+                    });
+
+                }
+            });
+        }        
     });
 });
 

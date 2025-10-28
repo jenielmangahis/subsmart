@@ -1,5 +1,5 @@
 <hr />
-<span style="font-size:18px; font-weight:bold;">Funding</span>
+<span style="font-size:18px; font-weight:bold;" class="d-block mb-4">Funding</span>
 <div class="row g-3">
     <div class="col-12 col-md-6">
         <div class="row g-3">

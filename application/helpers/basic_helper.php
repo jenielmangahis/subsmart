@@ -2627,8 +2627,11 @@ function get_customer_invoice_amount($type, $customer_id)
         case "outstanding":
             $result = $CI->invoice_model->getByWhere(array('customer_id' => $customer_id, 'date_issued >=' => $start_date, 'date_issued <=' => $end_date, 'status' => 'Due'));
             return total_invoice_amount($result);
+        case "paid":
+            $result = $CI->invoice_model->getByWhere(array('customer_id' => $customer_id, 'date_issued >=' => $start_date, 'date_issued <=' => $end_date, 'status' => 'Paid'));
+            return total_invoice_amount($result);
         case "due":
-            $result = $CI->invoice_model->getByWhere(array('customer_id' => $customer_id, 'date_issued >=' => $start_date, 'date_issued <=' => $end_date, 'status' => 'Due'));
+            $result = $CI->invoice_model->getByWhere(array('customer_id' => $customer_id, 'date_issued >=' => $start_date, 'date_issued <=' => $end_date, 'status' => 'Overdue'));
             return total_invoice_amount($result);
         case "pending":
             $result = $CI->invoice_model->getByWhere(array('customer_id' => $customer_id, 'date_issued >=' => $start_date, 'date_issued <=' => $end_date, 'status !=' => 'Paid'));
