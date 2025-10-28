@@ -383,7 +383,7 @@ tr {
                                         <div class="row g-3">
                                             <div class="col-12 col-md-6">
                                                 <label class="content-subtitle fw-bold d-block mb-2">Password <span class="nsm-text-error">*</span></label>
-                                                <input type="text" name="password" id="password" class="nsm-field form-control" value="<?php echo $workorder->password; ?>" required>
+                                                <input type="password" name="password" id="password" class="nsm-field form-control" value="<?php echo $workorder->password; ?>" required>
                                             </div>
                                             <div class="col-12 col-md-6">
                                                 <label class="content-subtitle fw-bold d-block mb-2">SSN (Optional)</label>
