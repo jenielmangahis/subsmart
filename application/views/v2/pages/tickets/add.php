@@ -1590,6 +1590,7 @@ $(document).ready(function(){
             success: function(response){            
                 var phone = response.phone_h;
                 var mobile = response.phone_m;
+                var panel_type = response.panel_type;
                 var service_location = response.mail_add + ' ' + response.city + ', ' + response.state + ' ' + response.zip_code;
                 $("#service_location").val(service_location);
                 $("#customer_address").val(response.mail_add);
@@ -1598,6 +1599,10 @@ $(document).ready(function(){
                 $("#customer_zip").val(response.zip_code);
                 $("#customer_phone").val(response.phone_m);
                 $("#business_name").val(response.business_name);
+
+                if( panel_type != '' ){
+                    $('#panel_type').val(panel_type);
+                }
 
                 var map_source = 'http://maps.google.com/maps?q=' + service_location +
                             '&output=embed';
