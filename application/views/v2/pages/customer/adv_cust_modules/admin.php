@@ -5,18 +5,18 @@
                 <span>Admin</span>
                 <?php 
                     $recurring_end_date = date("Y-m-d");
-                    $current_date = date("Y-m-d");
-                    if( strtotime($billing_info->recurring_end_date) > 0 ){
-                        $recurring_end_date = date("Y-m-d", strtotime($billing_info->recurring_end_date));
+                    $current_date       = date("Y-m-d");
+                    if( strtotime($billing_info->bill_end_date) > 0 ){
+                        $recurring_end_date = date("Y-m-d", strtotime($billing_info->bill_end_date));
                     }
 
                     $is_recurring_active = '';
-                    if( $billing_info && $billing_info->unpaid_amount > 0 ){
-                        $is_recurring_active = 'checked';
-                    }
-                    // if( $recurring_end_date > $current_date ){ 
+                    // if( $billing_info && $billing_info->unpaid_amount > 0 ){
                     //     $is_recurring_active = 'checked';
                     // }
+                    if( $recurring_end_date > $current_date ){ 
+                        $is_recurring_active = 'checked';
+                    }
                 ?>
                 <div class="form-check form-switch float-end">
                     <input class="form-check-input" type="checkbox" role="switch" id="chkRecurringActive" <?= $is_recurring_active; ?> readonly>

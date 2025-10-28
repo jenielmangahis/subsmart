@@ -94,12 +94,14 @@
                     <li><a class="dropdown-item" href="<?= base_url('customer/settings_financing_categories') ?>">Financing Payment Categories</a></li>
                     <li><a class="dropdown-item" href="<?= base_url('creditor_furnisher/list') ?>">Creditors / Furnishers</a></li>
                     <li><a class="dropdown-item" href="<?= base_url('customer/settings_alarm_installer_codes') ?>">Installer Codes</a></li>
-                    <?php if( in_array(logged('company_id'), adi_company_ids()) ){ ?>
-                        <li><a class="dropdown-item" href="<?php echo base_url('customer/settings_solar_lender_type') ?>">Solar Lender Types</a></li>
-                        <li><a class="dropdown-item" href="<?php echo base_url('customer/settings_solar_system_size') ?>">Solar System Size</a></li>
-                        <li><a class="dropdown-item" href="<?= base_url('customer/settings_solar_modules') ?>">Solar Proposed Modules</a></li>
-                        <li><a class="dropdown-item" href="<?= base_url('customer/settings_solar_inverter') ?>">Solar Proposed Inverters</a></li>
-                    <?php } ?>
+                    <?php //if( in_array(logged('company_id'), adi_company_ids()) ){ ?>
+                        <?php if( isSolarCompany() ){ ?>
+                            <li><a class="dropdown-item" href="<?php echo base_url('customer/settings_solar_lender_type') ?>">Solar Lender Types</a></li>
+                            <li><a class="dropdown-item" href="<?php echo base_url('customer/settings_solar_system_size') ?>">Solar System Size</a></li>
+                            <li><a class="dropdown-item" href="<?= base_url('customer/settings_solar_modules') ?>">Solar Proposed Modules</a></li>
+                            <li><a class="dropdown-item" href="<?= base_url('customer/settings_solar_inverter') ?>">Solar Proposed Inverters</a></li>
+                        <?php } ?>
+                    <?php //} ?>
                     <li><a class="dropdown-item" href="<?php echo base_url('customer/settings_headers') ?>">Header</a></li>
                     <li><a class="dropdown-item" href="<?= base_url('customer/settings_import') ?>">Import Settings</a></li>
                     <li><a class="dropdown-item" href="<?= base_url('customer/settings_export') ?>">Export Settings</a></li>

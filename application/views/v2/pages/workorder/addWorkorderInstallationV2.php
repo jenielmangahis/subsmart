@@ -346,26 +346,16 @@
                                     </thead>
                                     <tbody>
                                         <?php foreach($default_items as $default_item_key => $default_item) { ?>
-                                                <?php 
-                                                    $default_items_name[] = $default_item['name'];
-                                                    $default_item_data = [];
-                                                    foreach($items_data as $item) {
-                                                        if(strtolower($item->title) == strtolower($default_item['name'])) {
-                                                            $default_item_data['qty']   = $item->qty;
-                                                            $default_item_data['price'] = $item->price;
-                                                        }
-                                                    }
-                                                ?>
                                                 <?php if($default_item['sub']) {  ?>
                                                     <tr>
                                                         <td style="width: 35%">
                                                             <input type="text" class="nsm-field form-control" name="item[]" value="<?php echo $default_item['name']; ?>">
                                                             <input type="hidden" name="dataValue[]">                                                       
                                                         </td>
-                                                        <td style="width: 10%"><input style="text-align:center;" type="text" class="nsm-field form-control allQty" name="qty[]" value="<?php echo !empty($default_item_data['qty']) ? $default_item_data['qty'] : 0; ?>"></td>
+                                                        <td style="width: 10%"><input style="text-align:center;" type="text" class="nsm-field form-control allQty" name="qty[]" value=""></td>
                                                         <td style="width: 20%"><input style="text-align:center;" type="text" class="nsm-field form-control" name="existing[]"></td>
                                                         <td style="width: 20%"><input style="text-align:center;" type="text" class="nsm-field form-control" name="location[]"></td>
-                                                        <td style="width: 15%"><input style="text-align:center;" type="text" class="nsm-field form-control all-price-field allprices" name="price[]" value="<?php echo !empty($default_item_data['price']) ? number_format($default_item_data['price'],2) : number_format(0,2); ?>"></td>
+                                                        <td style="width: 15%"><input style="text-align:center;" type="text" class="nsm-field form-control all-price-field allprices" name="price[]" value=""></td>
                                                     </tr>
                                                     <tr>
                                                         <td colspan="5" style="padding: 4px;">
@@ -389,35 +379,35 @@
                                                             <input type="text" class="nsm-field form-control" name="item[]" value="<?php echo $default_item['name']; ?>">
                                                             <input type="hidden" name="dataValue[]">                                                        
                                                         </td>
-                                                        <td style="width: 10%"><input style="text-align:center;" type="text" class="nsm-field form-control allQty" value="<?php echo !empty($default_item_data['qty']) ? $default_item_data['qty'] : 0; ?>"></td>
+                                                        <td style="width: 10%"><input style="text-align:center;" type="text" class="nsm-field form-control allQty" value=""></td>
                                                         <td style="width: 20%"><input style="text-align:center;" type="text" class="nsm-field form-control" name="existing[]"></td>
                                                         <td style="width: 20%"><input style="text-align:center;" type="text" class="nsm-field form-control" name="location[]"></td>
-                                                        <td style="width: 15%"><input style="text-align:center;" type="text" class="nsm-field form-control all-price-field allprices" name="price[]" value="<?php echo !empty($default_item_data['price']) ? number_format($default_item_data['price'],2) : number_format(0,2); ?>"></td>
+                                                        <td style="width: 15%"><input style="text-align:center;" type="text" class="nsm-field form-control all-price-field allprices" name="price[]" value=""></td>
                                                     </tr>
                                                 <?php } ?>
                                         <?php } ?>
-                                            <?php foreach($items_data as $item) { ?>
-                                            <?php 
-                                                $to_show = false;
-                                                foreach($default_items as $default_item) {
-                                                    if (!in_array($item->title, $default_items_name)) {
-                                                        $to_show = true;
-                                                    }
-                                                }                                            
-                                            ?>        
-                                                <?php if($to_show) { ?>                                        
+
                                                     <tr>
                                                         <td style="width: 35%">
-                                                            <input type="text" class="nsm-field form-control" name="item[]" value="<?php echo $item->title; ?>">
+                                                            <input type="text" class="nsm-field form-control" name="item[]" value="">
                                                             <input type="hidden" name="dataValue[]">                                                        
                                                         </td>
-                                                        <td style="width: 10%"><input style="text-align:center;" type="text" class="nsm-field form-control allQty" name="qty[]" value="<?php echo !empty($item->qty) ? $item->qty : 0; ?>"></td>
+                                                        <td style="width: 10%"><input style="text-align:center;" type="text" class="nsm-field form-control allQty" value=""></td>
                                                         <td style="width: 20%"><input style="text-align:center;" type="text" class="nsm-field form-control" name="existing[]"></td>
                                                         <td style="width: 20%"><input style="text-align:center;" type="text" class="nsm-field form-control" name="location[]"></td>
-                                                        <td style="width: 15%"><input style="text-align:center;" type="text" class="nsm-field form-control all-price-field allprices" name="price[]" value="<?php echo !empty($item->price) ? number_format($item->price,2) : number_format(0,2); ?>"></td>
-                                                    </tr> 
-                                                <?php } ?>
-                                            <?php } ?>                                  
+                                                        <td style="width: 15%"><input style="text-align:center;" type="text" class="nsm-field form-control all-price-field allprices" name="price[]" value=""></td>
+                                                    </tr>       
+                                                    <tr>
+                                                        <td style="width: 35%">
+                                                            <input type="text" class="nsm-field form-control" name="item[]" value="">
+                                                            <input type="hidden" name="dataValue[]">                                                        
+                                                        </td>
+                                                        <td style="width: 10%"><input style="text-align:center;" type="text" class="nsm-field form-control allQty" value=""></td>
+                                                        <td style="width: 20%"><input style="text-align:center;" type="text" class="nsm-field form-control" name="existing[]"></td>
+                                                        <td style="width: 20%"><input style="text-align:center;" type="text" class="nsm-field form-control" name="location[]"></td>
+                                                        <td style="width: 15%"><input style="text-align:center;" type="text" class="nsm-field form-control all-price-field allprices" name="price[]" value=""></td>
+                                                    </tr>                                  
+                                                                           
                                         <tr>
                                             <td colspan="5" style="padding: 5px; text-align: center">
                                                 <strong>ENHANCED SERVICES</strong>
@@ -427,12 +417,6 @@
 
                                                 <?php 
                                                     $default_es_data = [];
-                                                    foreach($items_data as $item) {
-                                                        if(strtolower($item->title) == strtolower($default_enhance_service['name'])) {
-                                                            $default_es_data['qty']   = $item->qty;
-                                                            $default_es_data['price'] = $item->price;
-                                                        }
-                                                    }
                                                 ?>                                            
 
                                                 <?php if($default_enhance_service['sub']) {  ?>
@@ -441,10 +425,10 @@
                                                             <input type="text" class="nsm-field form-control" name="item[]" value="<?php echo $default_enhance_service['name']; ?>">
                                                             <input type="hidden" name="dataValue[]">                                                        
                                                         </td>
-                                                        <td style="width: 10%"><input style="text-align:center;" type="text" class="nsm-field form-control allQty" name="qty[]" value="<?php echo !empty($default_es_data['qty']) ? $default_es_data['qty'] : 0; ?>"></td>
+                                                        <td style="width: 10%"><input style="text-align:center;" type="text" class="nsm-field form-control allQty" name="qty[]" value=""></td>
                                                         <td style="width: 20%"><input style="text-align:center;" type="text" class="nsm-field form-control" name="existing[]"></td>
                                                         <td style="width: 20%"><input style="text-align:center;" type="text" class="nsm-field form-control" name="location[]"></td>
-                                                        <td style="width: 15%"><input style="text-align:center;" type="text" class="nsm-field form-control all-price-field allprices" name="price[]" value="<?php echo !empty($default_es_data['price']) ? $default_es_data['price'] : number_format(0,2); ?>"></td>
+                                                        <td style="width: 15%"><input style="text-align:center;" type="text" class="nsm-field form-control all-price-field allprices" name="price[]" value=""></td>
                                                     </tr>
                                                     <tr>
                                                         <td colspan="5" style="padding: 4px;">
@@ -468,30 +452,15 @@
                                                             <input type="text" class="nsm-field form-control" name="item[]" value="<?php echo $default_enhance_service['name']; ?>">
                                                             <input type="hidden" name="dataValue[]">                                                        
                                                         </td>
-                                                        <td style="width: 10%"><input style="text-align:center;" type="text" class="nsm-field form-control allQty" name="qty[]" value="<?php echo !empty($default_es_data['qty']) ? $default_es_data['qty'] : 0; ?>"></td>
+                                                        <td style="width: 10%"><input style="text-align:center;" type="text" class="nsm-field form-control allQty" name="qty[]" value=""></td>
                                                         <td style="width: 20%"><input style="text-align:center;" type="text" class="nsm-field form-control" name="existing[]"></td>
                                                         <td style="width: 20%"><input style="text-align:center;" type="text" class="nsm-field form-control" name="location[]"></td>
-                                                        <td style="width: 15%"><input style="text-align:center;" type="text" class="nsm-field form-control all-price-field allprices" name="price[]" value="<?php echo !empty($default_es_data['price']) ? $default_es_data['price'] : number_format(0,2); ?>"></td>
+                                                        <td style="width: 15%"><input style="text-align:center;" type="text" class="nsm-field form-control all-price-field allprices" name="price[]" value=""></td>
                                                     </tr>
                                                 <?php } ?>                                            
 
                                         <?php } ?>
 
-                                        <?php foreach($items_data as $item) { ?>
-                                            <?php 
-                                                //$i_total_amount = $item->price * $item->qty;
-                                            ?>
-                                            <!-- <tr>
-                                                <td>
-                                                    <input type="text" class="nsm-field form-control" name="item[]" value="<?php //echo $item->title; ?>">
-                                                    <input type="hidden" name="dataValue[]">
-                                                </td>
-                                                <td><input style="text-align:center;" type="text" class="nsm-field form-control" name="qty[]" value="<?php //echo $item->qty; ?>"></td>
-                                                <td><input style="text-align:center;" type="text" class="nsm-field form-control" name="existing[]"></td>
-                                                <td><input style="text-align:center;" type="text" class="nsm-field form-control" name="location[]"></td>
-                                                <td><input style="text-align:center;" type="text" class="nsm-field form-control all-price-field allprices" name="price[]" value="<?php //echo number_format($i_total_amount,2); ?>"></td>
-                                            </tr> -->
-                                        <?php } ?>
                                     </tbody>
                                 </table>
                             </div>
@@ -863,15 +832,15 @@
                                         <div class="row g-3">
                                             <div class="col-12 col-md-4">
                                                 <label class="content-subtitle fw-bold d-block mb-2">Credit Card Number</label>
-                                                <input type="text" name="credit_number" class="nsm-field form-control" placeholder="0000 0000 0000 000" />
+                                                <input name="credit_number" type="tel" id="credit_number" class="nsm-field form-control" placeholder="0000 0000 0000 000" />
                                             </div>
                                             <div class="col-12 col-md-4">
                                                 <label class="content-subtitle fw-bold d-block mb-2">Credit Card Expiration</label>
-                                                <input type="text" name="credit_expiry" class="nsm-field form-control" placeholder="MM/YYYY" />
+                                                <input id="credit_expiry" name="credit_expiry" type="tel" class="form-control cc-exp cc-exp__example" placeholder="MM / YY" autocompletetype="cc-exp" required="required">
                                             </div>
                                             <div class="col-12 col-md-4">
                                                 <label class="content-subtitle fw-bold d-block mb-2">CVC</label>
-                                                <input type="text" name="credit_cvc" class="nsm-field form-control" />
+                                                <input type="text" name="credit_cvc" maxlength=4 class="nsm-field form-control" />
                                             </div>
                                         </div>
                                     </div>
@@ -1113,7 +1082,7 @@
                                         </table>
                                     </div>                                    
                                 </div>
-                            </div>                            
+                            </div>
 
                         </div>
                     </div>
@@ -1200,8 +1169,6 @@
             </div>
         </div>
 
-        
-
         <!-- Modal New Customer -->
         <div class="modal fade nsm-modal" id="modalNewCustomer" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
             <div class="modal-dialog modal-lg" role="document">
@@ -1261,6 +1228,9 @@ $(document).ready(function() {
         var two = $('#lastname').val();
         $('#primary_account_holder_name').val(one + ' ' + two);
     });
+
+    $('#credit_expiry').payment('formatCardExpiry');
+    $('#credit_number').payment('formatCardNumber');
 
     $("#account_type").on("change", function() {
         let _this = $(this);
@@ -1370,9 +1340,11 @@ $(document).ready(function() {
         e.preventDefault();    
 
         _this.find("button[type=submit]").html("Saving");
-        _this.find("button[type=submit]").prop("disabled", true);          
+        _this.find("button[type=submit]").prop("disabled", true);  
+        
+        let is_valid = 1;
 
-        var url          = base_url+"workorder/_save_estimate_convert_to_workorder";
+        var url = base_url + "workorder/_save_new_workorder_agreement";
         let total_amount = $('#payment_amount_grand').val();       
         
         if( parseFloat(total_amount) <= 0 ){
@@ -1383,95 +1355,43 @@ $(document).ready(function() {
                 html: form_err_msg
             });    
             _this.find("button[type=submit]").html("Submit");
-            _this.find("button[type=submit]").prop("disabled", false);               
+            _this.find("button[type=submit]").prop("disabled", false);   
+            is_valid = 0;            
         }        
         
-        var post_data = new FormData(this);
-        $.ajax({
-            type: 'POST',
-            url: url,
-            data: post_data,
-            processData: false,
-            contentType: false,
-            dataType: "json",
-            success: function(result) {
-                Swal.fire({
-                    title: 'Convert Estimate to Workorder',
-                    html: result.msg,
-                    icon: result.is_success == 1 ? 'success' : 'error',
-                    showCloseButton: false,
-                    showCancelButton: false,
-                    confirmButtonColor: '#2ca01c',
-                    confirmButtonText: 'Okay'
-                }).then((res) => {
-                    if(res.isConfirmed) {
-                        if(result.is_success == 1) {
-                            _this.trigger("reset");
-                            window.location = base_url + "workorder";                        
-                        } else {
-                            _this.find("button[type=submit]").html("Submit");
-                            _this.find("button[type=submit]").prop("disabled", false);                             
-                        }
-                    }
-                });
-            },
-        });        
-    });
-
-    $("#form_new_adi_workorderOld").on("submit", function(e) {            
-        e.preventDefault();
-        var url = "<?php echo base_url('workorder/savenewWorkorderAgreement'); ?>";            
-
-        let _this        = $(this);
-        let form_valid   = 1;
-        let form_err_msg = '';
-        let total_amount = $('#payment_amount_grand').val();
-        let customer_id  = $('#customer_id').val();
-
-        if( parseFloat(total_amount) <= 0 ){
-            form_valid = 0;
-            form_err_msg = 'Cannot accept 0 total amount due';
-        }
-
-        /*if( parseFloat(customer_id) <= 0 ){
-            form_valid = 0;
-            form_err_msg = 'Please select customer';
-        }*/
-
-        if( form_valid == 1 ){
-            _this.find("button[type=submit]").html("Submitting");
-            _this.find("button[type=submit]").prop("disabled", true);
-
+        if(is_valid == 1) {
+            var post_data = new FormData(this);
             $.ajax({
                 type: 'POST',
                 url: url,
-                data: _this.serialize(),                
+                data: post_data,
+                processData: false,
+                contentType: false,
+                dataType: "json",
                 success: function(result) {
                     Swal.fire({
                         title: 'Save Successful!',
-                        text: "Workorder has been saved successfully.",
-                        icon: 'success',
+                        html: result.msg,
+                        icon: result.is_success == 1 ? 'success' : 'error',
+                        showCloseButton: false,
                         showCancelButton: false,
+                        confirmButtonColor: '#2ca01c',
                         confirmButtonText: 'Okay'
-                    }).then((result) => {
-                        //if (result.value) {
-                            location.reload();
-                        //}
+                    }).then((res) => {
+                        if(res.isConfirmed) {
+                            if(result.is_success == 1) {
+                                _this.trigger("reset");
+                                window.location = base_url + "workorder";                        
+                            } else {
+                                _this.find("button[type=submit]").html("Submit");
+                                _this.find("button[type=submit]").prop("disabled", false);                             
+                            }
+                        }
                     });
-
-                    _this.trigger("reset");
-
-                    _this.find("button[type=submit]").html("Submit");
-                    _this.find("button[type=submit]").prop("disabled", false);
                 },
-            });
-        }else{
-            Swal.fire({
-            icon: 'error',
-                title: 'Error!',
-                html: form_err_msg
-            });
+            }); 
         }
+       
     });
 
     $(".datepicker").datepicker({
@@ -1702,7 +1622,7 @@ function getTotalPrice() {
     let monthlyMonitoring = 0;
     if($('#monthlyMonitoring').val() != '') {
         monthlyMonitoring = $('#monthlyMonitoring').val();
-    }    
+    }
 
     let eq = val2;
     $('#equipmentCost').val(eq.toFixed(2));
@@ -1924,7 +1844,7 @@ $(document).ready(function() {
 
     $('#btn-add-attachment').on('click', function(){
         var tableBody = $("#tbl-attachments tbody");
-        let rowCount = $('#tbl-attachments > tbody > tr').length;
+        let rowCount  = $('#tbl-attachments > tbody > tr').length;
         let rowCount2 = $('#tbl-payment-attachments > tbody > tr').length;
         if( (rowCount + rowCount2) < 10 ){
             let html = `
@@ -1943,6 +1863,7 @@ $(document).ready(function() {
         }
     });
 
+      
     $('#btn-add-attachment-payment').on('click', function(){
         var tableBody = $("#tbl-payment-attachments tbody");
         let rowCount  = $('#tbl-payment-attachments > tbody > tr').length;
@@ -1962,7 +1883,8 @@ $(document).ready(function() {
                 html: 'Can only accept max 10 payment attachments'
             });
         }
-    });    
+    });
+
 });
 </script>
 <?php include viewPath('v2/includes/footer'); ?>

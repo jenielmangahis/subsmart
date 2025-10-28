@@ -31,12 +31,14 @@
                     <?= $salesArea ?>
                 </label>
             </div>
-            <div class="col-12 col-md-6">
-                <label class="content-subtitle fw-bold">Business Name</label>
-            </div>
-            <div class="col-12 col-md-6">
-                <label class="content-subtitle"><?= isset($profile_info) && !empty($profile_info->business_name) ? $profile_info->business_name : '---'; ?></label>
-            </div>
+            <?php if( $profile_info->customer_type == 'Commercial' ){ ?>
+                <div class="col-12 col-md-6">
+                    <label class="content-subtitle fw-bold">Business Name</label>
+                </div>            
+                <div class="col-12 col-md-6">
+                    <label class="content-subtitle"><?= isset($profile_info) && !empty($profile_info->business_name) ? $profile_info->business_name : '---'; ?></label>
+                </div>
+            <?php } ?>
             <?php if($companyId == 1): ?>
             <div class="col-12 col-md-6">
                 <label class="content-subtitle fw-bold">Industry Type</label>

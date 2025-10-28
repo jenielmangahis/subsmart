@@ -45,8 +45,8 @@
           <link rel="stylesheet" type="text/css" href="http://cdn.datatables.net/1.10.13/css/jquery.dataTables.css">
           <script type="text/javascript" charset="utf8" src="http://cdn.datatables.net/1.10.13/js/jquery.dataTables.js">
           </script>
-
-
+            <!-- Payment formatting -->
+          <script src="<?php echo base_url('assets/js/v2/jquery.payment.js'); ?>"></script>
           <!-- Timepicker -->
           <script src="<?php echo base_url('assets/plugins/jquery-timepicker/jquery.timepicker.min.js'); ?>"></script>
           <!-- Custom JS -->

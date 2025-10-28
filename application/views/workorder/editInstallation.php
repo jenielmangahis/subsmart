@@ -383,7 +383,7 @@ tr {
                                         <div class="row g-3">
                                             <div class="col-12 col-md-6">
                                                 <label class="content-subtitle fw-bold d-block mb-2">Password <span class="nsm-text-error">*</span></label>
-                                                <input type="text" name="password" id="password" class="nsm-field form-control" value="<?php echo $workorder->password; ?>" required>
+                                                <input type="password" name="password" id="password" class="nsm-field form-control" value="<?php echo $workorder->password; ?>" required>
                                             </div>
                                             <div class="col-12 col-md-6">
                                                 <label class="content-subtitle fw-bold d-block mb-2">SSN (Optional)</label>
@@ -1097,7 +1097,7 @@ tr {
                                         </div>
                                         <div class="col-12 col-md-8">
                                             <input type="hidden" name="total_attachment_count" id="total-attachment-count" class="total-attachment-count" value="<?php echo $total_existing_attachments; ?>" />
-                                            <a class="nsm-button btn-small" style="float:right;" id="btn-add-attachment" href="javascript:void(0);"><strong>+ Add File</strong></a>
+                                            <a class="nsm-button btn-small" style="float:right;" id="btn-add-attachment" href="javascript:void(0);"><strong>+ Add More</strong></a>
                                         </div>
                                     </div>
                                 </div>
@@ -1117,6 +1117,35 @@ tr {
                                     </div>                                    
                                 </div>
                             </div>
+
+                            <hr />
+                            <div class="nsm-card-header mt-2">
+                                <div class="nsm-card-title d-block">
+                                    <div class="row">
+                                        <div class="col-12 col-md-4">
+                                            <i class='bx bx-file' style="font-size:17px;position:relative;top:3px;"></i> <small><strong>Payments</strong></small>
+                                        </div>
+                                        <div class="col-12 col-md-8">
+                                            <a class="nsm-button btn-small" style="float:right;" id="btn-add-attachment-payment" href="javascript:void(0);"><strong>+ Add More</strong></a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="nsm-card-content">
+                                <div class="row">
+                                    <div class="col-12 col-md-12">
+                                         <table class="table table-borderless" id="tbl-payment-attachments">
+                                            <tbody>
+                                            <tr>
+                                                <td><input class="form-control" type="file" name="payment_attachments[]" accept="image/*" /></td>
+                                                <td>&nbsp;</td>
+                                            </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>                                    
+                                </div>
+                            </div>                            
+
                             <hr />
                             <div class="nsm-card-content">
                                 <table class="nsm-table tbl-attachments-list" id="tbl-attachments-list" style="">
@@ -1129,7 +1158,7 @@ tr {
                                     <tbody>     
                                         <?php foreach($workorder_attachments as $workorder_attachment) { ?>
                                         <tr>
-                                            <td><a href="javascript:void(0);" id="preview-attached-file" data-company-id="<?php echo $workorder->company_id; ?>" data-attach-filename="<?php echo $workorder_attachment->filename; ?>" class="preview-attached-file"><?php echo $workorder_attachment->filename; ?></a></td>
+                                            <td><a href="javascript:loadAttachImg('<?php echo $workorder->company_id; ?>', '<?php echo $workorder_attachment->filename; ?>');" id="preview-attached-file" data-company-id="<?php echo $workorder->company_id; ?>" data-attach-filename="<?php echo $workorder_attachment->filename; ?>" class="preview-attached-file"><?php echo $workorder_attachment->filename; ?></a></td>
                                             <td style="text-align: right;"><a href="javascript:void(0);" data-attached-id="<?php echo $workorder_attachment->id; ?>" class="btn-remove-row-edit-attachment nsm-button danger" id="btn-remove-row-edit-attachment" style="line-height:35px;"><i class='bx bx-trash'></i></a></td>
                                         </tr>
                                         <?php } ?>
@@ -1763,23 +1792,30 @@ $(".nsm-subtitle").html(function() {
         $('#payment_amount').val(val3.toFixed(2));
     }    
 
+    function loadAttachImg(cid, image_file) {
+        $("#modal-workorder-attachment").modal("show");
+        $('#work-order-attach-img').attr('src', base_url + 'uploads/customerdocuments/'+cid+'/'+image_file);
+    }    
+
     $(document).ready(function() {
 
         $(document).on('click', '.btn-remove-row-attachment', function(){
             $(this).closest('tr').remove();
         });   
         
+        var max_file_count = 10;
+        var total_existing_att = $("#total-attachment-count").val();
+        if(total_existing_att) {
+            var max_file_count = (max_file_count - total_existing_att);
+        }        
+
         $('#btn-add-attachment').on('click', function(){
-            var max_file_count = 10;
-            var total_existing_att = $("#total-attachment-count").val();
-            if(total_existing_att) {
-                var max_file_count = (10 - total_existing_att) + 1;
-            }
-
+            
             var tableBody = $("#tbl-attachments tbody");
-            let rowCount = $('#tbl-attachments > tbody > tr').length + 1;
+            let rowCount  = $('#tbl-attachments > tbody > tr').length + 1;
+            let rowCount2 = $('#tbl-payment-attachments > tbody > tr').length;
 
-            if( rowCount < max_file_count ){
+            if( (rowCount + rowCount2) < max_file_count ){
                 let html = `
                 <tr>
                     <td><input class="form-control" type="file" name="attachments[]" /></td>
@@ -1793,9 +1829,30 @@ $(".nsm-subtitle").html(function() {
                     html: 'Can only accept max 10 attachments'
                 });
             }
-        });    
+        });   
 
-    //Header
+        $('#btn-add-attachment-payment').on('click', function(){         
+            var tableBody = $("#tbl-payment-attachments tbody");
+            let rowCount  = $('#tbl-payment-attachments > tbody > tr').length;
+            let rowCount2 = $('#tbl-attachments > tbody > tr').length;
+            if( (rowCount + rowCount2) < max_file_count ){
+                let html = `
+                <tr>
+                    <td><input class="form-control" type="file" name="payment_attachments[]" /></td>
+                    <td><a href="javascript:void(0);" data-id="${rowCount}" class="btn-remove-row-attachment nsm-button danger" style="line-height:35px;"><i class='bx bx-trash'></i></a></td>
+                </tr>`;
+
+                tableBody.append(html);
+            }else{
+                Swal.fire({
+                icon: 'error',
+                    title: 'Error!',
+                    html: 'Can only accept max 10 payment attachments'
+                });
+            }
+        });         
+
+        //Header
         $("#form_update_header").on("submit", function(e) {
             e.preventDefault();
 
@@ -1818,16 +1875,6 @@ $(".nsm-subtitle").html(function() {
             });
         });
 
-
-    });
-
-    $(document).on('click', '.preview-attached-file', function(){
-        $("#modal-workorder-attachment").modal("show");
-         
-        var company_id = $('#preview-attached-file').attr('data-company-id');
-        var filename   = $('#preview-attached-file').attr('data-attach-filename');
-
-        $('#work-order-attach-img').attr('src', base_url + 'uploads/customerdocuments/'+company_id+'/'+filename);
     });
 
     $(document).on('click', '#btn-remove-row-edit-attachment', function(){

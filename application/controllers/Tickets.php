@@ -1310,6 +1310,7 @@ class Tickets extends MY_Controller
         $this->load->model('PanelType_model');
         $this->load->model('Customer_advance_model');
         $this->load->model('Invoice_settings_model');
+        $this->load->model('AcsAlarm_model');
 
         if(!checkRoleCanAccessModule('service-tickets', 'write')){
             show403Error();
@@ -1337,16 +1338,23 @@ class Tickets extends MY_Controller
 
         $default_customer_id = 0;
         $default_customer_name = '';
+        $default_panel_type = '';
         if ($this->input->get('cus_id')) {
             $customer = $this->AcsProfile_model->getByProfId($this->input->get('cus_id'));
             if ($customer) {
                 $default_customer_id = $customer->prof_id;
-                $default_customer_name = $customer->first_name . ' ' . $customer->last_name;                
+                $default_customer_name = $customer->first_name . ' ' . $customer->last_name;    
+                
+                $acsAlarm = $this->AcsAlarm_model->getByCustmerId($customer->prof_id);
+                if( $acsAlarm ){
+                    $default_panel_type = $acsAlarm->panel_type;
+                }
             }
         }
 
         $this->page_data['default_customer_id'] = $default_customer_id;
         $this->page_data['default_customer_name'] = $default_customer_name;
+        $this->page_data['default_panel_type'] = $default_panel_type;
 
         $default_start_date = date('Y-m-d');
         $default_start_time = '';
