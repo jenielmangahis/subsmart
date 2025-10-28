@@ -556,7 +556,8 @@
                             $('.utilityMonitoringInfo').text(`${element.data}`);
                         break;
                         case 'ledger_balance':
-                            $('.utilityLedgerBalanceInfo').text(parseFloat(element.data).toLocaleString('en-US', { style: 'currency', currency: 'USD' }));
+                            const balance = (element.data != null) ? element.data : 0.00;
+                            $('.utilityLedgerBalanceInfo').text(parseFloat(balance).toLocaleString('en-US', { style: 'currency', currency: 'USD' }));
                         break;
                         case 'notes':
                             $('.utilityNotesInfo').text(`${element.data}`);

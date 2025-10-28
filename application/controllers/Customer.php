@@ -8684,6 +8684,58 @@ class Customer extends MY_Controller
         $this->load->view('v2/pages/customer/subscription_list', $this->page_data);
     }
 
+    public function getActiveCustomerListByFilter()
+    {
+        $company_id = logged('company_id');
+
+        $status = $this->input->post('status');
+        $type = $this->input->post('type');
+
+        switch ($status) {
+            case 'all':
+                $statusFilter = "";
+                break;
+            case 'active':
+                $statusFilter = "AND customer_list_view.profile_status IN ('Active', 'Active w/RAR', 'Active w/RQR', 'Active w/RMR', 'Active w/RYR', 'Inactive w/RMM')";
+                break;
+        }
+
+        switch ($type) {
+            case 'all':
+                $typeFilter = "";
+            break;
+            case 'residential':
+                $typeFilter = "AND customer_list_view.profile_customer_type = 'Residential'";
+            break;
+            case 'commercial':
+                $typeFilter = "AND customer_list_view.profile_customer_type = 'Commercial'";
+            break;
+        }
+
+        $query = $this->db->query("
+            SELECT 
+                customer_list_view.prof_id AS id,
+                customer_list_view.company_id AS company_id,
+                customer_list_view.customer_name AS name,
+                customer_list_view.profile_status AS status,
+                customer_list_view.profile_customer_type AS type,
+                CONCAT(customer_list_view.profile_mail_add, ' ', customer_list_view.profile_city, ', ', customer_list_view.profile_state, ' ', customer_list_view.profile_zip_code) AS address,
+                customer_list_view.profile_email AS email,
+                customer_list_view.billing_bill_start_date AS bill_start,
+                customer_list_view.billing_bill_end_date AS bill_end,
+                customer_list_view.billing_mmr
+            FROM customer_list_view
+            WHERE customer_list_view.company_id = {$company_id}
+                {$statusFilter} 
+                {$typeFilter}
+            ORDER BY customer_list_view.customer_name ASC;
+        ");
+
+        $data = $query->result();
+
+        echo json_encode($data);
+    }
+
     public function ajax_load_active_subscriptions()
     {
         $this->load->model('Customer_advance_model');
