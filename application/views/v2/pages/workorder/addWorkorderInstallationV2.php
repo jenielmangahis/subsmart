@@ -832,15 +832,15 @@
                                         <div class="row g-3">
                                             <div class="col-12 col-md-4">
                                                 <label class="content-subtitle fw-bold d-block mb-2">Credit Card Number</label>
-                                                <input type="text" name="credit_number" class="nsm-field form-control" placeholder="0000 0000 0000 000" />
+                                                <input name="credit_number" type="tel" id="credit_number" class="nsm-field form-control" placeholder="0000 0000 0000 000" />
                                             </div>
                                             <div class="col-12 col-md-4">
                                                 <label class="content-subtitle fw-bold d-block mb-2">Credit Card Expiration</label>
-                                                <input type="text" name="credit_expiry" class="nsm-field form-control" placeholder="MM/YYYY" />
+                                                <input id="credit_expiry" name="credit_expiry" type="tel" class="form-control cc-exp cc-exp__example" placeholder="MM / YY" autocompletetype="cc-exp" required="required">
                                             </div>
                                             <div class="col-12 col-md-4">
                                                 <label class="content-subtitle fw-bold d-block mb-2">CVC</label>
-                                                <input type="text" name="credit_cvc" class="nsm-field form-control" />
+                                                <input type="text" name="credit_cvc" maxlength=4 class="nsm-field form-control" />
                                             </div>
                                         </div>
                                     </div>
@@ -1228,6 +1228,9 @@ $(document).ready(function() {
         var two = $('#lastname').val();
         $('#primary_account_holder_name').val(one + ' ' + two);
     });
+
+    $('#credit_expiry').payment('formatCardExpiry');
+    $('#credit_number').payment('formatCardNumber');
 
     $("#account_type").on("change", function() {
         let _this = $(this);
