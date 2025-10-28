@@ -2339,6 +2339,11 @@ $route['customer/_edit_emergency_agency'] = 'Customer/ajax_edit_emergency_agency
 $route['customer/_update_emergency_agency'] = 'Customer/ajax_update_emergency_agency';
 $route['customer/_delete_selected_emergency_agencies'] = 'Customer/ajax_delete_selected_emergency_agencies';
 $route['customer/export_emergency_agency_list/(:any)?'] = 'Customer/export_emergency_agency_list/$1';
+$route['customer/settings_alarm_site_types'] = 'Customer/settings_alarm_site_types';
+$route['customers/_create_site_type'] = 'Customer/ajax_create_site_type';
+$route['customers/_delete_site_type'] = 'Customer/ajax_delete_site_type';
+$route['customers/_update_site_type'] = 'Customer/ajax_update_site_type';
+$route['customers/_delete_selected_site_types'] = 'Customer/ajax_delete_selected_site_types';
 
 //Benchmark for Testing
 $route['benchmark/test_customer_subscription'] = 'Benchmark/test_customer_subscription';
