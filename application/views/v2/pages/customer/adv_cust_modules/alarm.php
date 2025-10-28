@@ -346,7 +346,8 @@
                     </div>
                 </div>
             </div>
-            <div id="alarm-zones-container"></div>   
+            <div id="alarm-zones-container"></div>  
+            <div id="emergency-agencies-container"></div>   
             <?php if( $alarm_info && $alarm_info->acct_type != 'In-House' ){ ?>
                 <?php include viewPath('v2/pages/customer/adv_cust_modules/funding'); ?>    
             <?php } ?>
@@ -446,6 +447,9 @@
 
 <script>
 $(function(){
+    
+    load_customer_emergency_agencies();
+
     $('.btn-alarm-api-view-customer').on('click', function(){
         var customer_id = $(this).attr('data-id');
         
@@ -491,6 +495,23 @@ $(function(){
             },
             beforeSend:function(){
                 $('#alarm-zones-container').html('<span class="bx bx-loader bx-spin"></span>');
+            }
+        });
+    }
+
+    function load_customer_emergency_agencies(){
+        let url = base_url + 'customer/_customer_emergency_agencies'  
+        let customer_id = "<?= $customer_id; ?>";
+        $.ajax({
+            type: "POST",
+            url: url,
+            data: {customer_id:customer_id},
+            success: function(o)
+            {	
+                $('#emergency-agencies-container').html(o);
+            },
+            beforeSend:function(){
+                $('#emergency-agencies-container').html('<span class="bx bx-loader bx-spin"></span>');
             }
         });
     }
@@ -706,6 +727,173 @@ $(function(){
                             Swal.close();              
                             if( result.is_success == 1 ) {
                                 load_customer_zones();
+                            } else {
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Error',
+                                    text: result.msg,
+                                });
+                            }
+                        },
+                        beforeSend: function(){
+                            Swal.fire({
+                                icon: "info",
+                                title: "Processing",
+                                html: "Please wait while the process is running...",
+                                allowOutsideClick: false,
+                                allowEscapeKey: false,
+                                showConfirmButton: false,
+                                didOpen: () => {
+                                    Swal.showLoading();
+                                },
+                            });
+                        }
+                    });
+
+                }
+            });
+        }        
+    });
+
+    $(document).on('submit', '#frm-save-emergency-agencies', function(e){
+        e.preventDefault();
+
+        $.ajax({
+            url: base_url + 'customer/_create_emergency_agencies',
+            type: "POST",
+            dataType: "json",
+            data: $('#frm-save-emergency-agencies').serialize(),
+            success: function(data) {
+                $("#modal-create-emergency-agencies").modal('hide');
+                $('#btn-save-emergency-agencies').html('Save');
+
+                if (data.is_success == 1) {                  
+                    load_customer_emergency_agencies();
+                } else {
+                    Swal.fire({
+                        showConfirmButton: false,
+                        timer: 2000,
+                        title: 'Failed',
+                        text: data.msg,
+                        icon: 'warning'
+                    });
+                }
+            },
+            beforeSend: function() {
+                $('#btn-save-emergency-agencies').html('<span class="bx bx-loader bx-spin"></span>');
+            }
+        });
+    });
+
+    $(document).on('submit', '#frm-update-emergency-agency', function(e){
+        e.preventDefault();
+
+        $.ajax({
+            url: base_url + 'customer/_update_emergency_agency',
+            type: "POST",
+            dataType: "json",
+            data: $('#frm-update-emergency-agency').serialize(),
+            success: function(data) {
+                $("#modal-edit-emergency-agency").modal('hide');
+                $('#btn-update-emergency-agency').html('Save');
+
+                if (data.is_success == 1) {                  
+                    load_customer_emergency_agencies();
+                } else {
+                    Swal.fire({
+                        showConfirmButton: false,
+                        timer: 2000,
+                        title: 'Failed',
+                        text: data.msg,
+                        icon: 'warning'
+                    });
+                }
+            },
+            beforeSend: function() {
+                $('#btn-update-emergency-agency').html('<span class="bx bx-loader bx-spin"></span>');
+            }
+        });
+    });
+
+    $(document).on("click", ".delete-emergency-agency-item", function() {
+        let id = $(this).attr('data-id');
+        let value = $(this).attr('data-value');
+
+        Swal.fire({
+            title: 'Delete Emergency Agency',
+            html: `Are you sure you want to agency <b>${value}</b>?<br/><br/>Note : This cannot be undone.`,
+            icon: 'question',
+            confirmButtonText: 'Proceed',
+            showCancelButton: true,
+            cancelButtonText: "Cancel"
+        }).then((result) => {
+            if (result.value) {
+                $.ajax({
+                    type: 'POST',
+                    url: base_url + "customer/_delete_emergency_agency",
+                    data: {
+                        id: id
+                    },
+                    dataType: "json",
+                    success: function(result) {
+                        Swal.close();
+                        if (result.is_success) {
+                            load_customer_emergency_agencies();
+                        } else {
+                            Swal.fire({
+                                title: 'Failed',
+                                text: result.msg,
+                                icon: 'error',
+                                showCancelButton: false,
+                                confirmButtonText: 'Okay'
+                            });
+                        }
+                    },
+                    beforeSend: function(){
+                        Swal.fire({
+                            icon: "info",
+                            title: "Processing",
+                            html: "Please wait while the process is running...",
+                            allowOutsideClick: false,
+                            allowEscapeKey: false,
+                            showConfirmButton: false,
+                            didOpen: () => {
+                                Swal.showLoading();
+                            },
+                        });
+                    }
+                });
+            }
+        });
+    });
+
+    $(document).on('click', '#with-selected-delete-amergency-agencies', function(){
+        let total= $('#tbl-emergency-agencies input[name="emergencyAgencies[]"]:checked').length;
+        if( total <= 0 ){
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'Please select rows',
+            });
+        }else{
+            Swal.fire({
+                title: 'Delete Emergency Agency',
+                html: `Are you sure you want to delete selected rows?<br/><br/>Note : This cannot be undone.`,
+                icon: 'question',
+                confirmButtonText: 'Proceed',
+                showCancelButton: true,
+                cancelButtonText: "Cancel"
+            }).then((result) => {
+                if (result.value) {
+                    $.ajax({
+                        method: 'POST',
+                        url: base_url + 'customer/_delete_selected_emergency_agencies',
+                        dataType: 'json',
+                        data: $('#frm-with-selected').serialize(),
+                        success: function(result) {          
+                            Swal.close();              
+                            if( result.is_success == 1 ) {
+                                load_customer_emergency_agencies();
                             } else {
                                 Swal.fire({
                                     icon: 'error',
