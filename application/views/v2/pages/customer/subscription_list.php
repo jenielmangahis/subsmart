@@ -1,6 +1,58 @@
 <?php include viewPath('v2/includes/header'); ?>
 <?php include viewPath('v2/includes/customer/customer_modals'); ?>
+<style>
+    .display_none {
+        display: none;
+    }
 
+    table.no-footer {
+        border-bottom: 0px solid #dee2e6 !important;
+    }
+
+    table thead th,
+    table thead td,
+    table tbody td {
+        padding: 6px !important;
+    }
+
+    table>thead>tr>th {
+        border-bottom: 1px solid lightgray !important;
+    }
+
+    .activeCustomerTableContainer {
+        max-height: 500px;
+    }
+
+    .activeCustomerStatusContainer {
+        max-height: 200px;
+    }
+
+    .accordionButton {
+        background: #f9f9f9;
+    }
+
+    thead {
+        background: #f9f9f9;
+    }
+
+    .nsm-profile {
+        width: 40px;
+        height: 40px;
+    }
+
+    .activeCustomerStatusCategory {
+        background: #00000008;
+        border-radius: 5px;
+        outline: 1px solid #0000000f;
+        padding: 5px;
+        margin-top: 10px;
+        padding-left: 10px;
+    }
+
+    .nsm-callout {
+        margin-bottom: unset;
+    }
+</style>
 <div class="row page-content g-0">
     <div class="col-12 mb-3">
         <?php include viewPath('v2/includes/page_navigations/customer_tabs'); ?>
@@ -12,12 +64,11 @@
                     <div class="col-12">
                         <div class="nsm-callout primary">
                             <button><i class='bx bx-x'></i></button>
-                            Listing of customer subscriptions.
+                            Displays customers with active subscriptions, including details of those currently enrolled in ongoing service plans.
                         </div>
                     </div>
                 </div>
-
-                <div class="row g-3 mb-3">
+                <!-- <div class="row g-3 mb-3">
                     <div class="col-12 col-md-12">
                         <div class="row">
                                 <div class="col-12 col-md-4">
@@ -62,9 +113,28 @@
                             </div>
                         </div>
                     </div>
+                </div> -->
+
+                <div class="row mb-3 table-responsive activeCustomerStatusContainer">
+
+                </div>
+                <div class="row">
+                    <div class="col-lg-3 mb-3">
+                        <input type="text" class="form-control customerGroupSearchBar" placeholder="Search Customer">
+                    </div>
+                    <div class="col-lg-12 activeCustomerListContent display_none"></div>
+                    <div class="col-lg-12">
+                        <div class="col mt-2 activeCustomerLoader">
+                            <div class="text-center">
+                                <div class="spinner-border text-secondary" role="status">
+                                    <span class="visually-hidden">Loading...</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
-                <div class="row">
+            <!-- <div class="row">
                     <div class="col-12 grid-mb text-end">
                         <div class="dropdown d-inline-block">
                             <button type="button" class="dropdown-toggle nsm-button" data-bs-toggle="dropdown">
@@ -80,13 +150,241 @@
                 </div>
                 <div class="row">
                     <div class="col-12" id="subscription_container"></div>
-                </div>
+                </div> -->
             </div>
         </div>
     </div>
 </div>
 
 <script type="text/javascript">
+    function getActiveCustomers() {
+        $.ajax({
+            type: "POST",
+            url: `${window.origin}/Customer/getActiveCustomerListByFilter`,
+            data: {
+                status: "active",
+                type: "all",
+            },
+            beforeSend: function() {
+                $('.activeCustomerListContent').hide();
+                $('.activeCustomerLoader').fadeIn('fast');
+            },
+            success: function(response) {
+                const data = JSON.parse(response);
+                let html = "";
+
+                if (data.length != 0) {
+                    const grouped = {};
+                    data.forEach((cust) => {
+                        let firstChar = cust.name.charAt(0).toUpperCase();
+                        if (!/^[A-Z]$/.test(firstChar)) firstChar = "#";
+                        if (!grouped[firstChar]) grouped[firstChar] = [];
+                        grouped[firstChar].push(cust);
+                    });
+
+                    const sortedKeys = Object.keys(grouped).sort((a, b) => {
+                        if (a === "#") return 1;
+                        if (b === "#") return -1;
+                        return a.localeCompare(b);
+                    });
+
+                    sortedKeys.forEach((key) => {
+                        const group = grouped[key].sort((a, b) => a.name.localeCompare(b.name));
+                        const collapseId = `${key}GroupCollapse`;
+
+                        let rows = group.map(cust => {
+                            const name = cust.name ? cust.name : "Not Specified";
+                            const initials = name && name !== "Not Specified"
+                                ? name
+                                    .split(" ")
+                                    .filter(w => w.trim() !== "")
+                                    .map(w => w[0].toUpperCase())
+                                    .slice(0, 2)
+                                    .join("")
+                                : "N/A";
+                            const type = cust.type ? cust.type : "Not Specified";
+                            const status = cust.status ? cust.status : "Not Specified";
+                            const address = cust.address ? cust.address : "Not Specified";
+                            const email = cust.email ? cust.email : "Not Specified";
+                            const bill_start = cust.bill_start ? new Date(cust.bill_start).toLocaleDateString("en-US", { month: "2-digit", day: "2-digit", year: "numeric" }) : "Not Specified";
+                            const bill_end = cust.bill_end ? new Date(cust.bill_end).toLocaleDateString("en-US", { month: "2-digit", day: "2-digit", year: "numeric" }) : "Not Specified";
+                            const billing_mmr = cust.billing_mmr ? Number(cust.billing_mmr).toLocaleString("en-US", { style: "currency", currency: "USD" }) : "Not Specified";
+
+                            return `
+                                <tr>
+                                    <td class="text-nowrap">
+                                        <div class="d-flex">
+                                            <div class="nsm-profile">
+                                            <span>${initials}</span>
+                                        </div>
+                                        <div>
+                                            <span class="mx-2">${name}</span>
+                                            <br>
+                                            <small class="mx-2 text-muted">${email}</small>
+                                        </div>
+                                        </div>
+                                    </td>
+                                    <td class="text-nowrap">${type}</td>
+                                    <td class="text-nowrap">${status}</td>
+                                    <td class="text-nowrap">${address}</td>
+                                    <td class="text-nowrap">${bill_start}</td>
+                                    <td class="text-nowrap">${bill_end}</td>
+                                    <td class="text-nowrap">${billing_mmr}</td>
+                                    <td style="width: 0;" class="p-0">
+                                        <div class='dropdown'>
+                                            <button class='btn dropdown-toggle text-muted' type='button' id='activeCustomerButtonDropdown' data-bs-toggle='dropdown' aria-expanded='false'><i class='fas fa-ellipsis-v'></i></button>
+                                            <ul class='dropdown-menu' aria-labelledby='activeCustomerButtonDropdown'>
+                                                <li><a class="dropdown-item" href="${window.origin}/customer/subscription/${cust.id}">View</a></li>
+                                                <li><a class="dropdown-item view-payment-item" href="javascript:void(0);" data-customer-id="${cust.id}" data-billing-id="">Payment History</a></li>
+                                            </ul>
+                                        </div>
+                                    </td>
+                                </tr>   
+                            `;
+                        }).join("");
+
+                        html += `
+                            <div class="activeCustomerGroupAccordion border rounded mb-2">
+                                <button class="btn w-100 text-start accordionButton text-muted" type="button"
+                                    data-bs-toggle="collapse" data-bs-target="#${collapseId}">
+                                    <strong>${key}&ensp;<span class="${key}GroupCount">(${group.length})</span></strong>
+                                </button>
+                                <div class="collapse" id="${collapseId}">
+                                    <div class="border-top position-relative">
+                                        <div class="table-responsive activeCustomerTableContainer">
+                                            <table class="table table-bordered table-hover mb-0 align-middle">
+                                                <thead class="sticky-top">
+                                                    <tr>
+                                                        <th>Name</th>
+                                                        <th>Type</th>
+                                                        <th>Status</th>
+                                                        <th>Address</th>
+                                                        <th>Bill Start</th>
+                                                        <th>Bill End</th>
+                                                        <th>MMR</th>
+                                                        <th class="w-0"></th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    ${rows}
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        `;
+                    });
+
+                } else {
+                    html += `
+                            <div class="activeCustomerGroupAccordion border rounded mb-2">
+                                <button class="btn w-100 text-start accordionButton text-muted" type="button">
+                                    <span>No Customers Found</span>
+                                </button>
+                                <div class="collapse"></div>
+                            </div>
+                        `;
+                }
+
+                $(".activeCustomerListContent").html(html);
+                $('.activeCustomerListContent').fadeIn('fast');
+                $('.activeCustomerLoader').hide(); 
+            },
+            error: function() {
+                Swal.fire({
+                    icon: "error",
+                    title: "Network Error!",
+                    html: "An unexpected error occurred. Please try again!",
+                    showConfirmButton: true,
+                    confirmButtonText: "Okay",
+                });
+            },
+        });
+    }
+
+    function getStatusBadge() {
+        $.ajax({
+            type: "POST",
+            url: `${window.origin}/dashboard/thumbnailWidgetRequest`,
+            data: {
+                category: "customer_status",
+                dateFrom: "1970-01-01",
+                dateTo: "<?php echo date('Y-m-d'); ?>",
+            },
+            beforeSend: function() {
+
+            },
+            success: function(response) {
+                const data = JSON.parse(response);
+                let html = "";
+
+                if (data) {
+                    Object.entries(data).forEach(([key, value]) => {
+                        html += `
+                            <div class="col-lg-1">
+                                <div class="activeCustomerStatusCategory">
+                                    <small class="text-uppercase activeCustomerStatusName">${key}</small>
+                                    <h5 class="activeCusomterStatusCount">${value}</h5>
+                                </div>
+                            </div>
+                        `;
+                    });
+                } else {
+
+                }
+
+                $('.activeCustomerStatusContainer').html(html);
+            },
+            error: function() {
+                Swal.fire({
+                    icon: "error",
+                    title: "Network Error!",
+                    html: "An unexpected error occurred. Please try again!",
+                    showConfirmButton: true,
+                    confirmButtonText: "Okay",
+                });
+            },
+        });
+    }
+
+    $(function () {
+        getActiveCustomers();
+        getStatusBadge();
+    });
+
+    $('.customerGroupSearchBar').on('input', function () {
+        const query = $(this).val().trim().toLowerCase();
+
+        if (!query) {
+            $('.activeCustomerGroupAccordion').fadeIn('fast');
+            $('.activeCustomerGroupAccordion tbody tr').fadeIn('fast');
+            return;
+        }
+
+        $('.activeCustomerGroupAccordion').each(function () {
+            const accordion = $(this);
+            const rows = accordion.find('tbody tr');
+            let hasMatch = false;
+
+            rows.each(function () {
+                const rowText = $(this).text().toLowerCase();
+                const match = rowText.includes(query);
+
+                $(this).toggle(match);
+                if (match) hasMatch = true;
+            });
+
+            accordion.toggle(hasMatch);
+        });
+    });
+
+    $(document).on('click', '.dropdown-menu', function (e) {
+        e.stopPropagation();
+    });
+
+
+
     $(document).ready(function() {
         showSubscriptions('all');
 
