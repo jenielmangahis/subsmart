@@ -11435,10 +11435,10 @@ class Workorder extends MY_Controller
                 $this->WorkorderSettings->updateByCompanyId($company_id,$data);
 
                 $is_success = 1;
-                $msg = 'Convert Estimate to Workorder has been saved successfully';              
+                $msg = 'Workorder has been saved successfully';              
             }else{
                 $is_success = 0;
-                $msg = 'Cannot convert estimate to workorder';                              
+                $msg = 'Cannot save workorder';                              
             }
 
         }else{
@@ -12379,7 +12379,7 @@ class Workorder extends MY_Controller
 
             if( $addQuery > 0 ){
                 $is_success = 1;
-                $msg = 'Convert Estimate to Workorder has been saved successfully';
+                $msg = 'Workorder has been saved successfully';
             }
 
         }
