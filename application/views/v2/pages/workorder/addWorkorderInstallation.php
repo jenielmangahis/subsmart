@@ -1580,7 +1580,7 @@ tr {
                                             <div class="col-12 col-md-3 text-end">
                                                 <div class="input-group">
                                                     <span class="input-group-text">$</span>
-                                                    <input type="number" step="any" name="installationCost" id="installationCost" class="nsm-field form-control text-end total-price total-price-click" value="0">
+                                                    <input type="number" step="any" name="installationCost" id="installationCost" class="nsm-field form-control text-end total-price total-price-click" value="" placeholder="0.00">
                                                 </div>
                                             </div>
                                             <div class="col-12 col-md-9">
@@ -1589,7 +1589,7 @@ tr {
                                             <div class="col-12 col-md-3 text-end">
                                                 <div class="input-group">
                                                     <span class="input-group-text">$</span>
-                                                    <input type="number" step="any" name="otps" id="otps" class="nsm-field form-control text-end total-price total-price-click" value="0">
+                                                    <input type="number" step="any" name="otps" id="otps" class="nsm-field form-control text-end total-price total-price-click" value="" placeholder="0.00">
                                                 </div>
                                             </div>
                                             <div class="col-12 col-md-9">
@@ -1598,7 +1598,7 @@ tr {
                                             <div class="col-12 col-md-3 text-end">
                                                 <div class="input-group">
                                                     <span class="input-group-text">$</span>
-                                                    <input type="number" step="any" name="monthlyMonitoring" id="monthlyMonitoring" class="nsm-field form-control text-end total-price total-price-click" value="0">
+                                                    <input type="number" step="any" name="monthlyMonitoring" id="monthlyMonitoring" class="nsm-field form-control text-end total-price total-price-click" value="" placeholder="0.00">
                                                 </div>
                                             </div>
                                             <div class="col-12 col-md-9">
