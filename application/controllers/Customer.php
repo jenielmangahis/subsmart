@@ -14277,7 +14277,7 @@ class Customer extends MY_Controller
         $company_id  = logged('company_id');
         $post = $this->input->post();
 
-        $emergencyAgency = $this->AcsCustomerEmergencyAgency_model->getById($post['zid']);
+        $emergencyAgency = $this->AcsCustomerEmergencyAgency_model->getById($post['eaid']);
         if( $emergencyAgency && $emergencyAgency->company_id == $company_id ){
             $data = [
                 'agency' => $post['agency_code'],
@@ -14305,5 +14305,82 @@ class Customer extends MY_Controller
         ];
 
         echo json_encode($return);
+    }
+
+    public function ajax_delete_selected_emergency_agencies()
+    {
+        $this->load->model('AcsCustomerEmergencyAgency_model');
+
+		$is_success = 0;
+        $msg    = 'Please select data';
+
+        $company_id  = logged('company_id');
+        $post = $this->input->post();
+
+        if( $post['emergencyAgencies'] ){
+            $filter[] = ['field' => 'company_id', 'value' => $company_id];
+            $total_deleted = $this->AcsCustomerEmergencyAgency_model->bulkDelete($post['emergencyAgencies'], $filter);
+
+            //Activity Logs
+            if( $total_deleted > 1 ){
+                $activity_name = 'Customer : Permanently deleted ' .$total_deleted. ' emergency agencies'; 
+            }else{
+                $activity_name = 'Customer : Permanently deleted ' .$total_deleted. ' emergency agency'; 
+            }
+            
+            createActivityLog($activity_name);
+
+            $is_success = 1;
+            $msg    = '';
+        }
+
+        $return = [
+            'is_success' => $is_success,
+            'msg' => $msg
+        ];
+
+        echo json_encode($return);
+    }
+
+    public function export_emergency_agency_list($customer_id)
+    {
+        $this->load->model('AcsCustomerEmergencyAgency_model');
+		
+		$cid     = logged('company_id');
+		$emergencyAgencies = $this->AcsCustomerEmergencyAgency_model->getAllByCustomerId($customer_id);
+
+		$delimiter = ",";
+		$time      = time();
+		$filename  = "customer_emergency_agencies_list_" . $time . ".csv";
+
+		$f = fopen('php://memory', 'w');
+
+		$fields = array('Name', 'Agency', 'Agency Phone', 'Agency Name', 'Permit Number', 'Permit EXP', 'Effective Date');
+		fputcsv($f, $fields, $delimiter);
+
+		if (!empty($emergencyAgencies)) {
+			foreach ($emergencyAgencies as $ea) {
+				$csvData = array(
+					$ea->first_name . ' ' . $ea->last_name,
+					$ea->agency,
+					$ea->agency_phone,
+                    $ea->agency_name,
+                    $ea->permit_number,
+                    date("m/d/Y",strtotime($ea->permit_exp)),
+                    date("m/d/Y",strtotime($ea->effective_date)),
+				);
+				fputcsv($f, $csvData, $delimiter);
+			}
+		} else {
+			$csvData = array('');
+			fputcsv($f, $csvData, $delimiter);
+		}
+
+		fseek($f, 0);
+
+		header('Content-Type: text/csv');
+		header('Content-Disposition: attachment; filename="' . $filename . '";');
+
+		fpassthru($f);
     }
 }
