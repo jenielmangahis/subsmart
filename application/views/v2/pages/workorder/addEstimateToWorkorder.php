@@ -727,7 +727,7 @@
                                             <div class="col-12 col-md-3 text-end">
                                                 <div class="input-group">
                                                     <span class="input-group-text">$</span>
-                                                    <input type="number" step="any" name="installationCost" id="installationCost" class="nsm-field form-control text-end total-price total-price-click" value="0.00">
+                                                    <input type="number" step="any" name="installationCost" id="installationCost" class="nsm-field form-control text-end total-price total-price-click" value="" placeholder="0.00">
                                                 </div>
                                             </div>
                                             <div class="col-12 col-md-9">
@@ -736,7 +736,7 @@
                                             <div class="col-12 col-md-3 text-end">
                                                 <div class="input-group">
                                                     <span class="input-group-text">$</span>
-                                                    <input type="number" step="any" name="otps" id="otps" class="nsm-field form-control text-end total-price total-price-click" value="0.00">
+                                                    <input type="number" step="any" name="otps" id="otps" class="nsm-field form-control text-end total-price total-price-click" value="" placeholder="0.00">
                                                 </div>
                                             </div>
                                             <div class="col-12 col-md-9">
@@ -745,7 +745,7 @@
                                             <div class="col-12 col-md-3 text-end">
                                                 <div class="input-group">
                                                     <span class="input-group-text">$</span>
-                                                    <input type="number" step="any" name="monthlyMonitoring" id="monthlyMonitoring" class="nsm-field form-control text-end total-price total-price-click" value="0.00">
+                                                    <input type="number" step="any" name="monthlyMonitoring" id="monthlyMonitoring" class="nsm-field form-control text-end total-price total-price-click" value="" placeholder="0.00">
                                                 </div>
                                             </div>
                                             <div class="col-12 col-md-9">
@@ -1067,7 +1067,7 @@
                                             <i class='bx bx-file' style="font-size:17px;position:relative;top:3px;"></i> <small><strong>Documents</strong></small>
                                         </div>
                                         <div class="col-12 col-md-8">
-                                            <a class="nsm-button btn-small" style="float:right;" id="btn-add-attachment" href="javascript:void(0);"><strong>+ Add File</strong></a>
+                                            <a class="nsm-button btn-small" style="float:right;" id="btn-add-attachment" href="javascript:void(0);"><strong>+ Add More</strong></a>
                                         </div>
                                     </div>
                                 </div>
@@ -1086,6 +1086,34 @@
                                     </div>                                    
                                 </div>
                             </div>
+
+                            <hr />
+                            <div class="nsm-card-header mt-2">
+                                <div class="nsm-card-title d-block">
+                                    <div class="row">
+                                        <div class="col-12 col-md-4">
+                                            <i class='bx bx-file' style="font-size:17px;position:relative;top:3px;"></i> <small><strong>Payments</strong></small>
+                                        </div>
+                                        <div class="col-12 col-md-8">
+                                            <a class="nsm-button btn-small" style="float:right;" id="btn-add-attachment-payment" href="javascript:void(0);"><strong>+ Add More</strong></a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="nsm-card-content">
+                                <div class="row">
+                                    <div class="col-12 col-md-12">
+                                         <table class="table table-borderless" id="tbl-payment-attachments">
+                                            <tbody>
+                                            <tr>
+                                                <td><input class="form-control" type="file" name="payment_attachments[]" accept="image/*" /></td>
+                                                <td>&nbsp;</td>
+                                            </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>                                    
+                                </div>
+                            </div>                            
 
                         </div>
                     </div>
@@ -1661,9 +1689,20 @@ function getTotalPrice() {
         val2   += (parseFloat(c.val() * qtyItem) || 0);
     });
 
-    let installationCost = $('#installationCost').val();
-    let otps = $('#otps').val();
-    let monthlyMonitoring = $('#monthlyMonitoring').val();
+    let installationCost = 0;
+    if($('#installationCost').val() != '') {
+        installationCost = $('#installationCost').val();
+    }
+
+    let otps = 0;
+    if($('#otps').val() != '') {
+        otps = $('#otps').val();
+    }
+
+    let monthlyMonitoring = 0;
+    if($('#monthlyMonitoring').val() != '') {
+        monthlyMonitoring = $('#monthlyMonitoring').val();
+    }    
 
     let eq = val2;
     $('#equipmentCost').val(eq.toFixed(2));
@@ -1885,8 +1924,9 @@ $(document).ready(function() {
 
     $('#btn-add-attachment').on('click', function(){
         var tableBody = $("#tbl-attachments tbody");
-        let rowCount = $('#tbl-attachments > tbody > tr').length + 1;
-        if( rowCount < 10 ){
+        let rowCount = $('#tbl-attachments > tbody > tr').length;
+        let rowCount2 = $('#tbl-payment-attachments > tbody > tr').length;
+        if( (rowCount + rowCount2) < 10 ){
             let html = `
             <tr>
                 <td><input class="form-control" type="file" name="attachments[]" /></td>
@@ -1902,6 +1942,27 @@ $(document).ready(function() {
             });
         }
     });
+
+    $('#btn-add-attachment-payment').on('click', function(){
+        var tableBody = $("#tbl-payment-attachments tbody");
+        let rowCount  = $('#tbl-payment-attachments > tbody > tr').length;
+        let rowCount2 = $('#tbl-attachments > tbody > tr').length;
+        if( (rowCount + rowCount2) < 10 ){
+            let html = `
+            <tr>
+                <td><input class="form-control" type="file" name="payment_attachments[]" /></td>
+                <td><a href="javascript:void(0);" data-id="${rowCount}" class="btn-remove-row-attachment nsm-button danger" style="line-height:35px;"><i class='bx bx-trash'></i></a></td>
+            </tr>`;
+
+            tableBody.append(html);
+        }else{
+            Swal.fire({
+            icon: 'error',
+                title: 'Error!',
+                html: 'Can only accept max 10 payment attachments'
+            });
+        }
+    });    
 });
 </script>
 <?php include viewPath('v2/includes/footer'); ?>
