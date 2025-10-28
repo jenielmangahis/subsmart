@@ -241,7 +241,7 @@
                     if (data.is_success) {
                         $('#modal-add-installer-code').modal('hide');
                         Swal.fire({
-                            title: 'Add Installer code',
+                            title: 'Add Installer Code',
                             text: "Data has been created successfully.",
                             icon: 'success',
                             showCancelButton: false,
@@ -282,7 +282,7 @@
                     if (data.is_success) {
                         $('#modal-edit-installer-code').modal('hide');
                         Swal.fire({
-                            title: 'Edit Installer code',
+                            title: 'Edit Installer Code',
                             text: "Data has been updated successfully.",
                             icon: 'success',
                             showCancelButton: false,
