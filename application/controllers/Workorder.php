@@ -10842,7 +10842,51 @@ class Workorder extends MY_Controller
                             } 
                         }
                     }
-                }                
+                } 
+                
+                if(isset($_FILES['payment_attachments'])) {
+                    $attachments = $_FILES['payment_attachments'];
+                    foreach($attachments['name'] as $key => $attachment_name) {
+                        $filename = $attachment_name;
+                        if(isset($attachments['tmp_name'][$key]) && $attachments['tmp_name'][$key] != '') {
+                            $tmp_name  = $attachments['tmp_name'][$key];
+                            $extension = strtolower(end(explode('.',$filename)));
+                            $attachment_photo = $this->input->post('workorder_number') ."_photo_".basename($filename);
+
+                            if(move_uploaded_file($tmp_name, $customerDocFolderPath.$attachment_photo)) {
+                                if (copy($customerDocFolderPath.$attachment_photo, $customerDocFolderPath2.$attachment_photo)) {
+                                }
+                            }                              
+
+                            $acsc_data2 = array(
+                                'customer_id'      => $w_acs,
+                                'file_name'        => $attachment_photo,
+                                'document_type'    => 'payment_details',
+                                'document_label'   => 'Payment Details',
+                                'is_predefined'    => 0,
+                                'is_active'        => 1,
+                                'date_created'     => date("Y-m-d H:i:s")
+                            );
+                            $acs_cust_docs = $this->workorder_model->save_acs_customer_document($acsc_data2);  
+                            if($acs_cust_docs) {
+                                
+                                $woa_data2 = array(
+                                    'work_order_id' => $wo_id,
+                                    'document_id'   => $acs_cust_docs,
+                                    'customer_id'   => $w_acs
+                                );                        
+                                $wo_attach = $this->workorder_model->save_work_order_attachments($woa_data2); 
+
+                                $wop_data2 = array(
+                                    'path'          => "uploads/CompanyPhoto/".$company_id."/" . $attachment_photo,
+                                    'work_order_id' => $wo_id,
+                                    'company_id'    => $company_id
+                                );  
+                                $wo_attach2 = $this->workorder_model->save_work_order_photo($wop_data2); 
+                            } 
+                        }
+                    }
+                }
 
             }            
 
@@ -11668,6 +11712,49 @@ class Workorder extends MY_Controller
                                 );  
                                 $wo_attach2 = $this->workorder_model->save_work_order_photo($wop_data);                                 
                             }    
+                        }
+                    }
+                }               
+                
+                if(isset($_FILES['payment_attachments'])) {
+                    $attachments = $_FILES['payment_attachments'];
+                    foreach($attachments['name'] as $key => $attachment_name) {
+                        $filename = $attachment_name;
+                        if(isset($attachments['tmp_name'][$key]) && $attachments['tmp_name'][$key] != '') {
+                            $tmp_name  = $attachments['tmp_name'][$key];
+                            $extension = strtolower(end(explode('.',$filename)));
+                            $attachment_photo = $work_order_number ."_photo_".basename($filename);
+
+                            if(move_uploaded_file($tmp_name, $customerDocFolderPath.$attachment_photo)) {
+                                if (copy($customerDocFolderPath.$attachment_photo, $customerDocFolderPath2.$attachment_photo)) {}
+                            }                            
+
+                            $acsc_data2 = array(
+                                'customer_id'      => $customer_id,
+                                'file_name'        => $attachment_photo,
+                                'document_type'    => 'payment_details',
+                                'document_label'   => 'Payment Details',
+                                'is_predefined'    => 0,
+                                'is_active'        => 1,
+                                'date_created'     => date("Y-m-d H:i:s")
+                            );
+                            $acs_cust_docs = $this->workorder_model->save_acs_customer_document($acsc_data2);  
+                            if($acs_cust_docs) {
+                                
+                                $woa_data2 = array(
+                                    'work_order_id' => $wo_id,
+                                    'document_id'   => $acs_cust_docs,
+                                    'customer_id'   => $customer_id
+                                );                        
+                                $wo_attach = $this->workorder_model->save_work_order_attachments($woa_data2); 
+
+                                $wop_data2 = array(
+                                    'path'          => "uploads/CompanyPhoto/".$company_id."/" . $attachment_photo,
+                                    'work_order_id' => $wo_id,
+                                    'company_id'    => $company_id
+                                );  
+                                $wo_attach2 = $this->workorder_model->save_work_order_photo($wop_data2); 
+                            } 
                         }
                     }
                 }                

@@ -1036,7 +1036,7 @@
                                             <i class='bx bx-file' style="font-size:17px;position:relative;top:3px;"></i> <small><strong>Documents</strong></small>
                                         </div>
                                         <div class="col-12 col-md-8">
-                                            <a class="nsm-button btn-small" style="float:right;" id="btn-add-attachment" href="javascript:void(0);"><strong>+ Add File</strong></a>
+                                            <a class="nsm-button btn-small" style="float:right;" id="btn-add-attachment" href="javascript:void(0);"><strong>+ Add More</strong></a>
                                         </div>
                                     </div>
                                 </div>
@@ -1048,6 +1048,34 @@
                                             <tbody>
                                             <tr>
                                                 <td><input class="form-control" type="file" name="attachments[]" accept="image/*" /></td>
+                                                <td>&nbsp;</td>
+                                            </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>                                    
+                                </div>
+                            </div>
+
+                            <hr />
+                            <div class="nsm-card-header mt-2">
+                                <div class="nsm-card-title d-block">
+                                    <div class="row">
+                                        <div class="col-12 col-md-4">
+                                            <i class='bx bx-file' style="font-size:17px;position:relative;top:3px;"></i> <small><strong>Payments</strong></small>
+                                        </div>
+                                        <div class="col-12 col-md-8">
+                                            <a class="nsm-button btn-small" style="float:right;" id="btn-add-attachment-payment" href="javascript:void(0);"><strong>+ Add More</strong></a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="nsm-card-content">
+                                <div class="row">
+                                    <div class="col-12 col-md-12">
+                                         <table class="table table-borderless" id="tbl-payment-attachments">
+                                            <tbody>
+                                            <tr>
+                                                <td><input class="form-control" type="file" name="payment_attachments[]" accept="image/*" /></td>
                                                 <td>&nbsp;</td>
                                             </tr>
                                             </tbody>
@@ -1140,8 +1168,6 @@
                 <?php echo form_close(); ?>
             </div>
         </div>
-
-        
 
         <!-- Modal New Customer -->
         <div class="modal fade nsm-modal" id="modalNewCustomer" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -1315,8 +1341,7 @@ $(document).ready(function() {
         
         let is_valid = 1;
 
-        var url          = base_url + "workorder/_save_new_workorder_agreement";
-
+        var url = base_url + "workorder/_save_new_workorder_agreement";
         let total_amount = $('#payment_amount_grand').val();       
         
         if( parseFloat(total_amount) <= 0 ){
@@ -1364,62 +1389,6 @@ $(document).ready(function() {
             }); 
         }
        
-    });
-
-    $("#form_new_adi_workorderOld").on("submit", function(e) {            
-        e.preventDefault();
-        var url = "<?php echo base_url('workorder/savenewWorkorderAgreement'); ?>";            
-
-        let _this        = $(this);
-        let form_valid   = 1;
-        let form_err_msg = '';
-        let total_amount = $('#payment_amount_grand').val();
-        let customer_id  = $('#customer_id').val();
-
-        if( parseFloat(total_amount) <= 0 ){
-            form_valid = 0;
-            form_err_msg = 'Cannot accept 0 total amount due';
-        }
-
-        /*if( parseFloat(customer_id) <= 0 ){
-            form_valid = 0;
-            form_err_msg = 'Please select customer';
-        }*/
-
-        if( form_valid == 1 ){
-            _this.find("button[type=submit]").html("Submitting");
-            _this.find("button[type=submit]").prop("disabled", true);
-
-            $.ajax({
-                type: 'POST',
-                url: url,
-                data: _this.serialize(),                
-                success: function(result) {
-                    Swal.fire({
-                        title: 'Save Successful!',
-                        text: "Workorder has been saved successfully.",
-                        icon: 'success',
-                        showCancelButton: false,
-                        confirmButtonText: 'Okay'
-                    }).then((result) => {
-                        //if (result.value) {
-                            location.reload();
-                        //}
-                    });
-
-                    _this.trigger("reset");
-
-                    _this.find("button[type=submit]").html("Submit");
-                    _this.find("button[type=submit]").prop("disabled", false);
-                },
-            });
-        }else{
-            Swal.fire({
-            icon: 'error',
-                title: 'Error!',
-                html: form_err_msg
-            });
-        }
     });
 
     $(".datepicker").datepicker({
@@ -1872,8 +1841,9 @@ $(document).ready(function() {
 
     $('#btn-add-attachment').on('click', function(){
         var tableBody = $("#tbl-attachments tbody");
-        let rowCount = $('#tbl-attachments > tbody > tr').length + 1;
-        if( rowCount < 10 ){
+        let rowCount  = $('#tbl-attachments > tbody > tr').length;
+        let rowCount2 = $('#tbl-payment-attachments > tbody > tr').length;
+        if( (rowCount + rowCount2) < 10 ){
             let html = `
             <tr>
                 <td><input class="form-control" type="file" name="attachments[]" /></td>
@@ -1889,6 +1859,29 @@ $(document).ready(function() {
             });
         }
     });
+
+      
+    $('#btn-add-attachment-payment').on('click', function(){
+        var tableBody = $("#tbl-payment-attachments tbody");
+        let rowCount  = $('#tbl-payment-attachments > tbody > tr').length;
+        let rowCount2 = $('#tbl-attachments > tbody > tr').length;
+        if( (rowCount + rowCount2) < 10 ){
+            let html = `
+            <tr>
+                <td><input class="form-control" type="file" name="payment_attachments[]" /></td>
+                <td><a href="javascript:void(0);" data-id="${rowCount}" class="btn-remove-row-attachment nsm-button danger" style="line-height:35px;"><i class='bx bx-trash'></i></a></td>
+            </tr>`;
+
+            tableBody.append(html);
+        }else{
+            Swal.fire({
+            icon: 'error',
+                title: 'Error!',
+                html: 'Can only accept max 10 payment attachments'
+            });
+        }
+    });
+
 });
 </script>
 <?php include viewPath('v2/includes/footer'); ?>
