@@ -2108,6 +2108,8 @@ $route['before_after_photos/_update_photos'] = 'Before_after_v2/ajax_update_phot
 //Photo Gallery
 $route['photo_gallery'] = 'PhotoGallery/index';
 $route['photo_gallery/_upload_images'] = 'PhotoGallery/ajax_upload_images';
+$route['photo_gallery/_update_caption'] = 'PhotoGallery/ajax_update_caption';
+$route['photo_gallery/_delete_photo'] = 'PhotoGallery/ajax_delete_photo';
 
 //Files Vault
 $route['files_vault'] = 'Vault_v2/index_v2';
@@ -2334,6 +2336,8 @@ $route['customer/_create_emergency_agencies'] = 'Customer/ajax_create_emergency_
 $route['customer/_delete_emergency_agency'] = 'Customer/ajax_delete_emergency_agency';
 $route['customer/_edit_emergency_agency'] = 'Customer/ajax_edit_emergency_agency';
 $route['customer/_update_emergency_agency'] = 'Customer/ajax_update_emergency_agency';
+$route['customer/_delete_selected_emergency_agencies'] = 'Customer/ajax_delete_selected_emergency_agencies';
+$route['customer/export_emergency_agency_list/(:any)?'] = 'Customer/export_emergency_agency_list/$1';
 
 //Benchmark for Testing
 $route['benchmark/test_customer_subscription'] = 'Benchmark/test_customer_subscription';
