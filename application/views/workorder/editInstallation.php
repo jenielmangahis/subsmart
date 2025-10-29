@@ -887,7 +887,7 @@ tr {
                                                 </div>
                                                 <div class="form-group col-md-6">
                                                     <label for="job_type" class="label-element">Credit Card Expiration</label>
-                                                    <input type="text" class="form-control input-element" name="credit_expiry" id="credit_expiry" placeholder="MM/YYYY"/ value="<?php echo $payments->credit_expiry; ?>">
+                                                    <input type="text" class="form-control input-element" name="credit_expiry" id="credit_expiry" placeholder="MM/YYYY" value="<?php echo $payments->credit_expiry; ?>">
                                                 </div>  
                                                 <div class="form-group col-md-6">
                                                     <label for="job_type" class="label-element">CVC</label>
