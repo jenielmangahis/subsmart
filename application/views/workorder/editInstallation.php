@@ -1185,15 +1185,17 @@ tr {
                                 <div class="col-12">
                                     <div class="nsm-card-content">
                                         <div class="row g-3">
-                                            <div class="col-12 col-md-4">
-                                            <h6>Company Representative Approval</h6> 
+                                            <div style="text-align: center;" class="col-12 col-md-4">
+                                            <label class="content-subtitle fw-bold d-block mb-2">Company Representative Approval</label>
                                             <!-- <a class="btn btn-success companySignature"><span class="fa fa-plus-square fa-margin-right"></span> Add Signature</a> -->
-                                            <div class="d-flex mt-2 companySignature" id="cra_sign_container" role="button" style="border: 1px solid #ced4da; border-radius: 0.25rem; min-height: 20px; padding: 1rem;" data-bs-toggle="modal" data-bs-target="#company-representative-approval-signature">
-                                                    <span class="m-auto" style="color: #c7c7c7;">Click to add signature</span>
+                                            <div class="d-flex mt-2 companySignature" id="cra_sign_container" role="button" style="background-color: #6a4a86; color: #ffffff; border: 1px solid #ced4da; border-radius: 0.25rem; min-height: 20px; padding: 1rem;" data-bs-toggle="modal" data-bs-target="#company-representative-approval-signature">
+                                                    <span class="m-auto" style="color: #ffffff;">Click to add signature</span>
                                                     <!-- <img src="" id="companyrep" class="m-auto d-none"> -->
                                                     <!-- <div id="companyrep"></div> -->
                                                 </div>
-                                            <img src="<?php echo base_url($workorder->company_representative_signature); ?>" class="img1">
+                                            <?php if($workorder->company_representative_signature != '') { ?>
+                                                <img src="<?php echo base_url($workorder->company_representative_signature); ?>" class="img1">
+                                            <?php } ?>
                                             <div id="companyrep"></div>
                                             <br>
 
@@ -1210,7 +1212,7 @@ tr {
                                            <!-- <input type="hidden" id="saveCompanySignatureDB1aM_web" name="company_representative_approval_signature1aM_web">  -->
                                            <div id="company_representative_div"></div>
                                             </div>
-                                            <div class="col-12 col-md-4">
+                                            <div style="text-align: center;" class="col-12 col-md-4">
                                                 <label class="content-subtitle fw-bold d-block mb-2">Primary Account Holder</label>
                                                 <!-- <input type="text" name="primary_account_holder_name" id="primary_account_holder_name" class="nsm-field form-control" placeholder="Printed Name" />
                                                 
@@ -1220,10 +1222,12 @@ tr {
                                                 <div class="d-flex mt-2" id="pah_sign_container" role="button" style="border: 1px solid #ced4da; border-radius: 0.25rem; min-height: 20px; padding: 1rem;" data-bs-toggle="modal" data-bs-target="#primary-account-holder-signature">
                                                     <span class="m-auto" style="color: #c7c7c7;">Click to add signature</span>
                                                 </div> -->
-                                                <div class="d-flex mt-2" id="pah_sign_container" role="button" style="border: 1px solid #ced4da; border-radius: 0.25rem; min-height: 20px; padding: 1rem;" data-bs-toggle="modal" data-bs-target="#primary-account-holder-signature">
-                                                    <span class="m-auto" style="color: #c7c7c7;">Click to add signature</span>
+                                                <div class="d-flex mt-2" id="pah_sign_container" role="button" style="background-color: #6a4a86; color: #ffffff; border: 1px solid #ced4da; border-radius: 0.25rem; min-height: 20px; padding: 1rem;" data-bs-toggle="modal" data-bs-target="#primary-account-holder-signature">
+                                                    <span class="m-auto" style="color: #ffffff;">Click to add signature</span>
                                                 </div>
-                                                <img src="<?php echo base_url($workorder->primary_account_holder_signature); ?>" class="img2">
+                                                <?php if($workorder->primary_account_holder_signature != '') { ?>
+                                                    <img src="<?php echo base_url($workorder->primary_account_holder_signature); ?>" class="img2">
+                                                <?php } ?>
                                                 <div id="primaryrep"></div>
                                                 <br>
 
@@ -1241,7 +1245,7 @@ tr {
                                                     <!-- <input type="hidden" id="saveCompanySignatureDB1aM_web2" name="primary_representative_approval_signature1aM_web"> -->
                                                     <div id="primary_representative_div"></div>
                                             </div>
-                                            <div class="col-12 col-md-4">
+                                            <div style="text-align: center;" class="col-12 col-md-4">
                                                 <label class="content-subtitle fw-bold d-block mb-2">Secondary Account Holder</label>
                                                 <!-- <input type="text" name="secondery_account_holder_name" class="nsm-field form-control" placeholder="Printed Name" /> -->
 
@@ -1251,10 +1255,12 @@ tr {
                                                 <div class="d-flex mt-2" id="sah_sign_container" role="button" style="border: 1px solid #ced4da; border-radius: 0.25rem; min-height: 20px; padding: 1rem;" data-bs-toggle="modal" data-bs-target="#secondary-account-holder-signature">
                                                     <span class="m-auto" style="color: #c7c7c7;">Click to add signature</span>
                                                 </div> -->
-                                                <div class="d-flex mt-2" id="sah_sign_container" role="button" style="border: 1px solid #ced4da; border-radius: 0.25rem; min-height: 20px; padding: 1rem;" data-bs-toggle="modal" data-bs-target="#secondary-account-holder-signature">
-                                                    <span class="m-auto" style="color: #c7c7c7;">Click to add signature</span>
+                                                <div class="d-flex mt-2" id="sah_sign_container" role="button" style="background-color: #6a4a86; color: #ffffff; border: 1px solid #ced4da; border-radius: 0.25rem; min-height: 20px; padding: 1rem;" data-bs-toggle="modal" data-bs-target="#secondary-account-holder-signature">
+                                                    <span class="m-auto" style="color: #ffffff;">Click to add signature</span>
                                                 </div>
-                                                <img src="<?php echo base_url($workorder->secondary_account_holder_signature); ?>" class="img3">
+                                                <?php if($workorder->secondary_account_holder_signature != '') { ?>
+                                                    <img src="<?php echo base_url($workorder->secondary_account_holder_signature); ?>" class="img3">
+                                                <?php } ?>
                                                 <div id="secondaryrep"></div>
                                                 <br>
 
