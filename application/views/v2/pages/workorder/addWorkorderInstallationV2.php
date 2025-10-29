@@ -836,7 +836,7 @@
                                             </div>
                                             <div class="col-12 col-md-4">
                                                 <label class="content-subtitle fw-bold d-block mb-2">Credit Card Expiration</label>
-                                                <input id="credit_expiry" name="credit_expiry" type="tel" class="form-control cc-exp cc-exp__example" placeholder="MM / YY" autocompletetype="cc-exp" required="required">
+                                                <input id="credit_expiry" name="credit_expiry" type="tel" class="form-control cc-exp cc-exp__example" placeholder="MM / YY" autocompletetype="cc-exp">
                                             </div>
                                             <div class="col-12 col-md-4">
                                                 <label class="content-subtitle fw-bold d-block mb-2">CVC</label>
