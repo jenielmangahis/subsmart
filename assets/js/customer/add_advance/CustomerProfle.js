@@ -36,7 +36,7 @@ $($installCode).select2({
     processResults: (response) => {
       return {
         results: response.map((item) => ({
-          id: item.id,
+          id: item.code,
           text: item.code,
         })),
       };
