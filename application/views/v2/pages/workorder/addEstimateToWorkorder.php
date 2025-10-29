@@ -151,7 +151,7 @@
                                         </select>
                                     </div>
                                     <div class="col-12 col-md-2">
-                                        <label class="content-subtitle fw-bold d-block mb-2">Security Data</label>
+                                        <label class="content-subtitle fw-bold d-block mb-2">System Package</label>
                                         <select class="nsm-field form-select" name="communication_type" id="communication_type">
                                             <option value="0">- none -</option>
                                             <?php foreach ($system_package_type as $lead) { ?>
