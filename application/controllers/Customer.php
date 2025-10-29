@@ -8716,15 +8716,27 @@ class Customer extends MY_Controller
             SELECT 
                 customer_list_view.prof_id AS id,
                 customer_list_view.company_id AS company_id,
-                customer_list_view.customer_name AS name,
-                customer_list_view.profile_business_name AS business_name,
+                customer_list_view.customer_no AS customer_no,
+                CASE 
+                    WHEN customer_list_view.profile_business_name IS NOT NULL 
+                        AND customer_list_view.profile_business_name != '' 
+                    THEN customer_list_view.profile_business_name
+                    ELSE customer_list_view.customer_name
+                END AS name,
+                customer_list_view.customer_group_name AS customer_group,
+                customer_list_view.profile_customer_group_id AS customer_group_id,
                 customer_list_view.profile_status AS status,
+                customer_list_view.office_lead_source AS source,
+                customer_list_view.office_sales_rep_name AS sales_rep_name,
+                customer_list_view.office_technician_name AS tech_rep_name,
+                customer_list_view.alarm_system_type AS service_package,
                 customer_list_view.profile_customer_type AS type,
-                CONCAT(customer_list_view.profile_mail_add, ' ', customer_list_view.profile_city, ', ', customer_list_view.profile_state, ' ', customer_list_view.profile_zip_code) AS address,
+                customer_list_view.profile_full_address AS address,
                 customer_list_view.profile_email AS email,
+                customer_list_view.profile_phone_m AS phone_m,
                 customer_list_view.billing_bill_start_date AS bill_start,
                 customer_list_view.billing_bill_end_date AS bill_end,
-                customer_list_view.billing_mmr
+                customer_list_view.billing_mmr AS bill_mmr
             FROM customer_list_view
             WHERE customer_list_view.company_id = {$company_id}
                 {$statusFilter} 

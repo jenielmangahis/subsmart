@@ -275,11 +275,11 @@ a.btn-primary.btn-md {
                                     <?php } ?>  
                                 </select>
                                 <div class="row">
-                                    <div class="col-md-6" style="display: ;">
+                                    <div class="col-md-6">
                                         <label for="customer_phone" class="required"><b>Mobile Number</b></label>
                                         <input type="text" class="form-control phone_number" placeholder="xxx-xxx-xxxx" name="customer_phone" id="customer_phone" required  value=""/>
                                     </div>
-                                    <div class="col-md-6">
+                                    <div class="col-md-6 business-name-section" <?= $default_customer_type == 'Residential' ? 'style="display:none;"' : ''; ?>>
                                         <label for="business_name"><b>Business Name</b> (optional)</label>
                                         <input type="text" class="form-control" name="business_name" id="business_name" placeholder="Business Name" value=""/>
                                     </div>
@@ -401,7 +401,7 @@ a.btn-primary.btn-md {
                                         <label for="panel_type" class="block-label"><b>Panel Type</b> <a href="javascript:void(0);" id="btn-quick-add-panel-type" class="btn-small nsm-button">Add New</a></label>                                            
                                         <select name="panel_type" id="panel_type" class="form-select" data-value="">
                                             <?php foreach($settingPanelTypes as $panelType){ ?>
-                                                <option value="<?= $panelType->name; ?>"><?= $panelType->name; ?></option>
+                                                <option <?= $default_panel_type == $panelType->name ? 'selected=""' : ''; ?> value="<?= $panelType->name; ?>"><?= $panelType->name; ?></option>
                                             <?php } ?>
                                         </select>
                                     </div>
@@ -1587,11 +1587,12 @@ $(document).ready(function(){
             url: base_url + "ticket/_get_customer_basic_information",
             data: {id : id },
             dataType: 'json',
-            success: function(response){            
+            success: function(response){       
+                var customer_type = response.customer_type;     
                 var phone = response.phone_h;
                 var mobile = response.phone_m;
                 var panel_type = response.panel_type;
-                var service_location = response.mail_add + ' ' + response.city + ', ' + response.state + ' ' + response.zip_code;
+                var service_location = response.mail_add + ' ' + response.city + ', ' + response.state + ' ' + response.zip_code;                
                 $("#service_location").val(service_location);
                 $("#customer_address").val(response.mail_add);
                 $("#customer_city").val(response.city);
@@ -1604,11 +1605,18 @@ $(document).ready(function(){
                     $('#panel_type').val(panel_type);
                 }
 
-                var map_source = 'http://maps.google.com/maps?q=' + service_location +
+                var map_service_location = service_location.replace("#", "");
+                var map_source = 'http://maps.google.com/maps?q=' + map_service_location +
                             '&output=embed';
                 var map_iframe = '<iframe id="TEMPORARY_MAP_VIEW" src="' + map_source +
                     '" height="370" width="100%" style=""></iframe>';
                 $('.MAP_LOADER').hide().html(map_iframe).fadeIn('slow');
+
+                if( customer_type == 'Residential' ){
+                    $('.business-name-section').hide();
+                }else{
+                    $('.business-name-section').show();
+                }
 
                 $('#btn-use-different-address').attr('data-id', id);
                 $('#btn-use-different-address').show();
@@ -1675,6 +1683,7 @@ $(document).ready(function(){
                 var customer_mobile = response.phone_m;
                 var customer_address = response.mail_add;
                 var service_location = response.mail_add + ' ' + response.city + ', ' + response.state + ' ' + response.zip_code; 
+                var customer_type = response.customer_type;
 
                 if( customer_business_name == '' ){
                     customer_business_name = 'Not Specified';
@@ -1705,11 +1714,11 @@ $(document).ready(function(){
                 var customer_city = response.city;
                 if( response.city == '' ){
                     customer_city = 'Not Specified';
-                }
+                }                
                 
                 $('#business_name').val(customer_business_name);
                 $('#customer_mobile').val(customer_mobile);
-                $('#customer_phone').val(customer_phone);
+                $('#customer_phone').val(customer_mobile);
                 $('#customer_zip').val(response.zip_code)
                 $('#customer_state').val(customer_state);
                 $('#customer_city').val(customer_city);
@@ -1721,6 +1730,12 @@ $(document).ready(function(){
                 var map_iframe = '<iframe id="TEMPORARY_MAP_VIEW" src="' + map_source +
                     '" height="370" width="100%" style=""></iframe>';
                 $('.MAP_LOADER').hide().html(map_iframe).fadeIn('slow');
+
+                if( customer_type == 'Residential' ){
+                    $('.business-name-section').hide();
+                }else{
+                    $('.business-name-section').show();
+                }
             },
             error: function(e) {
                 

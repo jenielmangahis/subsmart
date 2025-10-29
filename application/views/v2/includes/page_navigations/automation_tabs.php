@@ -1,4 +1,4 @@
-<style>
+<!-- <style>
     @media (max-width: 768px) {
     .nsm-page-link span {
         display: none;
@@ -10,7 +10,7 @@
     }
 }
 
-</style>
+</style> -->
 <div class="nsm-page-nav">
     <ul>
         <li class="<?php if($page->title == 'Automation'): echo 'active'; endif; ?>">
