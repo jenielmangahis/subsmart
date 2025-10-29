@@ -1339,11 +1339,13 @@ class Tickets extends MY_Controller
         $default_customer_id = 0;
         $default_customer_name = '';
         $default_panel_type = '';
+        $default_customer_type = '';
         if ($this->input->get('cus_id')) {
             $customer = $this->AcsProfile_model->getByProfId($this->input->get('cus_id'));
             if ($customer) {
                 $default_customer_id = $customer->prof_id;
                 $default_customer_name = $customer->first_name . ' ' . $customer->last_name;    
+                $default_customer_type = $customer->customer_type;
                 
                 $acsAlarm = $this->AcsAlarm_model->getByCustmerId($customer->prof_id);
                 if( $acsAlarm ){
@@ -1355,6 +1357,7 @@ class Tickets extends MY_Controller
         $this->page_data['default_customer_id'] = $default_customer_id;
         $this->page_data['default_customer_name'] = $default_customer_name;
         $this->page_data['default_panel_type'] = $default_panel_type;
+        $this->page_data['default_customer_type'] = $default_customer_type;
 
         $default_start_date = date('Y-m-d');
         $default_start_time = '';
@@ -2553,6 +2556,7 @@ class Tickets extends MY_Controller
             }
             $json_data = [
                 'prof_id' => $customer->prof_id,
+                'customer_type' => $customer->customer_type,
                 'first_name' => $customer->first_name,
                 'last_name' => $customer->last_name,
                 'email' => $customer->email,
@@ -2596,6 +2600,7 @@ class Tickets extends MY_Controller
         }else{
             $json_data = [
                 'prof_id' => $customer->prof_id,
+                'customer_type' => $customer->customer_type,
                 'first_name' => $customer->first_name,
                 'last_name' => $customer->last_name,
                 'email' => $customer->email,
