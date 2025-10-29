@@ -148,7 +148,7 @@
     }
 }
 
-@media (max-width: 768px){
+/* @media (max-width: 768px){
     .nsm-page-nav .nsm-page-link > i{
         text-align: center;
     }
@@ -156,7 +156,7 @@
     .nsm-page-nav .nsm-page-link > span{
         display: none;
     }
-}
+} */
 
 @media (max-width: 620px){
     .nsm-widget-table .widget-item .content .details{
