@@ -5,6 +5,7 @@ class Clients_model extends MY_Model
 {
     public $table = 'clients';
     public $solar_industry_id = 28;
+    public $alarm_industry_id = 39;
    
     public function getAll($filters=array())
     {
@@ -227,6 +228,10 @@ class Clients_model extends MY_Model
 
     public function solarIndustryId(){
         return $this->solar_industry_id;
+    }
+
+    public function alarmIndustryId(){
+        return $this->alarm_industry_id;
     }
 
     public function defaultNumLincense()
