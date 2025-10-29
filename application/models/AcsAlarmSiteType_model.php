@@ -38,6 +38,18 @@ class AcsAlarmSiteType_model extends MY_Model
         return $query->row();
     }
 
+    public function getByNameAndCompanyId($name, $cid)
+    {
+
+        $this->db->select('*');
+        $this->db->from($this->table);
+        $this->db->where('name', $name);
+        $this->db->where('company_id', $cid);
+
+        $query = $this->db->get();
+        return $query->row();
+    }
+
     public function bulkDelete($ids = [], $filters = [])
     {
         if( count($ids) > 0 ){
