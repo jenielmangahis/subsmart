@@ -26,14 +26,14 @@
 	<div class="col-md-4 mb-3">
 		<div class="form-group">
 			<label>Card Exp</label>
-			<input id="card_exp" type="tel" class="form-control cc-exp cc-exp__example" placeholder="MM / YYYY" autocompletetype="cc-exp" required="required">
+			<input id="card_exp" type="tel" class="form-control cc-exp cc-exp__example" placeholder="MM / YYYY" autocompletetype="cc-exp">
 		</div>
 	</div>
 
 	<div class="col-md-2 mb-3">
 		<div class="form-group">
 			<label>CVC</label>
-			<input id="card_cvc" type="text" maxlength=4 class="form-control" placeholder="1234" required="required">
+			<input id="card_cvc" type="text" maxlength=4 class="form-control" placeholder="1234">
 		</div>
 	</div>
 
