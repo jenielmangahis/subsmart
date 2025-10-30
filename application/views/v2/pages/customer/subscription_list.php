@@ -47,6 +47,7 @@
         padding: 5px;
         margin-top: 10px;
         padding-left: 10px;
+        cursor: pointer;
     }
 
     .nsm-callout {
@@ -60,6 +61,14 @@
     .customerNoLabel {
         font-size: smaller;
         color: darkgray;
+    }
+
+    .activeCustomerGroupSearch {
+        width: 140px !important;
+    }
+
+    .collapse, .collapsing {
+        transition: none !important;
     }
 </style>
 <div class="row page-content g-0">
@@ -91,6 +100,9 @@
                     <div class="col-lg-3 mb-3">
                         <div class="input-group">
                             <input type="text" class="form-control activeCustomerGroupSearch" placeholder="Search Customer">
+                            <select class="form-select activeCustomerCategoryFilter">
+                                <option value="">None</option>
+                            </select>
                         </div>
                     </div>
                     <div class="col-lg-12">
@@ -184,7 +196,7 @@
             },
             beforeSend: function() {
                 $('.activeCustomerListContent').hide();
-                $('.activeCustomerLoader').fadeIn('fast');
+                $('.activeCustomerLoader').show();
             },
             success: function(response) {
                 const data = JSON.parse(response);
@@ -228,12 +240,14 @@
                             const email = cust.email ? cust.email : "no@email.com";
                             const bill_start = cust.bill_start ? new Date(cust.bill_start).toLocaleDateString("en-US", { month: "2-digit", day: "2-digit", year: "numeric" }) : "Not Specified";
                             const bill_end = cust.bill_end ? new Date(cust.bill_end).toLocaleDateString("en-US", { month: "2-digit", day: "2-digit", year: "numeric" }) : "Not Specified";
-                            const billing_mmr = cust.billing_mmr ? Number(cust.billing_mmr).toLocaleString("en-US", { style: "currency", currency: "USD" }) : "$0.00";
+                            const bill_mmr = cust.bill_mmr ? Number(cust.bill_mmr).toLocaleString("en-US", { style: "currency", currency: "USD" }) : Number(cust.alarm_bill_mmr).toLocaleString("en-US", { style: "currency", currency: "USD" });
+
+                            
 
                             return `
                                 <tr>
                                     <td class="text-nowrap">
-                                        <div class="d-flex">
+                                        <div class="d-flex cursor-pointer" onclick="window.location.href = '${window.origin}/customer/module/${cust.id}'">
                                             <div class="nsm-profile">
                                             <span>${initials}</span>
                                         </div>
@@ -249,7 +263,7 @@
                                     <td class="text-nowrap">${address}</td>
                                     <td class="text-nowrap">${bill_start}</td>
                                     <td class="text-nowrap">${bill_end}</td>
-                                    <td class="text-nowrap">${billing_mmr}</td>
+                                    <td class="text-nowrap">${bill_mmr}</td>
                                     <td style="width: 0;" class="p-0">
                                         <div class='dropdown'>
                                             <button class='btn dropdown-toggle text-muted' type='button' id='activeCustomerButtonDropdown' data-bs-toggle='dropdown' aria-expanded='false'><i class='fas fa-ellipsis-v'></i></button>
@@ -309,7 +323,7 @@
 
                 $(".activeCustomerListContent").html(html);
                 setTimeout(() => {
-                    $('.activeCustomerListContent').fadeIn('fast');
+                    $('.activeCustomerListContent').show();
                     $('.activeCustomerLoader').hide(); 
                 }, 500);
             },
@@ -333,10 +347,11 @@
                 category: "customer_status",
                 dateFrom: "1970-01-01",
                 dateTo: "<?php echo date('Y-m-d'); ?>",
+                filter3: "active_only",
             },
             beforeSend: function() {
                 $('.activeCustomerStatusContainer').hide();
-                $('.activeCustomerBadgeLoader').fadeIn('fast');
+                $('.activeCustomerBadgeLoader').show();
             },
             success: function(response) {
                 const data = JSON.parse(response);
@@ -374,6 +389,8 @@
                                 </div>
                             </div>
                         `;
+
+                        $('.activeCustomerCategoryFilter').append(`<option value="${key}">${key}</option>`);
                     });
                 } else {
                     html += `
@@ -388,12 +405,12 @@
 
                 $('.activeCustomerStatusContainer').html(html);
                 setTimeout(() => {
-                    $('.activeCustomerStatusContainer').fadeIn('fast');
+                    $('.activeCustomerStatusContainer').show();
                     $('.activeCustomerBadgeLoader').hide();
                 }, 500);
             },
             error: function() {
-                $('.activeCustomerStatusContainer').fadeIn('fast');
+                $('.activeCustomerStatusContainer').show();
                 $('.activeCustomerBadgeLoader').hide();
                 Swal.fire({
                     icon: "error",
@@ -406,12 +423,13 @@
         });
     }
 
-    $('.activeCustomerGroupSearch').on('input', function () {
-        const query = $(this).val().trim().toLowerCase();
+    $(document).on('input change', '.activeCustomerGroupSearch, .activeCustomerCategoryFilter', function () {
+        const searchQuery = $('.activeCustomerGroupSearch').val().trim().toLowerCase();
+        const selectedCategory = $('.activeCustomerCategoryFilter').val();
 
-        if (!query) {
-            $('.activeCustomerGroupAccordion').fadeIn('fast');
-            $('.activeCustomerGroupAccordion tbody tr').fadeIn('fast');
+        if (!searchQuery && !selectedCategory) {
+            $('.activeCustomerGroupAccordion').show();
+            $('.activeCustomerGroupAccordion tbody tr').show();
             return;
         }
 
@@ -422,7 +440,9 @@
 
             rows.each(function () {
                 const rowText = $(this).text().toLowerCase();
-                const match = rowText.includes(query);
+                const matchText = !searchQuery || rowText.includes(searchQuery);
+                const matchCategory = !selectedCategory || rowText.includes(selectedCategory.toLowerCase());
+                const match = matchText && matchCategory;
 
                 $(this).toggle(match);
                 if (match) hasMatch = true;
@@ -432,6 +452,10 @@
         });
     });
 
+    $(document).on('click', '.activeCustomerStatusCategory', function () {
+        const value = $(this).find('.activeCustomerStatusName').text();
+        $('.activeCustomerCategoryFilter').val(value).change();
+    });
 
     $(function () {
         getActiveCustomers();

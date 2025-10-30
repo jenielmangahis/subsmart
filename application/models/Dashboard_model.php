@@ -2,7 +2,7 @@
 
 class Dashboard_model extends MY_Model
 {
-    public function fetchThumbnailWidgetData($category, $dateFrom, $dateTo, $filter3 = null)
+    public function fetchThumbnailWidgetData($category, $dateFrom, $dateTo, $filter3 = null, $filter4 = null)
     {
         $company_id = logged('company_id');
         switch ($category) {
@@ -163,9 +163,17 @@ class Dashboard_model extends MY_Model
                 $this->db->from('acs_profile');
                 $this->db->where('acs_profile.company_id', $company_id);
                 $this->db->where('acs_profile.is_archived', 0);
+                
                 if ($filter3 == "active_only") {
                     $this->db->where_in('acs_profile.status', ['Active w/RAR', 'Active w/RMR', 'Active w/RQR', 'Active w/RYR', 'Inactive w/RMM']);
                 }
+
+                if ($filter4 == "commercial") {
+                    $this->db->where('acs_profile.customer_type', "Commercial");
+                } else if ($filter4 == "residential") {
+                    $this->db->where('acs_profile.customer_type', "Residential");
+                }
+
                 $this->db->where('customer_groups.title !=', "");
                 $this->db->where("DATE_FORMAT(acs_profile.created_at, '%Y-%m-%d') >=", $dateFrom);
                 $this->db->where("DATE_FORMAT(acs_profile.created_at, '%Y-%m-%d') <=", $dateTo);
@@ -266,6 +274,11 @@ class Dashboard_model extends MY_Model
                 $this->db->where('acs_profile.company_id', $company_id);
                 $this->db->where('acs_profile.is_archived', 0);
                 $this->db->where('acs_profile.status !=', "");
+
+                if ($filter3 == "active_only") {
+                    $this->db->where_in('acs_profile.status', ['Active w/RAR', 'Active w/RMR', 'Active w/RQR', 'Active w/RYR', 'Inactive w/RMM']);
+                }
+
                 $this->db->where("DATE_FORMAT(acs_profile.updated_at, '%Y-%m-%d') >=", $dateFrom);
                 $this->db->where("DATE_FORMAT(acs_profile.updated_at, '%Y-%m-%d') <=", $dateTo);
                 $this->db->group_by('acs_profile.status');

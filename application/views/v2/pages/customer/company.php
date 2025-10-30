@@ -66,6 +66,7 @@
         padding: 5px;
         margin-top: 10px;
         padding-left: 10px;
+        cursor: pointer;
     }
 
     .display_none {
@@ -115,6 +116,14 @@
     .commercialCustomerTableContainer {
         height: 380px;
     }
+
+    .commercialCustomerGroupSearch {
+        width: 140px !important;
+    }
+
+    .collapse, .collapsing {
+        transition: none !important;
+    }
 </style>
 <div class="nsm-fab-container">
     <div class="nsm-fab nsm-fab-icon nsm-bxshadow" onclick="location.href='<?php echo url('customer/add_lead') ?>'">
@@ -151,6 +160,9 @@
                     <div class="col-lg-3 mb-3">
                         <div class="input-group">
                             <input type="text" class="form-control commercialCustomerGroupSearch" placeholder="Search Customer">
+                            <select class="form-select commercialCustomerCategoryFilter">
+                                <option value="">None</option>
+                            </select>
                         </div>
                     </div>
                     <div class="col-lg-12">
@@ -683,12 +695,12 @@
             type: "POST",
             url: `${window.origin}/Customer/getActiveCustomerListByFilter`,
             data: {
-                status: "active",
+                status: "all",
                 type: "commercial",
             },
             beforeSend: function() {
                 $('.commercialCustomerListContent').hide();
-                $('.commercialCustomerLoader').fadeIn('fast');
+                $('.commercialCustomerLoader').show();
             },
             success: function(response) {
                 const data = JSON.parse(response);
@@ -732,14 +744,15 @@
                             const sales_rep = cust.sales_rep_name ? cust.sales_rep_name : "Not Specified";
                             const tech_rep = cust.tech_rep_name ? cust.tech_rep_name : "Not Specified";
                             const package = cust.service_package ? cust.service_package : "Not Specified";
-                            const bill_mmr = cust.bill_mmr ? Number(cust.bill_mmr).toLocaleString("en-US", { style: "currency", currency: "USD" }) : "$0.00";
+                            const bill_mmr = cust.bill_mmr ? Number(cust.bill_mmr).toLocaleString("en-US", { style: "currency", currency: "USD" }) : Number(cust.alarm_bill_mmr).toLocaleString("en-US", { style: "currency", currency: "USD" });
                             const phone_m = cust.phone_m ? cust.phone_m : "Not Specified";
                             const status = cust.status ? cust.status : "Not Specified";
+                            const customer_group = cust.customer_group ? cust.customer_group : "Not Specified";
 
                             return `
                                 <tr>
                                     <td class="text-nowrap">
-                                        <div class="d-flex">
+                                        <div class="d-flex cursor-pointer" onclick="window.location.href = '${window.origin}/customer/module/${cust.id}' ">
                                             <div class="nsm-profile">
                                             <span>${initials}</span>
                                         </div>
@@ -758,6 +771,7 @@
                                     <td class="text-nowrap">${package}</td>
                                     <td class="text-nowrap">${bill_mmr}</td>
                                     <td class="text-nowrap">${phone_m}</td>
+                                    <td class="text-nowrap d-none">${customer_group}</td>
                                     <td class="text-nowrap">${status}</td>
                                     <td style="width: 0;" class="p-0">
                                         <div class='dropdown'>
@@ -824,7 +838,7 @@
 
                 $(".commercialCustomerListContent").html(html);
                 setTimeout(() => {
-                    $('.commercialCustomerListContent').fadeIn('fast');
+                    $('.commercialCustomerListContent').show();
                     $('.commercialCustomerLoader').hide(); 
                 }, 500);
             },
@@ -848,15 +862,15 @@
                 category: "customer_groups",
                 dateFrom: "1970-01-01",
                 dateTo: "<?php echo date('Y-m-d'); ?>",
-                filter3: "all_status",
+                // filter3: "all_status",
+                filter4: "commercial",
             },
             beforeSend: function() {
                 $('.commercialCustomerGroupContainer').hide();
-                $('.commercialCustomerBadgeLoader').fadeIn('fast');
+                $('.commercialCustomerBadgeLoader').show();
             },
             success: function(response) {
                 const data = JSON.parse(response).GRAPH;
-                console.log(data);
                 let html = "";
 
                 const colorMap = {
@@ -897,6 +911,8 @@
                                 </div>
                             </div>
                         `;
+
+                        $('.commercialCustomerCategoryFilter').append(`<option value="${key}">${key}</option>`);
                     });
                 } else {
                     html += `
@@ -911,12 +927,12 @@
 
                 $('.commercialCustomerGroupContainer').html(html);
                 setTimeout(() => {
-                    $('.commercialCustomerGroupContainer').fadeIn('fast');
+                    $('.commercialCustomerGroupContainer').show();
                     $('.commercialCustomerBadgeLoader').hide(); 
                 }, 500);
             },
             error: function() {
-                $('.commercialCustomerGroupContainer').fadeIn('fast');
+                $('.commercialCustomerGroupContainer').show();
                 $('.commercialCustomerBadgeLoader').hide();
                 Swal.fire({
                     icon: "error",
@@ -929,12 +945,13 @@
         });
     }
 
-    $('.commercialCustomerGroupSearch').on('input', function () {
-        const query = $(this).val().trim().toLowerCase();
+    $(document).on('input change', '.commercialCustomerGroupSearch, .commercialCustomerCategoryFilter', function () {
+        const searchQuery = $('.commercialCustomerGroupSearch').val().trim().toLowerCase();
+        const selectedCategory = $('.commercialCustomerCategoryFilter').val();
 
-        if (!query) {
-            $('.commercialCustomerGroupAccordion').fadeIn('fast');
-            $('.commercialCustomerGroupAccordion tbody tr').fadeIn('fast');
+        if (!searchQuery && !selectedCategory) {
+            $('.commercialCustomerGroupAccordion').show();
+            $('.commercialCustomerGroupAccordion tbody tr').show();
             return;
         }
 
@@ -945,7 +962,9 @@
 
             rows.each(function () {
                 const rowText = $(this).text().toLowerCase();
-                const match = rowText.includes(query);
+                const matchText = !searchQuery || rowText.includes(searchQuery);
+                const matchCategory = !selectedCategory || rowText.includes(selectedCategory.toLowerCase());
+                const match = matchText && matchCategory;
 
                 $(this).toggle(match);
                 if (match) hasMatch = true;
@@ -953,6 +972,11 @@
 
             accordion.toggle(hasMatch);
         });
+    });
+
+    $(document).on('click', '.commercialCustomerStatusCategory', function () {
+        const value = $(this).find('.commercialCustomerStatusName').text();
+        $('.commercialCustomerCategoryFilter').val(value).change();
     });
 
     $(function () {

@@ -288,7 +288,7 @@ class Customer extends MY_Controller
                         $customer_email = $customer->email;
                     }
                     $name = "
-                        <label class='nsm-link default d-block fw-bold' onclick='location.href=\"".base_url('customer/module/'.$customer->prof_id.'')."\"'>".$labelName."</label><small style='font-size: 12px;' class='text-muted content-subtitle d-block mt-1'>CS: $customer->customer_no</small><small class='text-muted'>".$customer_email.'</small>';
+                        <label class='nsm-link default d-block fw-bold' onclick='location.href=\"".base_url('customer/module/'.$customer->prof_id.'')."\"'>".$labelName."</label><small style='font-size: 12px;' class='text-muted content-subtitle d-block mt-1'>$customer->customer_no</small><small class='text-muted'>".$customer_email.'</small>';
                     if ($customer->adt_sales_project_id > 0) {
                         $name .= '<span class="badge badge-primary">ADT SALES PORTAL DATA</label>';
                     }
@@ -564,7 +564,7 @@ class Customer extends MY_Controller
                         $customer_email = $customer->email;
                     }
                     $name = "
-                        <label class='nsm-link default d-block fw-bold' onclick='location.href=\"".base_url('customer/module/'.$customer->prof_id.'')."\"'>".$labelName."</label><small style='font-size: 12px;' class='text-muted content-subtitle d-block mt-1'>CS: $customer->customer_no</small><small class='text-muted'>".$customer_email.'</small>';
+                        <label class='nsm-link default d-block fw-bold' onclick='location.href=\"".base_url('customer/module/'.$customer->prof_id.'')."\"'>".$labelName."</label><small style='font-size: 12px;' class='text-muted content-subtitle d-block mt-1'>$customer->customer_no</small><small class='text-muted'>".$customer_email.'</small>';
                     if ($customer->adt_sales_project_id > 0) {
                         $name .= '<span class="badge badge-primary">ADT SALES PORTAL DATA</label>';
                     }
@@ -993,7 +993,7 @@ class Customer extends MY_Controller
                         $customer_email = $customer->email;
                     }
                     $name = "
-                        <label class='nsm-link default d-block fw-bold' onclick='location.href=\"".base_url('customer/module/'.$customer->prof_id.'')."\"'>".$labelName."</label><small style='font-size: 12px;' class='text-muted content-subtitle d-block mt-1'>CS: $customer->customer_no</small><small class='text-muted'>".$customer_email.'</small>';
+                        <label class='nsm-link default d-block fw-bold' onclick='location.href=\"".base_url('customer/module/'.$customer->prof_id.'')."\"'>".$labelName."</label><small style='font-size: 12px;' class='text-muted content-subtitle d-block mt-1'>$customer->customer_no</small><small class='text-muted'>".$customer_email.'</small>';
                     if ($customer->adt_sales_project_id > 0) {
                         $name .= '<span class="badge badge-primary">ADT SALES PORTAL DATA</label>';
                     }
@@ -1236,8 +1236,6 @@ class Customer extends MY_Controller
         ];
         echo json_encode($output);
     }
-
-
 
     public function getDuplicatedEntry()
     {
@@ -8720,6 +8718,7 @@ class Customer extends MY_Controller
                 CASE 
                     WHEN customer_list_view.profile_business_name IS NOT NULL 
                         AND customer_list_view.profile_business_name != '' 
+                        AND customer_list_view.profile_business_name != 'Not Specified' 
                     THEN customer_list_view.profile_business_name
                     ELSE customer_list_view.customer_name
                 END AS name,
@@ -8736,6 +8735,7 @@ class Customer extends MY_Controller
                 customer_list_view.profile_phone_m AS phone_m,
                 customer_list_view.billing_bill_start_date AS bill_start,
                 customer_list_view.billing_bill_end_date AS bill_end,
+                customer_list_view.alarm_monthly_monitoring AS alarm_bill_mmr,
                 customer_list_view.billing_mmr AS bill_mmr
             FROM customer_list_view
             WHERE customer_list_view.company_id = {$company_id}
@@ -11053,19 +11053,38 @@ class Customer extends MY_Controller
 
     public function ajax_quick_search()
     {
-        $this->load->model('Customer_model');
-
-        $post = $this->input->post();
-        $cid  = logged('company_id');
-
-        $query['q'] = $post['customer_query'];
-        $customers = $this->Customer_model->getAllByCompany($cid,$query);
-
+        $post = trim($this->input->post('customer_query'));
+        $company_id = logged('company_id');
+    
+        $nameFilter = "";
+        if (!empty($post)) {
+            $nameFilter = " AND ( customer_list_view.profile_business_name LIKE '%{$post}%' OR customer_list_view.customer_name LIKE '%{$post}%' )";
+        }
+    
+        $query = $this->db->query("
+            SELECT 
+                customer_list_view.prof_id AS prof_id,
+                customer_list_view.company_id AS company_id,
+                customer_list_view.customer_no AS customer_no,
+                CASE 
+                    WHEN customer_list_view.profile_business_name IS NOT NULL 
+                        AND customer_list_view.profile_business_name != '' 
+                        AND customer_list_view.profile_business_name != 'Not Specified' 
+                    THEN customer_list_view.profile_business_name
+                    ELSE customer_list_view.customer_name
+                END AS name,
+                customer_list_view.profile_email AS email
+            FROM customer_list_view
+            WHERE customer_list_view.company_id = {$company_id}
+            {$nameFilter}
+            ORDER BY customer_list_view.prof_id DESC;
+        ");
+    
+        $customers = $query->result();
         $this->page_data['customers'] = $customers;
         $this->load->view("v2/pages/customer/ajax_quick_search_result", $this->page_data);
-
     }
-
+    
     public function ajax_archived_list()
     {
         $this->load->model('Customer_model');
