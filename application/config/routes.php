@@ -2348,6 +2348,14 @@ $route['customers/_update_site_type'] = 'Customer/ajax_update_site_type';
 $route['customers/_delete_selected_site_types'] = 'Customer/ajax_delete_selected_site_types';
 $route['customer/_set_default_site_type'] = 'Customer/ajax_set_default_site_type';
 $route['customer/_set_default_installer_code'] = 'Customer/ajax_set_default_installer_code';
+$route['customers/_delete_selected_account_types'] = 'Customer/ajax_delete_selected_account_types';
+
+
+$route['customer/settings_account_types'] = 'Customer/settings_account_types';
+$route['customers/_create_account_type'] = 'Customer/ajax_create_account_type';
+$route['customers/_update_account_type'] = 'Customer/ajax_update_account_type';
+$route['customers/_delete_account_type'] = 'Customer/ajax_delete_account_type';
+$route['customer/_set_default_account_type'] = 'Customer/ajax_set_default_account_type';
 
 //Benchmark for Testing
 $route['benchmark/test_customer_subscription'] = 'Benchmark/test_customer_subscription';
