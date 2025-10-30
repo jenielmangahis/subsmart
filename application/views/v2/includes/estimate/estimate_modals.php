@@ -25,11 +25,11 @@
                             options</label>
                         <button type="button" class="nsm-button w-50 primary" id="btn-new-with-options-estimate">Options Estimate</button>
                     </div> -->
-                    <!-- <div class="col-12">
+                    <div class="col-12">
                         <label class="content-subtitle d-block mb-2">Customers can select both Bundle Packages
                             to<br>obtain an overall discount</label>
                         <button type="button" class="nsm-button w-50 primary" id="btn-new-with-bundle">Bundle Estimate</button>
-                    </div> -->
+                    </div>
                 </div>
             </div>
         </div>
