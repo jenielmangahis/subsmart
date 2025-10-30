@@ -173,7 +173,7 @@ $(function(){
                     type: 'POST',
                     url: base_url + 'photo_gallery/_delete_photo',
                     data: {
-                        user_id: user_id
+                        photo_id: photo_id
                     },
                     dataType: "JSON",
                     success: function(result) {
