@@ -93,7 +93,6 @@
                     <li><a class="dropdown-item" href="<?php echo base_url('customer/settings_system_package') ?>">System Package Type</a></li>
                     <li><a class="dropdown-item" href="<?= base_url('customer/settings_financing_categories') ?>">Financing Payment Categories</a></li>
                     <li><a class="dropdown-item" href="<?= base_url('creditor_furnisher/list') ?>">Creditors / Furnishers</a></li>
-                    <li><a class="dropdown-item" href="<?= base_url('customer/settings_alarm_installer_codes') ?>">Installer Codes</a></li>
                     <?php //if( in_array(logged('company_id'), adi_company_ids()) ){ ?>
                         <?php if( isSolarCompany() ){ ?>
                             <li><a class="dropdown-item" href="<?php echo base_url('customer/settings_solar_lender_type') ?>">Solar Lender Types</a></li>
