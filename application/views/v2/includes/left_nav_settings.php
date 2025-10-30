@@ -232,13 +232,14 @@
                     </a>
                     <div id="sidebar-company-counter" ></div>   
                 </li>
-                <li class="<?php if ($page->title == 'Customer Subscriptions') {
+                <li class="d-flex align-items-center <?php if ($page->title == 'Customer Subscriptions') {
                     echo 'selected';
                 } ?>">
                     <a href="<?php echo base_url('customer/subscriptions'); ?>">
                         <div id="sidebar-subscribers-counter" class="position-absolute" style="right: 42px;"></div>
                         <i class='bx bx-fw bx-user-pin'></i>&nbsp;&nbsp;Subscriptions
                     </a>
+                    <div id="sidebar-subscribers-counter"></div>
                 </li>
                 <li class="<?php if ($page->title == 'Customer Groups') {
                     echo 'selected';

@@ -886,7 +886,7 @@
                     <div class="col-sm-12">
                         <label class="mb-2">Site Type</label>
                         <div class="input-group mb-3">
-                            <input type="text" name="site_type" id="site_type" value="" class="form-control" required="" autocomplete="off" />
+                            <input type="text" name="site_type" id="add_site_type" value="" class="form-control" required="" autocomplete="off" />
                         </div>
                     </div>                 
                 </div>
@@ -948,8 +948,9 @@
                 </form>
             </div>
             <div class="modal-footer">                    
-                <button type="button" class="nsm-button primary" data-bs-dismiss="modal">Cancel</button>
-                <button type="submit" class="nsm-button primary" id="btn-add-panel-type" form="frm-add-panel-type">Save</button>
+                <button type="button" class="nsm-button" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="nsm-button btn-fixed-width" id="btn-manage-panel-type">Manage</button>
+                <button type="submit" class="nsm-button primary btn-fixed-width" id="btn-add-panel-type" form="frm-add-panel-type">Save</button>
             </div>
         </div>        
     </div>
