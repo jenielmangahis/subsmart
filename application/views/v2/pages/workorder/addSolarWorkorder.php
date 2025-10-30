@@ -73,7 +73,7 @@
                                         </select>
                                     </div>
                                     <div class="col-12 col-md-2">
-                                        <label class="content-subtitle fw-bold d-block mb-2">System Type</label>
+                                        <label class="content-subtitle fw-bold d-block mb-2">System Package</label>
                                         <select class="nsm-field form-select" name="system_type" id="system_type">
                                             <option value="0">- none -</option>
                                             <?php foreach ($system_package_type as $lead) { ?>
