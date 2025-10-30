@@ -412,3 +412,31 @@
         </div>
     </div>
 </div>
+
+<div class="modal fade" id="quick_add_account_type" role="dialog">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <span class="modal-title content-title" style="font-size: 17px;">Add Account Type</span>
+                <button class="border-0 rounded mx-1" data-bs-dismiss="modal" style="cursor: pointer;"><i class="fas fa-times m-0 text-muted"></i></button>
+            </div>
+            <div class="modal-body">
+                <form id="frm-quick-add-account-type">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <label class="mb-2">Account Type</label>
+                            <div class="input-group mb-3">
+                                <input type="text" name="account_type" id="account_type_name" value="" class="form-control" required="" autocomplete="off" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="d-flex justify-content-end">                        
+                        <button type="button" id="" class="nsm-button" data-bs-dismiss="modal">Close</button>
+                        <button type="button" class="nsm-button btn-fixed-width" id="btn-manage-account-type">Manage</button>
+                        <button type="submit" class="nsm-button primary btn-fixed-width" id="btn-quick-add-account-type">Save</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
