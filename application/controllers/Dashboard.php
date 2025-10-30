@@ -2216,7 +2216,7 @@ class Dashboard extends Widgets
         // Temp only for testing
         $postData = $this->input->post() ? : $this->input->get();
     
-        $data = $this->Dashboard_model->fetchThumbnailWidgetData($postData['category'], $postData['dateFrom'], $postData['dateTo'], $postData['filter3']);
+        $data = $this->Dashboard_model->fetchThumbnailWidgetData($postData['category'], $postData['dateFrom'], $postData['dateTo'], $postData['filter3'], $postData['filter4']);
     
         switch ($postData['category']) {
             case 'subscription_revenue':

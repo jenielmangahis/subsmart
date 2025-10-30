@@ -11,6 +11,7 @@
         padding: 5px;
         margin-top: 10px;
         padding-left: 10px;
+        cursor: pointer;
     }
 
     .display_none {
@@ -70,6 +71,10 @@
         position: absolute;
         top: 0px;
         right: 0px;
+    }
+
+    .collapse, .collapsing {
+        transition: none !important;
     }
 </style>
 
@@ -285,7 +290,7 @@
 </div>
 
 <script type="text/javascript">
-    function getCommercialCustomers() {
+    function getCustomersByGroup() {
         $.ajax({
             type: "POST",
             url: `${window.origin}/Customer/getActiveCustomerListByFilter`,
@@ -295,7 +300,7 @@
             },
             beforeSend: function() {
                 $('.customerGroupListContent').hide();
-                $('.customerGroupLoader').fadeIn('fast');
+                $('.customerGroupLoader').show();
             },
             success: function(response) {
                 const data = JSON.parse(response);
@@ -346,14 +351,14 @@
                             const sales_rep = cust.sales_rep_name ? cust.sales_rep_name : "Not Specified";
                             const tech_rep = cust.tech_rep_name ? cust.tech_rep_name : "Not Specified";
                             const package = cust.service_package ? cust.service_package : "Not Specified";
-                            const bill_mmr = cust.bill_mmr ? Number(cust.bill_mmr).toLocaleString("en-US", { style: "currency", currency: "USD" }) : "$0.00";
+                            const bill_mmr = cust.bill_mmr ? Number(cust.bill_mmr).toLocaleString("en-US", { style: "currency", currency: "USD" }) : Number(cust.alarm_bill_mmr).toLocaleString("en-US", { style: "currency", currency: "USD" });
                             const phone_m = cust.phone_m ? cust.phone_m : "Not Specified";
                             const status = cust.status ? cust.status : "Not Specified";
 
                             return `
                                 <tr>
                                     <td class="text-nowrap">
-                                        <div class="d-flex">
+                                        <div class="d-flex cursor-pointer" onclick="window.location.href = '${window.origin}/customer/module/${cust.id}' ">
                                             <div class="nsm-profile">
                                                 <span>${initials}</span>
                                             </div>
@@ -446,7 +451,7 @@
 
                 $(".customerGroupListContent").html(html);
                 setTimeout(() => {
-                    $('.customerGroupListContent').fadeIn('fast');
+                    $('.customerGroupListContent').show();
                     $('.customerGroupLoader').hide(); 
                 }, 500);
             },
@@ -462,6 +467,7 @@
         });
     }
 
+    
     // function getCustomerGroupBadge() {
     //     $.ajax({
     //         type: "POST",
@@ -474,7 +480,7 @@
     //         },
     //         beforeSend: function() {
     //             $('.customerGroupContainer').hide();
-    //             $('.customerGroupBadgeLoader').fadeIn('fast');
+    //             $('.customerGroupBadgeLoader').show();
     //         },
     //         success: function(response) {
     //             const data = JSON.parse(response).GRAPH;
@@ -532,11 +538,11 @@
     //             }
 
     //             $('.customerGroupContainer').html(html);
-    //             $('.customerGroupContainer').fadeIn('fast');
+    //             $('.customerGroupContainer').show();
     //             $('.customerGroupBadgeLoader').hide();
     //         },
     //         error: function() {
-    //             $('.customerGroupContainer').fadeIn('fast');
+    //             $('.customerGroupContainer').show();
     //             $('.customerGroupBadgeLoader').hide();
     //             Swal.fire({
     //                 icon: "error",
@@ -553,8 +559,8 @@
         const query = $(this).val().trim().toLowerCase();
 
         if (!query) {
-            $('.customerGroupAccordion').fadeIn('fast');
-            $('.customerGroupAccordion tbody tr').fadeIn('fast');
+            $('.customerGroupAccordion').show();
+            $('.customerGroupAccordion tbody tr').show();
             return;
         }
 
@@ -576,7 +582,7 @@
     });
 
     $(function () {
-        getCommercialCustomers();
+        getCustomersByGroup();
         // getCustomerGroupBadge();
     });
 
@@ -671,7 +677,7 @@
                             
                         });
                     }
-                    getCommercialCustomers();
+                    getCustomersByGroup();
                 },
                 beforeSend: function() {
                     $('#btn-save-customer-group').html('<span class="bx bx-loader bx-spin"></span>');
@@ -713,7 +719,7 @@
                             
                         });
                     }
-                    getCommercialCustomers();
+                    getCustomersByGroup();
                 },
                 beforeSend: function() {
                     $('#btn-update-customer-group').html('<span class="bx bx-loader bx-spin"></span>');
@@ -771,7 +777,7 @@
                                     
                                 });
                             }
-                            getCommercialCustomers();
+                            getCustomersByGroup();
                         },
                     });
                 }

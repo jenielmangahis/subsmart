@@ -973,6 +973,15 @@ $newtasks = getTasks();
                                 });
                             });
 
+                            let customerSearchTimeout;
+                            $(document).on('keyup', 'input[name="customer_query"]', function () {
+                                clearTimeout(customerSearchTimeout);
+
+                                customerSearchTimeout = setTimeout(() => {
+                                    $('#frm-left-nav-quick-search-customer').submit().change();
+                                }, 500);
+                            });
+
                             $('#frm-getting-started-send-download-app-link').on('submit', function(e) {
                                 e.preventDefault();
 
