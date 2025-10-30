@@ -1109,6 +1109,18 @@
             );
         });
 
+        $('#btn-quick-account-type').on('click', function(){
+            $('#frm-quick-add-account-type')[0].reset();
+            $('#quick_add_account_type').modal('show');
+        });
+
+        $('#btn-manage-account-type').on('click', function(){
+            window.open(
+                base_url + 'customer/settings_account_types',
+                '_blank' 
+            );
+        });
+
         $('#frm-quick-add-site-type').on('submit', function(e){
             e.preventDefault();
 
@@ -1516,6 +1528,41 @@
                 },
                 beforeSend: function() {
                     $('#btn-save-proposed-inverter').html('<span class="bx bx-loader bx-spin"></span>');
+                }
+            });
+        });
+
+        $('#frm-quick-add-account-type').on('submit', function(e){
+            e.preventDefault();
+
+            $.ajax({
+                type: "POST",
+                url: base_url + 'customers/_create_account_type',
+                dataType: 'json',
+                data: $('#frm-quick-add-account-type').serialize(),
+                success: function(data) {    
+                    $('#btn-quick-add-account-type').html('Save');                   
+                    if (data.is_success) {
+                        $('#quick_add_account_type').modal('hide');
+                        $('#acct_type').append($('<option>', {
+                            value: data.account_type,
+                            text: data.account_type,
+                        }));
+                        $('#acct_type').val(data.account_type);
+                    }else{
+                        Swal.fire({
+                            title: 'Error',
+                            text: data.msg,
+                            icon: 'error',
+                            showCancelButton: false,
+                            confirmButtonText: 'Okay'
+                        }).then((result) => {
+                            
+                        });
+                    }
+                },
+                beforeSend: function() {
+                    $('#btn-quick-add-account-type').html('<span class="bx bx-loader bx-spin"></span>');
                 }
             });
         });
