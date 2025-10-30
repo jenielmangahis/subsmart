@@ -5446,12 +5446,25 @@ if(!function_exists('set_expense_graph_data')) {
         $CI->load->model('Clients_model');
         $industry_type_id = $CI->session->userdata('client_industry');
 
-        $is_solar = 0;
+        $is_solar = false;
         if( $industry_type_id == $CI->Clients_model->solarIndustryId() ){
-            $is_solar = 1;
+            $is_solar = true;
         }
 
         return $is_solar;
+    }
+
+    function isAlarmCompany(){
+        $CI = &get_instance();
+        $CI->load->model('Clients_model');
+        $industry_type_id = $CI->session->userdata('client_industry');
+
+        $is_alarm = false;
+        if( $industry_type_id == $CI->Clients_model->alarmIndustryId() ){
+            $is_alarm = true;
+        }
+
+        return $is_alarm;
     }
 
     function isApple(){
