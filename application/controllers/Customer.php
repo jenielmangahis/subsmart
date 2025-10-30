@@ -3841,6 +3841,7 @@ class Customer extends MY_Controller
         $this->load->model('Business_model');
         $this->load->model('Customer_model');
         $this->load->model('PanelType_model');
+        $this->load->model('AcsAccountType_model');
 
         $this->hasAccessModule(9);
 
@@ -4114,8 +4115,9 @@ class Customer extends MY_Controller
         $default_dealer_number = $this->Customer_model->createDealerNumber($customer_id, $business->business_name);
         $defaultAlarmSiteType  = $this->AcsAlarmSiteType_model->getCompanyDefaultValue($company_id);
         $defaultInstallerCode  = $this->AcsAlarmInstallerCode_model->getCompanyDefaultValue($company_id);
-
         $panelTypes = $this->PanelType_model->getAllByCompanyId($company_id);
+        $accountTypes = $this->AcsAccountType_model->getAllByCompanyId($company_id);
+        $defaultAccountType  = $this->AcsAccountType_model->getCompanyDefaultValue($company_id);
 
         $this->page_data['page']->title = 'Customers';
         $this->page_data['page']->parent = 'Customers';
@@ -4143,6 +4145,8 @@ class Customer extends MY_Controller
         $this->page_data['panelTypes'] = $panelTypes;
         $this->page_data['defaultAlarmSiteType'] = $defaultAlarmSiteType;
         $this->page_data['defaultInstallerCode'] = $defaultInstallerCode;
+        $this->page_data['accountTypes'] = $accountTypes;
+        $this->page_data['defaultAccountType'] = $defaultAccountType;
         //$this->load->view('v2/pages/customer/add', $this->page_data);
         $this->load->view('v2/pages/customer/add_dynamic_fields', $this->page_data);
     }
@@ -14725,4 +14729,208 @@ class Customer extends MY_Controller
 
         echo json_encode($json_data);
     }
+
+    public function settings_account_types()
+    {
+        $this->load->model('AcsAccountType_model');
+
+        if(!checkRoleCanAccessModule('customer-settings', 'read')){
+			show403Error();
+			return false;
+		}
+
+        $company_id = logged('company_id');
+        $accountTypes = $this->AcsAccountType_model->getAllByCompanyId($company_id);
+
+        $this->page_data['accountTypes'] = $accountTypes;
+        $this->page_data['page']->title = 'Account Types';
+        $this->page_data['page']->parent = 'Customers';
+        $this->load->view('v2/pages/customer/settings_account_types', $this->page_data);
+    }
+
+    public function ajax_create_account_type()
+    {
+        $this->load->model('AcsAccountType_model');
+
+        if(!checkRoleCanAccessModule('customer-settings', 'write')){
+			show403Error();
+			return false;
+		}
+
+        $is_success = 0;
+        $msg = 'Cannot save data';
+        $account_type_id = 0;
+        $account_type = 0;
+
+        $company_id = logged('company_id');
+        $post = $this->input->post();
+
+        $isExists = $this->AcsAccountType_model->getByAccountTypeAndCompanyId($post['account_type'], $company_id);
+        if( $isExists ){
+            $msg = 'Account type ' . $post['account_type'] . ' already exists.';
+        }elseif( $post['account_type'] == '' ){
+            $msg = 'Please enter account type';
+        }else{
+            $data = [
+                'company_id' => $company_id,
+                'account_type' => $post['account_type'],
+                'date_created' => date("Y-m-d H:i:s"),
+                'date_modified' => date("Y-m-d H:i:s")
+            ];
+
+            $account_type_id = $this->AcsAccountType_model->create($data);
+            $account_type = $post['account_type'];
+
+            //Activity Logs
+            $activity_name = 'Account Types : Created account type ' . $post['account_type']; 
+            createActivityLog($activity_name);
+
+            $is_success = 1;
+            $msg = '';
+        }
+
+        $return = ['is_success' => $is_success, 'msg' => $msg, 'account_type_id' => $account_type_id, 'account_type' => $account_type];
+        echo json_encode($return);
+    }
+
+    public function ajax_update_account_type()
+    {
+        $this->load->model('AcsAccountType_model');
+
+        if(!checkRoleCanAccessModule('customer-settings', 'write')){
+			show403Error();
+			return false;
+		}
+
+        $is_success = 0;
+        $msg = 'Cannot find data';
+
+        $company_id = logged('company_id');
+        $post = $this->input->post();
+
+        $isAccountTypeExists = $this->AcsAccountType_model->getByAccountTypeAndCompanyId($post['account_type'], $company_id);
+        if( $isAccountTypeExists && $post['account_type_id'] != $isAccountTypeExists->id ){
+            $msg = 'Account type ' . $post['account_type'] . ' already exists.';
+        }elseif( $post['account_type'] == '' ){
+            $msg = 'Please enter account type';
+        }else{
+            $accountType = $this->AcsAccountType_model->getByIdAndCompanyId($post['account_type_id'], $company_id);
+            if( $accountType ){
+                $data = [
+                    'account_type' => $post['account_type'],
+                    'date_modified' => date("Y-m-d H:i:s")
+                ];
+
+                $this->AcsAccountType_model->update($accountType->id, $data);
+
+                //Activity Logs
+                $activity_name = 'Account Types : Updated account type ' . $post['account_type']; 
+                createActivityLog($activity_name);
+
+                $is_success = 1;
+                $msg = '';
+            }
+            
+        }
+
+        $return = ['is_success' => $is_success, 'msg' => $msg];
+        echo json_encode($return);
+    }
+
+    public function ajax_delete_account_type()
+    {
+        $this->load->model('AcsAccountType_model');
+
+        $is_success = 0;
+        $msg = 'Cannot find record';
+
+        $company_id = logged('company_id');
+        $post = $this->input->post();
+
+        $accountType = $this->AcsAccountType_model->getByIdAndCompanyId($post['id'], $company_id);
+        if ($accountType) {
+            $this->AcsAccountType_model->delete($accountType->id);
+
+            //Activity Logs
+            $activity_name = 'Account Types : Deleted account type ' . $accountType->account_type; 
+            createActivityLog($activity_name);
+
+            $is_success = 1;
+            $msg = '';
+        }
+
+        $json_data = [
+            'is_success' => $is_success,
+            'msg' => $msg,
+        ];
+
+        echo json_encode($json_data);
+    }
+
+    public function ajax_set_default_account_type()
+    {
+        $this->load->model('AcsAccountType_model');
+
+        $is_success = 0;
+        $msg = 'Cannot find record';
+
+        $company_id = logged('company_id');
+        $post = $this->input->post();
+
+        $accountType = $this->AcsAccountType_model->getByIdAndCompanyId($post['id'], $company_id);
+        if ($accountType) {
+            $this->AcsAccountType_model->resetDefaultByCompanyId($company_id);
+            $this->AcsAccountType_model->update($accountType->id, ['is_default' => 'Yes']);
+
+            //Activity Logs
+            $activity_name = 'Account Types : Set default value to ' . $accountType->account_type; 
+            createActivityLog($activity_name);
+
+            $is_success = 1;
+            $msg = '';
+        }
+
+        $json_data = [
+            'is_success' => $is_success,
+            'msg' => $msg,
+        ];
+
+        echo json_encode($json_data);
+    }
+
+    public function ajax_delete_selected_account_types()
+	{
+		$this->load->model('AcsAccountType_model');
+
+		$is_success = 0;
+        $msg    = 'Please select data';
+
+        $company_id  = logged('company_id');
+        $post = $this->input->post();
+
+        if( $post['accountTypes'] ){
+
+            $filters[] = ['field' => 'company_id', 'value' => $company_id];
+            $total_deleted = $this->AcsAccountType_model->bulkDelete($post['accountTypes'], $filters);
+
+			//Activity Logs
+            if( $total_deleted > 1 ){
+                $activity_name = 'Account Types : Deleted ' .$total_deleted. ' account types'; 
+            }else{
+                $activity_name = 'Account Types : Deleted ' .$total_deleted. ' account type'; 
+            }
+			
+			createActivityLog($activity_name);
+
+            $is_success = 1;
+            $msg    = '';
+        }
+
+        $return = [
+            'is_success' => $is_success,
+            'msg' => $msg
+        ];
+
+        echo json_encode($return);
+	}
 }
