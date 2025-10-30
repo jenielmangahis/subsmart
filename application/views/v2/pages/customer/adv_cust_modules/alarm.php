@@ -28,9 +28,33 @@
                         </div>
                         <div class="col-12 col-md-6">
                             <span class="content-subtitle">
-                               ---
+                                <?php 
+                                    $dealer_number = $default_dealer_number;
+                                    if( $alarm_info && $alarm_info->dealer_number != '' ){
+                                        $dealer_number = $alarm_info->dealer_number;
+                                    }
+                                ?>
+                               <?= $dealer_number; ?>
                             </span>
-                        </div>       
+                        </div> 
+                        <div class="col-12 col-md-6">
+                            <label class="content-title">Site Type</label>
+                        </div>
+                        <div class="col-12 col-md-6">
+                            <span class="content-subtitle">
+                                <?php 
+                                    $site_type = '---';
+                                    if( $defaultAlarmSiteType ){
+                                        $site_type = $defaultAlarmSiteType->name;
+                                    }
+
+                                    if( $alarm_info && $alarm_info->site_type != '' ){
+                                        $site_type = $alarm_info->site_type;
+                                    }
+                                ?>
+                               <?= $site_type; ?>  
+                            </span>
+                        </div>      
                         <div class="col-12 col-md-6">
                             <label class="content-title">Monitoring Company</label>
                         </div>
@@ -104,7 +128,19 @@
                         </div>
                         <div class="col-12 col-md-6">
                             <span class="content-subtitle">
-                                <?= $alarm_info && $alarm_info->install_code != '' ? $alarm_info->install_code : '1423'; ?>      
+                                <?php 
+                                    $installer_code = '---';
+
+                                    if( $defaultInstallerCode ){
+                                        $installer_code = $defaultInstallerCode->installer_code;
+                                    }
+
+                                    if( $alarm_info && $alarm_info->install_code != '' ){
+                                        $installer_code = $alarm_info->install_code;
+                                    }
+                                    
+                                ?>
+                                <?= $installer_code; ?>      
                             </span>
                         </div>   
                         <div class="col-12 col-md-12">

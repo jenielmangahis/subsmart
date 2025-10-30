@@ -2231,6 +2231,7 @@ $route['tickets/_create_panel_type'] = 'Tickets/ajax_create_panel_type';
 $route['tickets/_update_panel_type'] = 'Tickets/ajax_update_panel_type';
 $route['tickets/_delete_panel_type'] = 'Tickets/ajax_delete_panel_type';
 $route['tickets/_with_selected_delete_panel_types'] = 'Tickets/ajax_with_selected_delete_panel_types';
+$route['tickets/_set_default_panel_type'] = 'Tickets/ajax_set_default_panel_type';
 
 //Setting : Panel Types
 $route['tickets/settings_plan_types'] = 'Tickets/settings_plan_types';

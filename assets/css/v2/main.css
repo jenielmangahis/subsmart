@@ -2291,3 +2291,11 @@ span.select2-selection {
   width:300px;
   /* padding:0.5rem 1rem; */
 }
+.badge-secondary {
+    color: #fff;
+    background-color: #6c757d;
+}
+.nsm-table .badge{
+  display:block;
+  width:100%;
+}
