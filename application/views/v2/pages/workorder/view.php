@@ -591,12 +591,16 @@ defined('BASEPATH') or exit('No direct script access allowed');
                     <span class="workorder-box"><?= $agreements->sales_re_name ?? "None"; ?></span> 
                   </div>
                   <div class="col-md-6 mt-5" style="text-align: center; min-height: 150px;">
-                      <img src="<?php echo base_url('uploads/workorders/signatures/'.$workorder->company_id.'/'.$workorder->company_representative_signature); ?>" />
+                      <?php //if($workorder->company_representative_signature != "") { ?>
+                        <img src="<?php echo base_url('uploads/workorders/signatures/'.$workorder->company_id.'/'.$workorder->company_representative_signature); ?>" />
+                      <?php //} ?>
                       <br /><?= $company->first_name . ' ' . $company->last_name; ?>
                   </div>
 
                   <div class="col-md-6 mt-5" style="text-align: center; min-height: 150px;">
-                    <img src="<?php echo base_url('uploads/workorders/signatures/'.$workorder->company_id.'/'.$workorder->primary_account_holder_signature); ?>" />
+                    <?php //if($workorder->primary_account_holder_signature != "") { ?>
+                      <img src="<?php echo base_url('uploads/workorders/signatures/'.$workorder->company_id.'/'.$workorder->primary_account_holder_signature); ?>" />
+                    <?php //} ?>
                     <br /><?= $customer->first_name . ' ' . $customer->last_name; ?>
                   </div>
 
