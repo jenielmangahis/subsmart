@@ -288,7 +288,7 @@ class Customer extends MY_Controller
                         $customer_email = $customer->email;
                     }
                     $name = "
-                        <label class='nsm-link default d-block fw-bold' onclick='location.href=\"".base_url('customer/module/'.$customer->prof_id.'')."\"'>".$labelName."</label><small style='font-size: 12px;' class='text-muted content-subtitle d-block mt-1'>CS: $customer->customer_no</small><small class='text-muted'>".$customer_email.'</small>';
+                        <label class='nsm-link default d-block fw-bold' onclick='location.href=\"".base_url('customer/module/'.$customer->prof_id.'')."\"'>".$labelName."</label><small style='font-size: 12px;' class='text-muted content-subtitle d-block mt-1'>$customer->customer_no</small><small class='text-muted'>".$customer_email.'</small>';
                     if ($customer->adt_sales_project_id > 0) {
                         $name .= '<span class="badge badge-primary">ADT SALES PORTAL DATA</label>';
                     }
@@ -564,7 +564,7 @@ class Customer extends MY_Controller
                         $customer_email = $customer->email;
                     }
                     $name = "
-                        <label class='nsm-link default d-block fw-bold' onclick='location.href=\"".base_url('customer/module/'.$customer->prof_id.'')."\"'>".$labelName."</label><small style='font-size: 12px;' class='text-muted content-subtitle d-block mt-1'>CS: $customer->customer_no</small><small class='text-muted'>".$customer_email.'</small>';
+                        <label class='nsm-link default d-block fw-bold' onclick='location.href=\"".base_url('customer/module/'.$customer->prof_id.'')."\"'>".$labelName."</label><small style='font-size: 12px;' class='text-muted content-subtitle d-block mt-1'>$customer->customer_no</small><small class='text-muted'>".$customer_email.'</small>';
                     if ($customer->adt_sales_project_id > 0) {
                         $name .= '<span class="badge badge-primary">ADT SALES PORTAL DATA</label>';
                     }
@@ -993,7 +993,7 @@ class Customer extends MY_Controller
                         $customer_email = $customer->email;
                     }
                     $name = "
-                        <label class='nsm-link default d-block fw-bold' onclick='location.href=\"".base_url('customer/module/'.$customer->prof_id.'')."\"'>".$labelName."</label><small style='font-size: 12px;' class='text-muted content-subtitle d-block mt-1'>CS: $customer->customer_no</small><small class='text-muted'>".$customer_email.'</small>';
+                        <label class='nsm-link default d-block fw-bold' onclick='location.href=\"".base_url('customer/module/'.$customer->prof_id.'')."\"'>".$labelName."</label><small style='font-size: 12px;' class='text-muted content-subtitle d-block mt-1'>$customer->customer_no</small><small class='text-muted'>".$customer_email.'</small>';
                     if ($customer->adt_sales_project_id > 0) {
                         $name .= '<span class="badge badge-primary">ADT SALES PORTAL DATA</label>';
                     }
@@ -1236,8 +1236,6 @@ class Customer extends MY_Controller
         ];
         echo json_encode($output);
     }
-
-
 
     public function getDuplicatedEntry()
     {
@@ -8720,6 +8718,7 @@ class Customer extends MY_Controller
                 CASE 
                     WHEN customer_list_view.profile_business_name IS NOT NULL 
                         AND customer_list_view.profile_business_name != '' 
+                        AND customer_list_view.profile_business_name != 'Not Specified' 
                     THEN customer_list_view.profile_business_name
                     ELSE customer_list_view.customer_name
                 END AS name,
@@ -8736,6 +8735,7 @@ class Customer extends MY_Controller
                 customer_list_view.profile_phone_m AS phone_m,
                 customer_list_view.billing_bill_start_date AS bill_start,
                 customer_list_view.billing_bill_end_date AS bill_end,
+                customer_list_view.alarm_monthly_monitoring AS alarm_bill_mmr,
                 customer_list_view.billing_mmr AS bill_mmr
             FROM customer_list_view
             WHERE customer_list_view.company_id = {$company_id}
@@ -11053,19 +11053,38 @@ class Customer extends MY_Controller
 
     public function ajax_quick_search()
     {
-        $this->load->model('Customer_model');
-
-        $post = $this->input->post();
-        $cid  = logged('company_id');
-
-        $query['q'] = $post['customer_query'];
-        $customers = $this->Customer_model->getAllByCompany($cid,$query);
-
+        $post = trim($this->input->post('customer_query'));
+        $company_id = logged('company_id');
+    
+        $nameFilter = "";
+        if (!empty($post)) {
+            $nameFilter = " AND ( customer_list_view.profile_business_name LIKE '%{$post}%' OR customer_list_view.customer_name LIKE '%{$post}%' )";
+        }
+    
+        $query = $this->db->query("
+            SELECT 
+                customer_list_view.prof_id AS prof_id,
+                customer_list_view.company_id AS company_id,
+                customer_list_view.customer_no AS customer_no,
+                CASE 
+                    WHEN customer_list_view.profile_business_name IS NOT NULL 
+                        AND customer_list_view.profile_business_name != '' 
+                        AND customer_list_view.profile_business_name != 'Not Specified' 
+                    THEN customer_list_view.profile_business_name
+                    ELSE customer_list_view.customer_name
+                END AS name,
+                customer_list_view.profile_email AS email
+            FROM customer_list_view
+            WHERE customer_list_view.company_id = {$company_id}
+            {$nameFilter}
+            ORDER BY customer_list_view.prof_id DESC;
+        ");
+    
+        $customers = $query->result();
         $this->page_data['customers'] = $customers;
         $this->load->view("v2/pages/customer/ajax_quick_search_result", $this->page_data);
-
     }
-
+    
     public function ajax_archived_list()
     {
         $this->load->model('Customer_model');
@@ -14448,4 +14467,177 @@ class Customer extends MY_Controller
 
 		fpassthru($f);
     }
+
+    public function settings_alarm_site_types()
+    {
+        $this->load->model('AcsAlarmSiteType_model');
+
+        if(!checkRoleCanAccessModule('customer-settings', 'read')){
+			show403Error();
+			return false;
+		}
+
+        $company_id = logged('company_id');
+        $alarmSiteTypes = $this->AcsAlarmSiteType_model->getAllByCompanyId($company_id);
+
+        $this->page_data['alarmSiteTypes'] = $alarmSiteTypes;
+        $this->page_data['page']->title = 'Alarm Site Types';
+        $this->page_data['page']->parent = 'Customers';
+        $this->load->view('v2/pages/customer/settings_alarm_site_types', $this->page_data);
+    }
+
+    public function ajax_create_site_type()
+    {
+        $this->load->model('AcsAlarmSiteType_model');
+
+        if(!checkRoleCanAccessModule('customer-settings', 'write')){
+			show403Error();
+			return false;
+		}
+
+        $is_success = 0;
+        $msg = 'Cannot save data';
+        $site_type_id   = 0;
+        $site_type_name = '';
+
+        $company_id = logged('company_id');
+        $post = $this->input->post();
+
+        $isExists = $this->AcsAlarmSiteType_model->getByNameAndCompanyId($post['site_type'], $company_id);
+        if( $isExists ){
+            $msg = 'Site type ' . $post['site_type'] . ' already exists.';
+        }elseif( $post['site_type'] == '' ){
+            $msg = 'Please enter site type name';
+        }else{
+            $data = [
+                'company_id' => $company_id,
+                'name' => $post['site_type'],
+                'date_created' => date("Y-m-d H:i:s"),
+                'date_updated' => date("Y-m-d H:i:s")
+            ];
+
+            $site_type_id = $this->AcsAlarmSiteType_model->create($data);
+            $site_type_name = $post['site_type'];
+
+            //Activity Logs
+            $activity_name = 'Site Type : Created site type ' . $post['site_type']; 
+            createActivityLog($activity_name);
+
+            $is_success = 1;
+            $msg = '';
+        }
+
+        $return = ['is_success' => $is_success, 'msg' => $msg, 'site_type_id' => $site_type_id, 'site_type_name' => $site_type_name];
+        echo json_encode($return);
+    }
+
+    public function ajax_delete_site_type()
+    {
+        $this->load->model('AcsAlarmSiteType_model');
+
+        $is_success = 0;
+        $msg = 'Cannot find record';
+
+        $company_id = logged('company_id');
+        $post = $this->input->post();
+
+        $siteType = $this->AcsAlarmSiteType_model->getByIdAndCompanyId($post['id'], $company_id);
+        if ($siteType) {
+            $this->AcsAlarmSiteType_model->delete($siteType->id);
+
+            //Activity Logs
+            $activity_name = 'Site Type : Deleted site type ' . $siteType->name; 
+            createActivityLog($activity_name);
+
+            $is_success = 1;
+            $msg = '';
+        }
+
+        $json_data = [
+            'is_success' => $is_success,
+            'msg' => $msg,
+        ];
+
+        echo json_encode($json_data);
+    }
+
+    public function ajax_update_site_type()
+    {
+        $this->load->model('AcsAlarmSiteType_model');
+
+        if(!checkRoleCanAccessModule('customer-settings', 'write')){
+			show403Error();
+			return false;
+		}
+
+        $is_success = 0;
+        $msg = 'Cannot find data';
+
+        $company_id = logged('company_id');
+        $post = $this->input->post();
+
+        $isSiteTypeExists = $this->AcsAlarmSiteType_model->getByNameAndCompanyId($post['site_type'], $company_id);
+        if( $isSiteTypeExists && $post['site_type_id'] != $isSiteTypeExists->id ){
+            $msg = 'Site type ' . $post['site_type'] . ' already exists.';
+        }elseif( $post['site_type'] == '' ){
+            $msg = 'Please enter site type';
+        }else{
+            $siteType = $this->AcsAlarmSiteType_model->getByIdAndCompanyId($post['site_type_id'], $company_id);
+            if( $siteType ){
+                $data = [
+                    'name' => $post['site_type'],
+                    'date_updated' => date("Y-m-d H:i:s")
+                ];
+
+                $this->AcsAlarmSiteType_model->update($siteType->id, $data);
+
+                //Activity Logs
+                $activity_name = 'Site Type : Updated site type ' . $post['site_type']; 
+                createActivityLog($activity_name);
+
+                $is_success = 1;
+                $msg = '';
+            }
+            
+        }
+
+        $return = ['is_success' => $is_success, 'msg' => $msg];
+        echo json_encode($return);
+    }
+
+    public function ajax_delete_selected_site_types()
+	{
+		$this->load->model('AcsAlarmSiteType_model');
+
+		$is_success = 0;
+        $msg    = 'Please select data';
+
+        $company_id  = logged('company_id');
+        $post = $this->input->post();
+
+        if( $post['siteTypes'] ){
+
+            $filters[] = ['field' => 'company_id', 'value' => $company_id];
+            $total_deleted = $this->AcsAlarmSiteType_model->bulkDelete($post['siteTypes'], $filters);
+
+			//Activity Logs
+            if( $total_delete > 1 ){
+                $activity_name = 'Site Types : Deleted ' .$total_deleted. ' site types'; 
+            }else{
+                $activity_name = 'Site Types : Deleted ' .$total_deleted. ' site type'; 
+            }
+			
+			createActivityLog($activity_name);
+
+            $is_success = 1;
+            $msg    = '';
+        }
+
+        $return = [
+            'is_success' => $is_success,
+            'msg' => $msg
+        ];
+
+        echo json_encode($return);
+	}
 }

@@ -2,7 +2,7 @@
 <?php include viewPath('v2/includes/customer/customer_modals'); ?>
 
 <div class="nsm-fab-container">
-    <div class="nsm-fab nsm-fab-icon nsm-bxshadow" data-bs-toggle="modal" data-bs-target="#new_lead_types_modal">
+    <div class="nsm-fab nsm-fab-icon nsm-bxshadow" data-bs-toggle="modal" data-bs-target="#modal-add-installer-code">
         <i class="bx bx-plus"></i>
     </div>
 </div>
@@ -81,7 +81,7 @@
                                             <i class='bx bx-layer'></i>
                                         </div>
                                     </td>
-                                    <td class="fw-bold nsm-text-primary"><?= $ic->installer_code; ?></td>
+                                    <td class="fw-bold nsm-text-primary show"><?= $ic->installer_code; ?></td>
                                     <td><?= date("m/d/Y h:i A",strtotime($ic->date_created)); ?></td>
                                     <td>
                                         <div class="dropdown table-management">
@@ -154,7 +154,7 @@
             }
         });
 
-        $('.edit-item').on('click', function(){
+        $(document).on('click', '.edit-item', function(){
             let id = $(this).attr('data-id');
             let value = $(this).attr('data-value');
 
@@ -241,7 +241,7 @@
                     if (data.is_success) {
                         $('#modal-add-installer-code').modal('hide');
                         Swal.fire({
-                            title: 'Add Installer code',
+                            title: 'Add Installer Code',
                             text: "Data has been created successfully.",
                             icon: 'success',
                             showCancelButton: false,
@@ -282,7 +282,7 @@
                     if (data.is_success) {
                         $('#modal-edit-installer-code').modal('hide');
                         Swal.fire({
-                            title: 'Edit Installer code',
+                            title: 'Edit Installer Code',
                             text: "Data has been updated successfully.",
                             icon: 'success',
                             showCancelButton: false,

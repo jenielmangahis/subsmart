@@ -352,6 +352,24 @@
     #customer-list_wrapper{
         overflow:auto;
     }
+    .nsm-callout {
+        margin-bottom: unset;
+    }
+</style>
+<style>
+    .commercialCustomerGroupContainer {
+        max-height: 200px;
+    }
+
+    .commercialCustomerStatusCategory {
+        background: #00000008;
+        border-radius: 5px;
+        outline: 1px solid #0000000f;
+        padding: 5px;
+        margin-top: 10px;
+        padding-left: 10px;
+        cursor: pointer;
+    }
 </style>
 <div class="nsm-fab-container">
     <div class="nsm-fab nsm-fab-icon nsm-bxshadow" onclick="location.href='<?php echo url('customer/add_lead') ?>'">
@@ -403,15 +421,21 @@
                     <div class="col-12">
                         <div class="nsm-callout primary">
                             <button><i class='bx bx-x'></i></button>
-                            A great process of managing interactions with existing as well as past and
-                            potential customers is to have one powerful platform that can provide an
-                            immediate response to your customer needs.
-                            Try our quick action icons to create invoices, scheduling, communicating and
-                            more with all your customers.
+                            Displays and manage interactions with your current, past, and potential customers through one platform designed to deliver instant responses to their needs.
                         </div>
                     </div>
                 </div>
-                <div class="row g-3 mb-3">
+                <div class="row mb-3 table-responsive commercialCustomerGroupContainer"></div>
+                <div class="row">
+                    <div class="col mt-3 commercialCustomerBadgeLoader">
+                        <div class="text-center">
+                            <div class="spinner-border text-secondary" role="status">
+                                <span class="visually-hidden">Loading...</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- <div class="row g-3 mb-3">
                     <?php 
                       $colorClasses = ['primary', 'success', 'error', 'secondary'];
                       $index = 0;
@@ -440,8 +464,8 @@
                         </div>
                     </div>
                     <?php $index++;}; ?>
-                </div>
-                <div class="row mt-5">
+                </div> -->
+                <div class="row">
                      <div class="col-12 col-md-4 grid-mb">
                         <div class="nsm-field-group search">
                             <!-- <input type="text" class="nsm-field nsm-search form-control mb-2" id="search_field" placeholder="Search Item"> -->
@@ -619,6 +643,139 @@
 
 <script src="<?= base_url("assets/js/v2/printThis.js") ?>"></script>
 <script type="text/javascript">
+    function getCustomerGroupBadge() {
+        $.ajax({
+            type: "POST",
+            url: `${window.origin}/dashboard/thumbnailWidgetRequest`,
+            data: {
+                category: "customer_groups",
+                dateFrom: "1970-01-01",
+                dateTo: "<?php echo date('Y-m-d'); ?>",
+                // filter3: "all_status",
+                // filter4: "commercial",
+            },
+            beforeSend: function() {
+                $('.commercialCustomerGroupContainer').hide();
+                $('.commercialCustomerBadgeLoader').show();
+            },
+            success: function(response) {
+                const data = JSON.parse(response).GRAPH;
+                let html = "";
+
+                const colorMap = {
+                    "ADT Solar Pro": { bg: "#FFD70010", border: "#FFD70020" },
+                    "Alarm.com": { bg: "#FFCC0010", border: "#FFCC0020" },
+                    "Alarm.com & DVR": { bg: "#FFC00010", border: "#FFC00020" },
+                    "AlarmNet": { bg: "#007BFF10", border: "#007BFF20" }, 
+                    "AlarmNet & PERS": { bg: "#3399FF10", border: "#3399FF20" },
+                    "DVR": { bg: "#8A2BE210", border: "#8A2BE220" },
+                    "Landline": { bg: "#80808010", border: "#80808020" },
+                    "Landline & Pers": { bg: "#A9A9A910", border: "#A9A9A920" },
+                    "Pers": { bg: "#32CD3210", border: "#32CD3220" },
+                    
+                    "Commercial": { bg: "#00CED110", border: "#00CED120" },
+                    "Residential": { bg: "#FF69B410", border: "#FF69B420" },
+                    "Enterprise": { bg: "#9932CC10", border: "#9932CC20" }, 
+                    "Unknown": { bg: "#0000000a", border: "#0000000f" },
+                };
+
+
+                if (data.length != 0) {
+                    Object.entries(data).forEach(([key, value]) => {
+                        const lowerKey = key.toLowerCase();
+                        let matchedColor = colorMap["Unknown"];
+
+                        for (const groupName in colorMap) {
+                            if (lowerKey.includes(groupName.toLowerCase())) {
+                                matchedColor = colorMap[groupName];
+                                break;
+                            }
+                        }
+
+                        html += `
+                            <div class="col-lg-1">
+                                <div class="commercialCustomerStatusCategory" style="background:${matchedColor.bg}; border:1px solid ${matchedColor.border};">
+                                    <small class="text-uppercase commercialCustomerStatusName">${key}</small>
+                                    <h5 class="commercialCustomerStatusCount">${value}</h5>
+                                </div>
+                            </div>
+                        `;
+
+                        $('.commercialCustomerCategoryFilter').append(`<option value="${key}">${key}</option>`);
+                    });
+                } else {
+                    html += `
+                        <div class="col-lg-1">
+                            <div class="commercialCustomerStatusCategory">
+                                <small class="text-uppercase commercialCustomerStatusName">No Status Found</small>
+                                <h5 class="commercialCustomerStatusCount">0</h5>
+                            </div>
+                        </div>
+                    `;
+                }
+
+                $('.commercialCustomerGroupContainer').html(html);
+                setTimeout(() => {
+                    $('.commercialCustomerGroupContainer').show();
+                    $('.commercialCustomerBadgeLoader').hide(); 
+                }, 500);
+            },
+            error: function() {
+                $('.commercialCustomerGroupContainer').show();
+                $('.commercialCustomerBadgeLoader').hide();
+                Swal.fire({
+                    icon: "error",
+                    title: "Network Error!",
+                    html: "An unexpected error occurred. Please try again!",
+                    showConfirmButton: true,
+                    confirmButtonText: "Okay",
+                });
+            },
+        });
+    }
+
+    $(function () {
+        // getCommercialCustomers();
+        getCustomerGroupBadge();
+    });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     const URL_ORIGIN = window.origin;
 
     $(document).ready(function () {

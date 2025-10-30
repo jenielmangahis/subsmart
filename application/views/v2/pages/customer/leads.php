@@ -726,7 +726,7 @@
             }        
         });
 
-        $('.btn-convert-to-customer').on('click', function(){
+        $(document).on('click', '.btn-convert-to-customer', function(){
             var lead_id = $(this).attr('data-id');
             Swal.fire({
                 title: 'Confirmation',

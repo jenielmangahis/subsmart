@@ -834,6 +834,15 @@ class Customer_model extends MY_Model
         $query = $this->db->get();
         return $query->result();
     }
+
+    public function createDealerNumber($customer_id, $company_name)
+    {
+        $str_1 = strtoupper(substr($company_name, 0, 3));
+        $str_2 = $customer_id;
+        $dealer_number = $str_1 . $str_2;
+
+        return $dealer_number;
+    }
 }
 
 /* End of file Customer_model.php */

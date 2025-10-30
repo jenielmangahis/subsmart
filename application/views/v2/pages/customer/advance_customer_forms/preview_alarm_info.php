@@ -298,7 +298,13 @@
                         </label>
                     </div>
                     <div class="col-12 col-md-6">
-                        <label class="content-subtitle"><?= !empty($alarm_info->install_code) ? $alarm_info->install_code : '---'; ?></label>
+                        <?php 
+                            $install_code = '1423';
+                            if( $alarm_info && $alarm_info->install_code != '' ){
+                               $install_code =  $alarm_info->install_code;
+                            }  
+                        ?>
+                        <label class="content-subtitle"><?= $install_code; ?></label>
                     </div>
                 </div>
 

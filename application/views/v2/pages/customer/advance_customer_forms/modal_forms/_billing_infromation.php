@@ -16,6 +16,28 @@
 		</div>
 	</div>
 
+	<div class="col-md-6 mb-3">
+		<div class="form-group">
+			<label>Card Number</label>
+			<input type="text" class="form-control" name="card_number" id="card_number" value="" />
+		</div>
+	</div>
+
+	<div class="col-md-4 mb-3">
+		<div class="form-group">
+			<label>Card Exp</label>
+			<input id="card_exp" type="tel" class="form-control cc-exp cc-exp__example" placeholder="MM / YYYY" autocompletetype="cc-exp">
+		</div>
+	</div>
+
+	<div class="col-md-2 mb-3">
+		<div class="form-group">
+			<label>CVC</label>
+			<input id="card_cvc" type="text" maxlength=4 class="form-control" placeholder="1234">
+		</div>
+	</div>
+
+
 	<div class="col-md-12 mb-3">
 		<div class="form-group">
 			<label>Card Address </label>
@@ -51,19 +73,19 @@
 				<div class="input-group-prepend">
 					<span class="input-group-text" id="basic-addon1">$</span>
 				</div>
-				<input type="number" step="0.01" class="form-control" name="equipment" value="0.00">
+				<input type="number" step="0.01" class="form-control" name="equipment" value="" placeholder="0.00" />
 			</div>
 		</div>
 	</div>
 
 	<div class="col-md-6 mb-3">
 		<div class="form-group">
-			<label>Initial Dep </label>
+			<label>Initial Deposit</label>
 			<div class="input-group">
 				<div class="input-group-prepend">
 					<span class="input-group-text" id="basic-addon1">$</span>
 				</div>
-				<input type="number" step="0.01" class="form-control" name="initial_dep" value="0.00" >
+				<input type="number" step="0.01" class="form-control" name="initial_dep" value="" placeholder="0.00" />
 			</div>
 		</div>
 	</div>
@@ -106,7 +128,7 @@
 				<option value="36">36 months</option>
 				<option value="42">42 months</option>
 				<option value="48">48 months</option>
-				<option value="60">60 months</option>
+				<option value="60" selected="">60 months</option>
 				<option value="72">72 months</option>
 			</select>
 		</div>
@@ -145,7 +167,7 @@
 				<div class="input-group-prepend">
 					<span class="input-group-text" style="width:35px;" id="">$</span>
 				</div>
-				<input type="number" step="any" class="form-control" name="late_fee" value="0.00" >
+				<input type="number" step="any" class="form-control" name="late_fee" value="" placeholder="0.00" >
 			</div>
 		</div>
 	</div>
@@ -157,15 +179,18 @@
 				<div class="input-group-prepend">
 					<span class="input-group-text" style="width:35px;" id="">%</span>
 				</div>
-				<input type="number" step="any" class="form-control" name="payment_fee" value="0.00">
+				<input type="number" step="any" class="form-control" name="payment_fee" value="" placeholder="0.00">
 			</div>
 		</div>
 	</div>
 </div>
+
 <script>
 $(function(){
 	$('.billing-searchable-dropdown').select2({
         dropdownParent: $('.billing-information')
     });
+
+	$('#card_exp').payment('formatCardExpiry');
 });
 </script>
