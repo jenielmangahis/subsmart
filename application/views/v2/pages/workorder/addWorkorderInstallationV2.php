@@ -1662,7 +1662,10 @@ window.addEventListener('DOMContentLoaded', (event) => {
             url: "<?= base_url() ?>/job/get_customer_selected",
             data: { id : customerId },
             success: function(data) {
+
                 const {data: customer} = JSON.parse(data);
+                const dataOjb = JSON.parse(data);
+
                 $("[name=firstname]").val(customer.first_name);
                 $("[name=lastname]").val(customer.last_name);
                 $("[name=address]").val(customer.mail_add);
@@ -1675,6 +1678,19 @@ window.addEventListener('DOMContentLoaded', (event) => {
                 $("[name=email]").val(customer.email);
                 $("[name=state_form]").val(customer.state);
                 $("[name=businessname]").val(customer.business_name);
+
+                $("[name=first_ecn_first]").val(dataOjb.emergency_contact_a.firstname);
+                $("[name=first_ecn_last]").val(dataOjb.emergency_contact_a.lastname);
+                $("[name=first_ecn_no]").val(dataOjb.emergency_contact_a.phone);  
+
+                $("[name=second_ecn_first]").val(dataOjb.emergency_contact_b.firstname);
+                $("[name=second_ecn_last]").val(dataOjb.emergency_contact_b.lastname);
+                $("[name=second_ecn_no]").val(dataOjb.emergency_contact_b.phone);  
+
+                $("[name=third_ecn_first]").val(dataOjb.emergency_contact_c.firstname);
+                $("[name=third_ecn_last]").val(dataOjb.emergency_contact_c.lastname);
+                $("[name=third_ecn_no]").val(dataOjb.emergency_contact_c.phone);  
+
             }
         });
     }
