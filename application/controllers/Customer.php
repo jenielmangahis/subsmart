@@ -2780,6 +2780,9 @@ class Customer extends MY_Controller
         $this->load->model('CustomerSignature_model');
         $this->load->model('Workorder_model');
         $this->load->model('Users_model');
+        $this->load->model('AcsAlarmSiteType_model');
+        $this->load->model('AcsAlarmInstallerCode_model');
+        $this->load->model('Customer_model');
         $this->load->library('wizardlib');                        
 
         $alarm_api_helper = new AlarmApi();
@@ -2979,6 +2982,15 @@ class Customer extends MY_Controller
                 }
             }
 
+            //Alarm Settings : Default Value
+            $defaultAlarmSiteType = $this->AcsAlarmSiteType_model->getCompanyDefaultValue($cid);
+            $defaultInstallerCode = $this->AcsAlarmInstallerCode_model->getCompanyDefaultValue($cid);
+
+            $lastCustomer = $this->Customer_model->getLastCustomerByCompanyId($cid);
+            $business     = $this->Business_model->getByCompanyId($cid);
+            $customer_id  = $customer->prof_id;
+            $default_dealer_number = $this->Customer_model->createDealerNumber($customer_id, $business->business_name);
+
             $this->page_data['companyInfo']   = $companyInfo;
             $this->page_data['twilioAccount'] = $twilioAccount;
             $this->page_data['ringCentralAccount'] = $ringCentralAccount;
@@ -2999,6 +3011,9 @@ class Customer extends MY_Controller
             $this->page_data['customerSignature'] = $customerSignature;
             $this->page_data['woLatest'] = $woLatest;
             $this->page_data['wo_created_by'] = $wo_created_by;
+            $this->page_data['defaultAlarmSiteType'] = $defaultAlarmSiteType;
+            $this->page_data['defaultInstallerCode'] = $defaultInstallerCode;
+            $this->page_data['default_dealer_number'] = $default_dealer_number;
             $this->load->view('v2/pages/customer/module', $this->page_data);
         }else{
             redirect('customer');
@@ -3827,6 +3842,7 @@ class Customer extends MY_Controller
         $this->load->model('AcsAlarmSiteType_model');
         $this->load->model('Business_model');
         $this->load->model('Customer_model');
+        $this->load->model('PanelType_model');
 
         $this->hasAccessModule(9);
 
@@ -4093,11 +4109,15 @@ class Customer extends MY_Controller
 
         $siteTypes = $this->AcsAlarmSiteType_model->getAllByCompanyId($company_id);
 
+        //Alarm Settings : Default Value
         $lastCustomer = $this->Customer_model->getLastCustomerByCompanyId($company_id);
-        $business = $this->Business_model->getByCompanyId($company_id);
-        $str_1 = strtoupper(substr($business->business_name, 0, 3));
-        $str_2 = $customer->prof_id ?? $lastCustomer->prof_id + 1;
-        $default_dealer_number = $str_1 . $str_2;
+        $business     = $this->Business_model->getByCompanyId($company_id);
+        $customer_id  = $customer->prof_id ?? $lastCustomer->prof_id + 1;
+        $default_dealer_number = $this->Customer_model->createDealerNumber($customer_id, $business->business_name);
+        $defaultAlarmSiteType  = $this->AcsAlarmSiteType_model->getCompanyDefaultValue($company_id);
+        $defaultInstallerCode  = $this->AcsAlarmInstallerCode_model->getCompanyDefaultValue($company_id);
+
+        $panelTypes = $this->PanelType_model->getAllByCompanyId($company_id);
 
         $this->page_data['page']->title = 'Customers';
         $this->page_data['page']->parent = 'Customers';
@@ -4122,6 +4142,9 @@ class Customer extends MY_Controller
         $this->page_data['installerCodes'] = $installerCodes;
         $this->page_data['siteTypes'] = $siteTypes;
         $this->page_data['default_dealer_number'] = $default_dealer_number;
+        $this->page_data['panelTypes'] = $panelTypes;
+        $this->page_data['defaultAlarmSiteType'] = $defaultAlarmSiteType;
+        $this->page_data['defaultInstallerCode'] = $defaultInstallerCode;
         //$this->load->view('v2/pages/customer/add', $this->page_data);
         $this->load->view('v2/pages/customer/add_dynamic_fields', $this->page_data);
     }
@@ -14621,4 +14644,66 @@ class Customer extends MY_Controller
 
         echo json_encode($return);
 	}
+
+    public function ajax_set_default_site_type()
+    {
+        $this->load->model('AcsAlarmSiteType_model');
+
+        $is_success = 0;
+        $msg = 'Cannot find record';
+
+        $company_id = logged('company_id');
+        $post = $this->input->post();
+
+        $siteType = $this->AcsAlarmSiteType_model->getByIdAndCompanyId($post['id'], $company_id);
+        if ($siteType) {
+            $this->AcsAlarmSiteType_model->resetDefaultByCompanyId($company_id);
+            $this->AcsAlarmSiteType_model->update($siteType->id, ['is_default' => 'Yes']);
+
+            //Activity Logs
+            $activity_name = 'Site Type : Set default value to ' . $siteType->name; 
+            createActivityLog($activity_name);
+
+            $is_success = 1;
+            $msg = '';
+        }
+
+        $json_data = [
+            'is_success' => $is_success,
+            'msg' => $msg,
+        ];
+
+        echo json_encode($json_data);
+    }
+    
+    public function ajax_set_default_installer_code()
+    {
+        $this->load->model('AcsAlarmInstallerCode_model');
+
+        $is_success = 0;
+        $msg = 'Cannot find record';
+
+        $company_id = logged('company_id');
+        $post = $this->input->post();
+
+        $installerCode = $this->AcsAlarmInstallerCode_model->getByIdAndCompanyId($post['id'], $company_id);
+        if ($installerCode) {
+            $this->AcsAlarmInstallerCode_model->resetDefaultByCompanyId($company_id);
+            $this->AcsAlarmInstallerCode_model->update($installerCode->id, ['is_default' => 'Yes']);
+
+            //Activity Logs
+            $activity_name = 'Installer Code : Set default value to ' . $installerCode->installer_code; 
+            createActivityLog($activity_name);
+
+            $is_success = 1;
+            $msg = '';
+        }
+
+        $json_data = [
+            'is_success' => $is_success,
+            'msg' => $msg,
+        ];
+
+        echo json_encode($json_data);
+    }
 }
