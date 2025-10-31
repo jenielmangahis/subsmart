@@ -1864,6 +1864,7 @@ $route['autocomplete/_company_job_tags'] = 'Autocomplete/company_job_tags';
 $route['autocomplete/_company_customer_lead'] = 'Autocomplete/company_customers_leads';
 $route['autocomplete/_company_customer_deal_labels'] = 'Autocomplete/company_customer_deal_labels';
 $route['autocomplete/_company_installer_codes'] = 'Autocomplete/company_installer_codes';
+$route['autocomplete/_company_site_types'] = 'Autocomplete/company_site_types';
 
 // Quick Add
 $route['quick_add/_add_customer'] = 'Quick_Add/ajax_add_company_customer';
@@ -2230,6 +2231,7 @@ $route['tickets/_create_panel_type'] = 'Tickets/ajax_create_panel_type';
 $route['tickets/_update_panel_type'] = 'Tickets/ajax_update_panel_type';
 $route['tickets/_delete_panel_type'] = 'Tickets/ajax_delete_panel_type';
 $route['tickets/_with_selected_delete_panel_types'] = 'Tickets/ajax_with_selected_delete_panel_types';
+$route['tickets/_set_default_panel_type'] = 'Tickets/ajax_set_default_panel_type';
 
 //Setting : Panel Types
 $route['tickets/settings_plan_types'] = 'Tickets/settings_plan_types';
@@ -2344,6 +2346,16 @@ $route['customers/_create_site_type'] = 'Customer/ajax_create_site_type';
 $route['customers/_delete_site_type'] = 'Customer/ajax_delete_site_type';
 $route['customers/_update_site_type'] = 'Customer/ajax_update_site_type';
 $route['customers/_delete_selected_site_types'] = 'Customer/ajax_delete_selected_site_types';
+$route['customer/_set_default_site_type'] = 'Customer/ajax_set_default_site_type';
+$route['customer/_set_default_installer_code'] = 'Customer/ajax_set_default_installer_code';
+$route['customers/_delete_selected_account_types'] = 'Customer/ajax_delete_selected_account_types';
+
+
+$route['customer/settings_account_types'] = 'Customer/settings_account_types';
+$route['customers/_create_account_type'] = 'Customer/ajax_create_account_type';
+$route['customers/_update_account_type'] = 'Customer/ajax_update_account_type';
+$route['customers/_delete_account_type'] = 'Customer/ajax_delete_account_type';
+$route['customer/_set_default_account_type'] = 'Customer/ajax_set_default_account_type';
 
 //Benchmark for Testing
 $route['benchmark/test_customer_subscription'] = 'Benchmark/test_customer_subscription';

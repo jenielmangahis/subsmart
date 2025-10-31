@@ -95,7 +95,6 @@
                         <?php }else{ ?>
                             <div class="page-empty-container" style="text-align:center; margin-top:50px;">
                                 <h5 class="page-empty-header">You haven't uploaded any photos.</h5>
-                                <p class="text-ter margin-bottom">Upload photos and send them to your customers.</p>
                             </div>
                         <?php } ?>
                     </form>

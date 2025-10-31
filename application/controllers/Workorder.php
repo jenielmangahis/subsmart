@@ -3901,6 +3901,9 @@ class Workorder extends MY_Controller
 
     public function addSolarWorkorder()
     {
+        $this->load->model('PanelType_model');
+        $this->load->model('WorkorderSettings_model');
+        
         add_footer_js([
 			'https://cdnjs.cloudflare.com/ajax/libs/signature_pad/1.5.3/signature_pad.min.js',
 			'assets/js/jquery.signaturepad.js'
@@ -3931,39 +3934,13 @@ class Workorder extends MY_Controller
         $this->load->library('session');
 
         $users_data = $this->session->all_userdata();
-        // foreach($users_data as $usersD){
-        //     $userID = $usersD->id;
-            
-        // }
-
-        // print_r($user_id);
-        // $users = $this->users_model->getUserByID($user_id);
-        // print_r($users);
-        // echo $company_id;
-
         $role = logged('role');
-        if( $role == 1 || $role == 2){
-            $this->page_data['customers'] = $this->AcsProfile_model->getAll();
-            // $this->page_data['customers'] = $this->AcsProfile_model->getAllByCompanyId($company_id);
-        }else{
-            // $this->page_data['customers'] = $this->AcsProfile_model->getAll();
-            $this->page_data['customers'] = $this->AcsProfile_model->getAllByCompanyId($company_id);
-        }
+        $this->page_data['customers'] = $this->AcsProfile_model->getAllByCompanyId($company_id);
+
         $type = $this->input->get('type');
         $this->page_data['type'] = $type;
         $this->page_data['items'] = $this->items_model->getItemlist();
         $this->page_data['plans'] = $this->plans_model->getByWhere(['company_id' => $company_id]);
-        // $this->page_data['number'] = $this->estimate_model->getlastInsert();
-        // $this->page_data['number'] = $this->workorder_model->getlastInsert($company_id);
-
-        // $termsCondi = $this->workorder_model->getTerms($company_id);
-        // if($termsCondi){
-        //     // $this->page_data['terms_conditions'] = $this->workorder_model->getTermsDefault();
-        //     $this->page_data['terms_conditions'] = $this->workorder_model->getTermsbyID();
-        // }else{
-        //     // $this->page_data['terms_conditions'] = $this->workorder_model->getTermsbyID();
-        //     $this->page_data['terms_conditions'] = $this->workorder_model->getTermsDefault();
-        // }
 
         $termsCondi = $this->workorder_model->getWOTerms($company_id);
         if($termsCondi){
@@ -3972,14 +3949,10 @@ class Workorder extends MY_Controller
             $this->page_data['terms_conditions'] = $this->workorder_model->getTermsDefault();
         }
 
-        // $this->workorder_model->getWOtermsByID();
-
         $termsUse = $this->workorder_model->getTermsUse($company_id);
         if($termsUse){
-            // $this->page_data['terms_conditions'] = $this->workorder_model->getTermsDefault();
             $this->page_data['terms_uses'] = $this->workorder_model->getTermsUsebyID();
         }else{
-            // $this->page_data['terms_conditions'] = $this->workorder_model->getTermsbyID();
             $this->page_data['terms_uses'] = $this->workorder_model->getTermsUseDefault();
         }
 
@@ -3991,8 +3964,7 @@ class Workorder extends MY_Controller
             $checklists[] = ['header' => $h, 'items' => $checklistItems];
         }
 
-        //Settings
-        $this->load->model('WorkorderSettings_model');
+        //Settings        
         $workorderSettings = $this->WorkorderSettings_model->getByCompanyId($company_id);
         if( $workorderSettings ){
             $prefix = $workorderSettings->work_order_num_prefix;
@@ -4014,31 +3986,28 @@ class Workorder extends MY_Controller
             ),
             'select' => '*',
         );
-        $this->page_data['system_package_type'] = $this->general->get_data_with_param($spt_query);
+        $system_package_type = $this->general->get_data_with_param($spt_query);
 
+        $panelTypes = $this->PanelType_model->getAllByCompanyId($company_id);
+
+        $this->page_data['system_package_type'] = $system_package_type;
         $this->page_data['prefix'] = $prefix;
         $this->page_data['next_num'] = $next_num;
-
-        // print_r($this->page_data['terms_conditions']);
         $this->page_data['fields'] = $this->workorder_model->getCustomByID();
         $this->page_data['headers'] = $this->workorder_model->getheaderSolarByID();
-        //$this->page_data['checklists'] = $this->workorder_model->getchecklistByUser($user_id);
         $this->page_data['checklists'] = $checklists;
         $this->page_data['job_types'] = $this->workorder_model->getjob_types();
-
         $this->page_data['job_tags'] = $this->workorder_model->getjob_tagsById();
         $this->page_data['clients'] = $this->workorder_model->getclientsById();
-        $this->page_data['lead_source'] = $this->workorder_model->getlead_source($company_id);
-        
+        $this->page_data['lead_source'] = $this->workorder_model->getlead_source($company_id);        
         $this->page_data['packages'] = $this->workorder_model->getPackagelist($company_id);
-
         $this->page_data['users'] = $this->users_model->getUser(logged('id'));
         $this->page_data['users_lists'] = $this->users_model->getAllUsersByCompanyID($company_id);
         $this->page_data['companyDet'] = $this->workorder_model->companyDet($company_id);
-
         $this->page_data['itemPackages'] = $this->workorder_model->getPackageDetailsByCompany($company_id);
         $this->page_data['getSettings'] = $this->workorder_model->getSettings($company_id);
         $this->page_data['ids'] = $this->workorder_model->getlastInsertID();
+        $this->page_data['panelTypes'] = $panelTypes;
 
         $org_id = array('58','31');
             if($company_id == 58 || $company_id == 31)
@@ -4051,9 +4020,7 @@ class Workorder extends MY_Controller
         
 
         $this->page_data['page_title'] = "Work Order";
-        // print_r($this->page_data['lead_source']);
-
-        // $this->load->view('workorder/addSolarWorkorder', $this->page_data);
+        //$this->load->view('workorder/addSolarWorkorder', $this->page_data);
         $this->load->view('v2/pages/workorder/addSolarWorkorder', $this->page_data);
     }
 
@@ -4189,6 +4156,8 @@ class Workorder extends MY_Controller
 
     public function workorderInstallation()
     {
+        $this->load->model('PanelType_model');
+
         if(!checkRoleCanAccessModule('work-orders', 'write')){
 			show403Error();
 			return false;
@@ -4279,8 +4248,12 @@ class Workorder extends MY_Controller
             ),
             'select' => '*',
         );
-        $this->page_data['system_package_type'] = $this->general->get_data_with_param($spt_query);
+        $system_package_type = $this->general->get_data_with_param($spt_query);
+        $panelTypes = $this->PanelType_model->getAllByCompanyId($company_id);
+        $defaultPanelType = $this->PanelType_model->getCompanyDefaultValue($company_id);
+        $org_id = array('58','31');
 
+        $this->page_data['system_package_type'] = $system_package_type;
         $this->page_data['prefix'] = $prefix;
         $this->page_data['next_num'] = $next_num;
         $this->page_data['fields'] = $this->workorder_model->getCustomByID();
@@ -4294,14 +4267,12 @@ class Workorder extends MY_Controller
         $this->page_data['users'] = $this->users_model->getUser(logged('id'));
         $this->page_data['users_lists'] = $this->users_model->getAllUsersByCompanyID($company_id);
         $this->page_data['companyDet'] = $this->workorder_model->companyDet($company_id);
-
         $this->page_data['itemPackages'] = $this->workorder_model->getPackageDetailsByCompany($company_id);
         $this->page_data['getSettings'] = $this->workorder_model->getSettings($company_id);
-
-        $org_id = array('58','31');
         $this->page_data['number'] = $this->workorder_model->getlastInsert($company_id);
-
         $this->page_data['ids'] = $this->workorder_model->getlastInsertID();
+        $this->page_data['panelTypes'] = $panelTypes;
+        $this->page_data['defaultPanelType'] = $defaultPanelType;
         $this->page_data['page_title'] = "Work Order";
         $this->page_data['checklists'] = [];
         $this->load->view('v2/pages/workorder/addWorkorderInstallationV2', $this->page_data);

@@ -129,21 +129,26 @@ class PhotoGallery extends MY_Controller
 
         $photoGallery = $this->PhotoGallery_model->getById($post['photo_id']);
         if( $photoGallery && $photoGallery->company_id == $company_id ){
+
+            $filePath = FCPATH . (implode(DIRECTORY_SEPARATOR, ['uploads', 'photo_gallery', $company_id]) . DIRECTORY_SEPARATOR);
+            if ($photoGallery->image && file_exists($filePath . $photoGallery->image)) {
+                unlink($filePath . $photoGallery->image);
+            }
+
             $this->PhotoGallery_model->delete($photoGallery->id);
 
             $is_success = 1;
             $msg = '';
 
             //Activity Logs
-            $activity_name = 'Photo Gallery : Deleted 1 photo';  
+            $activity_name = 'Photo Gallery : Deleted photo';  
             createActivityLog($activity_name);
         }
         
 
         $return = [
             'is_success' => $is_success,
-            'msg' => $msg,
-            'total_uploaded' => $total_uploaded
+            'msg' => $msg
         ];
 
         echo json_encode($return);

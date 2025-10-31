@@ -1,35 +1,25 @@
 <?php
 defined('BASEPATH') or exit('No direct script access allowed');
 
-class PanelType_model extends MY_Model
+class AcsAccountType_model extends MY_Model
 {
-    public $table = 'panel_types';
-   
-    public function getAll($filters=array())
+    public $table = 'acs_account_types';
+    
+    public function getAllByCompanyId($company_id, $filters = [])
     {
-        $id = logged('id');
-
         $this->db->select('*');
         $this->db->from($this->table);
+        $this->db->where('company_id', $company_id);
 
         if ( !empty($filters) ) {
-            if ( !empty($filters['search']) ) {
-                $this->db->like('name', $filters['search'], 'both');
+            $this->db->group_start();
+            foreach( $filters as $filter ){
+                if( $filter['value'] != '' ){
+                    $this->db->like($filter['field'], $filter['value'], 'both');  
+                }                
             }
+            $this->db->group_end();
         }
-
-        $this->db->order_by('id', 'ASC');
-
-        $query = $this->db->get();
-        return $query->result();
-    }
-
-    public function getAllByCompanyId($cid)
-    {
-        $this->db->select('*');
-        $this->db->from($this->table);
-        $this->db->where('company_id', $cid);
-        $this->db->order_by('id', 'ASC');
 
         $query = $this->db->get();
         return $query->result();
@@ -37,33 +27,10 @@ class PanelType_model extends MY_Model
 
     public function getById($id)
     {
+
         $this->db->select('*');
         $this->db->from($this->table);
         $this->db->where('id', $id);
-
-        $query = $this->db->get();
-        return $query->row();
-    }
-
-    public function getByIdAndCompanyId($id, $company_id)
-    {
-        $this->db->select('*');
-        $this->db->from($this->table);
-        $this->db->where('id', $id);
-        $this->db->where('company_id', $company_id);
-
-        $query = $this->db->get();
-        return $query->row();
-    }
-
-    public function getByNameAndCompanyId($name, $cid)
-    {
-        $name = trim($name);
-        
-        $this->db->select('*');
-        $this->db->from($this->table);
-        $this->db->where('name', $name);
-        $this->db->where('company_id', $cid);
 
         $query = $this->db->get();
         return $query->row();
@@ -76,6 +43,29 @@ class PanelType_model extends MY_Model
         $this->db->from($this->table);
         $this->db->where('company_id', $company_id);
         $this->db->where('is_default', 'Yes');
+
+        $query = $this->db->get();
+        return $query->row();
+    }
+
+    public function getByIdAndCompanyId($id, $cid)
+    {
+
+        $this->db->select('*');
+        $this->db->from($this->table);
+        $this->db->where('id', $id);
+        $this->db->where('company_id', $cid);
+
+        $query = $this->db->get();
+        return $query->row();
+    }
+
+    public function getByAccountTypeAndCompanyId($account_type, $cid)
+    {
+        $this->db->select('*');
+        $this->db->from($this->table);
+        $this->db->where('account_type', $account_type);
+        $this->db->where('company_id', $cid);
 
         $query = $this->db->get();
         return $query->row();
@@ -106,5 +96,5 @@ class PanelType_model extends MY_Model
     }
 }
 
-/* End of file PanelType_model.php */
-/* Location: ./application/models/PanelType_model.php */
+/* End of file AcsAccountType_model.php */
+/* Location: ./application/models/AcsAccountType_model.php */

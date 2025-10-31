@@ -15,8 +15,7 @@ window.addEventListener("DOMContentLoaded", () => {
   const $approveAndEsignButton = $modal.querySelector(
     "[data-action=approve-and-esign]"
   );
-  const $approveAndEsignButtonLoader =
-    $approveAndEsignButton.querySelector(".bx-spin");
+  //const $approveAndEsignButtonLoader = $approveAndEsignButton.querySelector(".bx-spin");
 
   $button.addEventListener("click", (event) => {
     event.preventDefault();
@@ -38,7 +37,7 @@ window.addEventListener("DOMContentLoaded", () => {
     const templates = jsonData.data;
 
     $loader.classList.add("d-none");
-    $approveAndEsignButtonLoader.classList.add("d-none");
+    //$approveAndEsignButtonLoader.classList.add("d-none");
 
     if (!Array.isArray(templates) || !templates.length) {
       $empty.classList.remove("d-none");
@@ -80,29 +79,31 @@ window.addEventListener("DOMContentLoaded", () => {
     disableApproveAndEsignButton();
   });
 
-  $approveButton.addEventListener("click", async () => {
-    disableApproveAndEsignButton();
-    const response = await updateJobToApproved();
-    enableApproveAndEsignButton();
+  if( $approveButton ){
+    $approveButton.addEventListener("click", async () => {
+      disableApproveAndEsignButton();
+      const response = await updateJobToApproved();
+      enableApproveAndEsignButton();
 
-    if (!response.success) return;
+      if (!response.success) return;
 
-    $($modal).modal("hide");
-    const swalResponse = await Swal.fire({
-      title: "Job is approved",
-      icon: "success",
-      text: "Invoice is now available for your review",
-      confirmButtonText: "See Invoice",
+      $($modal).modal("hide");
+      const swalResponse = await Swal.fire({
+        title: "Job is approved",
+        icon: "success",
+        text: "Invoice is now available for your review",
+        confirmButtonText: "See Invoice",
+      });
+
+      const jobId = $("input[id=esignJobId]").val();
+      if (swalResponse.isConfirmed) {
+        window.open(base_url + `job/viewInvoice/${jobId}`, '_blank','location=yes,height=650,width=1200,scrollbars=yes,status=yes');
+        window.location.reload();
+      } else if (swalResponse.dismiss) {
+        window.location.reload();
+      }
     });
-
-    const jobId = $("input[id=esignJobId]").val();
-    if (swalResponse.isConfirmed) {
-      window.open(base_url + `job/viewInvoice/${jobId}`, '_blank','location=yes,height=650,width=1200,scrollbars=yes,status=yes');
-      window.location.reload();
-    } else if (swalResponse.dismiss) {
-      window.location.reload();
-    }
-  });
+  }  
 
   $approveAndEsignButton.addEventListener("click", async () => {
     disableApproveAndEsignButton();
@@ -151,11 +152,11 @@ window.addEventListener("DOMContentLoaded", () => {
   }
 
   function disableApproveAndEsignButton() {
-    $approveAndEsignButtonLoader.classList.remove("d-none");
+    //$approveAndEsignButtonLoader.classList.remove("d-none");
     $esignButton.setAttribute("disabled", true);
   }
   function enableApproveAndEsignButton() {
-    $approveAndEsignButtonLoader.classList.add("d-none");
+    //$approveAndEsignButtonLoader.classList.add("d-none");
     $esignButton.removeAttribute("disabled");
   }
 });

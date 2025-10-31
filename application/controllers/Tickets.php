@@ -3132,6 +3132,8 @@ class Tickets extends MY_Controller
 
         $is_success = 1;
         $msg = '';
+        $panel_type = '';
+        $panel_type_id  = 0;
 
         $cid = logged('company_id');
 
@@ -3150,10 +3152,12 @@ class Tickets extends MY_Controller
         if( $is_success == 1 ){
             $data = [
                 'company_id' => $cid,
-                'name' => $post['panel_type_name']
+                'name' => $post['panel_type_name'],
+                'date_created' => date("Y-m-d H:i:s")
             ];
 
-            $this->PanelType_model->create($data);
+            $panel_type_id = $this->PanelType_model->create($data);
+            $panel_type    = $post['panel_type_name'];
 
             //Activity Logs
             $activity_name = 'Panel Types : Created Panel Type ' . $post['panel_type_name']; 
@@ -3164,7 +3168,8 @@ class Tickets extends MY_Controller
         $return = [
             'is_success' => $is_success,
             'msg' => $msg,
-            'service_type' => $service_type
+            'panel_type_id' => $panel_type_id,
+            'panel_type' => $panel_type
         ];
 
         echo json_encode($return);
@@ -3189,7 +3194,8 @@ class Tickets extends MY_Controller
         
         if( $panelType && $panelType->company_id == $cid ){
             $data = [
-                'name' => $post['panel_type_name']
+                'name' => $post['panel_type_name'],
+                'date_updated' => date("Y-m-d H:i:s")
             ];
 
             $this->PanelType_model->update($panelType->id, $data);
@@ -3819,6 +3825,37 @@ class Tickets extends MY_Controller
 
 		fpassthru($f);
 	}
+
+    public function ajax_set_default_panel_type()
+    {
+        $this->load->model('PanelType_model');
+
+        $is_success = 0;
+        $msg = 'Cannot find record';
+
+        $company_id = logged('company_id');
+        $post = $this->input->post();
+
+        $panelType = $this->PanelType_model->getByIdAndCompanyId($post['id'], $company_id);
+        if ($panelType) {
+            $this->PanelType_model->resetDefaultByCompanyId($company_id);
+            $this->PanelType_model->update($panelType->id, ['is_default' => 'Yes']);
+
+            //Activity Logs
+            $activity_name = 'Panel Types : Set default value to ' . $panelType->name; 
+            createActivityLog($activity_name);
+
+            $is_success = 1;
+            $msg = '';
+        }
+
+        $json_data = [
+            'is_success' => $is_success,
+            'msg' => $msg,
+        ];
+
+        echo json_encode($json_data);
+    }
 }
 
 /* End of file Tickets.php */

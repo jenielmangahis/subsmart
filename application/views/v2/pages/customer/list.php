@@ -693,7 +693,7 @@
                         }
 
                         html += `
-                            <div class="col-lg-1">
+                            <div class="col-6 col-sm-4 col-md-3 col-lg-2 col-xl-2 text-center">
                                 <div class="commercialCustomerStatusCategory" style="background:${matchedColor.bg}; border:1px solid ${matchedColor.border};">
                                     <small class="text-uppercase commercialCustomerStatusName">${key}</small>
                                     <h5 class="commercialCustomerStatusCount">${value}</h5>

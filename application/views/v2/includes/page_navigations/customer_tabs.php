@@ -93,22 +93,23 @@
                     <li><a class="dropdown-item" href="<?php echo base_url('customer/settings_system_package') ?>">System Package Type</a></li>
                     <li><a class="dropdown-item" href="<?= base_url('customer/settings_financing_categories') ?>">Financing Payment Categories</a></li>
                     <li><a class="dropdown-item" href="<?= base_url('creditor_furnisher/list') ?>">Creditors / Furnishers</a></li>
-                    <li><a class="dropdown-item" href="<?= base_url('customer/settings_alarm_installer_codes') ?>">Installer Codes</a></li>
                     <?php //if( in_array(logged('company_id'), adi_company_ids()) ){ ?>
                         <?php if( isSolarCompany() ){ ?>
                             <li><a class="dropdown-item" href="<?php echo base_url('customer/settings_solar_lender_type') ?>">Solar Lender Types</a></li>
                             <li><a class="dropdown-item" href="<?php echo base_url('customer/settings_solar_system_size') ?>">Solar System Size</a></li>
                             <li><a class="dropdown-item" href="<?= base_url('customer/settings_solar_modules') ?>">Solar Proposed Modules</a></li>
                             <li><a class="dropdown-item" href="<?= base_url('customer/settings_solar_inverter') ?>">Solar Proposed Inverters</a></li>
+                            <li><a class="dropdown-item btn-adt-sync-settings" href="javascript:void(0);">ADT Sales Portal : Data Sync Settings</a></li>
                         <?php } ?>
                     <?php //} ?>
+                    <?php if( isAlarmCompany() ){ ?>
+                        <li><a class="dropdown-item" href="<?php echo base_url('customer/settings_alarm_installer_codes') ?>">Alarm Installer Codes</a></li>
+                        <li><a class="dropdown-item" href="<?php echo base_url('customer/settings_alarm_site_types') ?>">Alarm Site Types</a></li>
+                    <?php } ?>
                     <li><a class="dropdown-item" href="<?php echo base_url('customer/settings_headers') ?>">Header</a></li>
                     <li><a class="dropdown-item" href="<?= base_url('customer/settings_import') ?>">Import Settings</a></li>
                     <li><a class="dropdown-item" href="<?= base_url('customer/settings_export') ?>">Export Settings</a></li>
                     <li><a class="dropdown-item" href="<?= base_url('customer/form_settings') ?>">Form Fields</a></li>
-                    <?php if ( isSolarCompany() == 1 ) { ?>
-                        <li><a class="dropdown-item btn-adt-sync-settings" href="javascript:void(0);">ADT Sales Portal : Data Sync Settings</a></li>
-                    <?php } ?>
                     <li><a class="dropdown-item" href="<?= base_url('customer/settings_lost_reasons') ?>">Lost / Reasons</a></li>
                 </ul>
             </div>

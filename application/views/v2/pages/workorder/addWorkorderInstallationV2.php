@@ -134,7 +134,7 @@
                                     <div class="col-12 col-md-2">
                                         <label class="content-subtitle fw-bold d-block mb-2">Lead Source</label>
                                         <select class="nsm-field form-select" name="lead_source" id="lead_source">
-                                            <option value="0">- none -</option>
+                                            <option value="None">- None -</option>
                                             <?php foreach ($lead_source as $lead) { ?>
                                                 <option value="<?php echo $lead->ls_id; ?>"><?php echo $lead->ls_name; ?></option>
                                             <?php } ?>
@@ -143,7 +143,7 @@
                                     <div class="col-12 col-md-2">
                                         <label class="content-subtitle fw-bold d-block mb-2">Account Type</label>
                                         <select class="nsm-field form-select" name="account_type" id="account_type">
-                                            <option value="">- none -</option>
+                                            <option value="None">- None -</option>
                                             <option value="Residential">Residential</option>
                                             <option value="Commercial">Commercial</option>
                                             <option value="Rental">Rental</option>
@@ -153,7 +153,7 @@
                                     <div class="col-12 col-md-2">
                                         <label class="content-subtitle fw-bold d-block mb-2">System Package</label>
                                         <select class="nsm-field form-select" name="communication_type" id="communication_type">
-                                            <option value="0">- none -</option>
+                                            <option value="None">- None -</option>
                                             <?php foreach ($system_package_type as $lead) { ?>
                                                 <option value="<?php echo $lead->name; ?>"><?php echo $lead->name; ?></option>
                                             <?php } ?>
@@ -161,153 +161,28 @@
                                     </div>
                                     <div class="col-12 col-md-2">
                                         <label class="content-subtitle fw-bold d-block mb-2">Panel Type</label>
+                                        <?php 
+                                            $selected_panel_type = '';
+                                            if( $defaultPanelType ){
+                                                $selected_panel_type = $defaultPanelType->name;
+                                            }
+
+                                            if( $alarm_info && $alarm_info->panel_type != '' ){
+                                                $selected_panel_type = $alarm_info->panel_type;
+                                            }
+
+                                        ?>
                                         <select class="nsm-field form-select" name="panel_type" id="panel_type">
-                                            <option <?php if (isset($alarm_info)) {
-                                                        if ($alarm_info->panel_type == '') {
-                                                            echo "selected";
-                                                        }
-                                                    } ?> value="0">- none -</option>
-                                            <option <?php if (isset($alarm_info)) {
-                                                        if ($alarm_info->panel_type == 'AERIONICS') {
-                                                            echo "selected";
-                                                        }
-                                                    } ?> value="AERIONICS">AERIONICS</option>
-                                            <option <?php if (isset($alarm_info)) {
-                                                        if ($alarm_info->panel_type == 'AlarmNet') {
-                                                            echo "selected";
-                                                        }
-                                                    } ?> value="AlarmNet">AlarmNet</option>
-                                            <option <?php if (isset($alarm_info)) {
-                                                        if ($alarm_info->panel_type == 'Alarm.com') {
-                                                            echo "selected";
-                                                        }
-                                                    } ?> value="Alarm.com">Alarm.com</option>
-                                            <option <?php if (isset($alarm_info)) {
-                                                        if ($alarm_info->panel_type == 'Alula') {
-                                                            echo "selected";
-                                                        }
-                                                    } ?> value="Alula">Alula</option>
-                                            <option <?php if (isset($alarm_info)) {
-                                                        if ($alarm_info->panel_type == 'Bosch') {
-                                                            echo "selected";
-                                                        }
-                                                    } ?> value="Bosch">Bosch</option>
-                                            <option <?php if (isset($alarm_info)) {
-                                                        if ($alarm_info->panel_type == 'DSC') {
-                                                            echo "selected";
-                                                        }
-                                                    } ?> value="DSC">DSC</option>
-                                            <option <?php if (isset($alarm_info)) {
-                                                        if ($alarm_info->panel_type == 'ELK') {
-                                                            echo "selected";
-                                                        }
-                                                    } ?> value="ELK">ELK</option>
-                                            <option <?php if (isset($alarm_info)) {
-                                                        if ($alarm_info->panel_type == 'FBI') {
-                                                            echo "selected";
-                                                        }
-                                                    } ?> value="FBI">FBI</option>
-                                            <option <?php if (isset($alarm_info)) {
-                                                        if ($alarm_info->panel_type == 'GRI') {
-                                                            echo "selected";
-                                                        }
-                                                    } ?> value="GRI">GRI</option>
-                                            <option <?php if (isset($alarm_info)) {
-                                                        if ($alarm_info->panel_type == 'GE') {
-                                                            echo "selected";
-                                                        }
-                                                    } ?> value="GE">GE</option>
-                                            <option <?php if (isset($alarm_info)) {
-                                                        if ($alarm_info->panel_type == 'Honeywell') {
-                                                            echo "selected";
-                                                        }
-                                                    } ?> value="Honeywell">Honeywell</option>
-                                            <option <?php if (isset($alarm_info)) {
-                                                        if ($alarm_info->panel_type == 'Honeywell Touch') {
-                                                            echo "selected";
-                                                        }
-                                                    } ?> value="Honeywell Touch">Honeywell Touch</option>
-                                            <option <?php if (isset($alarm_info)) {
-                                                        if ($alarm_info->panel_type == 'Honeywell 3000') {
-                                                            echo "selected";
-                                                        }
-                                                    } ?> value="Honeywell 3000">Honeywell 3000</option>
-                                            <option <?php if (isset($alarm_info)) {
-                                                        if ($alarm_info->panel_type == 'Honeywell') {
-                                                            echo "selected";
-                                                        }
-                                                    } ?> value="Honeywell Vista">Honeywell Vista</option>
-                                            <option <?php if (isset($alarm_info)) {
-                                                        if ($alarm_info->panel_type == 'Honeywell Vista with Sem') {
-                                                            echo "selected";
-                                                        }
-                                                    } ?> value="Honeywell Vista with Sem">Honeywell Vista with Sem</option>
-                                            <option <?php if (isset($alarm_info)) {
-                                                        if ($alarm_info->panel_type == 'Honeywell Lyric') {
-                                                            echo "selected";
-                                                        }
-                                                    } ?> value="Honeywell Lyric">Honeywell Lyric</option>
-                                            <option <?php if (isset($alarm_info)) {
-                                                        if ($alarm_info->panel_type == 'IEI') {
-                                                            echo "selected";
-                                                        }
-                                                    } ?> value="IEI">IEI</option>
-                                            <option <?php if (isset($alarm_info)) {
-                                                        if ($alarm_info->panel_type == 'MIER') {
-                                                            echo "selected";
-                                                        }
-                                                    } ?> value="MIER">MIER</option>
-                                            <option <?php if (isset($alarm_info)) {
-                                                        if ($alarm_info->panel_type == '2 GIG') {
-                                                            echo "selected";
-                                                        }
-                                                    } ?> value="2 GIG">2 GIG</option>
-                                            <option <?php if (isset($alarm_info)) {
-                                                        if ($alarm_info->panel_type == '2 GIG Go Panel 2') {
-                                                            echo "selected";
-                                                        }
-                                                    } ?> value="2 GIG Go Panel 2">2 GIG Go Panel 2</option>
-                                            <option <?php if (isset($alarm_info)) {
-                                                        if ($alarm_info->panel_type == '2 GIG Go Panel 3') {
-                                                            echo "selected";
-                                                        }
-                                                    } ?> value="2 GIG Go Panel 3">2 GIG Go Panel 3</option>
-                                            <option <?php if (isset($alarm_info)) {
-                                                        if ($alarm_info->panel_type == 'Qolsys') {
-                                                            echo "selected";
-                                                        }
-                                                    } ?> value="Qolsyx">Qolsys</option>
-                                            <option <?php if (isset($alarm_info)) {
-                                                        if ($alarm_info->panel_type == 'Qolsys IQ Panel 2') {
-                                                            echo "selected";
-                                                        }
-                                                    } ?> value="Qolsys IQ Panel 2">Qolsys IQ Panel 2</option>
-                                            <option <?php if (isset($alarm_info)) {
-                                                        if ($alarm_info->panel_type == 'Qolsys IQ Panel 2 Plus') {
-                                                            echo "selected";
-                                                        }
-                                                    } ?> value="Qolsys IQ Panel 2 Plus">Qolsys IQ Panel 2 Plus</option>
-                                            <option <?php if (isset($alarm_info)) {
-                                                        if ($alarm_info->panel_type == 'Qolsys IQ Panel 3') {
-                                                            echo "selected";
-                                                        }
-                                                    } ?> value="Qolsys IQ Panel 3">Qolsys IQ Panel 3</option>
-                                            <option <?php if (isset($alarm_info)) {
-                                                        if ($alarm_info->panel_type == 'Custom') {
-                                                            echo "selected";
-                                                        }
-                                                    } ?> value="Custom">Custom</option>
-                                            <option <?php if (isset($alarm_info)) {
-                                                        if ($alarm_info->panel_type == 'Other') {
-                                                            echo "selected";
-                                                        }
-                                                    } ?> value="Other">Other</option>
+                                            <option <?= $selected_panel_type == '' || $selected_panel_type == 'None' ? 'selected="selected"' : ''; ?> value="None">None</option>
+                                            <?php foreach($panelTypes as $pt){ ?>
+                                                <option <?= $selected_panel_type != '' && $selected_panel_type == $pt->name ? 'selected="selected"' : ''; ?> value="<?= $pt->name; ?>"><?= $pt->name; ?></option>
+                                            <?php } ?>
                                         </select>
                                     </div>
                                     <div class="col-12 col-md-2">
                                         <label class="content-subtitle fw-bold d-block mb-2">Jobs Tags</label>
                                         <select class="nsm-field form-select" name="job_tags" id="job_tags">
-                                            <option value="0">- none -</option>
+                                            <option value="0">- None -</option>
                                             <?php foreach ($job_tags as $jb) { ?>
                                                 <option value="<?php echo $jb->id; ?>"><?php echo $jb->name; ?></option>
                                             <?php } ?>
@@ -1662,7 +1537,10 @@ window.addEventListener('DOMContentLoaded', (event) => {
             url: "<?= base_url() ?>/job/get_customer_selected",
             data: { id : customerId },
             success: function(data) {
+
                 const {data: customer} = JSON.parse(data);
+                const dataOjb = JSON.parse(data);
+
                 $("[name=firstname]").val(customer.first_name);
                 $("[name=lastname]").val(customer.last_name);
                 $("[name=address]").val(customer.mail_add);
@@ -1675,6 +1553,19 @@ window.addEventListener('DOMContentLoaded', (event) => {
                 $("[name=email]").val(customer.email);
                 $("[name=state_form]").val(customer.state);
                 $("[name=businessname]").val(customer.business_name);
+
+                $("[name=first_ecn_first]").val(dataOjb.emergency_contact_a.firstname);
+                $("[name=first_ecn_last]").val(dataOjb.emergency_contact_a.lastname);
+                $("[name=first_ecn_no]").val(dataOjb.emergency_contact_a.phone);  
+
+                $("[name=second_ecn_first]").val(dataOjb.emergency_contact_b.firstname);
+                $("[name=second_ecn_last]").val(dataOjb.emergency_contact_b.lastname);
+                $("[name=second_ecn_no]").val(dataOjb.emergency_contact_b.phone);  
+
+                $("[name=third_ecn_first]").val(dataOjb.emergency_contact_c.firstname);
+                $("[name=third_ecn_last]").val(dataOjb.emergency_contact_c.lastname);
+                $("[name=third_ecn_no]").val(dataOjb.emergency_contact_c.phone);  
+
             }
         });
     }

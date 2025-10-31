@@ -872,3 +872,86 @@
         </div>
     </div>
 </div>
+
+<div class="modal fade nsm-modal fade" id="modal-add-site-type" tabindex="-1" aria-labelledby="modal-add-site-type_label" aria-hidden="true">
+    <div class="modal-dialog modal-md modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <span class="modal-title content-title">Add Site Type</span>
+                <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
+            </div>
+            <div class="modal-body">
+                <form id="frm-save-site-type">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <label class="mb-2">Site Type</label>
+                        <div class="input-group mb-3">
+                            <input type="text" name="site_type" id="add_site_type" value="" class="form-control" required="" autocomplete="off" />
+                        </div>
+                    </div>                 
+                </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="nsm-button" data-bs-dismiss="modal">Close</button>
+                <button type="submit" class="nsm-button primary" id="btn-save-site-type" form="frm-save-site-type">Save</button>
+            </div>
+            </form>                
+        </div>
+    </div>
+</div>
+
+<div class="modal fade nsm-modal fade" id="modal-edit-site-type" tabindex="-1" aria-labelledby="modal-edit-site-type_label" aria-hidden="true">
+    <div class="modal-dialog modal-md modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <span class="modal-title content-title">Edit Site Type</span>
+                <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
+            </div>
+            <div class="modal-body">
+                <form id="frm-update-site-type">
+                <input type="hidden" name="site_type_id" id="site-type-id" value="" />
+                <div class="row">
+                    <div class="col-sm-12">
+                        <label class="mb-2">Site Type</label>
+                        <div class="input-group mb-3">
+                            <input type="text" name="site_type" id="edit-site-type" value="" class="form-control" required="" autocomplete="off" />
+                        </div>
+                    </div>                 
+                </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="nsm-button" data-bs-dismiss="modal">Close</button>
+                <button type="submit" class="nsm-button primary" id="btn-update-site-type" form="frm-update-site-type">Save</button>
+            </div>
+            </form>                
+        </div>
+    </div>
+</div>
+
+<div class="modal fade nsm-modal fade" id="modal-add-panel-type" tabindex="-1" aria-labelledby="modal-quick-add-panel-type-label" aria-hidden="true">
+    <div class="modal-dialog modal-md modal-dialog-centered">     
+        <div class="modal-content">
+            <div class="modal-header">
+                <span class="modal-title content-title">Add Panel Type</span>
+                <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
+            </div>
+            <div class="modal-body">
+                <form id="frm-add-panel-type" method="POST">
+                <div class="row">
+                    <div class="col-12 mb-3">
+                        <label for="panel-type-name" class="content-subtitle fw-bold d-block mb-2">Name </label>
+                        <input type="text" name="panel_type_name" id="panel-type-name" class="nsm-field form-control" placeholder="" required>
+                    </div>
+                </div> 
+                </form>
+            </div>
+            <div class="modal-footer">                    
+                <button type="button" class="nsm-button" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="nsm-button btn-fixed-width" id="btn-manage-panel-type">Manage</button>
+                <button type="submit" class="nsm-button primary btn-fixed-width" id="btn-add-panel-type" form="frm-add-panel-type">Save</button>
+            </div>
+        </div>        
+    </div>
+</div>

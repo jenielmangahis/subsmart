@@ -297,21 +297,46 @@ class Autocomplete extends MY_Controller
     {
         $this->load->model('AcsAlarmInstallerCode_model');
 
-        $search = $this->input->get('q');
-        $filter = ['search' => $search];
         $cid    = logged('company_id');
-
-        if( $this->input->get('mobile') ){
-            $filter = ['mobile' => 1];
+        $search = $this->input->get('search');
+        
+        if( $search != '' ){
+            $filter[] = ['field' => 'installer_code', 'value' => $search];
+            $installerCodes  = $this->AcsAlarmInstallerCode_model->getAllByCompanyId($cid, $filter); 
+        }else{  
+            $installerCodes  = $this->AcsAlarmInstallerCode_model->getAllByCompanyId($cid, []); 
         }
-
-        $installerCodes  = $this->AcsAlarmInstallerCode_model->getAllByCompanyId($cid, $filter); 
 
         $result = array(); 
         foreach($installerCodes as $ic){
             $result[] = [
                 'id' => $ic->id,
                 'code' => $ic->installer_code
+            ];            
+        }
+        die(json_encode($result));   
+        
+    }
+
+    public function company_site_types()
+    {
+        $this->load->model('AcsAlarmSiteType_model');
+
+        $cid    = logged('company_id');
+        $search = $this->input->get('search');
+        
+        if( $search != '' ){            
+            $filter[] = ['field' => 'name', 'value' => $search];
+            $siteTypes  = $this->AcsAlarmSiteType_model->getAllByCompanyId($cid, $filter); 
+        }else{  
+            $siteTypes  = $this->AcsAlarmSiteType_model->getAllByCompanyId($cid, []); 
+        }
+        
+        $result = array(); 
+        foreach($siteTypes as $st){
+            $result[] = [
+                'id' => $st->id,
+                'name' => $st->name
             ];            
         }
         die(json_encode($result));   

@@ -1003,6 +1003,13 @@
             $('#quick_add_installer_code').modal('show');
         });
 
+        $('#btn-manage-installer-code').on('click', function(){
+            window.open(
+                base_url + 'customer/settings_alarm_installer_codes',
+                '_blank' 
+            );
+        });
+
         $('#frm-quick-add-installer-code').on('submit', function(e){
             e.preventDefault();
 
@@ -1038,6 +1045,58 @@
             });
         });
 
+        $('#btn-manage-panel-type').on('click', function(){
+            window.open(
+                base_url + 'tickets/settings_panel_types',
+                '_blank' 
+            );
+        });
+
+        $('#frm-add-panel-type').on('submit', function(e){
+            e.preventDefault();
+
+            $.ajax({
+                type: "POST",
+                url: base_url + 'tickets/_create_panel_type',
+                dataType: 'json',
+                data: $('#frm-add-panel-type').serialize(),
+                success: function(data) {    
+                    $('#btn-add-panel-type').html('Save');                   
+                    if (data.is_success) {
+                        $('#modal-add-panel-type').modal('hide');
+                        $('#panel_type').append($('<option>', {
+                            value: data.panel_type,
+                            text: data.panel_type,
+                        }));
+                        $('#panel_type').val(data.panel_type);
+                    }else{
+                        Swal.fire({
+                            title: 'Error',
+                            text: data.msg,
+                            icon: 'error',
+                            showCancelButton: false,
+                            confirmButtonText: 'Okay'
+                        }).then((result) => {
+                            
+                        });
+                    }
+                },
+                beforeSend: function() {
+                    $('#btn-add-panel-type').html('<span class="bx bx-loader bx-spin"></span>');
+                }
+            });
+        });
+
+        $('#btn-quick-panel-type').on('click', function(){
+            $('#frm-add-panel-type')[0].reset();
+            $('#modal-add-panel-type').modal('show');
+        });
+
+        $('#btn-quick-site-type').on('click', function(){
+            $('#frm-add-panel-type')[0].reset();
+            $('#quick_add_site_type').modal('show');
+        });
+
         $('#btn-quick-add-sales-area').on('click', function(){
             $('#frm-quick-add-sales-area')[0].reset();
             $('#quick_add_sales_area').modal('show');
@@ -1048,6 +1107,53 @@
                 base_url + 'customer/settings_sales_area',
                 '_blank' 
             );
+        });
+
+        $('#btn-quick-account-type').on('click', function(){
+            $('#frm-quick-add-account-type')[0].reset();
+            $('#quick_add_account_type').modal('show');
+        });
+
+        $('#btn-manage-account-type').on('click', function(){
+            window.open(
+                base_url + 'customer/settings_account_types',
+                '_blank' 
+            );
+        });
+
+        $('#frm-quick-add-site-type').on('submit', function(e){
+            e.preventDefault();
+
+            $.ajax({
+                type: "POST",
+                url: base_url + 'customers/_create_site_type',
+                dataType: 'json',
+                data: $('#frm-quick-add-site-type').serialize(),
+                success: function(data) {    
+                    $('#btn-quick-add-site-type').html('Save');                   
+                    if (data.is_success) {
+                        $('#quick_add_site_type').modal('hide');
+                        $('#site_type').append($('<option>', {
+                            value: data.site_type_name,
+                            text: data.site_type_name,
+                        }));
+                        $('#site_type').val(data.site_type_name);
+                    }else{
+                        Swal.fire({
+                            title: 'Error',
+                            text: data.msg,
+                            icon: 'error',
+                            showCancelButton: false,
+                            confirmButtonText: 'Okay'
+                        }).then((result) => {
+                            
+                        });
+                    }
+                },
+                beforeSend: function() {
+                    $('#btn-quick-add-site-type').html('<span class="bx bx-loader bx-spin"></span>');
+                }
+            });
         });
 
         $('#frm-quick-add-sales-area').on('submit', function(e){
@@ -1422,6 +1528,41 @@
                 },
                 beforeSend: function() {
                     $('#btn-save-proposed-inverter').html('<span class="bx bx-loader bx-spin"></span>');
+                }
+            });
+        });
+
+        $('#frm-quick-add-account-type').on('submit', function(e){
+            e.preventDefault();
+
+            $.ajax({
+                type: "POST",
+                url: base_url + 'customers/_create_account_type',
+                dataType: 'json',
+                data: $('#frm-quick-add-account-type').serialize(),
+                success: function(data) {    
+                    $('#btn-quick-add-account-type').html('Save');                   
+                    if (data.is_success) {
+                        $('#quick_add_account_type').modal('hide');
+                        $('#acct_type').append($('<option>', {
+                            value: data.account_type,
+                            text: data.account_type,
+                        }));
+                        $('#acct_type').val(data.account_type);
+                    }else{
+                        Swal.fire({
+                            title: 'Error',
+                            text: data.msg,
+                            icon: 'error',
+                            showCancelButton: false,
+                            confirmButtonText: 'Okay'
+                        }).then((result) => {
+                            
+                        });
+                    }
+                },
+                beforeSend: function() {
+                    $('#btn-quick-add-account-type').html('<span class="bx bx-loader bx-spin"></span>');
                 }
             });
         });

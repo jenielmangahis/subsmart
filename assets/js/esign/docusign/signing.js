@@ -111,7 +111,7 @@ function Signing(hash) {
 
     const { docusign_envelope_id } = window.__esigndata.auto_populate_data.user_customer_docfile;
 
-    const { alarm_cs_account, monthly_monitoring, otps, passcode, panel_type } = window.__esigndata.auto_populate_data.acs_alarm;    
+    const { alarm_cs_account, monthly_monitoring, otps, passcode, panel_type, site_customer_type, secondary_system_type, radio_serial_number, panel_location, transformer_location } = window.__esigndata.auto_populate_data.acs_alarm;    
 
     const { jp_amount, jp_program_setup, jp_monthly_monitoring, jp_tax, jp_intallation_cost, jp_equipment_cost, jp_tax_equipment_cost } = window.__esigndata.auto_populate_data.job_payments;   
 
@@ -634,6 +634,54 @@ function Signing(hash) {
         }
       }else{
         return alarm_cs_account;
+      }
+    }
+
+    if( field_name == "Panel Location" ){
+      if( fieldValue ){
+        if( fieldValue['value'] === '' || typeof fieldValue['value'] === 'undefined' ){
+          return panel_location;
+        }else{
+          return fieldValue['value'];
+        }
+      }else{
+        return panel_location;
+      }
+    }
+
+    if( field_name == "Transformer Location" ){
+      if( fieldValue ){
+        if( fieldValue['value'] === '' || typeof fieldValue['value'] === 'undefined' ){
+          return transformer_location;
+        }else{
+          return fieldValue['value'];
+        }
+      }else{
+        return transformer_location;
+      }
+    }
+
+    if( field_name == "Radio Serial Number" ){
+      if( fieldValue ){
+        if( fieldValue['value'] === '' || typeof fieldValue['value'] === 'undefined' ){
+          return radio_serial_number;
+        }else{
+          return fieldValue['value'];
+        }
+      }else{
+        return radio_serial_number;
+      }
+    }
+
+    if( field_name == "Secondary System Type" ){
+      if( fieldValue ){
+        if( fieldValue['value'] === '' || typeof fieldValue['value'] === 'undefined' ){
+          return secondary_system_type;
+        }else{
+          return fieldValue['value'];
+        }
+      }else{
+        return secondary_system_type;
       }
     }
 
@@ -2152,12 +2200,13 @@ function Signing(hash) {
   async function storeFieldValue({ id, value, force = false }) {
     const { recipient } = data;
     const { id: recipient_id } = recipient;
+    const customer_id = data.document.customer_id;
 
     if (value instanceof File) {
       const formData = new FormData();
       formData.append("attachment", value);
       formData.append("recipient_id", recipient_id);
-      formData.append("field_id", id);
+      formData.append("field_id", id);  
 
       const endpoint = `${prefixURL}/DocuSign/apiUploadAttachment`;
 
@@ -2184,6 +2233,7 @@ function Signing(hash) {
     const payload = {
       recipient_id,
       field_id: id,
+      customer_id: customer_id,
       value,
     };
 

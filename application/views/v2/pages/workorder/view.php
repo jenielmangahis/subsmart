@@ -380,12 +380,12 @@ defined('BASEPATH') or exit('No direct script access allowed');
                     <table class=" table table-print table-items" style="width: 100%; border-collapse: collapse;">
                       <thead>
                         <tr>
-                          <th style="background: #f4f4f4; text-align: center; padding: 5px 0;font-weight:bold;">#</th>
-                          <th style="background: #f4f4f4; text-align: left; padding: 5px 0;font-weight:bold;">Item Name</th>
-                          <th style="background: #f4f4f4; text-align: right; padding: 5px 0;font-weight:bold;">Qty</th>
-                          <th style="background: #f4f4f4; text-align: right; padding: 5px 0;font-weight:bold;">Price</th>
-                          <th style="background: #f4f4f4; text-align: right; padding: 5px 0;font-weight:bold;">Tax</th>
-                          <th style="background: #f4f4f4; text-align: right; padding: 5px 8px 5px 0;font-weight:bold;" class="text-right">Total</th>
+                          <th style="background: #f4f4f4; text-align: center; padding: 5px 0; font-weight:bold;">#</th>
+                          <th style="background: #f4f4f4; text-align: left; padding: 5px 0; font-weight:bold;">Item Name</th>
+                          <th style="background: #f4f4f4; text-align: right; padding: 5px 0; font-weight:bold;">Qty</th>
+                          <th style="background: #f4f4f4; text-align: right; padding: 5px 5px; font-weight:bold;">Price</th>
+                          <th style="background: #f4f4f4; text-align: right; padding: 5px 5px; font-weight:bold;">Tax</th>
+                          <th style="background: #f4f4f4; text-align: right; padding: 5px 8px 5px 0; font-weight:bold;" class="text-right">Total</th>
                         </tr>
                       </thead>
                       <tbody>
@@ -393,8 +393,8 @@ defined('BASEPATH') or exit('No direct script access allowed');
                         <?php if( $invoiceItems ){ ?>
                           <?php foreach($invoiceItems as $item){ ?>
                             <tr class="table-items__tr">
-                              <td style="width: 30px; text-align: center;" valign="top"><?= $row; ?></td>
-                              <td valign="top"> <?php echo $item->product_name; ?>   </td>
+                              <td style="width: 30px; text-align: center;" valign="top"><?= $row; ?>.</td>
+                              <td valign="top"> <?php echo $item->product_name; ?></td>
                               <td style="width: 50px; text-align: right;" valign="top"> <?php echo $item->qty; ?>  </td>
                               <td style="width: 80px; text-align: right;" valign="top">$<?php echo number_format($item->cost,2) ?></td>
                               <td style="width: 80px; text-align: right;" valign="top">$<?php echo number_format($item->tax,2) ?></td>
@@ -407,9 +407,12 @@ defined('BASEPATH') or exit('No direct script access allowed');
                               <?php 
                                 $qty = $item->qty > 0 ? $item->qty : 0;
                                 $total_cost = $item->price > 0 ? $item->price : 0;
+                                $total_item_cost = 0;
                                 if( $total_cost > 0 ){
                                   if($qty != 0) {
-                                    $unit_cost = $total_cost / $qty;
+                                    //$unit_cost = $total_cost / $qty;
+                                    $unit_cost = $total_cost;
+                                    $total_item_cost = $unit_cost * $qty;
                                   } else {
                                     $unit_cost = 0;
                                   }
@@ -418,12 +421,12 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                 }
                               ?>
                               <tr class="table-items__tr">
-                                <td style="width: 30px; text-align: center;" valign="top"><?= $row; ?></td>
+                                <td style="width: 30px; text-align: center;" valign="top"><?= $row; ?>.</td>
                                 <td valign="top"> <?php echo $item->item; ?></td>
-                                <td style="width: 50px; text-align: right;" valign="top"> <?php echo intval($qty); ?>  </td>
-                                <td style="width: 80px; text-align: right;" valign="top">$<?php echo number_format($unit_cost,2) ?></td>
-                                <td style="width: 80px; text-align: right;" valign="top">$0</td>
-                                <td style="width: 90px; text-align: right;" valign="top">$<?php echo number_format($total_cost,2); ?></td>
+                                <td style="width: 50px; text-align: right;" valign="top"><?php echo intval($qty); ?></td>
+                                <td style="width: 80px; text-align: right;" valign="top">$<?php echo number_format($unit_cost,2); ?></td>
+                                <td style="width: 80px; text-align: right;" valign="top">$<?php echo number_format(0,2); ?></td>
+                                <td style="width: 90px; text-align: right;" valign="top">$<?php echo number_format($total_item_cost,2); ?></td>
                               </tr>
                               <?php $row++; ?>
                           <?php } ?>
@@ -442,8 +445,8 @@ defined('BASEPATH') or exit('No direct script access allowed');
                               <tr class="table-items__tr">
                                 <td style="width: 30px; text-align: center;" valign="top"><?= $row; ?></td>
                                 <td valign="top" colspan="5"> <div id="PaName_<?php echo $item->package_id; ?>"></div> <br>
-                                <div id="packageItemsTitle<?php echo  $item->package_id; ?>" style="padding-left:5%;">
-                                <div id="packageItems<?php echo  $item->package_id; ?>" style="padding-left:5%;"></div>
+                                <div id="packageItemsTitle<?php echo $item->package_id; ?>" style="padding-left:5%;">
+                                <div id="packageItems<?php echo $item->package_id; ?>" style="padding-left:5%;"></div>
                                 </td>
                                 <td style="width: 90px; text-align: right;" valign="top">$<?php $a = $item->qty * $item->costing; $b = $a + $item->tax; echo number_format($b,2); ?></td>
                               </tr>
@@ -474,7 +477,6 @@ defined('BASEPATH') or exit('No direct script access allowed');
                               if( $invoice ){
                                 $taxes = $invoice->taxes;
                               }
-
                             ?>
                             $<?php echo number_format((Float)$taxes,2); ?>
                           </td>
@@ -507,7 +509,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
 
                             <tr>
                               <td colspan="3" style="border-left: 1px solid Transparent!important;"></td>
-                              <td colspan="2" style="text-align: ;"><b>Grand Total ($)</b></td>
+                              <td colspan="2" style="text-align: ;"><b>Grand Total</b></td>
                               <td colspan="1" style="text-align: right;"><b>$<?php echo number_format((Float)$invoice->grand_total,2) ?></b></td>
                             </tr>                            
                         <?php }else{ ?>
@@ -533,11 +535,19 @@ defined('BASEPATH') or exit('No direct script access allowed');
                               <td colspan="2" style="text-align: ;">Monthly Monitoring</td>
                               <td colspan="1" style="text-align: right;">$<?php echo number_format((Float)$workorder->monthly_monitoring,2); ?></td>
                             </tr>
-                            <?php } ?>                            
+                            <?php } ?> 
+                            
+                            <?php if( $workorder->installation_cost > 0 ){ ?>
+                            <tr>
+                              <td colspan="3" style="border-left: 1px solid Transparent!important;"></td>
+                              <td colspan="2" style="text-align: ;">Installation Cost</td>
+                              <td colspan="1" style="text-align: right;">$<?php echo number_format((Float)$workorder->installation_cost,2); ?></td>
+                            </tr>
+                            <?php } ?> 
 
                             <tr>
                               <td colspan="3" style="border-left: 1px solid Transparent!important;"></td>
-                              <td colspan="2" style="text-align: ;"><b>Grand Total ($)</b></td>
+                              <td colspan="2" style="text-align: ;"><b>Grand Total</b></td>
                               <td colspan="1" style="text-align: right;"><b>$<?php echo number_format((Float)$workorder->grand_total,2) ?></b></td>
                             </tr>
                         <?php } ?>
@@ -591,12 +601,16 @@ defined('BASEPATH') or exit('No direct script access allowed');
                     <span class="workorder-box"><?= $agreements->sales_re_name ?? "None"; ?></span> 
                   </div>
                   <div class="col-md-6 mt-5" style="text-align: center; min-height: 150px;">
-                      <img src="<?php echo base_url('uploads/workorders/signatures/'.$workorder->company_id.'/'.$workorder->company_representative_signature); ?>" />
+                      <?php if($workorder->company_representative_signature != "") { ?>
+                        <img src="<?php echo base_url('uploads/workorders/signatures/'.$workorder->company_id.'/'.$workorder->company_representative_signature); ?>" />
+                      <?php } ?>
                       <br /><?= $company->first_name . ' ' . $company->last_name; ?>
                   </div>
 
                   <div class="col-md-6 mt-5" style="text-align: center; min-height: 150px;">
-                    <img src="<?php echo base_url('uploads/workorders/signatures/'.$workorder->company_id.'/'.$workorder->primary_account_holder_signature); ?>" />
+                    <?php if($workorder->primary_account_holder_signature != "") { ?>
+                      <img src="<?php echo base_url('uploads/workorders/signatures/'.$workorder->company_id.'/'.$workorder->primary_account_holder_signature); ?>" />
+                    <?php } ?>
                     <br /><?= $customer->first_name . ' ' . $customer->last_name; ?>
                   </div>
 

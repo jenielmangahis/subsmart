@@ -1775,17 +1775,20 @@ class Job extends MY_Controller
 
                 $content_notification = 'Job #' . $jobs_data->job_number . ' has been ' . strtolower($status) . '.';
                 foreach($unique_notify_users as $to_notify_user) {
-                    $job_notify = array(
-                        'user_id' => $to_notify_user,
-                        'title' => 'Job Status',
-                        'content' => $content_notification,
-                        'status' => 1,
-                        'date_created' => date("Y-m-d H:i:s"),
-                        'company_id' => $jobs_data->company_id,
-                        'entity_id' => $id
+                    if( $to_notify_user > 0 ){
+                        $job_notify = array(
+                            'user_id' => $to_notify_user,
+                            'title' => 'Job Status',
+                            'content' => $content_notification,
+                            'status' => 1,
+                            'date_created' => date("Y-m-d H:i:s"),
+                            'company_id' => $jobs_data->company_id,
+                            'entity_id' => $id
 
-                    );                       
-                    $this->db->insert('user_notification', $job_notify);  
+                        );                       
+                        $this->db->insert('user_notification', $job_notify);  
+                    }
+                    
                 }
                 //Add header notification - end                 
             }

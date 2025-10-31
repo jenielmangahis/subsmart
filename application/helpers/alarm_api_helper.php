@@ -544,7 +544,6 @@ class AlarmApi extends MY_Model
     public function getAlarmCustomerInfo($customer_id, $token)
     {
         $url = "https://alarmadmin.alarm.com/PartnerApi/v1/customers/{$customer_id}";
-
         $ch = curl_init();
         curl_setopt_array($ch, [
             CURLOPT_URL => $url,
@@ -572,6 +571,35 @@ class AlarmApi extends MY_Model
         return json_decode($response, true); 
     }
 
+    public function getAlarmServicePlansInfo($customer_id, $token)
+    {
+        $url = "https://alarmadmin.alarm.com/PartnerApi//v1/customers/{$customer_id}/service-plans/current/price";
+        $ch = curl_init();
+        curl_setopt_array($ch, [
+            CURLOPT_URL => $url,
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_HTTPHEADER => [
+                "Authorization: Bearer {$token}",
+                "Content-Type: application/json",
+            ],
+            CURLOPT_CONNECTTIMEOUT => 5,
+            CURLOPT_TIMEOUT => 15,
+            CURLOPT_TCP_FASTOPEN => true,
+            CURLOPT_FOLLOWLOCATION => true,
+            CURLOPT_MAXREDIRS => 3
+        ]);
+
+        $response = curl_exec($ch);
+
+        if (curl_errno($ch)) {
+            $error = curl_error($ch);
+            curl_close($ch);
+            return ['error' => $error];
+        }
+
+        curl_close($ch);
+        return json_decode($response, true); 
+    }
 
     public function searchAlarmCustomer($nameSearch, $fuzzySearch)
     {
