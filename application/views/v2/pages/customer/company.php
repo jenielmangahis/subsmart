@@ -114,7 +114,7 @@
     }
 
     .commercialCustomerTableContainer {
-        height: 380px;
+        max-height: 380px;
     }
 
     .commercialCustomerGroupSearch {
@@ -796,7 +796,7 @@
                                     data-bs-toggle="collapse" data-bs-target="#${collapseId}">
                                     <strong>${key}&ensp;<span class="group${loopCount}Count">(${group.length})</span></strong>
                                 </button>
-                                <div class="collapse" id="${collapseId}">
+                                <div class="collapse show" id="${collapseId}">
                                     <div class="border-top position-relative">
                                         <div class="table-responsive commercialCustomerTableContainer">
                                             <table class="table table-bordered table-hover mb-0 align-middle">
@@ -904,7 +904,7 @@
                         }
 
                         html += `
-                            <div class="col-lg-1">
+                            <div class="col-6 col-sm-4 col-md-3 col-lg-2 col-xl-2 text-center">
                                 <div class="commercialCustomerStatusCategory" style="background:${matchedColor.bg}; border:1px solid ${matchedColor.border};">
                                     <small class="text-uppercase commercialCustomerStatusName">${key}</small>
                                     <h5 class="commercialCustomerStatusCount">${value}</h5>

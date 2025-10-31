@@ -21,7 +21,7 @@
                             <span><?= $initials; ?></span>
                         </div>
                     </td>
-                    <td class="nsm-text-primary show"><?= $customer->name; ?><br><small class="text-muted"><?= $customer->email; ?></small></td>
+                    <td class="nsm-text-primary show cursor-pointer" onclick="window.location.href = `${window.origin}/customer/module/<?php echo $customer->prof_id; ?>`;"><?= $customer->name; ?><br><small class="text-muted"><?= $customer->email; ?></small></td>
                     <td style="width:5%;" class="show">
                         <div class="dropdown table-management">
                             <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown"><i class='bx bx-fw bx-dots-vertical-rounded'></i></a>

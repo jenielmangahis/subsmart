@@ -493,6 +493,7 @@ class Customer_advance_model extends MY_Model
             if ($param['search'] != '') {
                 $this->db->group_start();
                 $this->db->or_like("CONCAT(acs_profile.first_name, ' ', acs_profile.last_name)", $param['search'], 'both');     
+                $this->db->or_like("acs_profile.business_name", $param['search'], 'both');     
                 $this->db->or_like("acs_profile.customer_no", $param['search'], 'both');     
                 $this->db->group_end();
             }
@@ -550,6 +551,7 @@ class Customer_advance_model extends MY_Model
         if ($param['search'] != '') {
             $this->db->group_start();
             $this->db->or_like("CONCAT(acs_profile.first_name, ' ', acs_profile.last_name)", $param['search'], 'both');    
+            $this->db->or_like("acs_profile.business_name", $param['search'], 'both');     
             $this->db->or_like("acs_profile.customer_no", $param['search'], 'both');     
             $this->db->group_end();
         }

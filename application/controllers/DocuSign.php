@@ -1391,6 +1391,10 @@ class DocuSign extends MYF_Controller
         //date_default_timezone_set($default_timezone);
         $payload = json_decode(file_get_contents('php://input'), true);        
         $isCreated = false;
+        $customer_id = $payload['customer_id'] ?? 0;
+        if( $payload['customer_id'] ){
+            unset($payload['customer_id']);
+        }        
 
         //Fetch docfile field and use ip timezone if field type is signature. To limit usage since ipapi.co is only limited to 45 requests per minute
         $this->db->where('id', $payload['field_id']);
@@ -1402,7 +1406,15 @@ class DocuSign extends MYF_Controller
                 $default_timezone = $ipTimezone;
             }
             date_default_timezone_set($default_timezone);
-        }        
+        }   
+        
+        if( $docfileField->field_name == 'Text' ){
+            $specs = json_decode($docfileField->specs);
+            if ( $specs->name && strpos($specs->name, 'zone') !== false) {            
+                $zone_a = explode("_", $specs->name);
+                //Store zones in 
+            }
+        }
              
         $date_created = date("Y-m-d H:i:s");
         $tableName    = 'user_docfile_recipient_field_values';   
