@@ -647,6 +647,7 @@
         $.ajax({
             type: "POST",
             url: `${window.origin}/dashboard/thumbnailWidgetRequest`,
+            //url: base_url + `dashboard/thumbnailWidgetRequest`,
             data: {
                 category: "customer_groups",
                 dateFrom: "1970-01-01",

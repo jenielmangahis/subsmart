@@ -5079,8 +5079,27 @@ class Customer extends MY_Controller
 
             $exist = $this->general->get_data_with_param($check, false);
             if ($exist) {
-                $input_billing['next_billing_date'] = $exist->next_billing_date;
-                $input_billing['next_subscription_billing_date'] = $exist->next_subscription_billing_date;
+                if($exist->next_billing_date == null || $exist->next_billing_date == "") {
+                    $input_billing['next_billing_date'] = $next_billing_date;
+                    $input_billing['next_subscription_billing_date'] = $next_billing_date;                       
+                } else {      
+                    if(strtotime($exist->next_billing_date) < strtotime(date('Y-m-d'))) {
+
+                        if($input['bill_start_date'] != '' && $input['bill_end_date'] != '') {
+                            $bill_start_month = date("m",strtotime($input['bill_start_date']));
+                            $bill_start_day   = $input['bill_day'];
+                            $bill_start_year  = date("Y",strtotime($input['bill_start_date']));
+                            //$next_billing_date  = date('Y-m-d', strtotime($bill_start_year . "-" . $bill_start_month . "-" . $bill_start_day));
+
+                            $input_billing['next_billing_date'] = $next_billing_date;
+                            $input_billing['next_subscription_billing_date'] = $next_billing_date;                        
+                        }                          
+
+                    } else {
+                        $input_billing['next_billing_date'] = $exist->next_billing_date;
+                        $input_billing['next_subscription_billing_date'] = $exist->next_subscription_billing_date;
+                    }                  
+                }
                 return $this->general->update_with_key_field($input_billing, $input['customer_id'], 'acs_billing', 'fk_prof_id');
             } else {
                 $input_billing['next_billing_date'] = $next_billing_date;
