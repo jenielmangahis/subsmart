@@ -958,10 +958,13 @@ class Customer extends MY_Controller
             $companyId = logged('company_id');
             $salesRep = get_sales_rep_name($customer->fk_sales_rep_office);
             //$labelName = $customer->customer_type === 'Business' ? $customer->business_name : $customer->first_name.' '.$customer->last_name;
+
+            $customerName = ($customer->business_name != "" && $customer->business_name != "Not Specified") ? $customer->business_name : "{$customer->first_name} {$customer->last_name}";
+
             if( $customer->is_favorite == 1 ){
-                $labelName   = "<i class='bx bxs-heart customer-favorite'></i> " . $customer->first_name.' '.$customer->last_name;
+                $labelName   = "<i class='bx bxs-heart customer-favorite'></i> {$customerName}";
             }else{
-                $labelName   = $customer->first_name.' '.$customer->last_name;
+                $labelName   = $customerName;
             }
             
             $data_arr = [];
@@ -2783,8 +2786,6 @@ class Customer extends MY_Controller
         $this->load->model('Customer_model');
         $this->load->library('wizardlib');                        
 
-        $alarm_api_helper = new AlarmApi();
-
         if(!checkRoleCanAccessModule('customer-dashboard', 'read')){
 			show403Error();
 			return false;
@@ -2903,6 +2904,7 @@ class Customer extends MY_Controller
                 $this->page_data['customerSignature'] = $customerSignature;
                 
                 // search Alarm.com customer
+                $alarm_api_helper = new AlarmApi();
                 if (
                     strpos($profile_info->status, 'Active w/RAR') !== false ||
                     strpos($profile_info->status, 'Active w/RMR') !== false ||
@@ -2916,7 +2918,7 @@ class Customer extends MY_Controller
                 $alarmCustomerDetails = $alarm_api_helper->searchAlarmCustomer($nameKeyword, $fuzzyKeyword);
                 $this->page_data['alarmcom_info'] = $alarmCustomerDetails;
 
-                // $this->page_data['esign_documents'] = $this->getCustomerGeneratedEsigns($id);
+                // $this->page_data['esign_documents'] = $this->getCustomerGeneratedEsigns$id);
             } else {
                 redirect(base_url('customer/'));
             }
@@ -4118,6 +4120,24 @@ class Customer extends MY_Controller
         $panelTypes = $this->PanelType_model->getAllByCompanyId($company_id);
         $accountTypes = $this->AcsAccountType_model->getAllByCompanyId($company_id);
         $defaultAccountType  = $this->AcsAccountType_model->getCompanyDefaultValue($company_id);
+
+
+        // search Alarm.com customer
+        $this->load->helper(array('sms_helper', 'alarm_api_helper', 'paypal_helper'));
+        $alarm_api_helper = new AlarmApi();
+        if (
+            strpos($customer->status, 'Active w/RAR') !== false ||
+            strpos($customer->status, 'Active w/RMR') !== false ||
+            strpos($customer->status, 'Active w/RQR') !== false ||
+            strpos($customer->status, 'Active w/RYR') !== false
+        ) {
+            $nameKeyword = "{$customer->first_name} {$customer->last_name}";
+            $fuzzyKeyword = "{$customer->email} {$customer->phone_h} {$customer->mail_add} {$customer->county} {$customer->state} {$customer->zip_code} {$customer->country} {$customer->subdivision}";
+        }
+
+        $alarmCustomerDetails = $alarm_api_helper->searchAlarmCustomer($nameKeyword, $fuzzyKeyword);
+        $this->page_data['alarmcom_info'] = $alarmCustomerDetails;
+
 
         $this->page_data['page']->title = 'Customers';
         $this->page_data['page']->parent = 'Customers';

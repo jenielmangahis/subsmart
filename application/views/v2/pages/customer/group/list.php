@@ -59,7 +59,7 @@
     }
 
     .customerGroupTableContainer {
-        height: 380px;
+        max-height: 380px;
     }
 
     .newGroupButton {
@@ -409,7 +409,7 @@
                                         <li><a class="dropdown-item delete-item" href="javascript:void(0);" data-name="${key}" data-id="${groupId}">Delete</a></li>
                                     </ul>
                                 </div>
-                                <div class="collapse" id="${collapseId}">
+                                <div class="collapse show" id="${collapseId}">
                                     <div class="border-top position-relative">
                                         <div class="table-responsive customerGroupTableContainer">
                                             <table class="table table-bordered table-hover mb-0 align-middle">

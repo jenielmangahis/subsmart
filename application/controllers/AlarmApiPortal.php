@@ -290,6 +290,7 @@ class AlarmApiPortal extends MY_Controller {
                     "modeminfo_imei" => $modem_info["imei"] ?? null,
                     "join_date" => $entry["joinDate"] ?? null,
                     "package_description" => $service_plan_info["packageDescription"] ?? null,
+                    "package_total_price" => $service_plan_info["totalServicePrice"] ?? null,
                 ];
 
                 $this->db->insert('alarmcom_customers', $data);
@@ -450,6 +451,18 @@ class AlarmApiPortal extends MY_Controller {
         echo json_encode($groupedDevices);
     }
 
+    public function searchAlarmServicePlansInfo()
+    {
+        $this->load->helper(['alarm_api_helper']);
+        $alarmApi = new AlarmApi();
+        $token = $alarmApi->generateAlarmToken();
+        $customer_id = $this->input->post('customer_id');
+
+        $servicePlansDetails = $alarmApi->getAlarmServicePlansInfo($customer_id, $token);
+
+        echo json_encode($servicePlansDetails);
+    }
+
     public function searchAlarmCustomer()
     {
         $this->load->helper(['alarm_api_helper']);
@@ -471,7 +484,7 @@ class AlarmApiPortal extends MY_Controller {
         $token = $alarmApi->generateAlarmToken();
         $customer_id = $this->input->post('customer_id');
 
-        $customerDetails = $alarmApi->getAlarmCustomerInfo(21055492, $token);
+        $customerDetails = $alarmApi->getAlarmServicePlansInfo(21055492, $token);
 
         echo '<pre>';
         print_r($customerDetails);
