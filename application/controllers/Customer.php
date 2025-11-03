@@ -14070,6 +14070,7 @@ class Customer extends MY_Controller
             foreach($post['zone_id'] as $key => $value){
                 if( $value != '' ){
                     $data = [
+                        'docfile_id' => 0,
                         'company_id' => $company_id,
                         'customer_id' => $customer->prof_id,
                         'zone_id' => $value ?? '',
@@ -14953,4 +14954,110 @@ class Customer extends MY_Controller
 
         echo json_encode($return);
 	}
+
+    public function settings_alarm_monitoring_companies()
+    {
+        $this->load->model('AcsAlarmMonitoringCompany_model');
+
+        if(!checkRoleCanAccessModule('customer-settings', 'read')){
+			show403Error();
+			return false;
+		}
+
+        $company_id = logged('company_id');
+        $monitoringCompanies = $this->AcsAlarmMonitoringCompany_model->getAllByCompanyId($company_id);
+
+        $this->page_data['monitoringCompanies'] = $monitoringCompanies;
+        $this->page_data['page']->title = 'Alarm Monitoring Companies';
+        $this->page_data['page']->parent = 'Customers';
+        $this->load->view('v2/pages/customer/settings_alarm_monitoring_companies', $this->page_data);
+    }
+
+    public function ajax_create_monitoring_company()
+    {
+        $this->load->model('AcsAlarmMonitoringCompany_model');
+
+        if(!checkRoleCanAccessModule('customer-settings', 'write')){
+			show403Error();
+			return false;
+		}
+
+        $is_success = 0;
+        $msg = 'Cannot save data';
+        $monitoring_company_id   = 0;
+        $monitoring_company_name = '';
+
+        $company_id = logged('company_id');
+        $post = $this->input->post();
+
+        $isExists = $this->AcsAlarmMonitoringCompany_model->getByNameAndCompanyId($post['monitoring_company'], $company_id);
+        if( $isExists ){
+            $msg = 'Monitoring company name ' . $post['monitoring_company'] . ' already exists.';
+        }elseif( $post['monitoring_company'] == '' ){
+            $msg = 'Please enter monitoring company name';
+        }else{
+            $data = [
+                'company_id' => $company_id,
+                'name' => $post['monitoring_company'],
+                'date_created' => date("Y-m-d H:i:s"),
+                'date_updated' => date("Y-m-d H:i:s")
+            ];
+
+            $site_type_id = $this->AcsAlarmMonitoringCompany_model->create($data);
+            $site_type_name = $post['monitoring_company'];
+
+            //Activity Logs
+            $activity_name = 'Monitoring Companies : Created monitoring company ' . $post['monitoring_company']; 
+            createActivityLog($activity_name);
+
+            $is_success = 1;
+            $msg = '';
+        }
+
+        $return = ['is_success' => $is_success, 'msg' => $msg, 'monitoring_company_id' => $monitoring_company_id, 'monitoring_company_name' => $monitoring_company_name];
+        echo json_encode($return);
+    }
+
+    public function ajax_update_monitoring_company()
+    {
+        $this->load->model('AcsAlarmMonitoringCompany_model');
+
+        if(!checkRoleCanAccessModule('customer-settings', 'write')){
+			show403Error();
+			return false;
+		}
+
+        $is_success = 0;
+        $msg = 'Cannot find data';
+
+        $company_id = logged('company_id');
+        $post = $this->input->post();
+
+        $isExists = $this->AcsAlarmMonitoringCompany_model->getByNameAndCompanyId($post['monitoring_company'], $company_id);
+        if( $isExists && $post['monitoring_company_id'] != $isExists->id ){
+            $msg = 'Monitoring company name ' . $post['monitoring_company'] . ' already exists.';
+        }elseif( $post['monitoring_company'] == '' ){
+            $msg = 'Please enter monitoring company name';
+        }else{
+            $monitoringCompany = $this->AcsAlarmMonitoringCompany_model->getByIdAndCompanyId($post['monitoring_company_id'], $company_id);
+            if( $monitoringCompany ){
+                $data = [
+                    'name' => $post['monitoring_company'],
+                    'date_updated' => date("Y-m-d H:i:s")
+                ];
+
+                $this->AcsAlarmMonitoringCompany_model->update($monitoringCompany->id, $data);
+
+                //Activity Logs
+                $activity_name = 'Monitoring Companies : Updated monitoring company ' . $post['monitoring_company']; 
+                createActivityLog($activity_name);
+
+                $is_success = 1;
+                $msg = '';
+            }
+        }
+
+        $return = ['is_success' => $is_success, 'msg' => $msg];
+        echo json_encode($return);
+    }
 }
