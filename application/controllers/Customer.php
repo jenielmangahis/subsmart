@@ -9139,7 +9139,7 @@ class Customer extends MY_Controller
         ];
 
         $this->page_data['customer_profile_id'] = $user_id;
-        $this->page_data['page']->title = 'System Package Type';
+        $this->page_data['page']->title = 'Service Packages';
         $this->page_data['page']->parent = 'Sales';
         $this->page_data['system_package_type'] = $this->general->get_data_with_param($spt_query);
         $this->load->view('v2/pages/customer/settings_system_package', $this->page_data);
