@@ -15173,5 +15173,26 @@ class Customer extends MY_Controller
         ];
         echo json_encode($return);
 
-    }    
+    }  
+    
+    public function ajax_get_account_cost()
+    {
+        $this->load->model('SystemPackageType_model');
+
+        $account_cost = 0;
+        $company_id   = logged('company_id');
+        $post         = $this->input->post();
+
+        $systemPackage = $this->SystemPackageType_model->getByNameAndCompanyId($post['service_package_type'], $company_id);
+        if( $systemPackage ){
+            if( $post['service_provider'] == 'Alarm.com' ){
+                $account_cost = $systemPackage->alarmcom_cost > 0 ? $systemPackage->alarmcom_cost : 0;
+            }elseif( $post['service_provider'] == 'AlarmNet' ){
+                $account_cost = $systemPackage->alarmnet_cost > 0 ? $systemPackage->alarmnet_cost : 0;
+            }
+        }
+
+        $return = ['account_cost' => $account_cost];
+        echo json_encode($return);
+    }
 }
