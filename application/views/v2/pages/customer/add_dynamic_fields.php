@@ -77,7 +77,7 @@
                         </div>
                     </div>
                 </div>
-                <form id="customer_form">
+                <form id="customer_form" enctype="multipart/form-data">
                     <div class="row g-3 align-items-start" id="customer-add-advance">
                         <?php 
                             if( in_array(logged('company_id'), adi_company_ids()) ){
@@ -323,6 +323,102 @@
         }
     });
 </script>
+
+<script>
+var max_file_count = 10;
+var exist_file_count = '<?php echo count($customer_attachments); ?>';
+if(exist_file_count > 0) {
+    var max_file_count = max_file_count - exist_file_count;
+}
+$('#btn-add-attachment-payment').on('click', function(){         
+    var tableBody = $("#tbl-payment-attachments tbody");
+    let rowCount  = $('#tbl-payment-attachments > tbody > tr').length;
+    let rowCount2 = $('#tbl-attachments > tbody > tr').length;
+    if( (rowCount + rowCount2) < max_file_count ){
+        let html = `
+        <tr>
+            <td><input class="form-control" type="file" name="payment_attachments[]" /></td>
+            <td><a href="javascript:void(0);" data-id="${rowCount}" class="btn-remove-row-attachment nsm-button danger" style="line-height:35px;"><i class='bx bx-trash'></i></a></td>
+        </tr>`;
+
+        tableBody.append(html);
+    }else{
+        Swal.fire({
+        icon: 'error',
+            title: 'Error!',
+            html: 'Can only accept max 10 payment attachments'
+        });
+    }
+});    
+
+$(document).on('click', '.btn-remove-row-attachment', function(){
+    $(this).closest('tr').remove();
+});  
+
+function loadAttachImg(cid, image_file) {
+    $("#modal-customer-attachment").modal("show");
+    $('#work-order-attach-img').attr('src', base_url + 'uploads/customerdocuments/'+cid+'/'+image_file);
+}   
+
+$(document).on('click', '#btn-remove-row-edit-attachment', function(){
+    let id = $(this).attr('data-attached-id');    
+
+    Swal.fire({
+        title: 'Delete Payment Attachment',
+        html: `Are you sure you want to <b>permanently delete</b> selected attachment? <br/><br/>Note : This cannot be undone.`,
+        icon: 'question',
+        confirmButtonText: 'Proceed',
+        showCancelButton: true,
+        cancelButtonText: "Cancel"
+    }).then((result) => {
+        if (result.value) {
+            $.ajax({
+                method: 'POST',
+                url: base_url + 'customer/_permanently_delete_selected_attachment',
+                dataType: 'json',
+                data: { id : id },
+                success: function(result) {                        
+                    if( result.is_success == 1 ) {
+                        Swal.fire({
+                            title: 'Delete Attachment',
+                            text: "Customer attachment deleted successfully!",
+                            icon: 'success',
+                            showCancelButton: false,
+                            confirmButtonText: 'Okay'
+                        }).then((result) => {
+                            //if (result.value) {
+                                location.reload();
+                            //}
+                        });
+                    } else {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error',
+                            text: result.msg,
+                        });
+                    }
+                },
+                beforeSend: function(){
+                    Swal.fire({
+                        icon: "info",
+                        title: "Processing",
+                        html: "Please wait while the process is running...",
+                        allowOutsideClick: false,
+                        allowEscapeKey: false,
+                        didOpen: () => {
+                            Swal.showLoading();
+                        },
+                    });
+                }
+            });
+
+        }
+    });
+            
+});    
+
+</script>
+
 <style>
 .active-section {
     transition: background-color 0.3s;
