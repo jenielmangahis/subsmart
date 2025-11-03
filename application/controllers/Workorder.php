@@ -10736,7 +10736,12 @@ class Workorder extends MY_Controller
                 $customerDocFolderPath2 = "./uploads/CompanyPhoto/".$company_id."/"; 
                 if (!file_exists($customerDocFolderPath2)) {
                     mkdir($customerDocFolderPath2, 0777, true);
-                }                     
+                }    
+                
+                $customerDocFolderPath3 = "./uploads/customerdocuments/".$w_acs."/"; 
+                if (!file_exists($customerDocFolderPath3)) {
+                    mkdir($customerDocFolderPath3, 0777, true);
+                } 
                 
                 if(isset($_FILES['attachment_id']) && $_FILES['attachment_id']['tmp_name'] != '') {
                     $tmp_name  = $_FILES['attachment_id']['tmp_name'];
@@ -10825,7 +10830,9 @@ class Workorder extends MY_Controller
                             $attachment_photo = $this->input->post('workorder_number') ."_photo_".basename($filename);
 
                             if(move_uploaded_file($tmp_name, $customerDocFolderPath.$attachment_photo)) {
-                                if (copy($customerDocFolderPath.$attachment_photo, $customerDocFolderPath2.$attachment_photo)) {
+                                //if (copy($customerDocFolderPath.$attachment_photo, $customerDocFolderPath2.$attachment_photo)) {
+                                //}
+                                if (copy($customerDocFolderPath.$attachment_photo, $customerDocFolderPath3.$attachment_photo)) {
                                 }
                             }                              
 
@@ -11616,7 +11623,12 @@ class Workorder extends MY_Controller
                 $customerDocFolderPath2 = "./uploads/CompanyPhoto/".$company_id."/"; 
                 if (!file_exists($customerDocFolderPath2)) {
                     mkdir($customerDocFolderPath2, 0777, true);
-                }                  
+                }           
+                
+                $customerDocFolderPath3 = "./uploads/customerdocuments/".$customer_id."/"; 
+                if (!file_exists($customerDocFolderPath3)) {
+                    mkdir($customerDocFolderPath3, 0777, true);
+                }                 
                 
                 $wo_id = $addQuery;
                 if(isset($_FILES['attachment_id']) && $_FILES['attachment_id']['tmp_name'] != '') {
@@ -11707,7 +11719,8 @@ class Workorder extends MY_Controller
                             $attachment_photo = $work_order_number ."_photo_".basename($filename);
 
                             if(move_uploaded_file($tmp_name, $customerDocFolderPath.$attachment_photo)) {
-                                if (copy($customerDocFolderPath.$attachment_photo, $customerDocFolderPath2.$attachment_photo)) {}
+                                //if (copy($customerDocFolderPath.$attachment_photo, $customerDocFolderPath2.$attachment_photo)) {}
+                                if (copy($customerDocFolderPath.$attachment_photo, $customerDocFolderPath3.$attachment_photo)) {}
                             }                            
 
                             $acsc_data2 = array(
@@ -12560,7 +12573,12 @@ class Workorder extends MY_Controller
                 $customerDocFolderPath2 = "./uploads/CompanyPhoto/".$company_id."/"; 
                 if (!file_exists($customerDocFolderPath2)) {
                     mkdir($customerDocFolderPath2, 0777, true);
-                }                     
+                }      
+                
+                $customerDocFolderPath3 = "./uploads/customerdocuments/".$w_acs."/"; 
+                if (!file_exists($customerDocFolderPath3)) {
+                    mkdir($customerDocFolderPath3, 0777, true);
+                }  
                 
                 if(isset($_FILES['attachment_id']) && $_FILES['attachment_id']['tmp_name'] != '') {
                     $tmp_name  = $_FILES['attachment_id']['tmp_name'];
@@ -12649,7 +12667,9 @@ class Workorder extends MY_Controller
                             $attachment_photo = $this->input->post('workorder_number') ."_photo_".basename($filename);
 
                             if(move_uploaded_file($tmp_name, $customerDocFolderPath.$attachment_photo)) {
-                                if (copy($customerDocFolderPath.$attachment_photo, $customerDocFolderPath2.$attachment_photo)) {
+                                //if (copy($customerDocFolderPath.$attachment_photo, $customerDocFolderPath2.$attachment_photo)) {
+                                //}
+                                if (copy($customerDocFolderPath.$attachment_photo, $customerDocFolderPath3.$attachment_photo)) {
                                 }
                             }                              
 
@@ -13449,7 +13469,12 @@ class Workorder extends MY_Controller
                 $customerDocFolderPath2 = "./uploads/CompanyPhoto/".$company_id."/"; 
                 if (!file_exists($customerDocFolderPath2)) {
                     mkdir($customerDocFolderPath2, 0777, true);
-                }                  
+                }      
+                
+                $customerDocFolderPath3 = "./uploads/customerdocuments/".$customer_id."/"; 
+                if (!file_exists($customerDocFolderPath3)) {
+                    mkdir($customerDocFolderPath3, 0777, true);
+                }  
                 
                 $wo_id = $addQuery;
                 if(isset($_FILES['attachment_id']) && $_FILES['attachment_id']['tmp_name'] != '') {
@@ -13540,7 +13565,9 @@ class Workorder extends MY_Controller
                             $attachment_photo = $this->input->post('workorder_number') ."_photo_".basename($filename);
 
                             if(move_uploaded_file($tmp_name, $customerDocFolderPath.$attachment_photo)) {
-                                if (copy($customerDocFolderPath.$attachment_photo, $customerDocFolderPath2.$attachment_photo)) {
+                                //if (copy($customerDocFolderPath.$attachment_photo, $customerDocFolderPath2.$attachment_photo)) {
+                                //}
+                                if (copy($customerDocFolderPath.$attachment_photo, $customerDocFolderPath3.$attachment_photo)) {
                                 }
                             }                               
 
@@ -15109,6 +15136,13 @@ class Workorder extends MY_Controller
             mkdir($customerDocFolderPath2, 0777, true);
         }
 
+        $cust_id = !empty($post_data['customer_id']) ? $post_data['customer_id'] : 0;
+        $customerDocFolderPath3 = "./uploads/customerdocuments/".$cust_id."/"; 
+        if (!file_exists($customerDocFolderPath3)) {
+            mkdir($customerDocFolderPath3, 0777, true);
+        }
+        
+
         if(isset($_FILES['attachment_id']) && $_FILES['attachment_id']['tmp_name'] != '') {
             $tmp_name  = $_FILES['attachment_id']['tmp_name'];
             $extension = strtolower(end(explode('.',$_FILES['attachment_id']['name'])));
@@ -15194,7 +15228,9 @@ class Workorder extends MY_Controller
                     $attachment_photo = $this->input->post('workorder_number') ."_photo_".basename($filename);
 
                     if(move_uploaded_file($tmp_name, $customerDocFolderPath.$attachment_photo)) {
-                        if (copy($customerDocFolderPath.$attachment_photo, $customerDocFolderPath2.$attachment_photo)) {
+                        //if (copy($customerDocFolderPath.$attachment_photo, $customerDocFolderPath2.$attachment_photo)) {
+                        //}
+                        if (copy($customerDocFolderPath.$attachment_photo, $customerDocFolderPath3.$attachment_photo)) {
                         }
                     }                              
 

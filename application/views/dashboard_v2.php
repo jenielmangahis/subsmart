@@ -352,10 +352,18 @@
             data-bs-target="#new_estimate_modal">
             <i class='bx bx-fw bx-chart'></i> Add Estimate
         </button>
-        <button name="button" type="button" class="nsm-button" data-bs-toggle="modal"
+
+        <!-- <button name="button" type="button" class="nsm-button" data-bs-toggle="modal"
             data-bs-target="#new_workorder_modal">
             <i class='bx bx-fw bx-message-alt-add'></i> Add Workorder
-        </button>
+        </button> -->
+
+        <?php if( in_array(logged('company_id'), adi_company_ids()) ){ ?>
+            <button type="button" class="nsm-button" data-bs-toggle="modal" data-bs-target="#new_workorder_modal"><i class='bx bx-fw bx-message-alt-add' style="position:relative;top:1px;"></i> Add Workorder</button>
+        <?php }else{ ?>
+            <button type="button" class="nsm-button" id="btn-add-new-workorder"><i class='bx bx-fw bx-message-alt-add' style="position:relative;top:1px;"></i> Add Workorder</button>
+        <?php } ?>        
+
         <button name="button" type="button" class="nsm-button btn-add-task">
             <i class='bx bx-fw bx-task'></i> New Task
         </button>
@@ -2440,6 +2448,10 @@ function loadCustomerGroupChart() {
             console.error(error);
         });
 }
+
+$('#btn-add-new-workorder').on('click', function(){
+    location.href = base_url + 'workorder/new';
+});
 </script>
 
 <?php include viewPath('v2/includes/footer'); ?>

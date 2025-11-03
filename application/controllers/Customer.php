@@ -4155,7 +4155,9 @@ class Customer extends MY_Controller
         $this->page_data['alarmcom_info'] = $alarmCustomerDetails;
 
         $filter['is_active'] = 1;
+        $filter['document_type'] = 'payment_details';
         $customer_attachments = $this->workorder_model->getCustomerAttachmentList($customer_id, $filter);
+
         $this->page_data['customer_attachments'] = $customer_attachments;
 
         $this->page_data['page']->title = 'Customers';
@@ -4414,12 +4416,12 @@ class Customer extends MY_Controller
 
                 if(isset($input['customer_id']) and !empty($input['customer_id'])) {
 
-                    $customerDocFolderPath = "./uploads/customerdocuments/".$companyId."/";   
+                    $customerDocFolderPath = "./uploads/customerdocuments/".$input['customer_id']."/";   
                     if (!file_exists($customerDocFolderPath)) {
                         mkdir($customerDocFolderPath, 0777, true);
                     }      
 
-                    $customerDocFolderPath2 = "./uploads/CompanyPhoto/".$companyId."/"; 
+                    $customerDocFolderPath2 = "./uploads/CompanyPhoto/".$input['customer_id']."/"; 
                     if (!file_exists($customerDocFolderPath2)) {
                         mkdir($customerDocFolderPath2, 0777, true);
                     }      
@@ -11909,11 +11911,7 @@ class Customer extends MY_Controller
             $msg = 'System package ' . $post['package_name'] . ' already exists.';
         }else{
             if ($post['package_name'] != '') {
-                $data = [
-                    'name' => $post['package_name'],
-                    'alarmcom_cost' => $post['alarmcom_cost'] > 0 ? $post['alarmcom_cost'] : 0,
-                    'alarmnet_cost' => $post['alarmnet_cost'] > 0 ? $post['alarmnet_cost'] : 0,
-                ];
+                $data = ['name' => $post['package_name']];
                 
                 $this->SystemPackageType_model->update($isExists->id, $data);
     
@@ -13866,6 +13864,10 @@ class Customer extends MY_Controller
         
         $balance = $g_total_income - $g_total_payment;
 
+        if($balance < 0) {
+            $balance = 0;
+        }
+
         $return = ['balance' => $balance];
         echo json_encode($return);
     }    
@@ -15148,26 +15150,6 @@ class Customer extends MY_Controller
         echo json_encode($return);
     }
 
-    public function ajax_get_account_cost()
-    {
-        $this->load->model('SystemPackageType_model');
-
-        $account_cost = 0;
-        $company_id   = logged('company_id');
-        $post         = $this->input->post();
-
-        $systemPackage = $this->SystemPackageType_model->getByNameAndCompanyId($post['service_package_type'], $company_id);
-        if( $systemPackage ){
-            if( $post['service_provider'] == 'Alarm.com' ){
-                $account_cost = $systemPackage->alarmcom_cost > 0 ? $systemPackage->alarmcom_cost : 0;
-            }elseif( $post['service_provider'] == 'AlarmNet' ){
-                $account_cost = $systemPackage->alarmnet_cost > 0 ? $systemPackage->alarmnet_cost : 0;
-            }
-        }
-
-        $return = ['account_cost' => $account_cost];
-        echo json_encode($return);
-    }
     
     public function ajax_permanently_delete_selected_attachment()
     {
