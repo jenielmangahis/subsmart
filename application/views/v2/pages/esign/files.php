@@ -1070,6 +1070,50 @@ echo put_header_assets();
                                                         </div>
                                                     </div>
                                                 </div>
+
+                                                <div class="accordion-item">
+                                                    <h2 class="accordion-header" id="widgetDefault11">
+                                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#widgetCollapseDefault11" aria-expanded="true" aria-controls="widgetCollapseDefault11">
+                                                        <i class='bx bx-grid-alt'></i> ALARM INFO
+                                                    </button>
+                                                    </h2>
+                                                    <div id="widgetCollapseDefault11" class="accordion-collapse collapse" aria-labelledby="widgetDefault11" data-bs-parent="#esignWidgetAccordion">
+                                                        <div class="accordion-body">
+                                                            <div class="menu-fields">
+                                                                <ul class="menu_list">
+                                                                    <li class="menu_listItem">
+                                                                        <div class="fields menu_item" data-type="default-widget" data-key="Panel Location">
+                                                                            <span class="swatch swatch-recipient swatch-lg swatch-ext-0"><i class="icon icon-color-tagger icon-palette-field-checkbox"></i></span>
+                                                                            <i class="esign-fa fa fa-server"></i>
+                                                                            <span class="u-ellipsis ng-binding">Panel Location</span>
+                                                                        </div>
+                                                                    </li>
+                                                                    <li class="menu_listItem">
+                                                                        <div class="fields menu_item" data-type="default-widget" data-key="Transformer Location">
+                                                                            <span class="swatch swatch-recipient swatch-lg swatch-ext-0"><i class="icon icon-color-tagger icon-palette-field-checkbox"></i></span>
+                                                                            <i class="esign-fa fa fa-server"></i>
+                                                                            <span class="u-ellipsis ng-binding">Transformer Location</span>
+                                                                        </div>
+                                                                    </li>
+                                                                    <li class="menu_listItem">
+                                                                        <div class="fields menu_item" data-type="default-widget" data-key="Radio Serial Number">
+                                                                            <span class="swatch swatch-recipient swatch-lg swatch-ext-0"><i class="icon icon-color-tagger icon-palette-field-checkbox"></i></span>
+                                                                            <i class="esign-fa fa fa-server"></i>
+                                                                            <span class="u-ellipsis ng-binding">Radio Serial Number</span>
+                                                                        </div>
+                                                                    </li>
+                                                                    <li class="menu_listItem">
+                                                                        <div class="fields menu_item" data-type="default-widget" data-key="Secondary System Type">
+                                                                            <span class="swatch swatch-recipient swatch-lg swatch-ext-0"><i class="icon icon-color-tagger icon-palette-field-checkbox"></i></span>
+                                                                            <i class="esign-fa fa fa-server"></i>
+                                                                            <span class="u-ellipsis ng-binding">Secondary System Type</span>
+                                                                        </div>
+                                                                    </li>
+                                                                </ul>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
                                             <?php } ?>
 
                                             <?php if( logged('company_id') == 58 || logged('company_id') == 1 ){ ?>
