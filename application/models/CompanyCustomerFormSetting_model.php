@@ -136,6 +136,7 @@ class CompanyCustomerFormSetting_model extends MY_Model
                 'receiver_phone_number' => ['field_name' => 'Receiver Phone Number', 'required' => 'no', 'is_visible' => 'yes'],
                 'master_code' => ['field_name' => 'Master Code', 'required' => 'no', 'is_visible' => 'yes'],
                 'site_type' => ['field_name' => 'Site Type', 'required' => 'no', 'is_visible' => 'yes'],
+                'addon_feature_cost' => ['field_name' => 'Add-on Feature Cost', 'required' => 'no', 'is_visible' => 'yes'],
             ],
             'solar-information' => [
                 'project_id' => ['field_name' => 'Project ID', 'required' => 'yes', 'is_visible' => 'yes'],
