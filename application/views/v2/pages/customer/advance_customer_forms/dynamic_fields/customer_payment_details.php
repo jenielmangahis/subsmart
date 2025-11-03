@@ -179,7 +179,7 @@
             <tbody>     
                 <?php foreach($customer_attachments as $customer_attachment) { ?>
                 <tr>
-                    <td><a href="javascript:loadAttachImg('<?php echo logged('company_id'); ?>', '<?php echo $customer_attachment->file_name; ?>');" id="preview-attached-file" data-company-id="<?php echo logged('company_id'); ?>" data-attach-filename="<?php echo $customer_attachment->file_name; ?>" class="preview-attached-file"><?php echo $customer_attachment->file_name; ?></a></td>
+                    <td><a href="javascript:loadAttachImg('<?php echo $customer_attachment->customer_id; ?>', '<?php echo $customer_attachment->file_name; ?>');" id="preview-attached-file" data-company-id="<?php echo logged('company_id'); ?>" data-attach-filename="<?php echo $customer_attachment->file_name; ?>" class="preview-attached-file"><?php echo $customer_attachment->file_name; ?></a></td>
                     <td style="text-align: right;"><a href="javascript:void(0);" data-attached-id="<?php echo $customer_attachment->id; ?>" class="btn-remove-row-edit-attachment nsm-button danger" id="btn-remove-row-edit-attachment" style="line-height:35px;"><i class='bx bx-trash'></i></a></td>
                 </tr>
                 <?php } ?>

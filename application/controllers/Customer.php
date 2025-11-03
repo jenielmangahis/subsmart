@@ -4414,12 +4414,12 @@ class Customer extends MY_Controller
 
                 if(isset($input['customer_id']) and !empty($input['customer_id'])) {
 
-                    $customerDocFolderPath = "./uploads/customerdocuments/".$companyId."/";   
+                    $customerDocFolderPath = "./uploads/customerdocuments/".$input['customer_id']."/";   
                     if (!file_exists($customerDocFolderPath)) {
                         mkdir($customerDocFolderPath, 0777, true);
                     }      
 
-                    $customerDocFolderPath2 = "./uploads/CompanyPhoto/".$companyId."/"; 
+                    $customerDocFolderPath2 = "./uploads/CompanyPhoto/".$input['customer_id']."/"; 
                     if (!file_exists($customerDocFolderPath2)) {
                         mkdir($customerDocFolderPath2, 0777, true);
                     }      
