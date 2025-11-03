@@ -59,8 +59,9 @@
                             <?php } ?>
                             <td class="table-icon"></td>
                             <td data-name="Name">Code</td>
-                            <td data-name="Date Created" style="width:10%;">Date Created</td>
-                            <td data-name="Manage" style="width:5%;"></td>
+                            <td data-name="Is Default" style="width:5%;">Is Default</td>
+                            <td data-name="Date Created" style="width:5%;">Date Created</td>
+                            <td data-name="Manage" style="width:3%;"></td>
                         </tr>
                     </thead>
                     <tbody>
@@ -82,6 +83,9 @@
                                         </div>
                                     </td>
                                     <td class="fw-bold nsm-text-primary show"><?= $ic->installer_code; ?></td>
+                                    <td>
+                                        <span class="badge <?= $ic->is_default == 'Yes' ? 'badge-primary' : 'badge-secondary'; ?>"><?= $ic->is_default; ?></span>
+                                    </td>
                                     <td><?= date("m/d/Y h:i A",strtotime($ic->date_created)); ?></td>
                                     <td>
                                         <div class="dropdown table-management">
@@ -92,6 +96,9 @@
                                                 <?php if(checkRoleCanAccessModule('customer-settings', 'write')){ ?>
                                                 <li>
                                                     <a class="dropdown-item edit-item" href="javascript:void(0);" data-id="<?= $ic->id; ?>" data-value="<?= $ic->installer_code; ?>">Edit</a>
+                                                </li>
+                                                <li>
+                                                    <a class="dropdown-item set-default-item" href="javascript:void(0);" data-id="<?= $ic->id; ?>" data-value="<?= $ic->installer_code; ?>">Set As Default</a>
                                                 </li>
                                                 <?php } ?>
                                                 <?php if(checkRoleCanAccessModule('customer-settings', 'delete')){ ?>
@@ -110,7 +117,7 @@
                         else :
                         ?>
                             <tr>
-                                <td colspan="3">
+                                <td colspan="6">
                                     <div class="nsm-empty">
                                         <span>No results found.</span>
                                     </div>
@@ -333,6 +340,65 @@
                                 Swal.fire({
                                     title: 'Delete Installer Code',
                                     text: "Data Deleted Successfully!",
+                                    icon: 'success',
+                                    showCancelButton: false,
+                                    confirmButtonText: 'Okay'
+                                }).then((result) => {
+                                    //if (result.value) {
+                                        location.reload();
+                                    //}
+                                });
+                            } else {
+                                Swal.fire({
+                                    title: 'Error',
+                                    text: result.msg,
+                                    icon: 'error',
+                                    showCancelButton: false,
+                                    confirmButtonText: 'Okay'
+                                });
+                            }
+                        },
+                        beforeSend: function(){
+                            Swal.fire({
+                                icon: "info",
+                                title: "Processing",
+                                html: "Please wait while the process is running...",
+                                allowOutsideClick: false,
+                                allowEscapeKey: false,
+                                showConfirmButton: false,
+                                didOpen: () => {
+                                    Swal.showLoading();
+                                },
+                            });
+                        }
+                    });
+                }
+            });
+        });
+
+        $(document).on("click", ".set-default-item", function() {
+            let id = $(this).attr("data-id");
+            let value = $(this).attr('data-value');
+
+            Swal.fire({
+                title: 'Set As Default',
+                html: `Are you sure you want to set installer code <b>${value}</b> as default?`,
+                icon: 'question',
+                confirmButtonText: 'Proceed',
+                showCancelButton: true,
+                cancelButtonText: "Cancel"
+            }).then((result) => {
+                if (result.value) {
+                    $.ajax({
+                        type: 'POST',
+                        url: base_url + "customer/_set_default_installer_code",
+                        data: {id: id},
+                        dataType: "JSON",
+                        success: function(result) {
+                            if (result.is_success) {
+                                Swal.fire({
+                                    title: 'Set As Default',
+                                    text: "Data Updated Successfully!",
                                     icon: 'success',
                                     showCancelButton: false,
                                     confirmButtonText: 'Okay'
