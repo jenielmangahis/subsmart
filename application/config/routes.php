@@ -2358,6 +2358,8 @@ $route['customer/settings_alarm_monitoring_companies'] = 'Customer/settings_alar
 $route['customers/_create_monitoring_company'] = 'Customer/ajax_create_monitoring_company';
 $route['customers/_update_monitoring_company'] = 'Customer/ajax_update_monitoring_company';
 $route['customers/_delete_monitoring_company'] = 'Customer/ajax_delete_monitoring_company';
+$route['customers/settings_panel_types'] = 'Tickets/settings_panel_types';
+$route['customer/_get_account_cost'] = 'Customer/ajax_get_account_cost';
 
 //Benchmark for Testing
 $route['benchmark/test_customer_subscription'] = 'Benchmark/test_customer_subscription';
