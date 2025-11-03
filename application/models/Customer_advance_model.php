@@ -519,7 +519,9 @@ class Customer_advance_model extends MY_Model
         $this->db->join('acs_billing as acs_b', 'acs_b.fk_prof_id = acs_profile.prof_id', 'left');
         $this->db->join('acs_alarm', 'acs_alarm.fk_prof_id = acs_profile.prof_id', 'left');
         $this->db->join('acs_office', 'acs_office.fk_prof_id = acs_profile.prof_id', 'left');
-        $this->db->join('industry_type', 'acs_profile.industry_type_id = industry_type.id', 'left');      
+        $this->db->join('industry_type', 'acs_profile.industry_type_id = industry_type.id', 'left');    
+        $this->db->join('customer_groups', 'customer_groups.id = acs_profile.customer_group_id', 'left');      
+
 
         if (!empty($filter_status)) {
             if($filter_status =="Active Subscription"){
@@ -552,6 +554,7 @@ class Customer_advance_model extends MY_Model
             $this->db->group_start();
             $this->db->or_like("CONCAT(acs_profile.first_name, ' ', acs_profile.last_name)", $param['search'], 'both');    
             $this->db->or_like("acs_profile.business_name", $param['search'], 'both');     
+            $this->db->or_like("title", $param['search'], 'both');     
             $this->db->or_like("acs_profile.customer_no", $param['search'], 'both');     
             $this->db->group_end();
         }

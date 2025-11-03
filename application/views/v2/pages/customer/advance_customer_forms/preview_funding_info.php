@@ -304,6 +304,29 @@
                     <label class="content-subtitle"><?= !empty($office_info->points_include) ? $office_info->points_include : '---';?></label>
                 </div>
             </div>
+
+            <div class="row p-0 field-custom-name-container">
+                <div class="col-12 col-md-6">
+                    <label class="content-subtitle fw-bold">
+                        <field-custom-name readonly default="Monitoring Confirm #" form="alarm_info"></field-custom-name>
+                    </label>
+                </div>
+                <div class="col-12 col-md-6">
+                    <label class="content-subtitle"><?= !empty($alarm_info->mcn) ? $alarm_info->mcn : '---'; ?></label>
+                </div>
+            </div>
+
+            <div class="row p-0 field-custom-name-container">
+                <div class="col-12 col-md-6">
+                    <label class="content-subtitle fw-bold">
+                        <field-custom-name readonly default="Signal Confirm #" form="alarm_info"></field-custom-name>
+                    </label>
+                </div>
+                <div class="col-12 col-md-6">
+                    <label class="content-subtitle"><?= !empty($alarm_info->scn) ? $alarm_info->scn : '---'; ?></label>
+                </div>
+            </div>
+            
             <div class="row p-0 field-custom-name-container">
                 <div class="col-12 col-md-6">
                     <label class="content-subtitle fw-bold">
