@@ -1239,7 +1239,7 @@ $route['work_order_view/(:any)/(:num)'] = 'Share_Link/public_view_v2/$1/$2';
 $route['customer/_get_customer_data'] = 'Customer/ajax_get_customer_data';
 $route['customer/_get_lead_data'] = 'Customer/ajax_get_lead_data';
 $route['customer/_convert_lead_to_customer'] = 'Customer/ajax_convert_lead_to_customer';
-
+$route['customer/_permanently_delete_selected_attachment'] = 'Customer/ajax_permanently_delete_selected_attachment';
 
 // workstatus
 $route['workstatus/_create_workorder_status'] = 'Workstatus/ajax_save_workorder_status';
