@@ -2989,7 +2989,7 @@ class Customer extends MY_Controller
             $this->session->set_userdata('module_customer_id', $id);
 
             $companyInfo = $this->Business_model->getByCompanyId($cid);
-            $woLatest = $this->Workorder_model->getRecentByCustomerIdAndStatus($customer->prof_id, '');
+            $woLatest = $this->Workorder_model->getRecentByCustomerIdAndStatus($customer->prof_id, 'Submitted');
             $wo_created_by = '---';
             if( $woLatest ){
                 $createdBy = $this->Users_model->getUserByID($woLatest->created_by);
@@ -11819,6 +11819,8 @@ class Customer extends MY_Controller
                 $data = [
                     'company_id' => $company_id,
                     'name' => $post['package_name'],
+                    'alarmcom_cost' => $post['alarmcom_cost'] > 0 ? $post['alarmcom_cost'] : 0,
+                    'alarmnet_cost' => $post['alarmnet_cost'] > 0 ? $post['alarmnet_cost'] : 0,
                     'date_created' => date("Y-m-d H:i:s")
                 ];
     
@@ -11861,7 +11863,11 @@ class Customer extends MY_Controller
             $msg = 'System package ' . $post['package_name'] . ' already exists.';
         }else{
             if ($post['package_name'] != '') {
-                $data = ['name' => $post['package_name']];
+                $data = [
+                    'name' => $post['package_name'],
+                    'alarmcom_cost' => $post['alarmcom_cost'] > 0 ? $post['alarmcom_cost'] : 0,
+                    'alarmnet_cost' => $post['alarmnet_cost'] > 0 ? $post['alarmnet_cost'] : 0,
+                ];
                 
                 $this->SystemPackageType_model->update($isExists->id, $data);
     
@@ -15093,6 +15099,27 @@ class Customer extends MY_Controller
         }
 
         $return = ['is_success' => $is_success, 'msg' => $msg];
+        echo json_encode($return);
+    }
+
+    public function ajax_get_account_cost()
+    {
+        $this->load->model('SystemPackageType_model');
+
+        $account_cost = 0;
+        $company_id   = logged('company_id');
+        $post         = $this->input->post();
+
+        $systemPackage = $this->SystemPackageType_model->getByNameAndCompanyId($post['service_package_type'], $company_id);
+        if( $systemPackage ){
+            if( $post['service_provider'] == 'Alarm.com' ){
+                $account_cost = $systemPackage->alarmcom_cost > 0 ? $systemPackage->alarmcom_cost : 0;
+            }elseif( $post['service_provider'] == 'AlarmNet' ){
+                $account_cost = $systemPackage->alarmnet_cost > 0 ? $systemPackage->alarmnet_cost : 0;
+            }
+        }
+
+        $return = ['account_cost' => $account_cost];
         echo json_encode($return);
     }
 }
