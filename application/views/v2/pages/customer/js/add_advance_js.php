@@ -69,7 +69,7 @@
             placeholder: "Select Warranty Type"
         });
         $("#communication_type").select2({
-            placeholder: "Select Service Package"
+            placeholder: "Select Communication Type"
         });
         $("#acct_type").select2({
             placeholder: "Select Account Type"
@@ -1608,5 +1608,51 @@
                 }
             });
         });
+
+        $('#panel_type').on('change', function(){
+            let selected = $(this).val();
+            let find_string = 'Honeywell';
+            if( selected.includes(find_string) ){
+                $('#service_provider').val('AlarmNet').trigger("change");
+                $('#dealer').val('AlarmNet').trigger("change");
+            }else{
+                $('#service_provider').val('Alarm.com').trigger("change");
+                $('#dealer').val('Alarm.com').trigger("change");
+            }
+        });
+
+        $('#communication_type').on('change', function(){
+            load_account_cost();
+        });
+
+        $('#service_provider').on('change', function(){
+            load_account_cost();
+        });
+
+        $('#contract_status').on('change', function(){
+            let selected = $(this).val();
+            if( selected == 'Contract Monitoring' ){
+                $('#acct_type').val('In-House').trigger('change');
+            } 
+        });
+
+        function load_account_cost(){
+            let service_provider = $('#service_provider').val();
+            let service_package_type = $('#communication_type').val();
+
+            $.ajax({
+                type: 'POST',
+                url: base_url + 'customer/_get_account_cost',
+                dataType: 'json',
+                data: {
+                    service_provider: service_provider,
+                    service_package_type:service_package_type
+                },
+                success: function(o) {
+                    let account_cost = parseFloat(o.account_cost);
+                    $('#account_cost').val(account_cost.toFixed(2));
+                },
+            });
+        }
     });
 </script>

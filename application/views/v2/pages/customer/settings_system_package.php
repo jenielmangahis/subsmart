@@ -43,7 +43,9 @@
                     <thead>
                         <tr>
                             <td class="table-icon"></td>
-                            <td data-name="Name">Name</td>
+                            <td data-name="Name" style="width:60%;">Name</td>
+                            <td data-name="Alarm.com">Alarm.com</td>
+                            <td data-name="AlarmNet">AlarmNet</td>
                             <td data-name="Date Created" style="width:10%;">Date Created</td>
                             <td data-name="Manage" style="width:2%;"></td>
                         </tr>
@@ -62,6 +64,8 @@
                                         </div>
                                     </td>
                                     <td class="fw-bold nsm-text-primary"><?= $type->name; ?></td>
+                                    <td class="fw-bold nsm-text-primary"><?= number_format($type->alarmcom_cost,2,".",","); ?></td>
+                                    <td class="fw-bold nsm-text-primary"><?= number_format($type->alarmnet_cost,2,".",","); ?></td>
                                     <td><?= date("m/d/Y h:i A",strtotime($type->date_created)); ?></td>
                                     <td>
                                         <div class="dropdown table-management">
@@ -70,7 +74,7 @@
                                             </a>
                                             <ul class="dropdown-menu dropdown-menu-end">
                                                 <?php if(checkRoleCanAccessModule('customer-settings', 'write')){ ?>
-                                                    <li><a class="dropdown-item edit-item" href="javascript:void(0);" data-id="<?= $type->id; ?>" data-name="<?= $type->name; ?>">Edit</a></li>
+                                                    <li><a class="dropdown-item edit-item" href="javascript:void(0);" data-id="<?= $type->id; ?>" data-name="<?= $type->name; ?>" data-alarmcom="<?= $type->alarmcom_cost > 0 ? $type->alarmcom_cost : 0; ?>" data-alarmnet="<?= $type->alarmnet_cost > 0 ? $type->alarmnet_cost : 0; ?>">Edit</a></li>
                                                 <?php } ?>
                                                 <?php if(checkRoleCanAccessModule('customer-settings', 'delete')){ ?>
                                                     <li><a class="dropdown-item delete-item" href="javascript:void(0);" data-id="<?= $type->id; ?>" data-name="<?= $type->name; ?>">Delete</a></li>
@@ -112,9 +116,13 @@
         $(document).on("click", ".edit-item", function() {
             let id = $(this).attr("data-id");
             let name = $(this).attr("data-name");
+            let alarmcom = $(this).attr("data-alarmcom");
+            let alarmnet = $(this).attr("data-alarmnet");
 
             $("#edit_system_id").val(id);
             $("#edit_system_name").val(name);
+            $("#edit_alarmcom_cost").val(alarmcom);
+            $("#edit_alarmnet_cost").val(alarmnet);
 
             $("#edit_system_package_modal").modal("show");
         });

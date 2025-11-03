@@ -17834,7 +17834,6 @@ class Workorder extends MY_Controller
 
         $post = $this->input->post();
         $id   = $post['id'];
-
         if($id) {
             $is_delete = $this->workorder_model->deleteAttachment($id);
             if($is_delete) {

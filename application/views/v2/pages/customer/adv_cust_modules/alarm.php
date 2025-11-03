@@ -115,11 +115,16 @@
                         <div class="col-12 col-md-6">
                             <span class="content-subtitle">
                                 <?php 
-                                    if ($alarm_info->passcode) {
-                                        echo $alarm_info->passcode; 
-                                    } else {
-                                        echo "---";
+                                    $passcode = '---';
+                                    if( $woLatest ){
+                                        $passcode = $woLatest->password;
                                     }
+
+                                    if( $alarm_info && $alarm_info->passcode != '' ){
+                                        $passcode = $alarm_info->passcode;
+                                    }
+
+                                    echo $passcode;
                                 ?>
                             </span>
                         </div>  
