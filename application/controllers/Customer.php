@@ -4155,7 +4155,9 @@ class Customer extends MY_Controller
         $this->page_data['alarmcom_info'] = $alarmCustomerDetails;
 
         $filter['is_active'] = 1;
+        $filter['document_type'] = 'payment_details';
         $customer_attachments = $this->workorder_model->getCustomerAttachmentList($customer_id, $filter);
+
         $this->page_data['customer_attachments'] = $customer_attachments;
 
         $this->page_data['page']->title = 'Customers';
