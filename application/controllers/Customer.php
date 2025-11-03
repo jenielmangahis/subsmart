@@ -4154,6 +4154,9 @@ class Customer extends MY_Controller
         $alarmCustomerDetails = $alarm_api_helper->searchAlarmCustomer($nameKeyword, $fuzzyKeyword);
         $this->page_data['alarmcom_info'] = $alarmCustomerDetails;
 
+        $filter['is_active'] = 1;
+        $customer_attachments = $this->workorder_model->getCustomerAttachmentList($customer_id, $filter);
+        $this->page_data['customer_attachments'] = $customer_attachments;
 
         $this->page_data['page']->title = 'Customers';
         $this->page_data['page']->parent = 'Customers';
@@ -4399,15 +4402,57 @@ class Customer extends MY_Controller
                     $activity_action = 'Customer : Created';
                 }
 
-                $companyId = logged('company_id');
-                $save_billing = $this->save_billing_information($input, $profile_id);
-                $save_office  = $this->save_office_information($input, $profile_id);
-                $save_alarm   = $this->save_alarm_information($input, $profile_id);
-                $save_access  = $this->save_access_information($input, $profile_id);
-                $save_papers  = $this->save_papers_information($input, $profile_id);
+                $companyId     = logged('company_id');
+                $save_billing  = $this->save_billing_information($input, $profile_id);
+                $save_office   = $this->save_office_information($input, $profile_id);
+                $save_alarm    = $this->save_alarm_information($input, $profile_id);
+                $save_access   = $this->save_access_information($input, $profile_id);
+                $save_papers   = $this->save_papers_information($input, $profile_id);
                 $save_contacts = $this->save_contacts($input, $profile_id);
                 $save_property = $this->save_property_information($input, $profile_id);
                 $save_other_address = $this->save_other_address($input, $profile_id);
+
+                if(isset($input['customer_id']) and !empty($input['customer_id'])) {
+
+                    $customerDocFolderPath = "./uploads/customerdocuments/".$companyId."/";   
+                    if (!file_exists($customerDocFolderPath)) {
+                        mkdir($customerDocFolderPath, 0777, true);
+                    }      
+
+                    $customerDocFolderPath2 = "./uploads/CompanyPhoto/".$companyId."/"; 
+                    if (!file_exists($customerDocFolderPath2)) {
+                        mkdir($customerDocFolderPath2, 0777, true);
+                    }      
+                    
+                    if(isset($_FILES['payment_attachments'])) {
+                        $attachments = $_FILES['payment_attachments'];
+                        foreach($attachments['name'] as $key => $attachment_name) {
+                            $filename = $attachment_name;
+                            if(isset($attachments['tmp_name'][$key]) && $attachments['tmp_name'][$key] != '') {
+                                $tmp_name  = $attachments['tmp_name'][$key];
+                                $extension = strtolower(end(explode('.',$filename)));
+                                $attachment_photo = $input['customer_id'] . "_payment_photo_".basename($filename);
+
+                                if(move_uploaded_file($tmp_name, $customerDocFolderPath.$attachment_photo)) {
+                                    if (copy($customerDocFolderPath.$attachment_photo, $customerDocFolderPath2.$attachment_photo)) {
+                                    }
+                                }                              
+
+                                $acsc_data2 = array(
+                                    'customer_id'      => $input['customer_id'],
+                                    'file_name'        => $attachment_photo,
+                                    'document_type'    => 'payment_details',
+                                    'document_label'   => 'Payment Details',
+                                    'is_predefined'    => 0,
+                                    'is_active'        => 1,
+                                    'date_created'     => date("Y-m-d H:i:s")
+                                );
+                                $acs_cust_docs = $this->workorder_model->save_acs_customer_document($acsc_data2);  
+                                if($acs_cust_docs) {} 
+                            }
+                        }
+                    }
+                }
 
                 if ($companyId == 58 || $companyId == 1) {
                     $this->save_solar_info($input, $profile_id);
@@ -15095,4 +15140,29 @@ class Customer extends MY_Controller
         $return = ['is_success' => $is_success, 'msg' => $msg];
         echo json_encode($return);
     }
+
+    
+    public function ajax_permanently_delete_selected_attachment()
+    {
+		$is_success = 0;
+        $msg    = 'Please select data';
+
+        $post = $this->input->post();
+        $id   = $post['id'];
+
+        if($id) {
+            $is_delete = $this->workorder_model->deleteAcsCustomerDocument($id);
+            if($is_delete) {
+                $is_success = 1;
+                $msg    = '';
+            }
+        }
+
+        $return = [
+            'is_success' => $is_success,
+            'msg' => $msg
+        ];
+        echo json_encode($return);
+
+    }    
 }

@@ -2836,7 +2836,31 @@ class Workorder_model extends MY_Model
         
         $query = $this->db->get();
         return $query->result();
-    }    
+    }  
+    
+    public function getCustomerAttachmentList( $id, $filters = array(), $sort = array() )
+    {        
+        $where = array(
+            'acs_customer_documents.customer_id' => $id
+        );
+
+        $this->db->select('acs_customer_documents.*');
+        $this->db->from('acs_customer_documents');
+		$this->db->where($where);
+
+        if( $filters['is_active'] != ''){
+            $this->db->where('acs_customer_documents.is_active', ucwords($filters['is_active']));
+        }
+
+        if( !empty($sort) ){
+            $this->db->order_by($sort['field'], strtoupper($sort['order']));
+        }else{
+            $this->db->order_by('id', 'DESC');    
+        }
+        
+        $query = $this->db->get();
+        return $query->result();
+    }      
 
     public function deleteAttachment($id) 
     {
@@ -2844,6 +2868,13 @@ class Workorder_model extends MY_Model
         $this->db->delete('work_order_attachments');
         return true;        
     }
+
+    public function deleteAcsCustomerDocument($id) 
+    {
+        $this->db->where('id',$id);
+        $this->db->delete('acs_customer_documents');
+        return true;        
+    }    
 }
 
 /* End of file Workorder_model.php */
