@@ -1382,6 +1382,9 @@ class DocuSign extends MYF_Controller
 
     public function apiStoreFieldValue()
     {
+        $this->load->model('AcsAlarmZone_model');
+        $this->load->model('AcsProfile_model');
+
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
             echo json_encode(['success' => false]);
             return;
@@ -1408,11 +1411,40 @@ class DocuSign extends MYF_Controller
             date_default_timezone_set($default_timezone);
         }   
         
-        if( $docfileField->field_name == 'Text' ){
+        //Store customer zones to acs_alarm_zones
+        if( $docfileField->field_name == 'Text' && $customer_id > 0 ){
             $specs = json_decode($docfileField->specs);
-            if ( $specs->name && strpos($specs->name, 'zone') !== false) {            
-                $zone_a = explode("_", $specs->name);
-                //Store zones in 
+            $customer = $this->AcsProfile_model->getByProfId($customer_id);
+
+            if ( $specs->name && $customer && strpos($specs->name, 'zone') !== false) {  
+                if( $payload['value'] != '' ){
+                    $zone_a = explode("_", $specs->name);
+                    $zone_id = 'ZONE ' . $zone_a[1];
+                    
+                    $isExists = $this->AcsAlarmZone_model->getByCustomerIdAndZoneIdAndDocumentId($customer_id, $zone_id, $docfileField->docfile_id);
+                    if( $isExists ){ //Prevent duplicate
+                        $data = [
+                            'location' => $payload['value'],
+                            'date_updated' => date("Y-m-d H:i:s")
+                        ];
+
+                        $this->AcsAlarmZone_model->update($isExists->id, $data);
+                    }else{
+                        $data = [
+                            'docfile_id' => $docfileField->docfile_id,
+                            'company_id' => $customer->company_id,
+                            'customer_id' => $customer_id,
+                            'zone_id' => $zone_id,
+                            'type' => 'NA',
+                            'event_code' => 'NA',
+                            'location' => $payload['value'],
+                            'date_created' => date("Y-m-d H:i:s"),
+                            'date_updated' => date("Y-m-d H:i:s")
+                        ];
+
+                        $this->AcsAlarmZone_model->create($data);
+                    }
+                }                          
             }
         }
              

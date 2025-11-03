@@ -117,7 +117,7 @@
                         else :
                         ?>
                             <tr>
-                                <td colspan="3">
+                                <td colspan="6">
                                     <div class="nsm-empty">
                                         <span>No results found.</span>
                                     </div>

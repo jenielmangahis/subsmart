@@ -27,6 +27,12 @@
     </div>
     <div class="nsm-card-content">
         <hr>    
+        <div class="row form_line field-custom-name-container" <?= isCustomerFieldEnabled($companyFormSetting, 'alarm-information', 'dealer_number') == 0 ? 'style="display:none;"' : ''; ?>>
+            <div class="col-md-6"><?= getCustomerFieldValue($companyFormSetting, 'alarm-information', 'dealer_number'); ?></div>
+            <div class="col-md-6">
+                <input type="text" class="form-control" name="dealer_number" id="dealer_number" value="<?= $alarm_info && $alarm_info->dealer_number != '' ? $alarm_info->dealer_number : $default_dealer_number; ?>" />
+            </div>
+        </div>
         <div class="row form_line field-custom-name-container" <?= isCustomerFieldEnabled($companyFormSetting, 'alarm-information', 'monitor_comp') == 0 ? 'style="display:none;"' : ''; ?>>
             <div class="col-md-6"><?= getCustomerFieldValue($companyFormSetting, 'alarm-information', 'monitor_comp'); ?></div>
             <div class="col-md-6">
@@ -54,20 +60,51 @@
                 <input type="text" class="form-control" name="monitor_id" id="monitor_id" value="<?php if(isset($alarm_info)){ echo $alarm_info->monitor_id != '0' ? $alarm_info->monitor_id : '' ; } ?>"/>
             </div>
         </div>
+        <div class="row form_line field-custom-name-container" <?= isCustomerFieldEnabled($companyFormSetting, 'alarm-information', 'contract_status') == 0 ? 'style="display:none;"' : ''; ?>>
+            <div class="col-md-6"><?= getCustomerFieldValue($companyFormSetting, 'alarm-information', 'contract_status'); ?></div>
+            <div class="col-md-6">
+                <select id="contract_status" name="contract_status" data-customer-source="dropdown" class="form-select input_select" >
+                    <option value="" selected=""></option>
+                    <option <?= $alarm_info && $alarm_info->contract_status == 'Contract Monitoring' ? 'selected="selected"' : ''; ?> value="Contract Monitoring">Contract Monitoring</option>
+                    <option <?= $alarm_info && $alarm_info->contract_status == 'Sold' ? 'selected="selected"' : ''; ?> value="Sold">Sold</option>
+                </select>
+            </div>
+        </div>
+
         <div class="row form_line field-custom-name-container" <?= isCustomerFieldEnabled($companyFormSetting, 'alarm-information', 'acct_type') == 0 ? 'style="display:none;"' : ''; ?>>
             <div class="col-md-6"><?= getCustomerFieldValue($companyFormSetting, 'alarm-information', 'acct_type'); ?></div>
             <div class="col-md-6">
                 <select name="acct_type" id="acct_type" class="input_select">
-                    <option <?php if(isset($alarm_info)){ if($alarm_info->acct_type == ''){echo "selected";} } ?> value=""></option>
-                    <option <?php if(isset($alarm_info)){ if($alarm_info->acct_type == 'In-House'){echo "selected";} } ?> value="In-House">In-House</option>
-                    <option <?php if(isset($alarm_info)){ if($alarm_info->acct_type == 'Funded'){echo "selected";} } ?> value="Funded">Funded</option>
-                    <!-- <option <?php if(isset($alarm_info)){ if($alarm_info->acct_type == 'Commercial'){echo "selected";} } ?> value="Commercial">Commercial</option>
-                    <option <?php if(isset($alarm_info)){ if($alarm_info->acct_type == 'Rental'){echo "selected";} } ?> value="Rental">Rental</option>
-                    <option <?php if(isset($alarm_info)){ if($alarm_info->acct_type == 'Residential'){echo "selected";} } ?> value="Residential">Residential</option> -->
+                    <?php 
+                        $account_type = '';
+                        if( $defaultAccountType ){
+                            $account_type = $defaultAccountType->account_type;
+                        }
+
+                        if( $alarm_info && $alarm_info->acct_type != ''){
+                            $account_type = $alarm_info->acct_type;
+                        }   
+                    ?>
+                    <?php foreach( $accountTypes as $at ){ ?>
+                        <option <?= $account_type == $at->account_type ? 'selected="selected"' : ''; ?> value="<?= $at->account_type; ?>"><?= $at->account_type; ?></option>
+                    <?php } ?>
                 </select>
-                <!-- <a href="<?= base_url() ?>customer/settings" target="_blank"  style="color:#58bc4f;font-size: 10px;"><span class="fa fa-plus"></span> Manage Type</a>&nbsp;&nbsp; -->
+                <!-- <a href="javascript:void(0);" class="nsm-button btn-small" id="btn-quick-account-type"><span class="fa fa-plus"></span> Add Account Type</a>             -->
             </div>
         </div>
+
+        <div class="row form_line field-custom-name-container" <?= isCustomerFieldEnabled($companyFormSetting, 'alarm-information', 'site_type') == 0 ? 'style="display:none;"' : ''; ?>>
+            <div class="col-md-6"><?= getCustomerFieldValue($companyFormSetting, 'alarm-information', 'site_type'); ?></div>
+            <div class="col-md-6">
+                <select id='site_type' name="site_type"  class="form-control" >
+                    <option value="" selected="selected">Select</option>
+                    <?php foreach($siteTypes as $st){ ?>
+                        <option <?= $alarm_info && $alarm_info->site_type == $st->name ? 'selected="selected"' : ''; ?> value="<?= $st->name; ?>"><?= $st->name; ?></option>
+                    <?php } ?>
+                </select>
+            </div>
+        </div>
+
         <div class="row form_line field-custom-name-container" <?= isCustomerFieldEnabled($companyFormSetting, 'alarm-information', 'online') == 0 ? 'style="display:none;"' : ''; ?>>
             <div class="col-md-6"><?= getCustomerFieldValue($companyFormSetting, 'alarm-information', 'online'); ?></div>
             <div class="col-md-6">
@@ -77,6 +114,7 @@
                 </select>
             </div>
         </div>
+
         <div class="row form_line field-custom-name-container" <?= isCustomerFieldEnabled($companyFormSetting, 'alarm-information', 'in_service') == 0 ? 'style="display:none;"' : ''; ?>>
             <div class="col-md-6">
                 <label><?= getCustomerFieldValue($companyFormSetting, 'alarm-information', 'in_service'); ?></div>
@@ -87,6 +125,57 @@
                 </select>
             </div>
         </div>
+
+        <div class="row form_line field-custom-name-container" <?= isCustomerFieldEnabled($companyFormSetting, 'alarm-information', 'passcode') == 0 ? 'style="display:none;"' : ''; ?>>
+            <div class="col-md-6"><?= getCustomerFieldValue($companyFormSetting, 'alarm-information', 'passcode'); ?></div>
+            <div class="col-md-6">
+                <input type="text" class="form-control" name="passcode" id="passcode" value="<?php if(isset($alarm_info)){ echo $alarm_info->passcode; } ?>"/>
+            </div>
+        </div>
+
+        <div class="row form_line field-custom-name-container" <?= isCustomerFieldEnabled($companyFormSetting, 'alarm-information', 'install_code') == 0 ? 'style="display:none;"' : ''; ?>>
+            <div class="col-md-6"><?= getCustomerFieldValue($companyFormSetting, 'alarm-information', 'install_code'); ?></div>
+            <div class="col-md-6">
+                <?php 
+                    $installer_code = '';
+
+                    if( $defaultInstallerCode ){
+                        $installer_code = $defaultInstallerCode->installer_code;
+                    }
+
+                    if( $alarm_info && $alarm_info->install_code != '' ){
+                        $installer_code = $alarm_info->install_code;
+                    }
+                    
+                ?>
+                <select class="form-control" data-type="install_code" id="install_code" name="install_code">
+                    <?php if( $installer_code != '' ){ ?>
+                    <option value="<?= $installer_code; ?>"><?= $installer_code; ?></option>
+                    <?php } ?>
+                </select>    
+                <a href="javascript:void(0);" class="nsm-button btn-small" id="btn-quick-installer-code"><span class="fa fa-plus"></span> Add Installer Code</a>            
+            </div>
+        </div>
+
+        <div class="row form_line field-custom-name-container" <?= isCustomerFieldEnabled($companyFormSetting, 'alarm-information', 'master_code') == 0 ? 'style="display:none;"' : ''; ?>>
+            <div class="col-md-6"><?= getCustomerFieldValue($companyFormSetting, 'alarm-information', 'master_code'); ?></div>
+            <div class="col-md-6">
+                <input type="text" class="form-control" name="master_code" id="master_code" value="<?= $alarm_info ? ($alarm_info->master_code != '' ? $alarm_info->master_code : '') : '';  ?>"/>
+            </div>
+        </div>
+
+        <div class="row form_line field-custom-name-container mt-2" <?= isCustomerFieldEnabled($companyFormSetting, 'alarm-information', 'panel_type') == 0 ? 'style="display:none;"' : ''; ?>>
+            <div class="col-md-6"><?= getCustomerFieldValue($companyFormSetting, 'alarm-information', 'panel_type'); ?></div>
+            <div class="col-md-6">
+                <select name="panel_type" id="panel_type" class="input_select" data-value="<?= isset($alarm_info) ? $alarm_info->panel_type : "" ?>">
+                    <?php foreach($panelTypes as $pt){ ?>
+                        <option <?= $alarm_info && $alarm_info->panel_type == $pt->name ? 'selected="selected"' : ''; ?> value="<?= $pt->name ?>"><?= $pt->name; ?></option>
+                    <?php } ?>
+                </select>
+                <a href="javascript:void(0);" class="nsm-button btn-small" id="btn-quick-panel-type"><span class="fa fa-plus"></span> Add Panel Type</a>            
+            </div>
+        </div>
+
         <div class="row form_line field-custom-name-container" <?= isCustomerFieldEnabled($companyFormSetting, 'alarm-information', 'equipment') == 0 ? 'style="display:none;"' : ''; ?>>
             <div class="col-md-6">
                 <label><?= getCustomerFieldValue($companyFormSetting, 'alarm-information', 'equipment'); ?></label>
@@ -99,64 +188,8 @@
                     <option <?= isset($alarm_info) && $alarm_info->equipment == 'System Pulled' ?  'selected' : '';?> value="System Pulled">System Pulled</option>
                 </select>                
             </div>
-        </div>
+        </div>   
 
-        <div class="row form_line field-custom-name-container" <?= isCustomerFieldEnabled($companyFormSetting, 'alarm-information', 'passcode') == 0 ? 'style="display:none;"' : ''; ?>>
-            <div class="col-md-6"><?= getCustomerFieldValue($companyFormSetting, 'alarm-information', 'passcode'); ?></div>
-            <div class="col-md-6">
-                <input type="text" class="form-control" name="passcode" id="passcode" value="<?php if(isset($alarm_info)){ echo $alarm_info->passcode; } ?>"/>
-            </div>
-        </div>
-        <div class="row form_line field-custom-name-container" <?= isCustomerFieldEnabled($companyFormSetting, 'alarm-information', 'install_code') == 0 ? 'style="display:none;"' : ''; ?>>
-            <div class="col-md-6"><?= getCustomerFieldValue($companyFormSetting, 'alarm-information', 'install_code'); ?></div>
-            <div class="col-md-6">
-                <select class="form-control" data-type="install_code" id="install_code" name="install_code">
-                    <?php if( $alarm_info && $alarm_info->install_code != '' ){ ?>
-                    <option value="<?= $alarm_info->install_code; ?>"><?= $alarm_info->install_code; ?></option>
-                    <?php } ?>
-                </select>   
-                <a href="javascript:void(0);" class="nsm-button btn-small" id="btn-quick-installer-code"><span class="fa fa-plus"></span> Add Installer Code</a>            
-            </div>
-        </div>
-        <div class="row form_line field-custom-name-container mt-2" <?= isCustomerFieldEnabled($companyFormSetting, 'alarm-information', 'panel_type') == 0 ? 'style="display:none;"' : ''; ?>>
-            <div class="col-md-6"><?= getCustomerFieldValue($companyFormSetting, 'alarm-information', 'panel_type'); ?></div>
-            <div class="col-md-6">
-                <select name="panel_type" id="panel_type" class="input_select" data-value="<?= isset($alarm_info) ? $alarm_info->panel_type : "" ?>">
-                    <?php foreach($panel_type as $panels) : ?>
-                        <option <?php if(isset($alarm_info)){if($alarm_info->panel_type == $panels->panel_type){echo "selected";}} ?>><?= $panels->panel_type ?></option>
-                    <?php endforeach; ?>
-                    <option <?php if(isset($alarm_info)){ if($alarm_info->panel_type == ''){echo "selected";} } ?> value=""></option>
-                    <option <?php if(isset($alarm_info)){ if($alarm_info->panel_type == 'AERIONICS'){echo "selected";} } ?> value="AERIONICS">AERIONICS</option>
-                    <option <?php if(isset($alarm_info)){ if($alarm_info->panel_type == 'AlarmNet'){echo "selected";} } ?> value="AlarmNet">AlarmNet</option>
-                    <option <?php if(isset($alarm_info)){ if($alarm_info->panel_type == 'Alarm.com'){echo "selected";} } ?> value="Alarm.com">Alarm.com</option>
-                    <option <?php if(isset($alarm_info)){ if($alarm_info->panel_type == 'Alula'){echo "selected";} } ?> value="Alula">Alula</option>
-                    <option <?php if(isset($alarm_info)){ if($alarm_info->panel_type == 'Bosch'){echo "selected";} } ?> value="Bosch">Bosch</option>
-                    <option <?php if(isset($alarm_info)){ if($alarm_info->panel_type == 'DSC'){echo "selected";} } ?> value="DSC">DSC</option>
-                    <option <?php if(isset($alarm_info)){ if($alarm_info->panel_type == 'ELK'){echo "selected";} } ?> value="ELK">ELK</option>
-                    <option <?php if(isset($alarm_info)){ if($alarm_info->panel_type == 'FBI'){echo "selected";} } ?> value="FBI">FBI</option>
-                    <option <?php if(isset($alarm_info)){ if($alarm_info->panel_type == 'GRI'){echo "selected";} } ?> value="GRI">GRI</option>
-                    <option <?php if(isset($alarm_info)){ if($alarm_info->panel_type == 'GE'){echo "selected";} } ?> value="GE">GE</option>
-                    <option <?php if(isset($alarm_info)){ if($alarm_info->panel_type == 'Honeywell'){echo "selected";} } ?> value="Honeywell">Honeywell</option>
-                    <option <?php if(isset($alarm_info)){ if($alarm_info->panel_type == 'Honeywell Touch'){echo "selected";} } ?> value="Honeywell Touch">Honeywell Touch</option>
-                    <option <?php if(isset($alarm_info)){ if($alarm_info->panel_type == 'Honeywell 3000'){echo "selected";} } ?> value="Honeywell 3000">Honeywell 3000</option>
-                    <option <?php if(isset($alarm_info)){ if($alarm_info->panel_type == 'Honeywell'){echo "selected";} } ?> value="Honeywell Vista">Honeywell Vista</option>
-                    <option <?php if(isset($alarm_info)){ if($alarm_info->panel_type == 'Honeywell Vista with Sem'){echo "selected";} } ?> value="Honeywell Vista with Sem">Honeywell Vista with Sem</option>
-                    <option <?php if(isset($alarm_info)){ if($alarm_info->panel_type == 'Honeywell Lyric'){echo "selected";} } ?> value="Honeywell Lyric">Honeywell Lyric</option>
-                    <option <?php if(isset($alarm_info)){ if($alarm_info->panel_type == 'IEI'){echo "selected";} } ?> value="IEI">IEI</option>
-                    <option <?php if(isset($alarm_info)){ if($alarm_info->panel_type == 'MIER'){echo "selected";} } ?> value="MIER">MIER</option>
-                    <option <?php if(isset($alarm_info)){ if($alarm_info->panel_type == '2 GIG'){echo "selected";} } ?> value="2 GIG">2 GIG</option>
-                    <option <?php if(isset($alarm_info)){ if($alarm_info->panel_type == '2 GIG Go Panel 2'){echo "selected";} } ?> value="2 GIG Go Panel 2">2 GIG Go Panel 2</option>
-                    <option <?php if(isset($alarm_info)){ if($alarm_info->panel_type == '2 GIG Go Panel 3'){echo "selected";} } ?> value="2 GIG Go Panel 3">2 GIG Go Panel 3</option>
-                    <option <?php if(isset($alarm_info)){ if($alarm_info->panel_type == 'Qolsys'){echo "selected";} } ?> value="Qolsyx">Qolsys</option>
-                    <option <?php if(isset($alarm_info)){ if($alarm_info->panel_type == 'Qolsys IQ Panel 2'){echo "selected";} } ?> value="Qolsys IQ Panel 2">Qolsys IQ Panel 2</option>
-                    <option <?php if(isset($alarm_info)){ if($alarm_info->panel_type == 'Qolsys IQ Panel 2 Plus'){echo "selected";} } ?> value="Qolsys IQ Panel 2 Plus">Qolsys IQ Panel 2 Plus</option>
-                    <option <?php if(isset($alarm_info)){ if($alarm_info->panel_type == 'Qolsys IQ Panel 3'){echo "selected";} } ?> value="Qolsys IQ Panel 3">Qolsys IQ Panel 3</option>
-                    <option <?php if(isset($alarm_info)){ if($alarm_info->panel_type == 'Custom'){echo "selected";} } ?> value="Custom">Custom</option>
-                    <option <?php if(isset($alarm_info)){ if($alarm_info->panel_type == 'Other'){echo "selected";} } ?> value="Other">Other</option>
-                </select>
-            </div>
-        </div>
-        
         <div class="row form_line field-custom-name-container" <?= isCustomerFieldEnabled($companyFormSetting, 'alarm-information', 'warranty_type') == 0 ? 'style="display:none;"' : ''; ?>>
             <div class="col-md-6"><?= getCustomerFieldValue($companyFormSetting, 'alarm-information', 'warranty_type'); ?></div>
             <div class="col-md-6">
@@ -168,6 +201,17 @@
                     <option <?php if(isset($alarm_info)){ if($alarm_info->warranty_type == "$50 Trip and $65 Deductible"){ echo 'selected'; } } ?>  value="$50 Trip and $65 Deductible">$50 Trip and $65 Deductible</option>
                     <option <?php if(isset($alarm_info)){ if($alarm_info->warranty_type == "Extended"){ echo 'selected'; } } ?>  value="Extended">Extended</option>
                     <option <?php if(isset($alarm_info)){ if($alarm_info->warranty_type == "None"){ echo 'selected'; } } ?>  value="None">None</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="row form_line field-custom-name-container" <?= isCustomerFieldEnabled($companyFormSetting, 'alarm-information', 'service_provider') == 0 ? 'style="display:none;"' : ''; ?>>
+            <div class="col-md-6"><?= getCustomerFieldValue($companyFormSetting, 'alarm-information', 'service_provider'); ?></div>
+            <div class="col-md-6">
+                <select id="service_provider" name="service_provider" data-customer-source="dropdown" class="form-select input_select" >
+                    <option value="" selected=""></option>
+                    <option <?= $alarm_info && $alarm_info->service_provider == 'Alarm.com' ? 'selected="selected"' : ''; ?> value="Alarm.com">Alarm.com</option>
+                    <option <?= $alarm_info && $alarm_info->service_provider == 'AlarmNet' ? 'selected="selected"' : ''; ?> value="AlarmNet">AlarmNet</option>
                 </select>
             </div>
         </div>
@@ -187,16 +231,27 @@
         <div class="row form_line field-custom-name-container" <?= isCustomerFieldEnabled($companyFormSetting, 'alarm-information', 'site_type') == 0 ? 'style="display:none;"' : ''; ?>>
             <div class="col-md-6"><?= getCustomerFieldValue($companyFormSetting, 'alarm-information', 'site_type'); ?></div>
             <div class="col-md-6">
-                <select id='site_type' name="site_type"  class="form-control" >
-                    <option value="" selected="selected">Select</option>
+                <select id='site_type' name="site_type" data-type="site_type" class="form-control" >
+                    <?php 
+                        $site_type = '';
+                        if( $defaultAlarmSiteType ){
+                            $site_type = $defaultAlarmSiteType->name;
+                        }
+
+                        if( $alarm_info && $alarm_info->site_type != '' ){
+                            $site_type = $alarm_info->site_type;
+                        }
+                    ?>
+                    <option value="" <?= $site_type == '' ? 'selected="selected"' : ''; ?>>Select</option>
                     <?php foreach($siteTypes as $st){ ?>
-                        <option <?= $alarm_info && $alarm_info->site_type == $st->name ? 'selected="selected"' : ''; ?> value="<?= $st->name; ?>"><?= $st->name; ?></option>
+                        <option <?= $site_type == $st->name ? 'selected="selected"' : ''; ?> value="<?= $st->name; ?>"><?= $st->name; ?></option>
                     <?php } ?>
                 </select>
+                <a href="javascript:void(0);" class="nsm-button btn-small" id="btn-quick-site-type"><span class="fa fa-plus"></span> Add Site Type</a>    
             </div>
         </div>
 
-        <div class="row form_line field-custom-name-container" <?= isCustomerFieldEnabled($companyFormSetting, 'alarm-information', 'secondary_system_type') == 0 ? 'style="display:none;"' : ''; ?>>
+        <div class="row form_line field-custom-name-container mt-2" <?= isCustomerFieldEnabled($companyFormSetting, 'alarm-information', 'secondary_system_type') == 0 ? 'style="display:none;"' : ''; ?>>
             <div class="col-md-6"><?= getCustomerFieldValue($companyFormSetting, 'alarm-information', 'secondary_system_type'); ?></div>
             <div class="col-md-6">
                 <select id='secondary_system_type' name="secondary_system_type"  class="form-control" >
@@ -228,13 +283,6 @@
             </div>
         </div>
 
-        <div class="row form_line field-custom-name-container" <?= isCustomerFieldEnabled($companyFormSetting, 'alarm-information', 'dealer_number') == 0 ? 'style="display:none;"' : ''; ?>>
-            <div class="col-md-6"><?= getCustomerFieldValue($companyFormSetting, 'alarm-information', 'dealer_number'); ?></div>
-            <div class="col-md-6">
-                <input type="text" class="form-control" name="dealer_number" id="dealer_number" value="<?= $alarm_info && $alarm_info->dealer_number != '' ? $alarm_info->dealer_number : $default_dealer_number; ?>" />
-            </div>
-        </div>
-
         <div class="row form_line field-custom-name-container" <?= isCustomerFieldEnabled($companyFormSetting, 'alarm-information', 'install_type') == 0 ? 'style="display:none;"' : ''; ?>>
             <div class="col-md-6"><?= getCustomerFieldValue($companyFormSetting, 'alarm-information', 'install_type'); ?></div>
             <div class="col-md-6">
@@ -247,52 +295,10 @@
             </div>
         </div>
 
-        <div class="row form_line field-custom-name-container" <?= isCustomerFieldEnabled($companyFormSetting, 'alarm-information', 'service_provider') == 0 ? 'style="display:none;"' : ''; ?>>
-            <div class="col-md-6"><?= getCustomerFieldValue($companyFormSetting, 'alarm-information', 'service_provider'); ?></div>
-            <div class="col-md-6">
-                <select id="service_provider" name="service_provider" data-customer-source="dropdown" class="form-select input_select" >
-                    <option value="" selected=""></option>
-                    <option <?= $alarm_info && $alarm_info->service_provider == 'Alarm.com' ? 'selected="selected"' : ''; ?> value="Alarm.com">Alarm.com</option>
-                    <option <?= $alarm_info && $alarm_info->service_provider == 'AlarmNet' ? 'selected="selected"' : ''; ?> value="AlarmNet">AlarmNet</option>
-                </select>
-            </div>
-        </div>
-
-        <div class="row form_line field-custom-name-container" <?= isCustomerFieldEnabled($companyFormSetting, 'alarm-information', 'dsl_voip') == 0 ? 'style="display:none;"' : ''; ?>>
-            <div class="col-md-6"><?= getCustomerFieldValue($companyFormSetting, 'alarm-information', 'dsl_voip'); ?></div>
-            <div class="col-md-6">
-                <select id="dsl_voip" name="dsl_voip" data-customer-source="dropdown" class="form-select input_select" >
-                    <option value="" selected=""></option>
-                    <option <?= $alarm_info && $alarm_info->dsl_voip == 'DSL' ? 'selected="selected"' : ''; ?> value="DSL">DSL</option>
-                    <option <?= $alarm_info && $alarm_info->dsl_voip == 'VOIP' ? 'selected="selected"' : ''; ?> value="VOIP">VOIP</option>
-                    <option <?= $alarm_info && $alarm_info->dsl_voip == 'DSL VOIP' ? 'selected="selected"' : ''; ?> value="DSL VOIP">DSL VOIP</option>
-                    <option <?= $alarm_info && $alarm_info->dsl_voip == 'None' ? 'selected="selected"' : ''; ?> value="None">None</option>
-                </select>
-            </div>
-        </div>
-
-        <div class="row form_line field-custom-name-container" <?= isCustomerFieldEnabled($companyFormSetting, 'alarm-information', 'contract_status') == 0 ? 'style="display:none;"' : ''; ?>>
-            <div class="col-md-6"><?= getCustomerFieldValue($companyFormSetting, 'alarm-information', 'contract_status'); ?></div>
-            <div class="col-md-6">
-                <select id="contract_status" name="contract_status" data-customer-source="dropdown" class="form-select input_select" >
-                    <option value="" selected=""></option>
-                    <option <?= $alarm_info && $alarm_info->contract_status == 'Contract Monitoring' ? 'selected="selected"' : ''; ?> value="Contract Monitoring">Contract Monitoring</option>
-                    <option <?= $alarm_info && $alarm_info->contract_status == 'Sold' ? 'selected="selected"' : ''; ?> value="Sold">Sold</option>
-                </select>
-            </div>
-        </div>
-
         <div class="row form_line field-custom-name-container" <?= isCustomerFieldEnabled($companyFormSetting, 'alarm-information', 'csid_number') == 0 ? 'style="display:none;"' : ''; ?>>
             <div class="col-md-6"><?= getCustomerFieldValue($companyFormSetting, 'alarm-information', 'csid_number'); ?></div>
             <div class="col-md-6">
                 <input type="text" class="form-control" name="csid_number" id="csid_number" value="<?= $alarm_info ? ($alarm_info->csid_number != '' ? $alarm_info->csid_number : '') : '';  ?>"/>
-            </div>
-        </div>
-
-        <div class="row form_line field-custom-name-container" <?= isCustomerFieldEnabled($companyFormSetting, 'alarm-information', 'panel_phone_number') == 0 ? 'style="display:none;"' : ''; ?>>
-            <div class="col-md-6"><?= getCustomerFieldValue($companyFormSetting, 'alarm-information', 'panel_phone_number'); ?></div>
-            <div class="col-md-6">
-                <input type="text" class="form-control" name="panel_phone_number" id="panel_phone_number" value="<?= $alarm_info ? ($alarm_info->panel_phone_number != '' ? $alarm_info->panel_phone_number : '') : '';  ?>"/>
             </div>
         </div>
 
@@ -321,13 +327,27 @@
             </div>
         </div>
 
-        <div class="row form_line field-custom-name-container" <?= isCustomerFieldEnabled($companyFormSetting, 'alarm-information', 'master_code') == 0 ? 'style="display:none;"' : ''; ?>>
-            <div class="col-md-6"><?= getCustomerFieldValue($companyFormSetting, 'alarm-information', 'master_code'); ?></div>
+        <div class="row form_line field-custom-name-container" <?= isCustomerFieldEnabled($companyFormSetting, 'alarm-information', 'panel_phone_number') == 0 ? 'style="display:none;"' : ''; ?>>
+            <div class="col-md-6"><?= getCustomerFieldValue($companyFormSetting, 'alarm-information', 'panel_phone_number'); ?></div>
             <div class="col-md-6">
-                <input type="text" class="form-control" name="master_code" id="master_code" value="<?= $alarm_info ? ($alarm_info->master_code != '' ? $alarm_info->master_code : '') : '';  ?>"/>
+                <input type="text" class="form-control" name="panel_phone_number" id="panel_phone_number" value="<?= $alarm_info ? ($alarm_info->panel_phone_number != '' ? $alarm_info->panel_phone_number : '') : '';  ?>"/>
             </div>
         </div>
 
+        <div class="row form_line field-custom-name-container" <?= isCustomerFieldEnabled($companyFormSetting, 'alarm-information', 'dsl_voip') == 0 ? 'style="display:none;"' : ''; ?>>
+            <div class="col-md-6"><?= getCustomerFieldValue($companyFormSetting, 'alarm-information', 'dsl_voip'); ?></div>
+            <div class="col-md-6">
+                <select id="dsl_voip" name="dsl_voip" data-customer-source="dropdown" class="form-select input_select" >
+                    <option value="" selected=""></option>
+                    <option <?= $alarm_info && $alarm_info->dsl_voip == 'DSL' ? 'selected="selected"' : ''; ?> value="DSL">DSL</option>
+                    <option <?= $alarm_info && $alarm_info->dsl_voip == 'VOIP' ? 'selected="selected"' : ''; ?> value="VOIP">VOIP</option>
+                    <option <?= $alarm_info && $alarm_info->dsl_voip == 'DSL VOIP' ? 'selected="selected"' : ''; ?> value="DSL VOIP">DSL VOIP</option>
+                    <option <?= $alarm_info && $alarm_info->dsl_voip == 'None' ? 'selected="selected"' : ''; ?> value="None">None</option>
+                </select>
+            </div>
+        </div>
+        
+        <hr /> 
         <div class="row form_line field-custom-name-container" <?= isCustomerFieldEnabled($companyFormSetting, 'alarm-information', 'account_cost') == 0 ? 'style="display:none;"' : ''; ?>>
             <div class="col-md-6"><?= getCustomerFieldValue($companyFormSetting, 'alarm-information', 'account_cost'); ?></div>
             <div class="col-md-6">

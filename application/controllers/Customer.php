@@ -1998,6 +1998,22 @@ class Customer extends MY_Controller
 
         }
         
+        // search Alarm.com customer
+        $this->load->helper(array('sms_helper', 'alarm_api_helper', 'paypal_helper'));
+        $alarm_api_helper = new AlarmApi();
+        if (
+            strpos($customer->status, 'Active w/RAR') !== false ||
+            strpos($customer->status, 'Active w/RMR') !== false ||
+            strpos($customer->status, 'Active w/RQR') !== false ||
+            strpos($customer->status, 'Active w/RYR') !== false
+        ) {
+            $nameKeyword = "{$customer->first_name} {$customer->last_name}";
+            $fuzzyKeyword = "{$customer->email} {$customer->phone_h} {$customer->mail_add} {$customer->county} {$customer->state} {$customer->zip_code} {$customer->country} {$customer->subdivision}";
+        }
+
+        $alarmCustomerDetails = $alarm_api_helper->searchAlarmCustomer($nameKeyword, $fuzzyKeyword);
+        $this->page_data['alarmcom_info'] = $alarmCustomerDetails;
+
         $this->page_data['sales_area'] = $this->customer_ad_model->get_all(false, '', 'ASC', 'ac_salesarea', 'sa_id');
         $this->page_data['employees'] = $this->customer_ad_model->get_all(false, '', 'ASC', 'users', 'id');
         $this->page_data['users'] = $this->users_model->getUsers();
@@ -5079,8 +5095,27 @@ class Customer extends MY_Controller
 
             $exist = $this->general->get_data_with_param($check, false);
             if ($exist) {
-                $input_billing['next_billing_date'] = $exist->next_billing_date;
-                $input_billing['next_subscription_billing_date'] = $exist->next_subscription_billing_date;
+                if($exist->next_billing_date == null || $exist->next_billing_date == "") {
+                    $input_billing['next_billing_date'] = $next_billing_date;
+                    $input_billing['next_subscription_billing_date'] = $next_billing_date;                       
+                } else {      
+                    if(strtotime($exist->next_billing_date) < strtotime(date('Y-m-d'))) {
+
+                        if($input['bill_start_date'] != '' && $input['bill_end_date'] != '') {
+                            $bill_start_month = date("m",strtotime($input['bill_start_date']));
+                            $bill_start_day   = $input['bill_day'];
+                            $bill_start_year  = date("Y",strtotime($input['bill_start_date']));
+                            //$next_billing_date  = date('Y-m-d', strtotime($bill_start_year . "-" . $bill_start_month . "-" . $bill_start_day));
+
+                            $input_billing['next_billing_date'] = $next_billing_date;
+                            $input_billing['next_subscription_billing_date'] = $next_billing_date;                        
+                        }                          
+
+                    } else {
+                        $input_billing['next_billing_date'] = $exist->next_billing_date;
+                        $input_billing['next_subscription_billing_date'] = $exist->next_subscription_billing_date;
+                    }                  
+                }
                 return $this->general->update_with_key_field($input_billing, $input['customer_id'], 'acs_billing', 'fk_prof_id');
             } else {
                 $input_billing['next_billing_date'] = $next_billing_date;
@@ -14070,6 +14105,7 @@ class Customer extends MY_Controller
             foreach($post['zone_id'] as $key => $value){
                 if( $value != '' ){
                     $data = [
+                        'docfile_id' => 0,
                         'company_id' => $company_id,
                         'customer_id' => $customer->prof_id,
                         'zone_id' => $value ?? '',
@@ -14953,4 +14989,110 @@ class Customer extends MY_Controller
 
         echo json_encode($return);
 	}
+
+    public function settings_alarm_monitoring_companies()
+    {
+        $this->load->model('AcsAlarmMonitoringCompany_model');
+
+        if(!checkRoleCanAccessModule('customer-settings', 'read')){
+			show403Error();
+			return false;
+		}
+
+        $company_id = logged('company_id');
+        $monitoringCompanies = $this->AcsAlarmMonitoringCompany_model->getAllByCompanyId($company_id);
+
+        $this->page_data['monitoringCompanies'] = $monitoringCompanies;
+        $this->page_data['page']->title = 'Alarm Monitoring Companies';
+        $this->page_data['page']->parent = 'Customers';
+        $this->load->view('v2/pages/customer/settings_alarm_monitoring_companies', $this->page_data);
+    }
+
+    public function ajax_create_monitoring_company()
+    {
+        $this->load->model('AcsAlarmMonitoringCompany_model');
+
+        if(!checkRoleCanAccessModule('customer-settings', 'write')){
+			show403Error();
+			return false;
+		}
+
+        $is_success = 0;
+        $msg = 'Cannot save data';
+        $monitoring_company_id   = 0;
+        $monitoring_company_name = '';
+
+        $company_id = logged('company_id');
+        $post = $this->input->post();
+
+        $isExists = $this->AcsAlarmMonitoringCompany_model->getByNameAndCompanyId($post['monitoring_company'], $company_id);
+        if( $isExists ){
+            $msg = 'Monitoring company name ' . $post['monitoring_company'] . ' already exists.';
+        }elseif( $post['monitoring_company'] == '' ){
+            $msg = 'Please enter monitoring company name';
+        }else{
+            $data = [
+                'company_id' => $company_id,
+                'name' => $post['monitoring_company'],
+                'date_created' => date("Y-m-d H:i:s"),
+                'date_updated' => date("Y-m-d H:i:s")
+            ];
+
+            $site_type_id = $this->AcsAlarmMonitoringCompany_model->create($data);
+            $site_type_name = $post['monitoring_company'];
+
+            //Activity Logs
+            $activity_name = 'Monitoring Companies : Created monitoring company ' . $post['monitoring_company']; 
+            createActivityLog($activity_name);
+
+            $is_success = 1;
+            $msg = '';
+        }
+
+        $return = ['is_success' => $is_success, 'msg' => $msg, 'monitoring_company_id' => $monitoring_company_id, 'monitoring_company_name' => $monitoring_company_name];
+        echo json_encode($return);
+    }
+
+    public function ajax_update_monitoring_company()
+    {
+        $this->load->model('AcsAlarmMonitoringCompany_model');
+
+        if(!checkRoleCanAccessModule('customer-settings', 'write')){
+			show403Error();
+			return false;
+		}
+
+        $is_success = 0;
+        $msg = 'Cannot find data';
+
+        $company_id = logged('company_id');
+        $post = $this->input->post();
+
+        $isExists = $this->AcsAlarmMonitoringCompany_model->getByNameAndCompanyId($post['monitoring_company'], $company_id);
+        if( $isExists && $post['monitoring_company_id'] != $isExists->id ){
+            $msg = 'Monitoring company name ' . $post['monitoring_company'] . ' already exists.';
+        }elseif( $post['monitoring_company'] == '' ){
+            $msg = 'Please enter monitoring company name';
+        }else{
+            $monitoringCompany = $this->AcsAlarmMonitoringCompany_model->getByIdAndCompanyId($post['monitoring_company_id'], $company_id);
+            if( $monitoringCompany ){
+                $data = [
+                    'name' => $post['monitoring_company'],
+                    'date_updated' => date("Y-m-d H:i:s")
+                ];
+
+                $this->AcsAlarmMonitoringCompany_model->update($monitoringCompany->id, $data);
+
+                //Activity Logs
+                $activity_name = 'Monitoring Companies : Updated monitoring company ' . $post['monitoring_company']; 
+                createActivityLog($activity_name);
+
+                $is_success = 1;
+                $msg = '';
+            }
+        }
+
+        $return = ['is_success' => $is_success, 'msg' => $msg];
+        echo json_encode($return);
+    }
 }

@@ -84,10 +84,10 @@
                 <label class="content-subtitle"><?= isset($profile_info) && !empty($profile_info->mail_add) ? $profile_info->mail_add : '---'; ?></label>
             </div>
             <div class="col-12 col-md-6">
-                <label class="content-subtitle fw-bold">Country</label>
+                <label class="content-subtitle fw-bold">County</label>
             </div>
             <div class="col-12 col-md-6">
-                <label class="content-subtitle"><?= isset($profile_info) && !empty($profile_info->country) ? $profile_info->country : '---'; ?></label>
+                <label class="content-subtitle"><?= isset($profile_info) && !empty($profile_info->county) ? $profile_info->county : '---'; ?></label>
             </div>
             <div class="col-12 col-md-6">
                 <label class="content-subtitle fw-bold">City</label>

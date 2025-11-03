@@ -357,11 +357,11 @@
     }
 </style>
 <style>
-    .commercialCustomerGroupContainer {
+    .allCustomerGroupContainer {
         max-height: 200px;
     }
 
-    .commercialCustomerStatusCategory {
+    .allCustomerStatusCategory {
         background: #00000008;
         border-radius: 5px;
         outline: 1px solid #0000000f;
@@ -425,9 +425,9 @@
                         </div>
                     </div>
                 </div>
-                <div class="row mb-3 table-responsive commercialCustomerGroupContainer"></div>
+                <div class="row mb-3 table-responsive allCustomerGroupContainer"></div>
                 <div class="row">
-                    <div class="col mt-3 commercialCustomerBadgeLoader">
+                    <div class="col mt-3 allCustomerBadgeLoader">
                         <div class="text-center">
                             <div class="spinner-border text-secondary" role="status">
                                 <span class="visually-hidden">Loading...</span>
@@ -655,8 +655,8 @@
                 // filter4: "commercial",
             },
             beforeSend: function() {
-                $('.commercialCustomerGroupContainer').hide();
-                $('.commercialCustomerBadgeLoader').show();
+                $('.allCustomerGroupContainer').hide();
+                $('.allCustomerBadgeLoader').show();
             },
             success: function(response) {
                 const data = JSON.parse(response).GRAPH;
@@ -694,35 +694,35 @@
 
                         html += `
                             <div class="col-6 col-sm-4 col-md-3 col-lg-2 col-xl-2 text-center">
-                                <div class="commercialCustomerStatusCategory" style="background:${matchedColor.bg}; border:1px solid ${matchedColor.border};">
-                                    <small class="text-uppercase commercialCustomerStatusName">${key}</small>
-                                    <h5 class="commercialCustomerStatusCount">${value}</h5>
+                                <div class="allCustomerStatusCategory" style="background:${matchedColor.bg}; border:1px solid ${matchedColor.border};">
+                                    <small class="text-uppercase allCustomerStatusName">${key}</small>
+                                    <h5 class="allCustomerStatusCount">${value}</h5>
                                 </div>
                             </div>
                         `;
 
-                        $('.commercialCustomerCategoryFilter').append(`<option value="${key}">${key}</option>`);
+                        $('.allCustomerCategoryFilter').append(`<option value="${key}">${key}</option>`);
                     });
                 } else {
                     html += `
                         <div class="col-lg-1">
-                            <div class="commercialCustomerStatusCategory">
-                                <small class="text-uppercase commercialCustomerStatusName">No Status Found</small>
-                                <h5 class="commercialCustomerStatusCount">0</h5>
+                            <div class="allCustomerStatusCategory">
+                                <small class="text-uppercase allCustomerStatusName">No Status Found</small>
+                                <h5 class="allCustomerStatusCount">0</h5>
                             </div>
                         </div>
                     `;
                 }
 
-                $('.commercialCustomerGroupContainer').html(html);
+                $('.allCustomerGroupContainer').html(html);
                 setTimeout(() => {
-                    $('.commercialCustomerGroupContainer').show();
-                    $('.commercialCustomerBadgeLoader').hide(); 
+                    $('.allCustomerGroupContainer').show();
+                    $('.allCustomerBadgeLoader').hide(); 
                 }, 500);
             },
             error: function() {
-                $('.commercialCustomerGroupContainer').show();
-                $('.commercialCustomerBadgeLoader').hide();
+                $('.allCustomerGroupContainer').show();
+                $('.allCustomerBadgeLoader').hide();
                 Swal.fire({
                     icon: "error",
                     title: "Network Error!",
@@ -836,6 +836,11 @@
 
         $("#CUSTOMER_SEARCHBAR").keyup(function() {
             CUSTOMER_LIST_TABLE.search($(this).val()).draw()
+        });
+
+        $(document).on('click', '.allCustomerStatusCategory', function () {
+            const value = $(this).find('.allCustomerStatusName').text();
+            CUSTOMER_LIST_TABLE.search(value).draw()
         });
 
         $(document).on('change', '#select-all', function(){

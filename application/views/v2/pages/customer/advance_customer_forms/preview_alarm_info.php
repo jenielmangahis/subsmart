@@ -311,28 +311,6 @@
                 <div class="row p-0 field-custom-name-container">
                     <div class="col-12 col-md-6">
                         <label class="content-subtitle fw-bold">
-                            <field-custom-name readonly default="Monitoring Confirm #" form="alarm_info"></field-custom-name>
-                        </label>
-                    </div>
-                    <div class="col-12 col-md-6">
-                        <label class="content-subtitle"><?= !empty($alarm_info->mcn) ? $alarm_info->mcn : '---'; ?></label>
-                    </div>
-                </div>
-
-                <div class="row p-0 field-custom-name-container">
-                    <div class="col-12 col-md-6">
-                        <label class="content-subtitle fw-bold">
-                            <field-custom-name readonly default="Signal Confirm #" form="alarm_info"></field-custom-name>
-                        </label>
-                    </div>
-                    <div class="col-12 col-md-6">
-                        <label class="content-subtitle"><?= !empty($alarm_info->scn) ? $alarm_info->scn : '---'; ?></label>
-                    </div>
-                </div>
-
-                <div class="row p-0 field-custom-name-container">
-                    <div class="col-12 col-md-6">
-                        <label class="content-subtitle fw-bold">
                             <field-custom-name readonly default="Panel Type" form="alarm_info"></field-custom-name>
                         </label>
                     </div>
@@ -383,7 +361,7 @@
                 </div>
 
                 <div class="col-12 col-md-6">
-                    <label class="content-subtitle fw-bold">Monhtly Monitoring Rate</label>
+                    <label class="content-subtitle fw-bold">Gross Monitoring Rate</label>
                 </div>
                 <div class="col-12 col-md-6">
                     <label class="content-subtitle"><?= !empty($alarm_info->monthly_monitoring) ? $alarm_info->monthly_monitoring : '---'; ?></label>
@@ -402,9 +380,12 @@
                     <label class="content-subtitle fw-bold">Pass Thru Cost</label>
                 </div>
                 <div class="col-12 col-md-6">
-                    <label class="content-subtitle"><?= !empty($alarm_info->pass_thru_cost) ? $alarm_info->pass_thru_cost : '---'; ?></label>
+                <?php 
+                    $passThruCost = ($alarm_info->pass_thru_cost != "" && $alarm_info->pass_thru_cost != 0) ? $alarm_info->pass_thru_cost : $alarmcom_info['package_total_price'];
+                    $passThruCostFormatted = '$' . number_format((float)$passThruCost, 2);
+                ?>
+                    <label class="content-subtitle"><?php echo $passThruCostFormatted; ?></label>
                 </div>
-
                 <div class="col-12 col-md-6">
                     <label class="content-subtitle fw-bold">Secondary System Type</label>
                 </div>
@@ -486,7 +467,17 @@
                     <label class="content-subtitle fw-bold">Connection Type</label>
                 </div>
                 <div class="col-12 col-md-6">
-                    <label class="content-subtitle"><?= !empty($alarm_info->connection_type) ? $alarm_info->connection_type : '---'; ?></label>
+                    <?php 
+                        $connection_type = '---';
+                        if( $alarm_info ){
+                        $connection_type = 'Wireless';
+                        if( $alarm_info->connection_type != ''){
+                            $connection_type = $alarm_info->connection_type;
+                        } 
+                        }
+
+                    ?>
+                    <label class="content-subtitle"><?= $connection_type; ?></label>
                 </div>
 
                 <div class="col-12 col-md-6">

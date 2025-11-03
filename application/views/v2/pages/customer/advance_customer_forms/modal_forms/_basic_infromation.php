@@ -11,6 +11,12 @@
 			</select>
 		</div>                            
 	</div> 
+	<div class="col-md-12 mb-3 grp-customer-business" style="display:none;">
+		<div class="form-group">
+			<label>Business Name</label>
+			<input type="text" name="business_name" class="form-control">
+		</div>
+	</div>
 	<div class="col-md-4 mb-3">
 		<div class="form-group">
 			<label>First Name</label>
@@ -50,13 +56,7 @@
 				<?php } ?>
 			</select>
 		</div>
-	</div>
-	<div class="col-md-12 mb-3 grp-customer-business" style="display:none;">
-		<div class="form-group">
-			<label>Business Name</label>
-			<input type="text" name="business_name" class="form-control">
-		</div>
-	</div>
+	</div>	
 	<div class="col-md-6 mb-2">
 		<div class="form-group">
 			<label>Mobile</label>

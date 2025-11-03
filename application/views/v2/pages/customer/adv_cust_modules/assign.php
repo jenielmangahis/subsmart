@@ -532,7 +532,7 @@
                 data.forEach(element => {
                     switch (element.category) {
                         case 'customer_info':
-                            $('.utilityCustomerInfo').text(`<?php echo $alarmcom_info['customer_id']; ?>`);
+                            $('.utilityCustomerInfo').text(`${element.data}`);
                         break;
                         case 'status':
                             $('.utilityStatusInfo').text(`${element.data}`);
