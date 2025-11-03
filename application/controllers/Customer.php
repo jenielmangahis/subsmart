@@ -1998,6 +1998,22 @@ class Customer extends MY_Controller
 
         }
         
+        // search Alarm.com customer
+        $this->load->helper(array('sms_helper', 'alarm_api_helper', 'paypal_helper'));
+        $alarm_api_helper = new AlarmApi();
+        if (
+            strpos($customer->status, 'Active w/RAR') !== false ||
+            strpos($customer->status, 'Active w/RMR') !== false ||
+            strpos($customer->status, 'Active w/RQR') !== false ||
+            strpos($customer->status, 'Active w/RYR') !== false
+        ) {
+            $nameKeyword = "{$customer->first_name} {$customer->last_name}";
+            $fuzzyKeyword = "{$customer->email} {$customer->phone_h} {$customer->mail_add} {$customer->county} {$customer->state} {$customer->zip_code} {$customer->country} {$customer->subdivision}";
+        }
+
+        $alarmCustomerDetails = $alarm_api_helper->searchAlarmCustomer($nameKeyword, $fuzzyKeyword);
+        $this->page_data['alarmcom_info'] = $alarmCustomerDetails;
+
         $this->page_data['sales_area'] = $this->customer_ad_model->get_all(false, '', 'ASC', 'ac_salesarea', 'sa_id');
         $this->page_data['employees'] = $this->customer_ad_model->get_all(false, '', 'ASC', 'users', 'id');
         $this->page_data['users'] = $this->users_model->getUsers();

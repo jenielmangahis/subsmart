@@ -197,7 +197,7 @@
                             </span>
                         </div>
                         <div class="col-12 col-md-6">
-                            <label class="content-title">Monthly Monitoring Rate</label>
+                            <label class="content-title">Gross Monitoring Rate</label>
                         </div>
                         <div class="col-12 col-md-6">
                             <span class="content-subtitle">
@@ -312,7 +312,17 @@
                         </div>
                         <div class="col-12 col-md-6">
                             <span class="content-subtitle">
-                                <?= $alarm_info && $alarm_info->connection_type != '' ? $alarm_info->connection_type : '---'; ?>    
+                                <?php 
+                                  $connection_type = '---';
+                                  if( $alarm_info ){
+                                    $connection_type = 'Wireless';
+                                    if( $alarm_info->connection_type != ''){
+                                        $connection_type = $alarm_info->connection_type;
+                                    } 
+                                  }
+
+                                ?>
+                                <?= $connection_type; ?>    
                             </span>
                         </div> 
 

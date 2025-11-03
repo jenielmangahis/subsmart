@@ -212,16 +212,16 @@
             if( status == 'Cancelled' || status == 'Cancel' || status == 'Charge Back' || status == 'Collection' || status == 'Competition Lost' ){
                 $('#office-info-cancel-date').attr('required', 'required');
                 $('#cancel_reason').attr('required', 'required');
-                $('#collections').attr('required', 'required');
-                $('#office-use-collection-date').attr('required', 'required');
-                $('#office-info-collect-amount').attr('required', 'required');
+                //$('#collections').attr('required', 'required');
+                //$('#office-use-collection-date').attr('required', 'required');
+                //$('#office-info-collect-amount').attr('required', 'required');
                 $('#cancelled-related-fields-container-a').show();
             }else{
                 $('#office-info-cancel-date').removeAttr('required');
                 $('#cancel_reason').removeAttr('required');
-                $('#collections').removeAttr('required');
-                $('#office-use-collection-date').removeAttr('required');
-                $('#office-info-collect-amount').removeAttr('required');
+                //$('#collections').removeAttr('required');
+                //$('#office-use-collection-date').removeAttr('required');
+                //$('#office-info-collect-amount').removeAttr('required');
                 $('#cancelled-related-fields-container-a').hide();
             }
         });

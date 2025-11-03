@@ -127,18 +127,14 @@
                                         if( $formGroups['office-use-information']['total_enabled'] > 0 ){
                                             include viewPath('v2/pages/customer/advance_customer_forms/dynamic_fields/customer_office_info');
                                         }
-
-                                        if( $formGroups['funding-information']['total_enabled'] > 0 ){
-                                            include viewPath('v2/pages/customer/advance_customer_forms/dynamic_fields/customer_funding_info');
-                                        }
-
+                                        
                                         if( $formGroups['customer-property']['total_enabled'] > 0 ){
                                             include viewPath('v2/pages/customer/advance_customer_forms/dynamic_fields/customer_property');
                                         }
                                     }else{
                                         if( $is_with_customer_subscription == 1 ){
                                             include viewPath('v2/pages/customer/advance_customer_forms/dynamic_fields/customer_office_info');
-                                            include viewPath('v2/pages/customer/advance_customer_forms/dynamic_fields/customer_funding_info');
+                                            //include viewPath('v2/pages/customer/advance_customer_forms/dynamic_fields/customer_funding_info');
                                         }
 
                                         if( $is_with_property_rental == 1 ){
@@ -179,6 +175,11 @@
                                     if( $formGroups['alarm-information'] && $formGroups['alarm-information']['total_enabled'] > 0 && logged('industry_type') == 'Alarm Industry' ){
                                         include viewPath('v2/pages/customer/advance_customer_forms/dynamic_fields/customer_alarm_info');
                                     }
+
+                                    if( $formGroups['funding-information']['total_enabled'] > 0 ){
+                                        include viewPath('v2/pages/customer/advance_customer_forms/dynamic_fields/customer_funding_info');
+                                    }
+
 
                                     if( $formGroups['solar-information'] && $formGroups['solar-information']['total_enabled'] > 0 && logged('company_id') == 58 ){
                                         include viewPath('v2/pages/customer/advance_customer_forms/dynamic_fields/customer_solar_info');

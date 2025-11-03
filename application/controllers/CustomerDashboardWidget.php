@@ -137,10 +137,10 @@ class CustomerDashboardWidget extends MY_Controller
 
         $query = $this->db->query("
             SELECT 
-                acs_profile.prof_id AS data,
+                alarmcom_customers.customer_id AS data,
                 'customer_info' AS category
-            FROM acs_profile
-            WHERE acs_profile.prof_id = {$customer_id}
+            FROM alarmcom_customers
+            WHERE alarmcom_customers.customer_id = {$alarmcom_customer_id}
             UNION
             SELECT 
                 acs_profile.status AS data,

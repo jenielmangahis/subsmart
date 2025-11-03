@@ -14,7 +14,13 @@
         <div class="row form_line" <?= isCustomerFieldEnabled($companyFormSetting, 'office-use-information', 'time_entered') == 0 ? 'style="display:none;"' : ''; ?>>
             <div class="col-md-6"><?= getCustomerFieldValue($companyFormSetting, 'office-use-information', 'time_entered'); ?></div>
             <div class="col-md-6">
-                <input type="time" class="form-control" name="time_entered" id="time_entered" value="<?php if(isset($office_info)){ echo  $office_info->time_entered; } ?>" />
+                <?php 
+                    $time_entered = date("H:i");
+                    if( $profile_info && strtotime($profile_info->created_at) > 0 ){
+                        $time_entered = date("H:i", strtotime($profile_info->created_at));
+                    }
+                ?>
+                <input type="time" class="form-control" name="time_entered" id="time_entered" value="<?= $time_entered; ?>" />
             </div>
         </div>
         <div class="row form_line" <?= isCustomerFieldEnabled($companyFormSetting, 'office-use-information', 'sales_date') == 0 ? 'style="display:none;"' : ''; ?>>
