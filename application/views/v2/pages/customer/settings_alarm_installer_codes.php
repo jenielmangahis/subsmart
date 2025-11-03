@@ -60,7 +60,7 @@
                             <td class="table-icon"></td>
                             <td data-name="Name">Code</td>
                             <td data-name="Is Default" style="width:5%;">Is Default</td>
-                            <td data-name="Date Created" style="width:5%;">Date Created</td>
+                            <td data-name="Date Created" style="width:8%;">Date Created</td>
                             <td data-name="Manage" style="width:3%;"></td>
                         </tr>
                     </thead>
