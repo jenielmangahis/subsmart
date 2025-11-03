@@ -28,7 +28,7 @@ class AcsAlarmZone_model extends MY_Model
         return $query->row();
     }
 
-    public function getByCustomerIdAndZoneIdAndDocumentId($customer_id, $zone_id, $document_id)
+    public function getByCustomerIdAndZoneIdAndDocumentId($customer_id, $zone_id, $docfile_id)
     {
 
         $this->db->select('acs_alarm_zones.*, acs_profile.first_name, acs_profile.last_name');
@@ -36,7 +36,7 @@ class AcsAlarmZone_model extends MY_Model
         $this->db->from($this->table);
         $this->db->where('acs_alarm_zones.zone_id', $zone_id);
         $this->db->where('acs_alarm_zones.customer_id', $customer_id);
-        $this->db->where('acs_alarm_zones.document_id', $document_id);
+        $this->db->where('acs_alarm_zones.docfile_id', $docfile_id);
 
         $query = $this->db->get();
         return $query->row();
