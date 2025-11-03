@@ -5345,6 +5345,7 @@ class Customer extends MY_Controller
         $input_alarm['receiver_phone_number']     = $input['receiver_phone_number'] ? $input['receiver_phone_number'] : '';
         $input_alarm['master_code']     = $input['master_code'] ? $input['master_code'] : '';
         $input_alarm['site_type']     = $input['site_type'] ? $input['site_type'] : '';
+        $input_alarm['addon_feature_cost'] = $input['addon_feature_cost'] ? $input['addon_feature_cost'] : '0';
 
         $check = [
             'where' => [
