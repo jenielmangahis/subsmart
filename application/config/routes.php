@@ -1239,7 +1239,7 @@ $route['work_order_view/(:any)/(:num)'] = 'Share_Link/public_view_v2/$1/$2';
 $route['customer/_get_customer_data'] = 'Customer/ajax_get_customer_data';
 $route['customer/_get_lead_data'] = 'Customer/ajax_get_lead_data';
 $route['customer/_convert_lead_to_customer'] = 'Customer/ajax_convert_lead_to_customer';
-
+$route['customer/_permanently_delete_selected_attachment'] = 'Customer/ajax_permanently_delete_selected_attachment';
 
 // workstatus
 $route['workstatus/_create_workorder_status'] = 'Workstatus/ajax_save_workorder_status';
@@ -2358,6 +2358,8 @@ $route['customer/settings_alarm_monitoring_companies'] = 'Customer/settings_alar
 $route['customers/_create_monitoring_company'] = 'Customer/ajax_create_monitoring_company';
 $route['customers/_update_monitoring_company'] = 'Customer/ajax_update_monitoring_company';
 $route['customers/_delete_monitoring_company'] = 'Customer/ajax_delete_monitoring_company';
+$route['customers/settings_panel_types'] = 'Tickets/settings_panel_types';
+$route['customer/_get_account_cost'] = 'Customer/ajax_get_account_cost';
 
 //Benchmark for Testing
 $route['benchmark/test_customer_subscription'] = 'Benchmark/test_customer_subscription';

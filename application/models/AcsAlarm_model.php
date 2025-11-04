@@ -35,6 +35,7 @@ class AcsAlarm_model extends MY_Model
         $this->db->join('acs_profile', 'acs_alarm.fk_prof_id = acs_profile.prof_id', 'left');
         $this->db->from($this->table);
         $this->db->where('acs_alarm.fk_prof_id', $customer_id);
+        $this->db->order_by('acs_alarm.alarm_id', 'desc');
 
         $query = $this->db->get();
         return $query->row();
@@ -79,6 +80,13 @@ class AcsAlarm_model extends MY_Model
         }        
 
         return $this->db->affected_rows();
+    }
+
+    public function updateByAlarmId($alarm_id, $data) {
+        $this->db->where('alarm_id', $alarm_id);
+        $this->db->update($this->table, $data);
+
+        return $this->db->affected_rows() > 0;
     }
 }
 

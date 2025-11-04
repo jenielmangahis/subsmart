@@ -2,7 +2,7 @@
 <?php include viewPath('v2/includes/customer/customer_modals'); ?>
 
 <div class="nsm-fab-container">
-    <div class="nsm-fab nsm-fab-icon nsm-bxshadow" data-bs-toggle="modal" data-bs-target="#modal-add-installer-code">
+    <div class="nsm-fab nsm-fab-icon nsm-bxshadow" data-bs-toggle="modal" data-bs-target="#modal-add-monitoring-company">
         <i class="bx bx-plus"></i>
     </div>
 </div>
@@ -19,7 +19,7 @@
                     <div class="col-12">
                         <div class="nsm-callout primary">
                             <button><i class='bx bx-x'></i></button>
-                            Manage Alarm Installer Codes.
+                            Manage Alarm Monitoring Companies.
                         </div>
                     </div>
                 </div>
@@ -41,7 +41,7 @@
                             </ul>
                         </div>
                         <div class="nsm-page-buttons page-button-container">
-                            <button type="button" class="nsm-button primary" data-bs-toggle="modal" data-bs-target="#modal-add-installer-code">
+                            <button type="button" class="nsm-button primary" data-bs-toggle="modal" data-bs-target="#modal-add-monitoring-company">
                                 <i class='bx bx-fw bx-plus'></i> Add New
                             </button>
                         </div>
@@ -49,7 +49,7 @@
                     </div>
                 </div>
                 <form id="frm-with-selected">
-                <table class="nsm-table" id="tbl-installer-codes">
+                <table class="nsm-table" id="tbl-monitoring-companies">
                     <thead>
                         <tr>
                             <?php if(checkRoleCanAccessModule('customer-settings', 'write')){ ?>
@@ -58,7 +58,7 @@
                             </td>
                             <?php } ?>
                             <td class="table-icon"></td>
-                            <td data-name="Name">Code</td>
+                            <td data-name="Name">Name</td>
                             <td data-name="Is Default" style="width:5%;">Is Default</td>
                             <td data-name="Date Created" style="width:8%;">Date Created</td>
                             <td data-name="Manage" style="width:3%;"></td>
@@ -66,15 +66,15 @@
                     </thead>
                     <tbody>
                         <?php
-                        if (!empty($installerCodes)) :
+                        if (!empty($monitoringCompanies)) :
                         ?>
                             <?php
-                            foreach ($installerCodes as $ic) :
+                            foreach ($monitoringCompanies as $mc) :
                             ?>
                                 <tr>
                                     <?php if(checkRoleCanAccessModule('customer-settings', 'write')){ ?>
                                     <td>
-                                        <input class="form-check-input row-select table-select" name="installerCodes[]" type="checkbox" value="<?= $ic->id; ?>">
+                                        <input class="form-check-input row-select table-select" name="monitoringCompanies[]" type="checkbox" value="<?= $mc->id; ?>">
                                     </td>
                                     <?php } ?>
                                     <td>
@@ -82,11 +82,11 @@
                                             <i class='bx bx-layer'></i>
                                         </div>
                                     </td>
-                                    <td class="fw-bold nsm-text-primary show"><?= $ic->installer_code; ?></td>
+                                    <td class="fw-bold nsm-text-primary show"><?= $mc->name; ?></td>
                                     <td>
-                                        <span class="badge <?= $ic->is_default == 'Yes' ? 'badge-primary' : 'badge-secondary'; ?>"><?= $ic->is_default; ?></span>
+                                        <span class="badge <?= $mc->is_default == 'Yes' ? 'badge-primary' : 'badge-secondary'; ?>"><?= $mc->is_default; ?></span>
                                     </td>
-                                    <td><?= date("m/d/Y h:i A",strtotime($ic->date_created)); ?></td>
+                                    <td><?= date("m/d/Y h:i A",strtotime($mc->date_created)); ?></td>
                                     <td>
                                         <div class="dropdown table-management">
                                             <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown">
@@ -95,15 +95,15 @@
                                             <ul class="dropdown-menu dropdown-menu-end">
                                                 <?php if(checkRoleCanAccessModule('customer-settings', 'write')){ ?>
                                                 <li>
-                                                    <a class="dropdown-item edit-item" href="javascript:void(0);" data-id="<?= $ic->id; ?>" data-value="<?= $ic->installer_code; ?>">Edit</a>
+                                                    <a class="dropdown-item edit-item" href="javascript:void(0);" data-id="<?= $mc->id; ?>" data-value="<?= $mc->name; ?>">Edit</a>
                                                 </li>
                                                 <li>
-                                                    <a class="dropdown-item set-default-item" href="javascript:void(0);" data-id="<?= $ic->id; ?>" data-value="<?= $ic->installer_code; ?>">Set As Default</a>
+                                                    <a class="dropdown-item set-default-item" href="javascript:void(0);" data-id="<?= $mc->id; ?>" data-value="<?= $mc->name; ?>">Set As Default</a>
                                                 </li>
                                                 <?php } ?>
                                                 <?php if(checkRoleCanAccessModule('customer-settings', 'delete')){ ?>
                                                 <li>
-                                                    <a class="dropdown-item delete-item" href="javascript:void(0);" data-id="<?= $ic->id; ?>" data-value="<?= $ic->installer_code; ?>">Delete</a>
+                                                    <a class="dropdown-item delete-item" href="javascript:void(0);" data-id="<?= $mc->id; ?>" data-value="<?= $mc->name; ?>">Delete</a>
                                                 </li>
                                                 <?php } ?>
                                             </ul>
@@ -144,7 +144,7 @@
 
         $(document).on('change', '#select-all', function(){
             $('tr:visible .row-select:checkbox').prop('checked', this.checked);  
-            let total= $('#tbl-installer-codes tr:visible input[name="installerCodes[]"]:checked').length;
+            let total= $('#tbl-monitoring-companies tr:visible input[name="monitoringCompanies[]"]:checked').length;
             if( total > 0 ){
                 $('#num-checked').text(`(${total})`);
             }else{
@@ -153,7 +153,7 @@
         });
 
         $(document).on('change', '.row-select', function(){
-            let total= $('#tbl-installer-codes input[name="installerCodes[]"]:checked').length;
+            let total= $('#tbl-monitoring-companies input[name="monitoringCompanies[]"]:checked').length;
             if( total > 0 ){
                 $('#num-checked').text(`(${total})`);
             }else{
@@ -165,14 +165,14 @@
             let id = $(this).attr('data-id');
             let value = $(this).attr('data-value');
 
-            $('#installer-code-id').val(id);
-            $('#edit-installer-code').val(value);
+            $('#monitoring-company-id').val(id);
+            $('#edit-monitoring-company').val(value);
 
-            $('#modal-edit-installer-code').modal('show');
+            $('#modal-edit-monitoring-company').modal('show');
         });
 
         $(document).on('click', '#with-selected-delete', function(){
-            let total= $('#tbl-installer-codes input[name="installerCodes[]"]:checked').length;
+            let total= $('#tbl-monitoring-companies input[name="monitoringCompanies[]"]:checked').length;
             if( total <= 0 ){
                 Swal.fire({
                     icon: 'error',
@@ -181,7 +181,7 @@
                 });
             }else{
                 Swal.fire({
-                    title: 'Delete Installer Code',
+                    title: 'Delete Monitoring Company',
                     html: `Are you sure you want to delete selected rows?<br/><br/>Note : This cannot be undone.`,
                     icon: 'question',
                     confirmButtonText: 'Proceed',
@@ -191,13 +191,13 @@
                     if (result.value) {
                         $.ajax({
                             method: 'POST',
-                            url: base_url + 'customers/_delete_selected_installer_codes',
+                            url: base_url + 'customers/_delete_selected_site_types',
                             dataType: 'json',
                             data: $('#frm-with-selected').serialize(),
                             success: function(result) {                        
                                 if( result.is_success == 1 ) {
                                     Swal.fire({
-                                        title: 'Delete Installer Code',
+                                        title: 'Delete Monitoring Company',
                                         text: "Data deleted successfully!",
                                         icon: 'success',
                                         showCancelButton: false,
@@ -235,20 +235,20 @@
             }        
         });
 
-        $('#frm-save-installer-code').on('submit', function(e){
+        $('#frm-save-monitoring-company').on('submit', function(e){
             e.preventDefault();
 
             $.ajax({
                 type: "POST",
-                url: base_url + 'customers/_create_installer_code',
+                url: base_url + 'customers/_create_monitoring_company',
                 dataType: 'json',
-                data: $('#frm-save-installer-code').serialize(),
+                data: $('#frm-save-monitoring-company').serialize(),
                 success: function(data) {    
-                    $('#btn-save-installer-code').html('Save');                   
+                    $('#btn-save-monitoring-company').html('Save');                   
                     if (data.is_success) {
-                        $('#modal-add-installer-code').modal('hide');
+                        $('#modal-add-monitoring-company').modal('hide');
                         Swal.fire({
-                            title: 'Add Installer Code',
+                            title: 'Add Monitoring Company',
                             text: "Data has been created successfully.",
                             icon: 'success',
                             showCancelButton: false,
@@ -271,25 +271,25 @@
                     }
                 },
                 beforeSend: function() {
-                    $('#btn-save-installer-code').html('<span class="bx bx-loader bx-spin"></span>');
+                    $('#btn-save-monitoring-company').html('<span class="bx bx-loader bx-spin"></span>');
                 }
             });
         });
 
-        $('#frm-update-installer-code').on('submit', function(e){
+        $('#frm-update-monitoring-company').on('submit', function(e){
             e.preventDefault();
 
             $.ajax({
                 type: "POST",
-                url: base_url + 'customers/_update_installer_code',
+                url: base_url + 'customers/_update_monitoring_company',
                 dataType: 'json',
-                data: $('#frm-update-installer-code').serialize(),
+                data: $('#frm-update-monitoring-company').serialize(),
                 success: function(data) {    
-                    $('#btn-update-installer-code').html('Save');                   
+                    $('#btn-update-monitoring-company').html('Save');                   
                     if (data.is_success) {
-                        $('#modal-edit-installer-code').modal('hide');
+                        $('#modal-edit-monitoring-company').modal('hide');
                         Swal.fire({
-                            title: 'Edit Installer Code',
+                            title: 'Edit Monitoring Company',
                             text: "Data has been updated successfully.",
                             icon: 'success',
                             showCancelButton: false,
@@ -312,7 +312,7 @@
                     }
                 },
                 beforeSend: function() {
-                    $('#btn-update-installer-code').html('<span class="bx bx-loader bx-spin"></span>');
+                    $('#btn-update-monitoring-company').html('<span class="bx bx-loader bx-spin"></span>');
                 }
             });
         });
@@ -322,8 +322,8 @@
             let value = $(this).attr('data-value');
 
             Swal.fire({
-                title: 'Delete Installer Code',
-                html: `Are you sure you want to delete installer code <b>${value}</b>?<br/><br/>Note : This cannot be undone.`,
+                title: 'Delete Monitoring Company',
+                html: `Are you sure you want to delete monitoring company <b>${value}</b>?<br/><br/>Note : This cannot be undone.`,
                 icon: 'question',
                 confirmButtonText: 'Proceed',
                 showCancelButton: true,
@@ -332,13 +332,13 @@
                 if (result.value) {
                     $.ajax({
                         type: 'POST',
-                        url: base_url + "customers/_delete_installer_code",
+                        url: base_url + "customers/_delete_monitoring_company",
                         data: {id: id},
                         dataType: "JSON",
                         success: function(result) {
                             if (result.is_success) {
                                 Swal.fire({
-                                    title: 'Delete Installer Code',
+                                    title: 'Delete Monitoring Company',
                                     text: "Data Deleted Successfully!",
                                     icon: 'success',
                                     showCancelButton: false,
@@ -382,7 +382,7 @@
 
             Swal.fire({
                 title: 'Set As Default',
-                html: `Are you sure you want to set installer code <b>${value}</b> as default?`,
+                html: `Are you sure you want to set Monitoring Company <b>${value}</b> as default?`,
                 icon: 'question',
                 confirmButtonText: 'Proceed',
                 showCancelButton: true,
@@ -391,7 +391,7 @@
                 if (result.value) {
                     $.ajax({
                         type: 'POST',
-                        url: base_url + "customer/_set_default_installer_code",
+                        url: base_url + "customer/_set_default_site_type",
                         data: {id: id},
                         dataType: "JSON",
                         success: function(result) {

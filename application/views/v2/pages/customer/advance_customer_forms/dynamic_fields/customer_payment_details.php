@@ -143,4 +143,60 @@
         </div>
 
     </div>
+
+    <hr />
+    
+    <div class="nsm-card-header">
+        <div class="nsm-card-title">
+            <span><i class="bx bx-file"></i>Attachments</span>
+            <a class="nsm-button btn-small" style="float:right;" id="btn-add-attachment-payment" href="javascript:void(0);"><strong>+ Add More</strong></a>
+        </div>
+    </div>    
+    <div class="nsm-card-content">
+        <div class="row">
+            <div class="col-12 col-md-12">
+                    <table class="table table-borderless" id="tbl-payment-attachments">
+                    <tbody>
+                    <tr>
+                        <td><input class="form-control" type="file" name="payment_attachments[]" accept="image/*" /></td>
+                        <td>&nbsp;</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>                                    
+        </div>
+    </div>       
+    
+    <hr />
+    <div class="nsm-card-content">
+        <table class="nsm-table tbl-attachments-list" id="tbl-attachments-list" style="">
+            <thead>
+                <tr style="">
+                    <td data-name="Filename" style="width:90%;">Attachments List</td>
+                    <td data-name="Action" style="width:10%;">&nbsp;</td>       
+                </tr>
+            </thead>
+            <tbody>     
+                <?php foreach($customer_attachments as $customer_attachment) { ?>
+                <tr>
+                    <td><a href="javascript:loadAttachImg('<?php echo $customer_attachment->customer_id; ?>', '<?php echo $customer_attachment->file_name; ?>');" id="preview-attached-file" data-company-id="<?php echo logged('company_id'); ?>" data-attach-filename="<?php echo $customer_attachment->file_name; ?>" class="preview-attached-file"><?php echo $customer_attachment->file_name; ?></a></td>
+                    <td style="text-align: right;"><a href="javascript:void(0);" data-attached-id="<?php echo $customer_attachment->id; ?>" class="btn-remove-row-edit-attachment nsm-button danger" id="btn-remove-row-edit-attachment" style="line-height:35px;"><i class='bx bx-trash'></i></a></td>
+                </tr>
+                <?php } ?>
+            </tbody>  
+        </table>                         
+    </div>    
+</div>
+<div class="modal fade nsm-modal fade" id="modal-customer-attachment" aria-labelledby="modal-customer-attachment-label" aria-hidden="true">
+    <div class="modal-dialog modal-sm modal-dialog-centered">        
+        <div class="modal-content">
+            <div class="modal-header">
+                <span class="modal-title content-title">Preview Attachment</span>
+                <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
+            </div>
+            <div class="modal-body" id="workorder-customer-container" style="max-height: 800px; overflow: auto; text-align: center;">
+                <img id="work-order-attach-img" class="work-order-attach-img" src="default.jpg" alt="Image" width="200">
+            </div>
+        </div>
+    </div>
 </div>

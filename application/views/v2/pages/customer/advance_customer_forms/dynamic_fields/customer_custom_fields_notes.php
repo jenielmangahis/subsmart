@@ -66,6 +66,7 @@
                 <table width="100%" cellpadding="0" cellspacing="0">
                     <tbody>
                     <?php foreach ($customer_notes as $note) : ?>
+                        <?php if( trim($note->note) != '' ){ ?>
                         <tr>
                             <td style="width: 880px; text-align: left; vertical-align: top; font-size: 11px; color: #336699; padding:5px;background-color: #d9d9d9;border: 1px; border-style: solid; border-color: #999999;">
                                 <i class='bx bxs-calendar-event'></i> <?= $note->datetime; ?>
@@ -76,6 +77,7 @@
                                 <?= $note->note; ?>
                             </td>
                         </tr>
+                        <?php } ?>
                     <?php endforeach; ?>
                     </tbody>
                 </table>

@@ -17,6 +17,12 @@
     font-weight:bold;
 }
 </style>
+<style>
+    .selectize-dropdown .selected {
+        background-color: #6a4a8624 !important;
+        color: unset !important;
+    }
+</style>
 <div class="row page-content g-0">
     <div class="col-12 mb-3">
         <?php include viewPath('v2/includes/page_navigations/customer_module_tabs'); ?>
@@ -33,23 +39,30 @@
                         </div>
                     </div>
                 </div>
-                <div class="row">
-                    <div class="col-md-4 col-12 grid-mb">
+                <div class="row mb-2">
+                    <div class="col-lg-8">
                         <button type="button" id="btn-statement-of-claims" class="nsm-button primary" data-bs-toggle="modal" data-bs-target="#statement_claim_modal">
                             <i class='bx bx-fw bx-spreadsheet'></i> Statement of Claim
                         </button>
+                        <button type="button" id="btn-manage-modules" class="nsm-button primary" data-bs-toggle="modal" data-bs-target="#manage_modules_modal">
+                            <i class='bx bx-fw bx-cog'></i>
+                        </button>
                     </div>
-                    <div class="col-8 grid-mb text-end">
-                        <div class="nsm-page-buttons page-button-container" style="width:450px;">
-                            <select class="" id="search-customer"></select>
-                        </div>
-                        <div class="nsm-page-buttons page-button-container">
-                            <button type="button" id="btn-manage-modules" class="nsm-button primary" data-bs-toggle="modal" data-bs-target="#manage_modules_modal">
-                                <i class='bx bx-fw bx-cog'></i>
-                            </button>
-                        </div>                        
+                    <div class="col lg-4">
+                        <select class="form-select searchCustomerDashboard">
+                            <option value=""></option>
+                        </select>
                     </div>
                 </div>
+
+                <!-- <div class="row">
+                    <div class="col-md-4 col-12 grid-mb">
+                        
+                    </div>
+                    <div class="col-md-4 grid-mb text-end">
+                                          
+                    </div>
+                </div> -->
                 <div class="row h-100 g-3 grid-row-mb nsm-draggable-container" id="customer_modules">
                     <?php
                     $modules = explode(",", $module_sort->ams_values);
@@ -88,6 +101,85 @@
 </div>
 
 <?php include viewPath('customer/adv_cust/js_list'); ?>
+
+<script>
+    const selectLedgerCustomerInput = $(".searchCustomerDashboard").selectize({
+        placeholder: "Search and select customer...",
+        valueField: 'id',
+        labelField: 'customer',
+        searchField: ['customer', 'email', 'phone'],
+        render: {
+            option: function(item, escape) {
+                const name = item.customer.trim();
+                const splitName = name.split(' ');
+                const initials = (splitName[0]?.charAt(0) || '') + (splitName[1]?.charAt(0) || '');
+
+                const phonePattern = /^\(?\d{3}\)?[-.\s]?\d{3}[-.\s]?\d{4}$/;
+                const phone = phonePattern.test(item.phone) ? item.phone : 'Not Specified';
+                const email = item.email ? escape(item.email) : 'Not Specified';
+
+                return `
+                    <div style="display: flex; align-items: center; padding: 8px;">
+                        <div style="
+                            width: 40px;
+                            height: 40px;
+                            background: #6a4a86;
+                            color: #fff;
+                            border-radius: 50%;
+                            display: flex;
+                            align-items: center;
+                            justify-content: center;
+                            font-weight: bold;
+                            margin-right: 12px;
+                            font-size: 14px;
+                        ">${initials.toUpperCase()}</div>
+                        <div style="max-width: 250px; word-wrap: break-word;">
+                            <div style="font-weight: bold; word-wrap: break-word;">${escape(item.customer)}</div>
+                            <div style="font-size: 12px; color: #555; word-wrap: break-word;">${phone} / ${email}</div>
+                        </div>
+                    </div>
+                `;
+            },
+            item: function(item, escape) {
+                return `<div>${escape(item.customer)}</div>`;
+            }
+        }
+    });
+
+    const selectizeLedgerInstance = selectLedgerCustomerInput[0].selectize;
+
+    $.ajax({
+        url: `${window.origin}/dashboard/thumbnailWidgetRequest`,
+        type: "POST",
+        data: {
+            category: "customer_list",
+            dateFrom: null,
+            dateTo: null,
+            filter3: null
+        },
+        beforeSend: function() {
+            
+        },
+        success: function (response) {
+            const customers = JSON.parse(response);
+            selectizeLedgerInstance.clearOptions();
+            customers.forEach(customer => {
+                selectizeLedgerInstance.addOption(customer);
+            });
+            selectizeLedgerInstance.refreshOptions(false);
+        },
+        error: function () {
+            console.error("Failed to fetch customer data.");
+        }
+    });
+
+    $(document).on('change', '.searchCustomerDashboard', function () {
+        const customerID = $(this).val();
+        window.location.href = `${window.origin}/customer/module/${customerID}`;
+    });
+</script>
+
+
 <script type="text/javascript">
     let modules = [];
     $(document).ready(function() {
@@ -135,8 +227,8 @@
         });
 
         function formatRepoCustomerSelection(repo) {
-            if( repo.first_name != null ){
-                return repo.first_name + ' ' + repo.last_name;      
+            if( repo.name != null ){
+                return repo.name;      
             }else{
                 return repo.text;
             }
@@ -147,7 +239,7 @@
                 return repo.text;
             }
             var $container = $(
-                '<div class="contact-acro">'+repo.acro+'</div><div class="contact-info"><i class="bx bx-user-pin"></i> '+repo.first_name + ' ' + repo.last_name+'<br><small><i class="bx bx-mobile"></i> '+repo.phone_m+' / <i class="bx bx-envelope"></i> '+repo.email+'</div>'
+                '<div class="contact-acro">'+repo.acro+'</div><div class="contact-info"><i class="bx bx-user-pin"></i> '+repo.name +'<br><small><i class="bx bx-mobile"></i> '+repo.phone_m+' / <i class="bx bx-envelope"></i> '+repo.email+'</div>'
             );
             return $container;
         }

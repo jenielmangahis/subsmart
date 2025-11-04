@@ -2,7 +2,7 @@
 <?php include viewPath('v2/includes/customer/customer_modals'); ?>
 
 <div class="nsm-fab-container">
-    <div class="nsm-fab nsm-fab-icon nsm-bxshadow" data-bs-toggle="modal" data-bs-target="#modal-add-installer-code">
+    <div class="nsm-fab nsm-fab-icon nsm-bxshadow" data-bs-toggle="modal" data-bs-target="#modal-add-account-type">
         <i class="bx bx-plus"></i>
     </div>
 </div>
@@ -19,7 +19,7 @@
                     <div class="col-12">
                         <div class="nsm-callout primary">
                             <button><i class='bx bx-x'></i></button>
-                            Manage Alarm Installer Codes.
+                            Manage Account Types.
                         </div>
                     </div>
                 </div>
@@ -41,7 +41,7 @@
                             </ul>
                         </div>
                         <div class="nsm-page-buttons page-button-container">
-                            <button type="button" class="nsm-button primary" data-bs-toggle="modal" data-bs-target="#modal-add-installer-code">
+                            <button type="button" class="nsm-button primary" data-bs-toggle="modal" data-bs-target="#modal-add-account-type">
                                 <i class='bx bx-fw bx-plus'></i> Add New
                             </button>
                         </div>
@@ -49,7 +49,7 @@
                     </div>
                 </div>
                 <form id="frm-with-selected">
-                <table class="nsm-table" id="tbl-installer-codes">
+                <table class="nsm-table" id="tbl-account-types">
                     <thead>
                         <tr>
                             <?php if(checkRoleCanAccessModule('customer-settings', 'write')){ ?>
@@ -66,15 +66,15 @@
                     </thead>
                     <tbody>
                         <?php
-                        if (!empty($installerCodes)) :
+                        if (!empty($accountTypes)) :
                         ?>
                             <?php
-                            foreach ($installerCodes as $ic) :
+                            foreach ($accountTypes as $at) :
                             ?>
                                 <tr>
                                     <?php if(checkRoleCanAccessModule('customer-settings', 'write')){ ?>
                                     <td>
-                                        <input class="form-check-input row-select table-select" name="installerCodes[]" type="checkbox" value="<?= $ic->id; ?>">
+                                        <input class="form-check-input row-select table-select" name="accountTypes[]" type="checkbox" value="<?= $at->id; ?>">
                                     </td>
                                     <?php } ?>
                                     <td>
@@ -82,11 +82,11 @@
                                             <i class='bx bx-layer'></i>
                                         </div>
                                     </td>
-                                    <td class="fw-bold nsm-text-primary show"><?= $ic->installer_code; ?></td>
+                                    <td class="fw-bold nsm-text-primary show"><?= $at->account_type; ?></td>
                                     <td>
-                                        <span class="badge <?= $ic->is_default == 'Yes' ? 'badge-primary' : 'badge-secondary'; ?>"><?= $ic->is_default; ?></span>
+                                        <span class="badge <?= $at->is_default == 'Yes' ? 'badge-primary' : 'badge-secondary'; ?>"><?= $at->is_default; ?></span>
                                     </td>
-                                    <td><?= date("m/d/Y h:i A",strtotime($ic->date_created)); ?></td>
+                                    <td><?= date("m/d/Y h:i A",strtotime($at->date_created)); ?></td>
                                     <td>
                                         <div class="dropdown table-management">
                                             <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown">
@@ -95,15 +95,15 @@
                                             <ul class="dropdown-menu dropdown-menu-end">
                                                 <?php if(checkRoleCanAccessModule('customer-settings', 'write')){ ?>
                                                 <li>
-                                                    <a class="dropdown-item edit-item" href="javascript:void(0);" data-id="<?= $ic->id; ?>" data-value="<?= $ic->installer_code; ?>">Edit</a>
+                                                    <a class="dropdown-item edit-item" href="javascript:void(0);" data-id="<?= $at->id; ?>" data-value="<?= $at->account_type; ?>">Edit</a>
                                                 </li>
                                                 <li>
-                                                    <a class="dropdown-item set-default-item" href="javascript:void(0);" data-id="<?= $ic->id; ?>" data-value="<?= $ic->installer_code; ?>">Set As Default</a>
+                                                    <a class="dropdown-item set-default-item" href="javascript:void(0);" data-id="<?= $at->id; ?>" data-value="<?= $at->account_type; ?>">Set As Default</a>
                                                 </li>
                                                 <?php } ?>
                                                 <?php if(checkRoleCanAccessModule('customer-settings', 'delete')){ ?>
                                                 <li>
-                                                    <a class="dropdown-item delete-item" href="javascript:void(0);" data-id="<?= $ic->id; ?>" data-value="<?= $ic->installer_code; ?>">Delete</a>
+                                                    <a class="dropdown-item delete-item" href="javascript:void(0);" data-id="<?= $at->id; ?>" data-value="<?= $at->account_type; ?>">Delete</a>
                                                 </li>
                                                 <?php } ?>
                                             </ul>
@@ -144,7 +144,7 @@
 
         $(document).on('change', '#select-all', function(){
             $('tr:visible .row-select:checkbox').prop('checked', this.checked);  
-            let total= $('#tbl-installer-codes tr:visible input[name="installerCodes[]"]:checked').length;
+            let total= $('#tbl-account-types tr:visible input[name="accountTypes[]"]:checked').length;
             if( total > 0 ){
                 $('#num-checked').text(`(${total})`);
             }else{
@@ -153,7 +153,7 @@
         });
 
         $(document).on('change', '.row-select', function(){
-            let total= $('#tbl-installer-codes input[name="installerCodes[]"]:checked').length;
+            let total= $('#tbl-account-types input[name="accountTypes[]"]:checked').length;
             if( total > 0 ){
                 $('#num-checked').text(`(${total})`);
             }else{
@@ -165,14 +165,14 @@
             let id = $(this).attr('data-id');
             let value = $(this).attr('data-value');
 
-            $('#installer-code-id').val(id);
-            $('#edit-installer-code').val(value);
+            $('#account-type-id').val(id);
+            $('#edit-account-type').val(value);
 
-            $('#modal-edit-installer-code').modal('show');
+            $('#modal-edit-account-type').modal('show');
         });
 
         $(document).on('click', '#with-selected-delete', function(){
-            let total= $('#tbl-installer-codes input[name="installerCodes[]"]:checked').length;
+            let total= $('#tbl-account-types input[name="accountTypes[]"]:checked').length;
             if( total <= 0 ){
                 Swal.fire({
                     icon: 'error',
@@ -181,7 +181,7 @@
                 });
             }else{
                 Swal.fire({
-                    title: 'Delete Installer Code',
+                    title: 'Delete Account Type',
                     html: `Are you sure you want to delete selected rows?<br/><br/>Note : This cannot be undone.`,
                     icon: 'question',
                     confirmButtonText: 'Proceed',
@@ -191,13 +191,13 @@
                     if (result.value) {
                         $.ajax({
                             method: 'POST',
-                            url: base_url + 'customers/_delete_selected_installer_codes',
+                            url: base_url + 'customers/_delete_selected_account_types',
                             dataType: 'json',
                             data: $('#frm-with-selected').serialize(),
                             success: function(result) {                        
                                 if( result.is_success == 1 ) {
                                     Swal.fire({
-                                        title: 'Delete Installer Code',
+                                        title: 'Delete Account Type',
                                         text: "Data deleted successfully!",
                                         icon: 'success',
                                         showCancelButton: false,
@@ -235,20 +235,20 @@
             }        
         });
 
-        $('#frm-save-installer-code').on('submit', function(e){
+        $('#frm-save-account-type').on('submit', function(e){
             e.preventDefault();
 
             $.ajax({
                 type: "POST",
-                url: base_url + 'customers/_create_installer_code',
+                url: base_url + 'customers/_create_account_type',
                 dataType: 'json',
-                data: $('#frm-save-installer-code').serialize(),
+                data: $('#frm-save-account-type').serialize(),
                 success: function(data) {    
-                    $('#btn-save-installer-code').html('Save');                   
+                    $('#btn-save-account-type').html('Save');                   
                     if (data.is_success) {
-                        $('#modal-add-installer-code').modal('hide');
+                        $('#modal-add-account-type').modal('hide');
                         Swal.fire({
-                            title: 'Add Installer Code',
+                            title: 'Add Account Type',
                             text: "Data has been created successfully.",
                             icon: 'success',
                             showCancelButton: false,
@@ -271,25 +271,25 @@
                     }
                 },
                 beforeSend: function() {
-                    $('#btn-save-installer-code').html('<span class="bx bx-loader bx-spin"></span>');
+                    $('#btn-save-account-type').html('<span class="bx bx-loader bx-spin"></span>');
                 }
             });
         });
 
-        $('#frm-update-installer-code').on('submit', function(e){
+        $('#frm-update-account-type').on('submit', function(e){
             e.preventDefault();
 
             $.ajax({
                 type: "POST",
-                url: base_url + 'customers/_update_installer_code',
+                url: base_url + 'customers/_update_account_type',
                 dataType: 'json',
-                data: $('#frm-update-installer-code').serialize(),
+                data: $('#frm-update-account-type').serialize(),
                 success: function(data) {    
-                    $('#btn-update-installer-code').html('Save');                   
+                    $('#btn-update-account-type').html('Save');                   
                     if (data.is_success) {
-                        $('#modal-edit-installer-code').modal('hide');
+                        $('#modal-edit-account-type').modal('hide');
                         Swal.fire({
-                            title: 'Edit Installer Code',
+                            title: 'Edit Account Type',
                             text: "Data has been updated successfully.",
                             icon: 'success',
                             showCancelButton: false,
@@ -312,7 +312,7 @@
                     }
                 },
                 beforeSend: function() {
-                    $('#btn-update-installer-code').html('<span class="bx bx-loader bx-spin"></span>');
+                    $('#btn-update-account-type').html('<span class="bx bx-loader bx-spin"></span>');
                 }
             });
         });
@@ -322,8 +322,8 @@
             let value = $(this).attr('data-value');
 
             Swal.fire({
-                title: 'Delete Installer Code',
-                html: `Are you sure you want to delete installer code <b>${value}</b>?<br/><br/>Note : This cannot be undone.`,
+                title: 'Delete Account Type',
+                html: `Are you sure you want to delete account type <b>${value}</b>?<br/><br/>Note : This cannot be undone.`,
                 icon: 'question',
                 confirmButtonText: 'Proceed',
                 showCancelButton: true,
@@ -332,13 +332,13 @@
                 if (result.value) {
                     $.ajax({
                         type: 'POST',
-                        url: base_url + "customers/_delete_installer_code",
+                        url: base_url + "customers/_delete_account_type",
                         data: {id: id},
                         dataType: "JSON",
                         success: function(result) {
                             if (result.is_success) {
                                 Swal.fire({
-                                    title: 'Delete Installer Code',
+                                    title: 'Delete Account Type',
                                     text: "Data Deleted Successfully!",
                                     icon: 'success',
                                     showCancelButton: false,
@@ -382,7 +382,7 @@
 
             Swal.fire({
                 title: 'Set As Default',
-                html: `Are you sure you want to set installer code <b>${value}</b> as default?`,
+                html: `Are you sure you want to set account type <b>${value}</b> as default?`,
                 icon: 'question',
                 confirmButtonText: 'Proceed',
                 showCancelButton: true,
@@ -391,7 +391,7 @@
                 if (result.value) {
                     $.ajax({
                         type: 'POST',
-                        url: base_url + "customer/_set_default_installer_code",
+                        url: base_url + "customer/_set_default_account_type",
                         data: {id: id},
                         dataType: "JSON",
                         success: function(result) {

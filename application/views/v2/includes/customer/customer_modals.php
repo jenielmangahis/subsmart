@@ -349,14 +349,29 @@
         <div class="modal-content">
             <form method="POST" id="new_system_package_form">
                 <div class="modal-header">
-                    <span class="modal-title content-title">Add System Package Type</span>
+                    <span class="modal-title content-title">Add Service Package</span>
                     <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
                 </div>
                 <div class="modal-body">
                     <div class="row">
-                        <div class="col-12">
-                            <input type="text" placeholder="Name" name="package_name" id="system_name" class="nsm-field form-control mb-2" required />
+                        <div class="col-sm-12">
+                            <label class="mb-2">Package Name</label>
+                            <div class="input-group mb-3">
+                                <input type="text" placeholder="" name="package_name" id="system_name" class="nsm-field form-control mb-2" required />
+                            </div>
+                        </div> 
+                        <div class="col-sm-12 col-md-6">
+                            <label class="mb-2">Alarm.com</label>
+                            <div class="input-group mb-3">
+                                <input type="number" step="any" placeholder="0.00" name="alarmcom_cost" id="alarmcom_cost" class="nsm-field form-control mb-2" />
+                            </div>
                         </div>
+                        <div class="col-sm-12 col-md-6">
+                            <label class="mb-2">AlarmNet</label>
+                            <div class="input-group mb-3">
+                                <input type="number" step="any" placeholder="0.00" name="alarmnet_cost" id="alarmnet_cost" class="nsm-field form-control mb-2" />
+                            </div>
+                        </div> 
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -374,13 +389,28 @@
             <form method="POST" id="edit_system_package_form">
                 <input type="hidden" class="form-control" name="id" id="edit_system_id" />
                 <div class="modal-header">
-                    <span class="modal-title content-title">Edit System Package Type</span>
+                    <span class="modal-title content-title">Edit Service Package</span>
                     <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
                 </div>
                 <div class="modal-body">                    
                     <div class="row">
-                        <div class="col-12">
-                            <input type="text" placeholder="Name" name="package_name" id="edit_system_name" class="nsm-field form-control mb-2" required />
+                        <div class="col-sm-12">
+                            <label class="mb-2">Package Name</label>
+                            <div class="input-group mb-3">
+                                <input type="text" placeholder="" name="package_name" id="edit_system_name" class="nsm-field form-control mb-2" required />
+                            </div>
+                        </div> 
+                        <div class="col-sm-12 col-md-6">
+                            <label class="mb-2">Alarm.com</label>
+                            <div class="input-group mb-3">
+                                <input type="number" step="any" placeholder="0.00" name="alarmcom_cost" id="edit_alarmcom_cost" class="nsm-field form-control mb-2" />
+                            </div>
+                        </div>
+                        <div class="col-sm-12 col-md-6">
+                            <label class="mb-2">AlarmNet</label>
+                            <div class="input-group mb-3">
+                                <input type="number" step="any" placeholder="0.00" name="alarmnet_cost" id="edit_alarmnet_cost" class="nsm-field form-control mb-2" />
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -953,5 +983,119 @@
                 <button type="submit" class="nsm-button primary btn-fixed-width" id="btn-add-panel-type" form="frm-add-panel-type">Save</button>
             </div>
         </div>        
+    </div>
+</div>
+
+<div class="modal fade nsm-modal fade" id="modal-add-account-type" tabindex="-1" aria-labelledby="modal-add-account-type_label" aria-hidden="true">
+    <div class="modal-dialog modal-md modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <span class="modal-title content-title">Add Account Type</span>
+                <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
+            </div>
+            <div class="modal-body">
+                <form id="frm-save-account-type">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <label class="mb-2">Account Type</label>
+                        <div class="input-group mb-3">
+                            <input type="text" name="account_type" id="add_account_type" value="" class="form-control" required="" autocomplete="off" />
+                        </div>
+                    </div>                 
+                </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="nsm-button" data-bs-dismiss="modal">Close</button>
+                <button type="submit" class="nsm-button primary" id="btn-save-account-type" form="frm-save-account-type">Save</button>
+            </div>
+            </form>                
+        </div>
+    </div>
+</div>
+
+<div class="modal fade nsm-modal fade" id="modal-edit-account-type" tabindex="-1" aria-labelledby="modal-edit-account-type_label" aria-hidden="true">
+    <div class="modal-dialog modal-md modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <span class="modal-title content-title">Edit Account Type</span>
+                <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
+            </div>
+            <div class="modal-body">
+                <form id="frm-update-account-type">
+                <input type="hidden" name="account_type_id" id="account-type-id" value="" />
+                <div class="row">
+                    <div class="col-sm-12">
+                        <label class="mb-2">Installer Code</label>
+                        <div class="input-group mb-3">
+                            <input type="text" name="account_type" id="edit-account-type" value="" class="form-control" required="" autocomplete="off" />
+                        </div>
+                    </div>                 
+                </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="nsm-button" data-bs-dismiss="modal">Close</button>
+                <button type="submit" class="nsm-button primary" id="btn-update-account-type" form="frm-update-account-type">Save</button>
+            </div>
+            </form>                
+        </div>
+    </div>
+</div>
+
+<div class="modal fade nsm-modal fade" id="modal-add-monitoring-company" tabindex="-1" aria-labelledby="modal-add-monitoring-company_label" aria-hidden="true">
+    <div class="modal-dialog modal-md modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <span class="modal-title content-title">Add Monitoring Company</span>
+                <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
+            </div>
+            <div class="modal-body">
+                <form id="frm-save-monitoring-company">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <label class="mb-2">Monitoring Company</label>
+                        <div class="input-group mb-3">
+                            <input type="text" name="monitoring_company" id="add_monitoring_company" value="" class="form-control" required="" autocomplete="off" />
+                        </div>
+                    </div>                 
+                </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="nsm-button" data-bs-dismiss="modal">Close</button>
+                <button type="submit" class="nsm-button primary" id="btn-save-monitoring-company" form="frm-save-monitoring-company">Save</button>
+            </div>
+            </form>                
+        </div>
+    </div>
+</div>
+
+<div class="modal fade nsm-modal fade" id="modal-edit-monitoring-company" tabindex="-1" aria-labelledby="modal-edit-monitoring-company_label" aria-hidden="true">
+    <div class="modal-dialog modal-md modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <span class="modal-title content-title">Edit Monitoring Company</span>
+                <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
+            </div>
+            <div class="modal-body">
+                <form id="frm-update-monitoring-company">
+                <input type="hidden" name="monitoring_company_id" id="monitoring-company-id" value="" />
+                <div class="row">
+                    <div class="col-sm-12">
+                        <label class="mb-2">Monitoring Company</label>
+                        <div class="input-group mb-3">
+                            <input type="text" name="monitoring_company" id="edit-monitoring-company" value="" class="form-control" required="" autocomplete="off" />
+                        </div>
+                    </div>                 
+                </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="nsm-button" data-bs-dismiss="modal">Close</button>
+                <button type="submit" class="nsm-button primary" id="btn-update-monitoring-company" form="frm-update-monitoring-company">Save</button>
+            </div>
+            </form>                
+        </div>
     </div>
 </div>

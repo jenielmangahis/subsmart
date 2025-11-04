@@ -628,13 +628,15 @@
 <script>
     $(document).ready(function() {
         $("#customer_form").submit(async function(e) {
-            e.preventDefault(); // avoid to execute the actual submit of the form.
+            e.preventDefault();
             var form = $(this);
             var is_valid = 1;
             var err_msg = '';
             
-            if (is_valid == 1) {                
-                $.ajax({
+            var post_data = new FormData(this);
+
+            if (is_valid == 1) {     
+                /*$.ajax({
                     type: "POST",
                     url: base_url + "customer/save_customer_profile",
                     dataType: 'json',
@@ -670,7 +672,47 @@
                             }
                         });
                     }
-                });
+                });*/
+
+                $.ajax({
+                    type: 'POST',
+                    url: base_url + "customer/save_customer_profile",
+                    data: post_data,
+                    processData: false,
+                    contentType: false,
+                    dataType: "json",
+                    success: function(data) {
+                        document.getElementById('overlay').style.display = "none";
+                        if (data) {
+                            <?php if (isset($profile_info)) : ?>
+                                sucess("Customer Information has been Updated Successfully!", data.profile_id);
+                            <?php else : ?>
+                                sucess("New Customer has been Added Successfully!", data.profile_id);
+                            <?php endif; ?>
+                        } else {
+                            error(data.message);
+                        }
+                        console.log(data);
+                    },
+                    beforeSend: function() {
+                        document.getElementById('overlay').style.display = "flex";
+                    },
+                    error: function(xhr, ajaxOptions, thrownError, data) {
+                        document.getElementById('overlay').style.display = "none";
+                        Swal.fire({
+                            text: 'Customer profile was successfully updated!',
+                            icon: 'success',
+                            showCancelButton: false,
+                            confirmButtonColor: '#32243d',
+                            cancelButtonColor: '#d33',
+                            confirmButtonText: 'Ok'
+                        }).then((result) => {
+                            if (result.value) {
+                                window.location.href = "<?= base_url(); ?>customer";
+                            }
+                        });
+                    }
+                });               
             } else {
                 Swal.fire({
                     icon: 'error',
@@ -1566,5 +1608,51 @@
                 }
             });
         });
+
+        $('#panel_type').on('change', function(){
+            let selected = $(this).val();
+            let find_string = 'Honeywell';
+            if( selected.includes(find_string) ){
+                $('#service_provider').val('AlarmNet').trigger("change");
+                $('#dealer').val('AlarmNet').trigger("change");
+            }else{
+                $('#service_provider').val('Alarm.com').trigger("change");
+                $('#dealer').val('Alarm.com').trigger("change");
+            }
+        });
+
+        $('#communication_type').on('change', function(){
+            load_account_cost();
+        });
+
+        $('#service_provider').on('change', function(){
+            load_account_cost();
+        });
+
+        $('#contract_status').on('change', function(){
+            let selected = $(this).val();
+            if( selected == 'Contract Monitoring' ){
+                $('#acct_type').val('In-House').trigger('change');
+            } 
+        });
+
+        function load_account_cost(){
+            let service_provider = $('#service_provider').val();
+            let service_package_type = $('#communication_type').val();
+
+            $.ajax({
+                type: 'POST',
+                url: base_url + 'customer/_get_account_cost',
+                dataType: 'json',
+                data: {
+                    service_provider: service_provider,
+                    service_package_type:service_package_type
+                },
+                success: function(o) {
+                    let account_cost = parseFloat(o.account_cost);
+                    $('#account_cost').val(account_cost.toFixed(2));
+                },
+            });
+        }
     });
 </script>
