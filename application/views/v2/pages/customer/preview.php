@@ -1,4 +1,10 @@
 <?php include viewPath('v2/includes/header'); ?>
+<style>
+    .selectize-dropdown .selected {
+        background-color: #6a4a8624 !important;
+        color: unset !important;
+    }
+</style>
 <div class="row page-content g-0">
     <div class="col-12">
         <div class="nsm-page">
@@ -33,7 +39,14 @@
                         </div>
                     </div>
                 </div>
-
+                <div class="row mb-3">
+                    <div class="col-lg-8"></div>
+                    <div class="col lg-4">
+                        <select class="form-select searchCustomerDashboard">
+                            <option value=""></option>
+                        </select>
+                    </div>
+                </div>
                 <div id="DivIdToPrint">
                 <div class="row g-3 mb-3">
                     <div class="col-12 col-md-12">
@@ -238,6 +251,82 @@
                         </div>
                     </div>
                 </div>
+                <script>
+                    const selectLedgerCustomerInput = $(".searchCustomerDashboard").selectize({
+                        placeholder: "Search and select customer...",
+                        valueField: 'id',
+                        labelField: 'customer',
+                        searchField: ['customer', 'email', 'phone'],
+                        render: {
+                            option: function(item, escape) {
+                                const name = item.customer.trim();
+                                const splitName = name.split(' ');
+                                const initials = (splitName[0]?.charAt(0) || '') + (splitName[1]?.charAt(0) || '');
+
+                                const phonePattern = /^\(?\d{3}\)?[-.\s]?\d{3}[-.\s]?\d{4}$/;
+                                const phone = phonePattern.test(item.phone) ? item.phone : 'Not Specified';
+                                const email = item.email ? escape(item.email) : 'Not Specified';
+
+                                return `
+                                    <div style="display: flex; align-items: center; padding: 8px;">
+                                        <div style="
+                                            width: 40px;
+                                            height: 40px;
+                                            background: #6a4a86;
+                                            color: #fff;
+                                            border-radius: 50%;
+                                            display: flex;
+                                            align-items: center;
+                                            justify-content: center;
+                                            font-weight: bold;
+                                            margin-right: 12px;
+                                            font-size: 14px;
+                                        ">${initials.toUpperCase()}</div>
+                                        <div style="max-width: 250px; word-wrap: break-word;">
+                                            <div style="font-weight: bold; word-wrap: break-word;">${escape(item.customer)}</div>
+                                            <div style="font-size: 12px; color: #555; word-wrap: break-word;">${phone} / ${email}</div>
+                                        </div>
+                                    </div>
+                                `;
+                            },
+                            item: function(item, escape) {
+                                return `<div>${escape(item.customer)}</div>`;
+                            }
+                        }
+                    });
+
+                    const selectizeLedgerInstance = selectLedgerCustomerInput[0].selectize;
+
+                    $.ajax({
+                        url: `${window.origin}/dashboard/thumbnailWidgetRequest`,
+                        type: "POST",
+                        data: {
+                            category: "customer_list",
+                            dateFrom: null,
+                            dateTo: null,
+                            filter3: null
+                        },
+                        beforeSend: function() {
+                            
+                        },
+                        success: function (response) {
+                            const customers = JSON.parse(response);
+                            selectizeLedgerInstance.clearOptions();
+                            customers.forEach(customer => {
+                                selectizeLedgerInstance.addOption(customer);
+                            });
+                            selectizeLedgerInstance.refreshOptions(false);
+                        },
+                        error: function () {
+                            console.error("Failed to fetch customer data.");
+                        }
+                    });
+
+                    $(document).on('change', '.searchCustomerDashboard', function () {
+                        const customerID = $(this).val();
+                        window.location.href = `${window.origin}/customer/preview/${customerID}`;
+                    });
+                </script>
                 <div class="row cards-container" data-masonry='{"percentPosition": true }'>
                     <div class="col-12 col-md-4 mb-2">
                         <?php include viewPath('v2/pages/customer/advance_customer_forms/preview_customer_info'); ?>

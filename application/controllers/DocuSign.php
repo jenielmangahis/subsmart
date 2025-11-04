@@ -1394,6 +1394,7 @@ class DocuSign extends MYF_Controller
     {
         $this->load->model('AcsAlarmZone_model');
         $this->load->model('AcsProfile_model');
+        $this->load->model('AcsAlarm_model');
 
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
             echo json_encode(['success' => false]);
@@ -1455,7 +1456,19 @@ class DocuSign extends MYF_Controller
                         $this->AcsAlarmZone_model->create($data);
                     }
                 }                          
-            }
+            }elseif( $specs->name && $specs->name == 'alarm_panel_location'){
+                $customerAlarm = $this->AcsAlarm_model->getByCustmerId($customer->prof_id);
+                if( $customerAlarm && $payload['value'] != '' ){
+                    $data = ['panel_location' => $payload['value']];
+                    $this->AcsAlarm_model->updateByAlarmId($customerAlarm->alarm_id, $data);
+                }
+            }elseif( $specs->name && $specs->name == 'alarm_transformer_location'){
+                $customerAlarm = $this->AcsAlarm_model->getByCustmerId($customer->prof_id);
+                if( $customerAlarm && $payload['value'] != '' ){
+                    $data = ['transformer_location' => $payload['value']];
+                    $this->AcsAlarm_model->updateByAlarmId($customerAlarm->alarm_id, $data);
+                }
+            }   
         }
              
         $date_created = date("Y-m-d H:i:s");

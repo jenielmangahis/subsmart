@@ -713,16 +713,32 @@ class Dashboard_model extends MY_Model
                 return $data;
             break;
             case 'customer_list':
-                $this->db->select('acs_profile.prof_id AS id, acs_profile.company_id AS company_id, CONCAT(acs_profile.first_name, " ", acs_profile.last_name) AS customer, CONCAT(acs_profile.city, ", ", acs_profile.state, " ", acs_profile.zip_code) AS address,acs_profile.phone_h AS phone, acs_profile.email AS email, COUNT(invoices.id) AS invoice_records');
-                $this->db->from('acs_profile');
-                $this->db->where('acs_profile.company_id', $company_id);
-                $this->db->where('acs_profile.is_archived', 0);
-                $this->db->where('invoices.view_flag', 0);
-                $this->db->join('invoices', 'invoices.customer_id = acs_profile.prof_id', 'left');
-                $this->db->group_by('acs_profile.prof_id, invoices.customer_id');
-                $this->db->order_by('acs_profile.first_name', 'ASC');
-                $query = $this->db->get();
-                return $query->result();
+                $query = $this->db->query("
+                    SELECT 
+                        acs_profile.prof_id AS id,
+                        acs_profile.company_id AS company_id,
+                        CASE 
+                            WHEN acs_profile.business_name IS NOT NULL 
+                                AND acs_profile.business_name != '' 
+                                AND acs_profile.business_name != 'Not Specified' 
+                            THEN acs_profile.business_name
+                            ELSE CONCAT(acs_profile.first_name, ' ', acs_profile.last_name) 
+                        END AS customer,
+                        CONCAT(acs_profile.city, ', ', acs_profile.state, ' ', acs_profile.zip_code) AS address,
+                        acs_profile.phone_h AS phone,
+                        acs_profile.email AS email,
+                        COUNT(invoices.id) AS invoice_records
+                    FROM acs_profile
+                    LEFT JOIN invoices ON invoices.customer_id = acs_profile.prof_id
+                    WHERE acs_profile.company_id = '{$company_id}'
+                    AND acs_profile.is_archived = 0
+                    AND invoices.view_flag = 0
+                    GROUP BY acs_profile.prof_id, invoices.customer_id
+                    ORDER BY acs_profile.first_name ASC
+                ");
+
+                $data = $query->result();
+                return $data;
             break;
             case 'ledger_lookup':
                 $query = $this->db->query("

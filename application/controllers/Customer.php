@@ -1786,6 +1786,7 @@ class Customer extends MY_Controller
             $get_customer_notes = [
                 'where' => [
                     'fk_prof_id' => $userid,
+                    'note !=' => ''
                 ],
                 'table' => 'acs_notes',
                 'select' => '*',
@@ -4416,6 +4417,48 @@ class Customer extends MY_Controller
                 $save_property = $this->save_property_information($input, $profile_id);
                 $save_other_address = $this->save_other_address($input, $profile_id);
                 $save_notes = $this->save_notes($prev_notes_value, $input['notes'], $profile_id);
+
+                if(isset($input['customer_id']) and !empty($input['customer_id'])) {
+
+                    $customerDocFolderPath = "./uploads/customerdocuments/".$input['customer_id']."/";   
+                    if (!file_exists($customerDocFolderPath)) {
+                        mkdir($customerDocFolderPath, 0777, true);
+                    }      
+
+                    $customerDocFolderPath2 = "./uploads/CompanyPhoto/".$input['customer_id']."/"; 
+                    if (!file_exists($customerDocFolderPath2)) {
+                        mkdir($customerDocFolderPath2, 0777, true);
+                    }      
+                    
+                    if(isset($_FILES['payment_attachments'])) {
+                        $attachments = $_FILES['payment_attachments'];
+                        foreach($attachments['name'] as $key => $attachment_name) {
+                            $filename = $attachment_name;
+                            if(isset($attachments['tmp_name'][$key]) && $attachments['tmp_name'][$key] != '') {
+                                $tmp_name  = $attachments['tmp_name'][$key];
+                                $extension = strtolower(end(explode('.',$filename)));
+                                $attachment_photo = $input['customer_id'] . "_payment_photo_".basename($filename);
+
+                                if(move_uploaded_file($tmp_name, $customerDocFolderPath.$attachment_photo)) {
+                                    if (copy($customerDocFolderPath.$attachment_photo, $customerDocFolderPath2.$attachment_photo)) {
+                                    }
+                                }                              
+
+                                $acsc_data2 = array(
+                                    'customer_id'      => $input['customer_id'],
+                                    'file_name'        => $attachment_photo,
+                                    'document_type'    => 'payment_details',
+                                    'document_label'   => 'Payment Details',
+                                    'is_predefined'    => 0,
+                                    'is_active'        => 1,
+                                    'date_created'     => date("Y-m-d H:i:s")
+                                );
+                                $acs_cust_docs = $this->workorder_model->save_acs_customer_document($acsc_data2);  
+                                if($acs_cust_docs) {} 
+                            }
+                        }
+                    }
+                }
 
                 if(isset($input['customer_id']) and !empty($input['customer_id'])) {
 
@@ -11917,7 +11960,11 @@ class Customer extends MY_Controller
             $msg = 'System package ' . $post['package_name'] . ' already exists.';
         }else{
             if ($post['package_name'] != '') {
-                $data = ['name' => $post['package_name']];
+                $data = [
+                    'name' => $post['package_name'],
+                    'alarmcom_cost' => $post['alarmcom_cost'] > 0 ? $post['alarmcom_cost'] : 0,
+                    'alarmnet_cost' => $post['alarmnet_cost'] > 0 ? $post['alarmnet_cost'] : 0,
+                ];
                 
                 $this->SystemPackageType_model->update($isExists->id, $data);
     
