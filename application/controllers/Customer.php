@@ -4295,6 +4295,8 @@ class Customer extends MY_Controller
 
     public function save_customer_profile()
     {
+        $this->load->model('AcsNote_model');
+
         self::addJSONResponseHeader();
 
         $input = $this->input->post();
@@ -4413,6 +4415,7 @@ class Customer extends MY_Controller
                 $save_contacts = $this->save_contacts($input, $profile_id);
                 $save_property = $this->save_property_information($input, $profile_id);
                 $save_other_address = $this->save_other_address($input, $profile_id);
+                $save_notes = $this->save_notes($prev_notes_value, $input['notes'], $profile_id);
 
                 if(isset($input['customer_id']) and !empty($input['customer_id'])) {
 
@@ -4465,9 +4468,9 @@ class Customer extends MY_Controller
                     echo 'Error Occured on Saving Billing Information';
                     $data_arr = ['success' => false, 'message' => 'Error on saving information'];
                 } else {
-                    if ($input['notes'] != '' && $input['notes'] != null && !empty($input['notes'])) {
-                        $this->save_notes($prev_notes_value, $input, $profile_id);
-                    }
+                    // if ($input['notes'] != '' && $input['notes'] != null && !empty($input['notes'])) {
+                    //     $this->save_notes($prev_notes_value, $input, $profile_id);
+                    // }
                     // $this->generate_qr_image($profile_id);
                     if (isset($input['customer_id'])) {
                         $data_arr = ['success' => true, 'profile_id' => $input['customer_id']];
@@ -5417,14 +5420,17 @@ class Customer extends MY_Controller
         }
     }
 
-    public function save_notes($prev_notes_value, $input, $id)
+    public function save_notes($prev_notes_value, $notes, $prof_id)
     {
-        $input_notes = [];
-        if (trim($prev_notes_value) != trim($input['notes'])) {
-            $input_notes['fk_prof_id'] = $id;
-            $input_notes['note'] = $input['notes'];
-            $input_notes['datetime'] = date('m-d-Y h:i A');
-            $this->general->add_($input_notes, 'acs_notes');
+        $this->load->model('AcsNote_model');
+        
+        if ((trim($prev_notes_value) != trim($notes)) && trim($notes) != '') {
+            $data = [
+                'fk_prof_id' => $prof_id,
+                'note' => $notes,
+                'datetime' => date('Y-m-d h:i A')
+            ];
+            $this->AcsNote_model->create($data);
         }
     }
 
