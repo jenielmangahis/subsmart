@@ -636,6 +636,11 @@ class Workorder extends MY_Controller
             $company = $this->Business_model->getByCompanyId($company_id);
             $public_view_url = base_url('work_order_view/'.$company->profile_slug.'/'.$work->id);
 
+            $workorder_attachments = $this->workorder_model->getworkorderAttachmentList($id);
+
+            $this->page_data['total_existing_attachments'] = count($workorder_attachments);
+            $this->page_data['workorder_attachments'] = $workorder_attachments;            
+
             $this->page_data['workorder'] = $work;
             $this->page_data['public_view_url'] = $public_view_url;
             $this->page_data['invoice'] = $invoice;

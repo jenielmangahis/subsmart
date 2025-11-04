@@ -1,6 +1,7 @@
 <?php
 defined('BASEPATH') or exit('No direct script access allowed');
 ?>
+<?php include viewPath('v2/includes/workorder/workorder_modals'); ?>
 <style>
   .title-border {
       background-color: #6a4a86;
@@ -96,13 +97,20 @@ defined('BASEPATH') or exit('No direct script access allowed');
                         <?php } ?>
                       </li>
                       <li>
-                        <?php if($workorder->work_order_type_id == '2'){ ?>
-                          <a class="dropdown-item" href="<?php echo base_url('workorder/editAlarm/' . $workorder->id) ?>">Edit</a>        
-                        <?php }elseif($workorder->work_order_type_id == '3'){ ?>
-                          <a class="dropdown-item" href="<?php echo base_url('workorder/editSolar/' . $workorder->id) ?>">Edit</a>       
+
+
+                        <?php if( in_array(logged('company_id'), adi_company_ids()) ){ ?>
+                                <a class="dropdown-item" href="<?php echo base_url('workorder/editInstallation/' . $workorder->id) ?>">Edit</a> 
                         <?php }else{ ?>
-                          <a class="dropdown-item" href="<?php echo base_url('workorder/edit/' . $workorder->id) ?>">Edit</a> 
-                        <?php } ?>
+                                <?php if($workorder->work_order_type_id == '2'){ ?>
+                                  <a class="dropdown-item" href="<?php echo base_url('workorder/editAlarm/' . $workorder->id) ?>">Edit</a>        
+                                <?php }elseif($workorder->work_order_type_id == '3'){ ?>
+                                  <a class="dropdown-item" href="<?php echo base_url('workorder/editSolar/' . $workorder->id) ?>">Edit</a>       
+                                <?php }else{ ?>
+                                  <a class="dropdown-item" href="<?php echo base_url('workorder/edit/' . $workorder->id) ?>">Edit</a> 
+                                <?php } ?>
+                        <?php } ?>                         
+
                         </li>
                         <li>
                         <?php if($workorder->work_order_type_id == 1){ ?>                           
@@ -408,11 +416,12 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                 $qty = $item->qty > 0 ? $item->qty : 0;
                                 $total_cost = $item->price > 0 ? $item->price : 0;
                                 $total_item_cost = 0;
+                                $item_tax = 0;
                                 if( $total_cost > 0 ){
                                   if($qty != 0) {
-                                    //$unit_cost = $total_cost / $qty;
                                     $unit_cost = $total_cost;
                                     $total_item_cost = $unit_cost * $qty;
+                                    $item_tax = $total_item_cost * (7.5 / 100);
                                   } else {
                                     $unit_cost = 0;
                                   }
@@ -425,7 +434,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                 <td valign="top"> <?php echo $item->item; ?></td>
                                 <td style="width: 50px; text-align: right;" valign="top"><?php echo intval($qty); ?></td>
                                 <td style="width: 80px; text-align: right;" valign="top">$<?php echo number_format($unit_cost,2); ?></td>
-                                <td style="width: 80px; text-align: right;" valign="top">$<?php echo number_format(0,2); ?></td>
+                                <td style="width: 80px; text-align: right;" valign="top">$<?php echo number_format($item_tax,2); ?></td>
                                 <td style="width: 90px; text-align: right;" valign="top">$<?php echo number_format($total_item_cost,2); ?></td>
                               </tr>
                               <?php $row++; ?>
@@ -596,6 +605,19 @@ defined('BASEPATH') or exit('No direct script access allowed');
                     <?php } ?>
                   </div>
 
+                    <div class="col-md-12">
+                      <h6 class="title-border">ATTACHMENTS :</h6>                  
+                      <?php if($total_existing_attachments) { ?>
+                          <span class="workorder-box">
+                              <?php foreach($workorder_attachments as $workorder_attachment) { ?>
+                                <a href="javascript:loadAttachImg('<?php echo $workorder->company_id; ?>', '<?php echo $workorder_attachment->filename; ?>');" id="preview-attached-file" data-company-id="<?php echo $workorder->company_id; ?>" data-attach-filename="<?php echo $workorder_attachment->filename; ?>" class="preview-attached-file"><?php echo $workorder_attachment->filename; ?></a><br />
+                              <?php } ?>                            
+                          </div>
+                      <?php } else { ?>
+                          <span class="workorder-box">None</span>
+                      <?php } ?>
+                    </div>
+
                   <div class="col-md-12">
                     <h6 class="title-border">SALES REPRESENTATIVES :</h6>
                     <span class="workorder-box"><?= $agreements->sales_re_name ?? "None"; ?></span> 
@@ -700,6 +722,12 @@ function printDiv(divName) {
     window.print();
     document.body.innerHTML = originalContents;
 }
+
+function loadAttachImg(cid, image_file) {
+  $("#modal-workorder-attachment").modal("show");
+  $('#work-order-attach-img').attr('src', base_url + 'uploads/customerdocuments/'+cid+'/'+image_file);
+}   
+
 $(function(){  
   CKEDITOR.replace('email_content_share');
 
