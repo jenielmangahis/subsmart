@@ -477,14 +477,237 @@ class AlarmApiPortal extends MY_Controller {
         echo '</pre>';
     }
 
+    public function searchApiData($searchCategory)
+    {
+        $this->load->helper(['alarm_dictionary_helper']);
+        $customer_id = $this->input->post('customer_id');
+        $alarmcom_customer_id = $this->input->post('alarmcom_customer_id');
+
+        switch ($searchCategory) {
+            case 'getEquipment':
+                $sensor_device       = [1,2,3,4,5,6,7,8,9,19,25,26,27,30,41,44,45,50,52,53,54,57,60,61,62,63,64,65,66,67,113,114,117,124,128,129];
+                $peripheral_device   = [38,39,47,48,49,55,58,75,76,86,87,93,101,123,132];
+                $video_device        = [11,30,68,91,93,126];
+                $access_point_device = [82];
+                $zwave_device        = [20,21,22,23,28,29,92];
+                $liftmaster_device   = [36,37];
+                $geo_device          = [13,42];
+                $voice_device        = [56,78,79,88];
+                $panel_device        = [127];
+
+                $groupedDevices = [
+                    'sensor'        => [],
+                    'peripheral'    => [],
+                    'video'         => [],
+                    'access_point'  => [],
+                    'zwave'         => [],
+                    'liftmaster'    => [],
+                    'geo'           => [],
+                    'voice'         => [],
+                    'panel'         => [],
+                    'other'         => [],
+                ];
+
+                $query = $this->db->query("
+                    SELECT 
+                        `id`,
+                        `customer_id`,
+                        `deviceId`,
+                        `webSiteDeviceName`,
+                        `group`,
+                        `partition`,
+                        `monitoredForNormalActivity`,
+                        `status`,
+                        `deviceType`,
+                        `nonReportingFlag`,
+                        `manufacturerSpecificInfo`,
+                        `isSecondaryLoop`,
+                        `isExistingEquipment`,
+                        `zwaveManufacturer`,
+                        `mac`,
+                        `videoDeviceModel`,
+                        `installDate`,
+                        `maintainDate`,
+                        `statusDate`,
+                        `date_updated`
+                    FROM alarmcom_equipments
+                    ORDER BY installDate ASC
+                ");
+
+                $equipmentDetails = $query->result();
+
+                $filtered = array_filter($equipmentDetails, function ($device) use ($alarmcom_customer_id) {
+                    return $device->customer_id == $alarmcom_customer_id;
+                });
+
+                foreach ($filtered as $device) {
+                    $id = (int)$device->deviceType;
+                    $device->deviceName = getDeviceDetails($id);
+
+                    switch (true) {
+                        case in_array($id, $sensor_device):
+                            $groupedDevices['sensor'][] = $device;
+                            break;
+                        case in_array($id, $peripheral_device):
+                            $groupedDevices['peripheral'][] = $device;
+                            break;
+                        case in_array($id, $video_device):
+                            $groupedDevices['video'][] = $device;
+                            break;
+                        case in_array($id, $access_point_device):
+                            $groupedDevices['access_point'][] = $device;
+                            break;
+                        case in_array($id, $zwave_device):
+                            $groupedDevices['zwave'][] = $device;
+                            break;
+                        case in_array($id, $liftmaster_device):
+                            $groupedDevices['liftmaster'][] = $device;
+                            break;
+                        case in_array($id, $geo_device):
+                            $groupedDevices['geo'][] = $device;
+                            break;
+                        case in_array($id, $voice_device):
+                            $groupedDevices['voice'][] = $device;
+                            break;
+                        case in_array($id, $panel_device):
+                            $groupedDevices['panel'][] = $device;
+                            break;
+                        default:
+                            $groupedDevices['other'][] = $device;
+                    }
+                }
+
+                echo json_encode($groupedDevices);
+            break;
+            case 'getRemoteUtilityInfo':
+                if ($alarmcom_customer_id) {
+                    $alarmcomData = "
+                        SELECT 
+                            CAST(alarmcom_customers.customer_id AS CHAR CHARACTER SET utf8) AS data,
+                            'customer_info' AS category
+                        FROM alarmcom_customers
+                        WHERE alarmcom_customers.customer_id = {$alarmcom_customer_id}
+                        UNION
+                        SELECT 
+                            CAST(alarmcom_customers.panel_version AS CHAR CHARACTER SET utf8) AS data,
+                            'panel_version' AS category
+                        FROM alarmcom_customers
+                        WHERE alarmcom_customers.customer_id = {$alarmcom_customer_id}
+                        UNION
+                        SELECT 
+                            CAST(alarmcom_customers.login_name AS CHAR CHARACTER SET utf8) AS data,
+                            'login_name' AS category
+                        FROM alarmcom_customers
+                        WHERE alarmcom_customers.customer_id = {$alarmcom_customer_id}
+                        UNION
+                        SELECT 
+                            CAST(alarmcom_customers.package_description AS CHAR CHARACTER SET utf8) AS data,
+                            'package_description' AS category
+                        FROM alarmcom_customers
+                        WHERE alarmcom_customers.customer_id = {$alarmcom_customer_id}
+                        UNION
+                        SELECT 
+                            CAST('Always' AS CHAR CHARACTER SET utf8) AS data,
+                            'monitoring' AS category
+                    ";
+                } else {
+                    $alarmcomData = "
+                        SELECT 
+                            CAST('0' AS CHAR CHARACTER SET utf8) AS data,
+                            'customer_info' AS category
+                        UNION
+                        SELECT 
+                            CAST('None' AS CHAR CHARACTER SET utf8) AS data,
+                            'panel_version' AS category
+                        UNION
+                        SELECT 
+                            CAST('None' AS CHAR CHARACTER SET utf8) AS data,
+                            'login_name' AS category
+                        UNION
+                        SELECT 
+                            CAST('None' AS CHAR CHARACTER SET utf8) AS data,
+                            'package_description' AS category
+                        UNION
+                        SELECT 
+                            CAST('None' AS CHAR CHARACTER SET utf8) AS data,
+                            'monitoring' AS category
+                    ";
+                }
+            
+                $query = $this->db->query("
+                    {$alarmcomData}
+                    UNION
+                    SELECT 
+                        CAST(acs_profile.status AS CHAR CHARACTER SET utf8) AS data,
+                        'status' AS category
+                    FROM acs_profile
+                    WHERE acs_profile.prof_id = {$customer_id}
+                    UNION
+                    SELECT 
+                        CAST(COUNT(acs_customer_documents.id) AS CHAR CHARACTER SET utf8) AS data,
+                        'documents' AS category
+                    FROM acs_customer_documents
+                    WHERE acs_customer_documents.customer_id = {$customer_id}
+                    UNION
+                    SELECT 
+                        CAST(0 AS CHAR CHARACTER SET utf8) AS data,
+                        'gallery' AS category
+                    UNION
+                    SELECT 
+                        CAST(ROUND(SUM(data), 2) AS CHAR CHARACTER SET utf8) AS data,
+                        'ledger_balance' AS category
+                    FROM (
+                        SELECT 
+                            ROUND(
+                                CASE 
+                                    WHEN (
+                                        CASE 
+                                            WHEN invoices.job_id IS NOT NULL AND invoices.job_id != '' THEN 
+                                                (SELECT SUM(job_items.total) FROM job_items WHERE job_items.job_id = jobs.id)
+                                            ELSE invoices.grand_total
+                                        END
+                                    ) - COALESCE(SUM(payment_records.invoice_amount), 0) < 0 
+                                    THEN 0
+                                    ELSE (
+                                        CASE 
+                                            WHEN invoices.job_id IS NOT NULL AND invoices.job_id != '' THEN 
+                                                (SELECT SUM(job_items.total) FROM job_items WHERE job_items.job_id = jobs.id)
+                                            ELSE invoices.grand_total
+                                        END
+                                    ) - COALESCE(SUM(payment_records.invoice_amount), 0)
+                                END
+                            , 2) AS data
+                        FROM invoices
+                        LEFT JOIN payment_records ON payment_records.invoice_id = invoices.id
+                        LEFT JOIN users ON users.id = invoices.user_id
+                        LEFT JOIN jobs ON jobs.id = invoices.job_id
+                        LEFT JOIN acs_profile ON acs_profile.prof_id = invoices.customer_id
+                        WHERE invoices.company_id = 31
+                        AND invoices.customer_id = {$customer_id}
+                        AND invoices.view_flag = 0
+                        GROUP BY invoices.id
+                    ) AS t
+                    UNION
+                    SELECT 
+                        CAST(COUNT(acs_notes.id) AS CHAR CHARACTER SET utf8) AS data,
+                        'notes' AS category
+                    FROM acs_notes
+                    WHERE acs_notes.fk_prof_id = {$customer_id}
+                ");
+                $data = $query->result();
+                echo json_encode($data);
+            break;
+        }
+
+    }
+
     public function testOnlyMethod()
     {
         $this->load->helper(['alarm_api_helper']);
         $alarmApi = new AlarmApi();
-        $token = $alarmApi->generateAlarmToken();
-        $customer_id = $this->input->post('customer_id');
+        $customer_id = $this->input->get('customer_id');
 
-        $customerDetails = $alarmApi->getAlarmServicePlansInfo(21055492, $token);
+        $customerDetails = $alarmApi->alarmApiRequest("getCustomerById", $customer_id, null, null, null);
 
         echo '<pre>';
         print_r($customerDetails);

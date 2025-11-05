@@ -343,11 +343,101 @@ if ($this->session->userdata('usertimezone') == null) {
                         <div id="hdr-multi-account-list"></div>
                     </li>
                 <?php } ?>
-                <li>
+                <!-- <li>
                     <a href="javascript:void(0);" id="left-nav-customer-search">
                         <i class='bx bx-fw bx-search'></i> Search Customer
                     </a>
-                </li>
+                </li> -->
+                <div class="row mb-2">
+                    <div class="col-lg-12">
+                        <style>
+                            .selectize-dropdown .selected {
+                                background-color: #6a4a8624 !important;
+                                color: unset !important;
+                            }
+                        </style>
+                        <select class="form-select searchCustomerNavigationAccounting">
+                            <option value=""></option>
+                        </select>
+                        <script>
+                            const selectSearchCustomerAccountingInput = $(".searchCustomerNavigationAccounting").selectize({
+                                placeholder: "Search and select customer...",
+                                valueField: 'id',
+                                labelField: 'customer',
+                                searchField: ['customer', 'email', 'phone'],
+                                render: {
+                                    option: function(item, escape) {
+                                        const name = item.customer.trim();
+                                        const splitName = name.split(' ');
+                                        const initials = (splitName[0]?.charAt(0) || '') + (splitName[1]?.charAt(0) || '');
+
+                                        const phonePattern = /^\(?\d{3}\)?[-.\s]?\d{3}[-.\s]?\d{4}$/;
+                                        const phone = phonePattern.test(item.phone) ? item.phone : 'Not Specified';
+                                        const email = item.email ? escape(item.email) : 'Not Specified';
+
+                                        return `
+                                            <div style="display: flex; align-items: center; padding: 8px;">
+                                                <div style="
+                                                    width: 40px;
+                                                    height: 40px;
+                                                    background: #6a4a86;
+                                                    color: #fff;
+                                                    border-radius: 50%;
+                                                    display: flex;
+                                                    align-items: center;
+                                                    justify-content: center;
+                                                    font-weight: bold;
+                                                    margin-right: 12px;
+                                                    font-size: 14px;
+                                                    flex: 0 0 auto;
+                                                ">${initials.toUpperCase()}</div>
+                                                <div style="max-width: 250px; word-wrap: break-word;">
+                                                    <div style="font-weight: bold; word-wrap: break-word;">${escape(item.customer)}</div>
+                                                    <div style="font-size: 12px; color: #555; word-wrap: break-word;">${phone} / ${email}</div>
+                                                </div>
+                                            </div>
+                                        `;
+                                    },
+                                    item: function(item, escape) {
+                                        return `<div>${escape(item.customer)}</div>`;
+                                    }
+                                }
+                            });
+
+                            const selectizeSearchCustomerNavigationAccountingInstance = selectSearchCustomerAccountingInput[0].selectize;
+
+                            $.ajax({
+                                url: `${window.origin}/dashboard/thumbnailWidgetRequest`,
+                                type: "POST",
+                                data: {
+                                    category: "customer_list",
+                                    dateFrom: null,
+                                    dateTo: null,
+                                    filter3: null
+                                },
+                                beforeSend: function() {
+                                    
+                                },
+                                success: function (response) {
+                                    const customers = JSON.parse(response);
+                                    selectizeSearchCustomerNavigationAccountingInstance.clearOptions();
+                                    customers.forEach(customer => {
+                                        selectizeSearchCustomerNavigationAccountingInstance.addOption(customer);
+                                    });
+                                    selectizeSearchCustomerNavigationAccountingInstance.refreshOptions(false);
+                                },
+                                error: function () {
+                                    console.error("Failed to fetch customer data.");
+                                }
+                            });
+
+                            $(document).on('change', '.searchCustomerNavigationAccounting', function () {
+                                const customerID = $(this).val();
+                                window.location.href = `${window.origin}/customer/module/${customerID}`;
+                            });
+                        </script>
+                    </div>
+                </div>
                 <li>
                     <a href="javascript:void(0);" id="left-getting-started">
                         <i class='bx bx-fw bx-rocket'></i> Getting Started

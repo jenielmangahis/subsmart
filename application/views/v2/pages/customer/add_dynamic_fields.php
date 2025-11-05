@@ -172,7 +172,7 @@
                         <div class="col-md-4 customer-inputs">     
                             <?php 
                                 if( $formGroups ){
-                                    if( $formGroups['alarm-information'] && $formGroups['alarm-information']['total_enabled'] > 0 && logged('industry_type') == 'Alarm Industry' ){
+                                    if( ($formGroups['alarm-information'] && $formGroups['alarm-information']['total_enabled'] > 0 && logged('industry_type') == 'Alarm Industry') || logged('company_id') == 1 ){
                                         include viewPath('v2/pages/customer/advance_customer_forms/dynamic_fields/customer_alarm_info');
                                     }
 

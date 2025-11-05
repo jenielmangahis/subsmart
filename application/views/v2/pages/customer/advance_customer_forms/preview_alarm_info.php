@@ -247,7 +247,15 @@
                     <hr>
                 </div>
             <?php else: ?>
-                <div class="row p-0 field-custom-name-container">
+                <div class="row p-0">
+                    <div class="col-12 col-md-6">
+                        <label class="content-subtitle fw-bold">Dealer Number</label>
+                    </div>
+                    <div class="col-12 col-md-6">
+                        <label class="content-subtitle"><?= !empty($alarm_info->dealer_number) ? $alarm_info->dealer_number : '---'; ?></label>
+                    </div>
+                </div>  
+                <div class="row p-0">
                     <div class="col-12 col-md-6">
                         <label class="content-subtitle fw-bold">
                             <field-custom-name readonly default="Monitoring Company" form="alarm_info"></field-custom-name>
@@ -257,8 +265,15 @@
                         <label class="content-subtitle"><?= !empty($alarm_info->monitor_comp) ? $alarm_info->monitor_comp : '---'; ?></label>
                     </div>
                 </div>
-
-                <div class="row p-0 field-custom-name-container">
+                <div class="row p-0">
+                    <div class="col-12 col-md-6">
+                        <label class="content-subtitle fw-bold">Contract Status</label>
+                    </div>
+                    <div class="col-12 col-md-6">
+                        <label class="content-subtitle"><?= !empty($alarm_info->contract_status) ? $alarm_info->contract_status : '---'; ?></label>
+                    </div>
+                </div>
+                <div class="row p-0">
                     <div class="col-12 col-md-6">
                         <label class="content-subtitle fw-bold">
                             <field-custom-name readonly default="Monitoring ID" form="alarm_info"></field-custom-name>
@@ -268,8 +283,7 @@
                         <label class="content-subtitle"><?= !empty($alarm_info->monitor_id) ? $alarm_info->monitor_id : '---'; ?></label>
                     </div>
                 </div>
-
-                <div class="row p-0 field-custom-name-container">
+                <div class="row p-0">
                     <div class="col-12 col-md-6">
                         <label class="content-subtitle fw-bold">
                             <field-custom-name readonly default="Account Type" form="alarm_info"></field-custom-name>
@@ -279,8 +293,37 @@
                         <label class="content-subtitle"><?= !empty($alarm_info->acct_type) ? $alarm_info->acct_type : '---'; ?></label>
                     </div>
                 </div>
-
-                <div class="row p-0 field-custom-name-container">
+                <div class="row p-0">
+                    <div class="col-12 col-md-6">
+                        <label class="content-subtitle fw-bold">
+                            <field-custom-name readonly default="Site Type" form="alarm_info"></field-custom-name>
+                        </label>
+                    </div>
+                    <div class="col-12 col-md-6">
+                        <label class="content-subtitle"><?= !empty($alarm_info->site_type) ? $alarm_info->site_type : '---'; ?></label>
+                    </div>
+                </div>
+                <div class="row p-0">
+                    <div class="col-12 col-md-6">
+                        <label class="content-subtitle fw-bold">
+                            <field-custom-name readonly default="Online" form="alarm_info"></field-custom-name>
+                        </label>
+                    </div>
+                    <div class="col-12 col-md-6">
+                        <label class="content-subtitle"><?= !empty($alarm_info->online) ? $alarm_info->online : '---'; ?></label>
+                    </div>
+                </div>
+                <div class="row p-0">
+                    <div class="col-12 col-md-6">
+                        <label class="content-subtitle fw-bold">
+                            <field-custom-name readonly default="In Service" form="alarm_info"></field-custom-name>
+                        </label>
+                    </div>
+                    <div class="col-12 col-md-6">
+                        <label class="content-subtitle"><?= !empty($alarm_info->in_service) ? $alarm_info->in_service : '---'; ?></label>
+                    </div>
+                </div>
+                <div class="row p-0">
                     <div class="col-12 col-md-6">
                         <label class="content-subtitle fw-bold">
                             <field-custom-name readonly default="Abort/Password Code" form="alarm_info"></field-custom-name>
@@ -290,8 +333,7 @@
                         <label class="content-subtitle"><?= !empty($alarm_info->passcode) ? $alarm_info->passcode : '---'; ?></label>
                     </div>
                 </div>
-
-                <div class="row p-0 field-custom-name-container">
+                <div class="row p-0">
                     <div class="col-12 col-md-6">
                         <label class="content-subtitle fw-bold">
                             <field-custom-name readonly default="Installer Code" form="alarm_info"></field-custom-name>
@@ -307,8 +349,34 @@
                         <label class="content-subtitle"><?= $install_code; ?></label>
                     </div>
                 </div>
-
-                <div class="row p-0 field-custom-name-container">
+                <div class="row p-0">
+                    <div class="col-12 col-md-6">
+                        <label class="content-subtitle fw-bold">Master Code</label>
+                    </div>
+                    <div class="col-12 col-md-6">
+                        <label class="content-subtitle"><?= !empty($alarm_info->master_code) ? $alarm_info->master_code : '---'; ?></label>
+                    </div>                
+                    <div class="col-12"><hr></div>
+                </div>
+                <div class="row p-0">
+                    <div class="col-12 col-md-6">
+                        <label class="content-subtitle fw-bold">
+                            <field-custom-name readonly default="Equipment" form="alarm_info"></field-custom-name>
+                        </label>
+                    </div>
+                    <div class="col-12 col-md-6">
+                        <label class="content-subtitle"><?= !empty($alarm_info->equipment) ? $alarm_info->equipment : '---'; ?></label>
+                    </div>
+                </div>
+                <div class="row p-0">
+                    <div class="col-12 col-md-6">
+                        <label class="content-subtitle fw-bold">Install Type</label>
+                    </div>
+                    <div class="col-12 col-md-6">
+                        <label class="content-subtitle"><?= !empty($alarm_info->install_type) ? $alarm_info->install_type : '---'; ?></label>
+                    </div>
+                </div>
+                <div class="row p-0">
                     <div class="col-12 col-md-6">
                         <label class="content-subtitle fw-bold">
                             <field-custom-name readonly default="Panel Type" form="alarm_info"></field-custom-name>
@@ -318,8 +386,7 @@
                         <label class="content-subtitle"><?= !empty($alarm_info->panel_type) ? $alarm_info->panel_type : '---'; ?></label>
                     </div>
                 </div>
-
-                <div class="row p-0 field-custom-name-container">
+                <div class="row p-0">
                     <div class="col-12 col-md-6">
                         <label class="content-subtitle fw-bold">
                             <field-custom-name readonly default="Warranty Type" form="alarm_info"></field-custom-name>
@@ -329,180 +396,177 @@
                         <label class="content-subtitle"><?= !empty($alarm_info->warranty_type) ? $alarm_info->warranty_type : '---'; ?></label>
                     </div>
                 </div>
-                <!-- <div class="row p-0 field-custom-name-container">
+                <div class="row p-0">           
                     <div class="col-12 col-md-6">
-                        <label class="content-subtitle fw-bold">
-                            <field-custom-name readonly default="System Package Type" form="alarm_info"></field-custom-name>
-                        </label>
+                        <label class="content-subtitle fw-bold">Secondary System Type</label>
                     </div>
                     <div class="col-12 col-md-6">
-                        <label class="content-subtitle"><?= !empty($alarm_info->system_type) ? $alarm_info->system_type : '---'; ?></label>
+                        <label class="content-subtitle"><?= !empty($alarm_info->radio_serial_number) ? $alarm_info->radio_serial_number : '---'; ?></label>
                     </div>
-                </div> -->
-                <div class="col-12 col-md-6">
-                    <label class="content-subtitle fw-bold">System Package Type</label>
                 </div>
-                <div class="col-12 col-md-6">
-                    <label class="content-subtitle"><?= !empty($alarm_info->comm_type) ? $alarm_info->comm_type : '---'; ?></label>
+                <div class="row p-0">    
+                    <div class="col-12 col-md-6">
+                        <label class="content-subtitle fw-bold">Radio Serial Number</label>
+                    </div>
+                    <div class="col-12 col-md-6">
+                        <label class="content-subtitle"><?= !empty($alarm_info->radio_serial_number) ? $alarm_info->radio_serial_number : '---'; ?></label>
+                    </div>
+                </div>
+                <div class="row p-0">    
+                    <div class="col-12 col-md-6">
+                        <label class="content-subtitle fw-bold">Panel Location</label>
+                    </div>
+                    <div class="col-12 col-md-6">
+                        <label class="content-subtitle"><?= !empty($alarm_info->panel_location) ? $alarm_info->panel_location : '---'; ?></label>
+                    </div>
+                </div>
+                <div class="row p-0">    
+                    <div class="col-12 col-md-6">
+                        <label class="content-subtitle fw-bold">Transformer Location</label>
+                    </div>
+                    <div class="col-12 col-md-6">
+                        <label class="content-subtitle"><?= !empty($alarm_info->transformer_location) ? $alarm_info->transformer_location : '---'; ?></label>
+                    </div>
+                </div>
+                <div class="row p-0">    
+                    <div class="col-12 col-md-6">
+                        <label class="content-subtitle fw-bold">Connection Type</label>
+                    </div>
+                    <div class="col-12 col-md-6">
+                        <?php 
+                            $connection_type = '---';
+                            if( $alarm_info ){
+                            $connection_type = 'Wireless';
+                            if( $alarm_info->connection_type != ''){
+                                $connection_type = $alarm_info->connection_type;
+                            } 
+                            }
+
+                        ?>
+                        <label class="content-subtitle"><?= $connection_type; ?></label>
+                    </div>
+                </div>
+                <div class="row p-0">    
+                    <div class="col-12 col-md-6">
+                        <label class="content-subtitle fw-bold">CSID Number</label>
+                    </div>
+                    <div class="col-12 col-md-6">
+                        <label class="content-subtitle"><?= !empty($alarm_info->csid_number) ? $alarm_info->csid_number : '---'; ?></label>
+                    </div>
+                </div>
+                <div class="row p-0"> 
+                    <div class="col-12 col-md-6">
+                        <label class="content-subtitle fw-bold">Report Format</label>
+                    </div>
+                    <div class="col-12 col-md-6">
+                        <label class="content-subtitle"><?= !empty($alarm_info->report_format) ? $alarm_info->report_format : '---'; ?></label>
+                    </div>
+                </div>
+                <div class="row p-0"> 
+                    <div class="col-12 col-md-6">
+                        <label class="content-subtitle fw-bold">Receiver Phone Number</label>
+                    </div>
+                    <div class="col-12 col-md-6">
+                        <label class="content-subtitle"><?= !empty($alarm_info->receiver_phone_number) ? $alarm_info->receiver_phone_number : '---'; ?></label>
+                    </div>
+                </div>
+                <div class="row p-0"> 
+                    <div class="col-12 col-md-6">
+                        <label class="content-subtitle fw-bold">Panel Phone Number</label>
+                    </div>
+                    <div class="col-12 col-md-6">
+                        <label class="content-subtitle"><?= !empty($alarm_info->panel_phone_number) ? $alarm_info->panel_phone_number : '---'; ?></label>
+                    </div>
+                </div>
+                <div class="row p-0"> 
+                    <div class="col-12 col-md-6">
+                        <label class="content-subtitle fw-bold">DSL Voip</label>
+                    </div>
+                    <div class="col-12 col-md-6">
+                        <label class="content-subtitle"><?= !empty($alarm_info->dsl_voip) ? $alarm_info->dsl_voip : '---'; ?></label>
+                    </div>
+                    <div class="col-12"><hr></div>
+                </div>
+                
+                <div class="row p-0"> 
+                    <div class="col-12 col-md-6">
+                        <label class="content-subtitle fw-bold">Service Provider</label>
+                    </div>
+                    <div class="col-12 col-md-6">
+                        <label class="content-subtitle"><?= !empty($alarm_info->service_provider) ? $alarm_info->service_provider : '---'; ?></label>
+                    </div>
                 </div>
 
-                <div class="col-12 col-md-6">
-                    <label class="content-subtitle fw-bold">Program and Setup</label>
-                </div>
-                <div class="col-12 col-md-6">
-                    <label class="content-subtitle"><?= !empty($alarm_info->otps) ? $alarm_info->otps : '---'; ?></label>
-                </div>
-
-                <div class="col-12 col-md-6">
-                    <label class="content-subtitle fw-bold">Equipment Cost</label>
-                </div>
-                <div class="col-12 col-md-6">
-                    <label class="content-subtitle"><?= !empty($alarm_info->equipment_cost) ? $alarm_info->equipment_cost : '---'; ?></label>
+                <div class="row p-0"> 
+                    <div class="col-12 col-md-6">
+                        <label class="content-subtitle fw-bold">System Package Type</label>
+                    </div>
+                    <div class="col-12 col-md-6">
+                        <label class="content-subtitle"><?= !empty($alarm_info->comm_type) ? $alarm_info->comm_type : '---'; ?></label>
+                    </div>
                 </div>
 
-                <div class="col-12 col-md-6">
-                    <label class="content-subtitle fw-bold">Gross Monitoring Rate</label>
+                <div class="row p-0"> 
+                    <div class="col-12 col-md-6">
+                        <label class="content-subtitle fw-bold">Add-on Feature Cost</label>
+                    </div>
+                    <div class="col-12 col-md-6">
+                        <label class="content-subtitle"><?= !empty($alarm_info->addon_feature_cost) ? $alarm_info->addon_feature_cost : '---'; ?></label>
+                    </div>
                 </div>
-                <div class="col-12 col-md-6">
-                    <label class="content-subtitle"><?= !empty($alarm_info->monthly_monitoring) ? $alarm_info->monthly_monitoring : '---'; ?></label>
+                <div class="row p-0"> 
+                    <div class="col-12 col-md-6">
+                        <label class="content-subtitle fw-bold">Account Cost</label>
+                    </div>
+                    <div class="col-12 col-md-6">
+                        <label class="content-subtitle">$<?= !empty($alarm_info->account_cost) ? $alarm_info->account_cost : '0.00'; ?></label>
+                    </div>
                 </div>
-
-
-
-                <div class="col-12 col-md-6">
-                    <label class="content-subtitle fw-bold">Account Cost</label>
-                </div>
-                <div class="col-12 col-md-6">
-                    <label class="content-subtitle">$<?= !empty($alarm_info->account_cost) ? $alarm_info->account_cost : '0.00'; ?></label>
-                </div>
-
-                <div class="col-12 col-md-6">
-                    <label class="content-subtitle fw-bold">Pass Thru Cost</label>
-                </div>
-                <div class="col-12 col-md-6">
-                <?php 
-                    $passThruCost = ($alarm_info->pass_thru_cost != "" && $alarm_info->pass_thru_cost != 0) ? $alarm_info->pass_thru_cost : $alarmcom_info['package_total_price'];
-                    $passThruCostFormatted = '$' . number_format((float)$passThruCost, 2);
-                ?>
-                    <label class="content-subtitle"><?php echo $passThruCostFormatted; ?></label>
-                </div>
-                <div class="col-12 col-md-6">
-                    <label class="content-subtitle fw-bold">Secondary System Type</label>
-                </div>
-                <div class="col-12 col-md-6">
-                    <label class="content-subtitle"><?= !empty($alarm_info->radio_serial_number) ? $alarm_info->radio_serial_number : '---'; ?></label>
-                </div>
-
-                <div class="col-12 col-md-6">
-                    <label class="content-subtitle fw-bold">Radio Serial Number</label>
-                </div>
-                <div class="col-12 col-md-6">
-                    <label class="content-subtitle"><?= !empty($alarm_info->radio_serial_number) ? $alarm_info->radio_serial_number : '---'; ?></label>
-                </div>
-
-                <div class="col-12 col-md-6">
-                    <label class="content-subtitle fw-bold">Panel Location</label>
-                </div>
-                <div class="col-12 col-md-6">
-                    <label class="content-subtitle"><?= !empty($alarm_info->panel_location) ? $alarm_info->panel_location : '---'; ?></label>
-                </div>
-
-                <div class="col-12 col-md-6">
-                    <label class="content-subtitle fw-bold">Transformer Location</label>
-                </div>
-                <div class="col-12 col-md-6">
-                    <label class="content-subtitle"><?= !empty($alarm_info->transformer_location) ? $alarm_info->transformer_location : '---'; ?></label>
-                </div>
-
-                <div class="col-12 col-md-6">
-                    <label class="content-subtitle fw-bold">Dealer Number</label>
-                </div>
-                <div class="col-12 col-md-6">
-                    <label class="content-subtitle"><?= !empty($alarm_info->dealer_number) ? $alarm_info->dealer_number : '---'; ?></label>
-                </div>
-
-                <div class="col-12 col-md-6">
-                    <label class="content-subtitle fw-bold">Install Type</label>
-                </div>
-                <div class="col-12 col-md-6">
-                    <label class="content-subtitle"><?= !empty($alarm_info->install_type) ? $alarm_info->install_type : '---'; ?></label>
-                </div>
-
-                <div class="col-12 col-md-6">
-                    <label class="content-subtitle fw-bold">Service Provider</label>
-                </div>
-                <div class="col-12 col-md-6">
-                    <label class="content-subtitle"><?= !empty($alarm_info->service_provider) ? $alarm_info->service_provider : '---'; ?></label>
-                </div>
-
-                <div class="col-12 col-md-6">
-                    <label class="content-subtitle fw-bold">DSL Voip</label>
-                </div>
-                <div class="col-12 col-md-6">
-                    <label class="content-subtitle"><?= !empty($alarm_info->dsl_voip) ? $alarm_info->dsl_voip : '---'; ?></label>
-                </div>
-
-                <div class="col-12 col-md-6">
-                    <label class="content-subtitle fw-bold">Contract Status</label>
-                </div>
-                <div class="col-12 col-md-6">
-                    <label class="content-subtitle"><?= !empty($alarm_info->contract_status) ? $alarm_info->contract_status : '---'; ?></label>
-                </div>
-
-                <div class="col-12 col-md-6">
-                    <label class="content-subtitle fw-bold">CSID Number</label>
-                </div>
-                <div class="col-12 col-md-6">
-                    <label class="content-subtitle"><?= !empty($alarm_info->csid_number) ? $alarm_info->csid_number : '---'; ?></label>
-                </div>
-
-                <div class="col-12 col-md-6">
-                    <label class="content-subtitle fw-bold">Panel Phone Number</label>
-                </div>
-                <div class="col-12 col-md-6">
-                    <label class="content-subtitle"><?= !empty($alarm_info->panel_phone_number) ? $alarm_info->panel_phone_number : '---'; ?></label>
-                </div>
-
-                <div class="col-12 col-md-6">
-                    <label class="content-subtitle fw-bold">Connection Type</label>
-                </div>
-                <div class="col-12 col-md-6">
+                <div class="row p-0"> 
+                    <div class="col-12 col-md-6">
+                        <label class="content-subtitle fw-bold">Pass Thru Cost</label>
+                    </div>
+                    <div class="col-12 col-md-6">
                     <?php 
-                        $connection_type = '---';
-                        if( $alarm_info ){
-                        $connection_type = 'Wireless';
-                        if( $alarm_info->connection_type != ''){
-                            $connection_type = $alarm_info->connection_type;
-                        } 
-                        }
-
+                        $passThruCost = ($alarm_info->pass_thru_cost != "" && $alarm_info->pass_thru_cost != 0) ? $alarm_info->pass_thru_cost : $alarmcom_info['package_total_price'];
+                        $passThruCostFormatted = '$' . number_format((float)$passThruCost, 2);
                     ?>
-                    <label class="content-subtitle"><?= $connection_type; ?></label>
+                        <label class="content-subtitle"><?php echo $passThruCostFormatted; ?></label>
+                    </div>
                 </div>
-
-                <div class="col-12 col-md-6">
-                    <label class="content-subtitle fw-bold">Report Format</label>
+                <div class="row p-0"> 
+                    <div class="col-12 col-md-6">
+                        <label class="content-subtitle fw-bold">Program and Setup</label>
+                    </div>
+                    <div class="col-12 col-md-6">
+                        <label class="content-subtitle"><?= !empty($alarm_info->otps) ? $alarm_info->otps : '---'; ?></label>
+                    </div>
                 </div>
-                <div class="col-12 col-md-6">
-                    <label class="content-subtitle"><?= !empty($alarm_info->report_format) ? $alarm_info->report_format : '---'; ?></label>
+                <div class="row p-0"> 
+                    <div class="col-12 col-md-6">
+                        <label class="content-subtitle fw-bold">Equipment Cost</label>
+                    </div>
+                    <div class="col-12 col-md-6">
+                        <label class="content-subtitle"><?= !empty($alarm_info->equipment_cost) ? $alarm_info->equipment_cost : '---'; ?></label>
+                    </div>
                 </div>
-
-                <div class="col-12 col-md-6">
-                    <label class="content-subtitle fw-bold">Receiver Phone Number</label>
+                <div class="row p-0"> 
+                    <div class="col-12 col-md-6">
+                        <label class="content-subtitle fw-bold">Gross Monitoring Rate</label>
+                    </div>
+                    <div class="col-12 col-md-6">
+                        <label class="content-subtitle"><?= !empty($alarm_info->monthly_monitoring) ? $alarm_info->monthly_monitoring : '---'; ?></label>
+                    </div>
+                    <div class="col-12"><hr></div>
                 </div>
-                <div class="col-12 col-md-6">
-                    <label class="content-subtitle"><?= !empty($alarm_info->receiver_phone_number) ? $alarm_info->receiver_phone_number : '---'; ?></label>
-                </div>
-
-                <div class="col-12 col-md-6">
-                    <label class="content-subtitle fw-bold">Master Code</label>
-                </div>
-                <div class="col-12 col-md-6">
-                    <label class="content-subtitle"><?= !empty($alarm_info->master_code) ? $alarm_info->master_code : '---'; ?></label>
-                </div>
-               
-                <div class="col-12">
-                    <hr>
+                
+                <div class="row p-0"> 
+                    <div class="col-12 col-md-6">
+                        <label class="content-subtitle fw-bold">CSID Number</label>
+                    </div>
+                    <div class="col-12 col-md-6">
+                        <label class="content-subtitle"><?= !empty($alarm_info->csid_number) ? $alarm_info->csid_number : '---'; ?></label>
+                    </div>
                 </div>
 
                 <div class="row p-0 field-custom-name-container">
@@ -543,17 +607,6 @@
                         <label class="content-subtitle"><?= $alarm_login; ?></label>
                     </div>
                 </div>
-
-                <!-- <div class="row p-0 field-custom-name-container">
-                    <div class="col-12 col-md-6">
-                        <label class="content-subtitle fw-bold">
-                            <field-custom-name readonly default="CS Account" form="alarm_info"></field-custom-name>
-                        </label>
-                    </div>
-                    <div class="col-12 col-md-6">
-                        <label class="content-subtitle"><?= !empty($alarm_info->alarm_cs_account) ? $alarm_info->alarm_cs_account : '---'; ?></label>
-                    </div>
-                </div> -->
             <?php endif; ?> 
         </div>
 

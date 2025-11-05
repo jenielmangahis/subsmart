@@ -42,9 +42,7 @@
                 <div class="row mb-3">
                     <div class="col-lg-8"></div>
                     <div class="col lg-4">
-                        <select class="form-select searchCustomerDashboard">
-                            <option value=""></option>
-                        </select>
+                        <select class="form-select w-100 searchCustomerPreview"></select>
                     </div>
                 </div>
                 <div id="DivIdToPrint">
@@ -252,7 +250,7 @@
                     </div>
                 </div>
                 <script>
-                    const selectLedgerCustomerInput = $(".searchCustomerDashboard").selectize({
+                    const selectSearchCustomerPreviewInput = $(".searchCustomerPreview").selectize({
                         placeholder: "Search and select customer...",
                         valueField: 'id',
                         labelField: 'customer',
@@ -281,6 +279,7 @@
                                             font-weight: bold;
                                             margin-right: 12px;
                                             font-size: 14px;
+                                            flex: 0 0 auto;
                                         ">${initials.toUpperCase()}</div>
                                         <div style="max-width: 250px; word-wrap: break-word;">
                                             <div style="font-weight: bold; word-wrap: break-word;">${escape(item.customer)}</div>
@@ -295,7 +294,7 @@
                         }
                     });
 
-                    const selectizeLedgerInstance = selectLedgerCustomerInput[0].selectize;
+                    const selectizeSearchCustomerPreviewInstance = selectSearchCustomerPreviewInput[0].selectize;
 
                     $.ajax({
                         url: `${window.origin}/dashboard/thumbnailWidgetRequest`,
@@ -311,18 +310,18 @@
                         },
                         success: function (response) {
                             const customers = JSON.parse(response);
-                            selectizeLedgerInstance.clearOptions();
+                            selectizeSearchCustomerPreviewInstance.clearOptions();
                             customers.forEach(customer => {
-                                selectizeLedgerInstance.addOption(customer);
+                                selectizeSearchCustomerPreviewInstance.addOption(customer);
                             });
-                            selectizeLedgerInstance.refreshOptions(false);
+                            selectizeSearchCustomerPreviewInstance.refreshOptions(false);
                         },
                         error: function () {
                             console.error("Failed to fetch customer data.");
                         }
                     });
 
-                    $(document).on('change', '.searchCustomerDashboard', function () {
+                    $(document).on('change', '.searchCustomerPreview', function () {
                         const customerID = $(this).val();
                         window.location.href = `${window.origin}/customer/preview/${customerID}`;
                     });

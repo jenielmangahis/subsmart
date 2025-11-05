@@ -1900,6 +1900,7 @@ class Customer extends MY_Controller
 
     public function preview($id = null)
     {
+        $this->load->helper(array('sms_helper', 'paypal_helper'));
         $this->load->model('jobs_model');
         $this->load->model('AcsProperties_model');
         $this->load->model('Workorder_model');
@@ -2000,20 +2001,18 @@ class Customer extends MY_Controller
         }
         
         // search Alarm.com customer
-        $this->load->helper(array('sms_helper', 'alarm_api_helper', 'paypal_helper'));
-        $alarm_api_helper = new AlarmApi();
+        $this->load->helper(array('alarm_api_helper'));    
+        $alarmApi = new AlarmApi();
         if (
             strpos($customer->status, 'Active w/RAR') !== false ||
             strpos($customer->status, 'Active w/RMR') !== false ||
             strpos($customer->status, 'Active w/RQR') !== false ||
             strpos($customer->status, 'Active w/RYR') !== false
         ) {
-            $nameKeyword = "{$customer->first_name} {$customer->last_name}";
-            $fuzzyKeyword = "{$customer->email} {$customer->phone_h} {$customer->mail_add} {$customer->county} {$customer->state} {$customer->zip_code} {$customer->country} {$customer->subdivision}";
+            $alarmCustomerDetails = $alarmApi->alarmApiRequest("getCustomerById", $customer->prof_id, null, null, null);
         }
-
-        $alarmCustomerDetails = $alarm_api_helper->searchAlarmCustomer($nameKeyword, $fuzzyKeyword);
         $this->page_data['alarmcom_info'] = $alarmCustomerDetails;
+
 
         $this->page_data['sales_area'] = $this->customer_ad_model->get_all(false, '', 'ASC', 'ac_salesarea', 'sa_id');
         $this->page_data['employees'] = $this->customer_ad_model->get_all(false, '', 'ASC', 'users', 'id');
@@ -2788,7 +2787,7 @@ class Customer extends MY_Controller
 
     public function module($id = null)
     {   
-        $this->load->helper(array('sms_helper', 'alarm_api_helper', 'paypal_helper'));        
+        $this->load->helper(array('sms_helper', 'paypal_helper'));            
         $this->load->model('Clients_model');
         $this->load->model('taskhub_model');
         $this->load->model('CustomerStatementClaim_model');
@@ -2921,18 +2920,16 @@ class Customer extends MY_Controller
                 $this->page_data['customerSignature'] = $customerSignature;
                 
                 // search Alarm.com customer
-                $alarm_api_helper = new AlarmApi();
+                $this->load->helper(array('alarm_api_helper'));    
+                $alarmApi = new AlarmApi();
                 if (
                     strpos($profile_info->status, 'Active w/RAR') !== false ||
                     strpos($profile_info->status, 'Active w/RMR') !== false ||
                     strpos($profile_info->status, 'Active w/RQR') !== false ||
                     strpos($profile_info->status, 'Active w/RYR') !== false
                 ) {
-                    $nameKeyword = "{$profile_info->first_name} {$profile_info->last_name}";
-                    $fuzzyKeyword = "{$profile_info->email} {$profile_info->phone_h} {$profile_info->mail_add} {$profile_info->county} {$profile_info->state} {$profile_info->zip_code} {$profile_info->country} {$profile_info->subdivision}";
+                    $alarmCustomerDetails = $alarmApi->alarmApiRequest("getCustomerById", $profile_info->prof_id, null, null, null);
                 }
-
-                $alarmCustomerDetails = $alarm_api_helper->searchAlarmCustomer($nameKeyword, $fuzzyKeyword);
                 $this->page_data['alarmcom_info'] = $alarmCustomerDetails;
 
                 // $this->page_data['esign_documents'] = $this->getCustomerGeneratedEsigns$id);
@@ -3841,6 +3838,7 @@ class Customer extends MY_Controller
 
     public function add_advance($id = null)
     {
+        $this->load->helper(array('sms_helper', 'paypal_helper'));
         $this->load->model('FinancingPaymentCategory_model');
         $this->load->model('IndustryType_model');
         $this->load->model('CompanyCustomerFormSetting_model');
@@ -4140,7 +4138,7 @@ class Customer extends MY_Controller
 
 
         // search Alarm.com customer
-        $this->load->helper(array('sms_helper', 'alarm_api_helper', 'paypal_helper'));
+        $this->load->helper(array('alarm_api_helper'));
         $alarm_api_helper = new AlarmApi();
         if (
             strpos($customer->status, 'Active w/RAR') !== false ||
@@ -4296,6 +4294,8 @@ class Customer extends MY_Controller
 
     public function save_customer_profile()
     {
+        $this->load->model('AcsNote_model');
+
         self::addJSONResponseHeader();
 
         $input = $this->input->post();
@@ -4414,6 +4414,49 @@ class Customer extends MY_Controller
                 $save_contacts = $this->save_contacts($input, $profile_id);
                 $save_property = $this->save_property_information($input, $profile_id);
                 $save_other_address = $this->save_other_address($input, $profile_id);
+                $save_notes = $this->save_notes($prev_notes_value, $input['notes'], $profile_id);
+
+                if(isset($input['customer_id']) and !empty($input['customer_id'])) {
+
+                    $customerDocFolderPath = "./uploads/customerdocuments/".$input['customer_id']."/";   
+                    if (!file_exists($customerDocFolderPath)) {
+                        mkdir($customerDocFolderPath, 0777, true);
+                    }      
+
+                    $customerDocFolderPath2 = "./uploads/CompanyPhoto/".$input['customer_id']."/"; 
+                    if (!file_exists($customerDocFolderPath2)) {
+                        mkdir($customerDocFolderPath2, 0777, true);
+                    }      
+                    
+                    if(isset($_FILES['payment_attachments'])) {
+                        $attachments = $_FILES['payment_attachments'];
+                        foreach($attachments['name'] as $key => $attachment_name) {
+                            $filename = $attachment_name;
+                            if(isset($attachments['tmp_name'][$key]) && $attachments['tmp_name'][$key] != '') {
+                                $tmp_name  = $attachments['tmp_name'][$key];
+                                $extension = strtolower(end(explode('.',$filename)));
+                                $attachment_photo = $input['customer_id'] . "_payment_photo_".basename($filename);
+
+                                if(move_uploaded_file($tmp_name, $customerDocFolderPath.$attachment_photo)) {
+                                    if (copy($customerDocFolderPath.$attachment_photo, $customerDocFolderPath2.$attachment_photo)) {
+                                    }
+                                }                              
+
+                                $acsc_data2 = array(
+                                    'customer_id'      => $input['customer_id'],
+                                    'file_name'        => $attachment_photo,
+                                    'document_type'    => 'payment_details',
+                                    'document_label'   => 'Payment Details',
+                                    'is_predefined'    => 0,
+                                    'is_active'        => 1,
+                                    'date_created'     => date("Y-m-d H:i:s")
+                                );
+                                $acs_cust_docs = $this->workorder_model->save_acs_customer_document($acsc_data2);  
+                                if($acs_cust_docs) {} 
+                            }
+                        }
+                    }
+                }
 
                 if(isset($input['customer_id']) and !empty($input['customer_id'])) {
 
@@ -4466,9 +4509,9 @@ class Customer extends MY_Controller
                     echo 'Error Occured on Saving Billing Information';
                     $data_arr = ['success' => false, 'message' => 'Error on saving information'];
                 } else {
-                    if ($input['notes'] != '' && $input['notes'] != null && !empty($input['notes'])) {
-                        $this->save_notes($prev_notes_value, $input, $profile_id);
-                    }
+                    // if ($input['notes'] != '' && $input['notes'] != null && !empty($input['notes'])) {
+                    //     $this->save_notes($prev_notes_value, $input, $profile_id);
+                    // }
                     // $this->generate_qr_image($profile_id);
                     if (isset($input['customer_id'])) {
                         $data_arr = ['success' => true, 'profile_id' => $input['customer_id']];
@@ -5418,14 +5461,17 @@ class Customer extends MY_Controller
         }
     }
 
-    public function save_notes($prev_notes_value, $input, $id)
+    public function save_notes($prev_notes_value, $notes, $prof_id)
     {
-        $input_notes = [];
-        if (trim($prev_notes_value) != trim($input['notes'])) {
-            $input_notes['fk_prof_id'] = $id;
-            $input_notes['note'] = $input['notes'];
-            $input_notes['datetime'] = date('m-d-Y h:i A');
-            $this->general->add_($input_notes, 'acs_notes');
+        $this->load->model('AcsNote_model');
+        
+        if ((trim($prev_notes_value) != trim($notes)) && trim($notes) != '') {
+            $data = [
+                'fk_prof_id' => $prof_id,
+                'note' => $notes,
+                'datetime' => date('Y-m-d h:i A')
+            ];
+            $this->AcsNote_model->create($data);
         }
     }
 

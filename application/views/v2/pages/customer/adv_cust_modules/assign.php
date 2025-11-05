@@ -431,7 +431,7 @@
                     <div class="text-center utilityInfoCategory">
                         <i class="fas fa-user text-muted mt-2 mb-1 fs-5"></i><br>
                         <small class="text-muted text-uppercase utilityCategoryName">Customer Info</small>
-                        <h5 class="utilityCustomerInfo">31204</h5>
+                        <h5 class="utilityCustomerInfo">0</h5>
                     </div>
                 </div>
                 <div class="col-lg-6 remoteDataContainer display_none">
@@ -459,21 +459,21 @@
                     <div class="text-center utilityInfoCategory">
                         <i class="fas fa-solar-panel text-muted mt-2 mb-1 fs-5"></i><br>
                         <small class="text-muted text-uppercase utilityCategoryName">Panel Type</small>
-                        <h5 class="utilityPanelTypeInfo">Honeywell Lynx</h5>
+                        <h5 class="utilityPanelTypeInfo">None</h5>
                     </div>
                 </div>
                 <div class="col-lg-6 remoteDataContainer display_none">
                     <div class="text-center utilityInfoCategory">
                         <i class="fas fa-sign-in-alt text-muted mt-2 mb-1 fs-5"></i><br>
                         <small class="text-muted text-uppercase utilityCategoryName">Logins</small>
-                        <h5 class="utilityLoginsInfo">Tommy Nguyen</h5>
+                        <h5 class="utilityLoginsInfo">None</h5>
                     </div>
                 </div>
                 <div class="col-lg-6 remoteDataContainer display_none">
                     <div class="text-center utilityInfoCategory">
                         <i class="fas fa-box-open text-muted mt-2 mb-1 fs-5"></i><br>
                         <small class="text-muted text-uppercase utilityCategoryName">Package</small>
-                        <h5 class="utilityPackageInfo">Interactive Gold</h5>
+                        <h5 class="utilityPackageInfo">None</h5>
                     </div>
                 </div>
                 <div class="col-lg-6 remoteDataContainer display_none">
@@ -517,10 +517,10 @@
     function getRemoteUtilityData() {
         $.ajax({
             type: "POST",
-            url: `${window.origin}/CustomerDashboardWidget/getRemoteUtilityInfo`,
+            url: `${window.origin}/AlarmApiPortal/searchApiData/getRemoteUtilityInfo`,
             data: {
                 customer_id : <?php echo $profile_info->prof_id; ?>,
-                alarmcom_customer_id : <?php echo $alarmcom_info['customer_id']; ?>,
+                alarmcom_customer_id : <?php echo ($alarmcom_info['customer_id']) ? $alarmcom_info['customer_id'] : 0 ; ?>,
             },
             beforeSend: function() {
                 $('.remoteDataContainer').hide();
@@ -529,41 +529,43 @@
             success: function(response) {
                 const data = JSON.parse(response);
 
-                data.forEach(element => {
-                    switch (element.category) {
-                        case 'customer_info':
-                            $('.utilityCustomerInfo').text(`${element.data}`);
-                        break;
-                        case 'status':
-                            $('.utilityStatusInfo').text(`${element.data}`);
-                        break;
-                        case 'documents':
-                            $('.utilityDocumentsInfo').text(`${element.data}`);
-                        break;
-                        case 'gallery':
-                            $('.utilityGalleryInfo').text(`${element.data}`);
-                        break;
-                        case 'panel_version':
-                            $('.utilityPanelTypeInfo').text(`${element.data}`);
-                        break;
-                        case 'login_name':
-                            $('.utilityLoginsInfo').text(`${element.data}`);
-                        break;
-                        case 'package_description':
-                            $('.utilityPackageInfo').text(`${element.data}`);
-                        break;
-                        case 'monitoring':
-                            $('.utilityMonitoringInfo').text(`${element.data}`);
-                        break;
-                        case 'ledger_balance':
-                            const balance = (element.data != null) ? element.data : 0.00;
-                            $('.utilityLedgerBalanceInfo').text(parseFloat(balance).toLocaleString('en-US', { style: 'currency', currency: 'USD' }));
-                        break;
-                        case 'notes':
-                            $('.utilityNotesInfo').text(`${element.data}`);
-                        break;
-                    }
-                });
+                if (data) {
+                    data.forEach(element => {
+                        switch (element.category) {
+                            case 'customer_info':
+                                $('.utilityCustomerInfo').text(`${element.data}`);
+                            break;
+                            case 'status':
+                                $('.utilityStatusInfo').text(`${element.data}`);
+                            break;
+                            case 'documents':
+                                $('.utilityDocumentsInfo').text(`${element.data}`);
+                            break;
+                            case 'gallery':
+                                $('.utilityGalleryInfo').text(`${element.data}`);
+                            break;
+                            case 'panel_version':
+                                $('.utilityPanelTypeInfo').text(`${element.data}`);
+                            break;
+                            case 'login_name':
+                                $('.utilityLoginsInfo').text(`${element.data}`);
+                            break;
+                            case 'package_description':
+                                $('.utilityPackageInfo').text(`${element.data}`);
+                            break;
+                            case 'monitoring':
+                                $('.utilityMonitoringInfo').text(`${element.data}`);
+                            break;
+                            case 'ledger_balance':
+                                const balance = (element.data != null) ? element.data : 0.00;
+                                $('.utilityLedgerBalanceInfo').text(parseFloat(balance).toLocaleString('en-US', { style: 'currency', currency: 'USD' }));
+                            break;
+                            case 'notes':
+                                $('.utilityNotesInfo').text(`${element.data}`);
+                            break;
+                        }
+                    });
+                } else { }
 
                 $('.remoteDataContainer').fadeIn('fast');
                 $('.remoteUtilityLoader').hide();
