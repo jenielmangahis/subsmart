@@ -355,12 +355,23 @@ if ($this->session->userdata('usertimezone') == null) {
                                 background-color: #6a4a8624 !important;
                                 color: unset !important;
                             }
+
+                            .searchCustomerNavigationAccountingClear {
+                                right: 35px;
+                                top: 6px;
+                                z-index: 999;
+                                cursor: pointer;
+                                display: none;
+                            }
                         </style>
-                        <select class="form-select searchCustomerNavigationAccounting">
-                            <option value=""></option>
-                        </select>
+                        <div class="position-relative">
+                            <select class="form-select w-100 searchCustomerNavigationAccounting">
+                                <option value=""></option>
+                            </select>
+                            <div class="searchCustomerNavigationAccountingClear position-absolute text-muted"><i class="fas fa-times-circle"></i></div>
+                        </div>
                         <script>
-                            const selectSearchCustomerAccountingInput = $(".searchCustomerNavigationAccounting").selectize({
+                            const selectSearchCustomerAccountingInput = $(".searchCustomerNavigationAccountingAccounting").selectize({
                                 placeholder: "Search and select customer...",
                                 valueField: 'id',
                                 labelField: 'customer',
@@ -401,6 +412,18 @@ if ($this->session->userdata('usertimezone') == null) {
                                     item: function(item, escape) {
                                         return `<div>${escape(item.customer)}</div>`;
                                     }
+                                },
+                                onChange: function(value) {
+                                    if (value) {
+                                        window.location.href = `${window.origin}/customer/module/${value}`;
+                                    }
+                                },
+                                onType: function(str) {
+                                    if (str.length > 0) {
+                                        $('.searchCustomerNavigationAccountingClear').show();
+                                    } else {
+                                        $('.searchCustomerNavigationAccountingClear').hide();
+                                    }
                                 }
                             });
 
@@ -431,9 +454,8 @@ if ($this->session->userdata('usertimezone') == null) {
                                 }
                             });
 
-                            $(document).on('change', '.searchCustomerNavigationAccounting', function () {
-                                const customerID = $(this).val();
-                                window.location.href = `${window.origin}/customer/module/${customerID}`;
+                            $(document).on('click', '.searchCustomerNavigationAccountingClear', function () {
+                                $(this).hide();
                             });
                         </script>
                     </div>

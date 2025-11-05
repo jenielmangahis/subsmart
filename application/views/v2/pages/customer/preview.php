@@ -4,6 +4,14 @@
         background-color: #6a4a8624 !important;
         color: unset !important;
     }
+
+    .searchCustomerPreviewClear {
+        right: 35px;
+        top: 6px;
+        z-index: 999;
+        cursor: pointer;
+        display: none;
+    }
 </style>
 <div class="row page-content g-0">
     <div class="col-12">
@@ -42,7 +50,12 @@
                 <div class="row mb-3">
                     <div class="col-lg-8"></div>
                     <div class="col lg-4">
-                        <select class="form-select w-100 searchCustomerPreview"></select>
+                        <div class="position-relative">
+                            <select class="form-select w-100 searchCustomerPreview">
+                                <option value=""></option>
+                            </select>
+                            <div class="searchCustomerPreviewClear position-absolute text-muted"><i class="fas fa-times-circle"></i></div>
+                        </div>
                     </div>
                 </div>
                 <div id="DivIdToPrint">
@@ -291,6 +304,18 @@
                             item: function(item, escape) {
                                 return `<div>${escape(item.customer)}</div>`;
                             }
+                        },
+                        onChange: function(value) {
+                            if (value) {
+                                window.location.href = `${window.origin}/customer/preview/${value}`;
+                            }
+                        },
+                        onType: function(str) {
+                            if (str.length > 0) {
+                                $('.searchCustomerPreviewClear').show();
+                            } else {
+                                $('.searchCustomerPreviewClear').hide();
+                            }
                         }
                     });
 
@@ -321,9 +346,8 @@
                         }
                     });
 
-                    $(document).on('change', '.searchCustomerPreview', function () {
-                        const customerID = $(this).val();
-                        window.location.href = `${window.origin}/customer/preview/${customerID}`;
+                    $(document).on('click', '.searchCustomerPreviewClear', function () {
+                        $(this).hide();
                     });
                 </script>
                 <div class="row cards-container" data-masonry='{"percentPosition": true }'>
