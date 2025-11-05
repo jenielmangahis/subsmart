@@ -17,7 +17,7 @@
                 Status
             </div>
             <div class="col-md-8">
-                <select data-type="customer_status" id="status" name="status" data-customer-source="dropdown" class="input_select" >
+                <select data-type="customer_status" id="status" name="status" data-customer-source="dropdown" class="input_select status-select" >
                     <option  value=""></option>
                     <?php foreach ($customer_status as $status): ?>
                         <option <?= isset($profile_info) ? ($profile_info->status == $status->name ? 'selected' : '') : '' ?> value="<?= $status->name ?>"><?= $status->name ?></option>
