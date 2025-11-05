@@ -76,7 +76,7 @@
                                             <i class='bx bx-cog'></i>
                                         </div>
                                     </td>
-                                    <td class="fw-bold nsm-text-primary"><?= $panel->name; ?></td>
+                                    <td class="fw-bold nsm-text-primary show"><?= $panel->name; ?></td>
                                     <td>
                                         <div class="dropdown table-management">
                                             <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown">
@@ -259,17 +259,16 @@ $(function(){
         }        
     });
 
-    $('.row-edit-panel-type').on('click', function(){
+    $(document).on('click', '.row-edit-panel-type', function(){
         var pid = $(this).attr('data-id');
         var panel_name = $(this).attr('data-name');
 
         $('#pid').val(pid);
         $('#edit-panel-type-name').val(panel_name);
         $('#modal-edit-panel-type').modal('show');
-
     });
 
-    $('.row-delete-panel-type').on('click', function(){
+    $(document).on('click', '.row-delete-panel-type', function(){
         var panel_type_name = $(this).attr('data-name');
         var pid = $(this).attr('data-id');
 

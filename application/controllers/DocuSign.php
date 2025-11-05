@@ -1411,6 +1411,16 @@ class DocuSign extends MYF_Controller
             }
             date_default_timezone_set($default_timezone);
         }   
+
+
+        if( $docfileField && $docfileField->field_name == 'Abort Code' ){
+            //Update customer passcode
+            $customerAlarm = $this->AcsAlarm_model->getByCustmerId($customer_id);
+            if( $customerAlarm ){
+                $data = ['passcode' => $payload['value']];
+                $this->AcsAlarm_model->updateByAlarmId($customerAlarm->alarm_id, $data);
+            }
+        }
         
         //Store customer zones to acs_alarm_zones
         if( $docfileField->field_name == 'Text' && $customer_id > 0 ){

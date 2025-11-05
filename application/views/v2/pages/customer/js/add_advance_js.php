@@ -1622,6 +1622,13 @@
         });
 
         $('#communication_type').on('change', function(){
+            let selected = $(this).val();
+            if( selected == 'Landline' ){
+                $('#secondary_system_type').val('WiFi').trigger('change');
+            }else{
+                $('#secondary_system_type').val('GSM').trigger('change');
+            }
+            
             load_account_cost();
         });
 

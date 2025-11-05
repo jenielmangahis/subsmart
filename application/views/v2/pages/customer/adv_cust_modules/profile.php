@@ -230,7 +230,7 @@ div#controls div#call-controls div#volume-indicators > div {
                         </div>
 
                         <div class="row w-100">
-                            <div class="col-12 col-md-6">
+                            <div class="col-6 col-md-6">
                                 <span class="content-title">
                                     <?php if ($profile_info->customer_type === 'Business'): ?>
                                         <?= $profile_info->business_name ?>
@@ -240,7 +240,7 @@ div#controls div#call-controls div#volume-indicators > div {
                                 </span>                                
                                 <span class="content-subtitle d-block mt-1" style="font-size:14px;">ID# : <?= formatCustomerId($profile_info->customer_no) ?> </span>
                             </div>
-                            <div class="col-12 col-md-6 text-end">
+                            <div class="col-6 col-md-6 text-end">
                                 <?php
                                 switch (strtoupper($profile_info->status)):
                                     case "INSTALLED":
@@ -260,9 +260,10 @@ div#controls div#call-controls div#volume-indicators > div {
                                         break;
                                 endswitch;
                                 ?>
+                                <span class="nsm-badge" style="margin-bottom:4px;display:inline-block;"><?= $alarm_info && $alarm_info->panel_type != '' ? $alarm_info->panel_type : '---'; ?></span><br />
                                 <span class="nsm-badge <?= $badge ?>"><?= $profile_info->status != '' ? $profile_info->status : 'Pending'; ?></span><br />                         
                                 <?php if( $billing_info->mmr > 0 ){ ?>       
-                                    <span class="profile-mmr">MMR : $<?= $billing_info->mmr > 0 ? number_format($billing_info->mmr,2,'.',',') : '0.00'; ?></span>       
+                                    <span class="profile-mmr" style="display:inline-block;margin-top:7px;">MMR : $<?= $billing_info->mmr > 0 ? number_format($billing_info->mmr,2,'.',',') : '0.00'; ?></span>       
                                 <?php } ?>
                             </div>
                         </div>
@@ -270,23 +271,23 @@ div#controls div#call-controls div#volume-indicators > div {
                 </div>
             </div>
             <div class="row pt-1 mt-5">
-                <div class="col-4 mb-1">
+                <div class="col-6 col-md-4 mb-1">
                     <h6><i class='bx bx-calendar'></i> Date of Birth</h6>
                     <p class="text-muted"><?= $profile_info->date_of_birth != '' && strtotime($profile_info->date_of_birth) > 0 ? date("m/d/Y",strtotime($profile_info->date_of_birth)) : '---'; ?></p>
                 </div>
-                <div class="col-4 mb-1">
+                <div class="col-6 col-md-4 mb-1">
                     <h6><i class='bx bx-mobile-alt' ></i> Phone #</h6>
                     <p class="text-muted"><?= $profile_info->phone_m != '' ? formatPhoneNumber($profile_info->phone_m) : '---'; ?></p>
                 </div>
-                <div class="col-4 mb-1">
+                <div class="col-6 col-md-4 mb-1">
                     <h6><i class='bx bx-envelope'></i> Email Address</h6>
                     <p class="text-muted"><?= $profile_info->email != '' ? $profile_info->email : '---'; ?></p>
                 </div>
-                <div class="col-4 mb-1">
+                <div class="col-6 col-md-4 mb-1">
                     <h6><i class='bx bx-id-card'></i> CS Account #</h6>
                     <p class="text-muted"><?= $alarm_info->monitor_id != '' ? $alarm_info->monitor_id : '---'; ?></p>
                 </div>
-                <div class="col-4 mb-1">
+                <div class="col-6 col-md-4 mb-1">
                     <h6><i class='bx bx-id-card'></i> SSN</h6>
                     <p class="text-muted">
                         <?php 
@@ -308,7 +309,7 @@ div#controls div#call-controls div#volume-indicators > div {
                         ?>
                     </p>
                 </div>
-                <div class="col-4 mb-1">
+                <div class="col-6 col-md-4 mb-1">
                     <h6><i class='bx bx-id-card'></i> Customer Group</h6>
                     <p class="text-muted"><?= $customerGroup ? $customerGroup->title : '---'; ?></p>
                 </div>

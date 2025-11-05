@@ -22,6 +22,14 @@
         background-color: #6a4a8624 !important;
         color: unset !important;
     }
+    
+    .searchCustomerDashboardClear {
+        right: 35px;
+        top: 6px;
+        z-index: 999;
+        cursor: pointer;
+        display: none;
+    }
 </style>
 <div class="row page-content g-0">
     <div class="col-12 mb-3">
@@ -49,12 +57,14 @@
                         </button>
                     </div>
                     <div class="col lg-4">
-                        <select class="form-select w-100 searchCustomerDashboard">
-                            <option value=""></option>
-                        </select>
+                        <div class="position-relative">
+                            <select class="form-select w-100 searchCustomerDashboard">
+                                <option value=""></option>
+                            </select>
+                            <div class="searchCustomerDashboardClear position-absolute text-muted"><i class="fas fa-times-circle"></i></div>
+                        </div>
                     </div>
                 </div>
-
                 <!-- <div class="row">
                     <div class="col-md-4 col-12 grid-mb">
                         
@@ -144,6 +154,18 @@
             item: function(item, escape) {
                 return `<div>${escape(item.customer)}</div>`;
             }
+        },
+        onChange: function(value) {
+            if (value) {
+                window.location.href = `${window.origin}/customer/module/${value}`;
+            }
+        },
+        onType: function(str) {
+            if (str.length > 0) {
+                $('.searchCustomerDashboardClear').show();
+            } else {
+                $('.searchCustomerDashboardClear').hide();
+            }
         }
     });
 
@@ -174,9 +196,8 @@
         }
     });
 
-    $(document).on('change', '.searchCustomerDashboard', function () {
-        const customerID = $(this).val();
-        window.location.href = `${window.origin}/customer/module/${customerID}`;
+    $(document).on('click', '.searchCustomerDashboardClear', function () {
+        $(this).hide();
     });
 </script>
 
