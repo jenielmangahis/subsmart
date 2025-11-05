@@ -5951,4 +5951,22 @@ function isMobile() {
         return false;
     }
 }
+
+function getCustomerCancelRequestReason() {
+    $items_arr = [
+        'Moving' => 'Moving',
+        'Retirement Home' => 'Retirement Home',
+        'Not Happy with Service' => 'Not Happy with Service',
+        'Rates' => 'Rates',
+        'Financial' => 'Financial',
+        'Switched' => 'Switched',
+        'Move in with Family' => 'Move in with Family',
+        'Deceased' => 'Deceased',
+        'Medical' => 'Medical',
+        'Faulty Equipment' => 'Faulty Equipment',
+        'Other' => 'Other',
+    ];
+
+    return $items_arr;
+}
 ?>

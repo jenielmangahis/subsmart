@@ -1099,3 +1099,71 @@
         </div>
     </div>
 </div>
+
+<div class="modal fade nsm-modal fade" id="send_cancel_status_request_modal" data-bs-backdrop="static" tabindex="-1" aria-labelledby="send_cancel_status_request_modal_label" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">        
+        <div class="modal-content">
+            <form method="POST" id="customer_cancel_status_request_form" class="customer_cancel_status_request_form">
+                <div class="modal-header">
+                    <span class="modal-title content-title">Cancellation Request</span>
+                    <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
+                </div>
+                <div class="modal-body">                    
+                    <div class="row">
+                        <div class="col-12 mt-2">
+                            <label class="bold"><strong>Date Request Received</strong></label>
+                            <input type="text" placeholder="" name="date_request_received" id="date_request_received" class="form-control mb-2" required />
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-12 mt-2">
+                            <label class="bold"><strong>Reason</strong></label>
+                            <select id="reason" name="reason" data-customer-source="dropdown" class="form-control mb-2" required>
+                                <option value="">--Select--</option>
+                                <?php $default_reasons = getCustomerCancelRequestReason(); ?>
+                                <?php foreach($default_reasons as $default_reason) { ?>
+                                    <option value="<?php echo $default_reason; ?>"><?php echo $default_reason; ?></option>
+                                <?php } ?>
+                            </select>
+                        </div>
+                    </div>  
+                    <div class="row">
+                        <div class="col-12 mt-2">
+                            <label class="bold"><strong>Next Step</strong></label>
+                            <input type="text" placeholder="" name="director_approval_date" id="director_approval_date" class="form-control mb-2" required />
+                        </div>
+                    </div>                     
+                    <div class="row">
+                        <div class="col-12 mt-2">
+                            <label class="bold"><strong>BOC Amount</strong></label>
+                            <input type="text" placeholder="" name="boc_amount" id="boc_amount" class="form-control mb-2" required />
+                        </div>
+                    </div>                  
+                    <div class="row">
+                        <div class="col-12 mt-2">
+                            <label class="bold"><strong>BOC Received Date</strong></label>
+                            <input type="text" placeholder="" name="boc_received_date" id="boc_received_date" class="form-control mb-2" required />
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-12 mt-2">
+                            <label class="bold"><strong>CS Closed Date</strong></label>
+                            <input type="text" placeholder="" name="cs_closed_ate" id="cs_closed_ate" class="form-control mb-2" required />
+                        </div>
+                    </div>                    
+                    <div class="row">
+                        <div class="col-12 mt-2">
+                            <label class="bold"><strong>Equipment Return Date</strong></label>
+                            <input type="text" placeholder="" name="equpment_return_date" id="equpment_return_date" class="form-control mb-2" required />
+                        </div>
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="nsm-button" data-bs-dismiss="modal">Close</button>
+                    <button type="submit" id="btn-customer-cancel-status-request" class="nsm-button primary btn-customer-cancel-status-request">Send</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

@@ -15246,4 +15246,16 @@ class Customer extends MY_Controller
         $return = ['account_cost' => $account_cost];
         echo json_encode($return);
     }
+
+    public function ajax_send_customer_cancel_status_request()
+    {
+        $is_success = 1;
+        $msg = "Please do note that this function is under construction.";
+
+        $return = [
+            'is_success' => $is_success,
+            'msg' => $msg
+        ];
+        echo json_encode($return);
+    }
 }
