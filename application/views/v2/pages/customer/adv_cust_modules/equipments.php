@@ -540,11 +540,11 @@
         }
     }
 
-    function getAlarmEquipmentDetails(customer_id) {
+    function getAlarmEquipmentDetails(alarmcom_customer_id) {
         $.ajax({
-            url: `${window.origin}/AlarmApiPortal/searchAlarmEquipment`,
+            url: `${window.origin}/AlarmApiPortal/searchApiData/getEquipment`,
             type: "POST",
-            data: { customer_id: `${customer_id}` },
+            data: { alarmcom_customer_id: `${alarmcom_customer_id}` },
             beforeSend: function() {
                 $('.equipmentAccordion').hide();
                 $('.equipmentLoader').fadeIn('fast');
@@ -552,74 +552,77 @@
             success: function(response) {
                 const equipmentDetails = JSON.parse(response);
 
-                const panelDevice = equipmentDetails.panel || [];
-                const panelDeviceCount = panelDevice.length;
-                if (panelDeviceCount > 0) {
-                    const panelDeviceName = panelDevice[0].webSiteDeviceName;
-                    const panelDeviceId = panelDevice[0].deviceId;
-                    $('.panelDeviceCount').text(`(${panelDeviceCount})`);
-                    $('.panelDeviceName').text(panelDeviceName);
-                    $('.panelDeviceId').text(panelDeviceId);
-                } else {
-                    $('.panelDeviceCount').text(`(0)`).addClass('fw-normal text-muted');
-                }
+                if (equipmentDetails) {
+                    // const panelDevice = equipmentDetails.panel || [];
+                    // const panelDeviceCount = panelDevice.length;
+                    // console.log(panelDevice);
+                    // if (panelDeviceCount > 0) {
+                    //     const panelDeviceName = panelDevice[0].webSiteDeviceName;
+                    //     const panelDeviceId = panelDevice[0].deviceId;
+                    //     $('.panelDeviceCount').text(`(${panelDeviceCount})`);
+                    //     $('.panelDeviceName').text(panelDeviceName);
+                    //     $('.panelDeviceId').text(panelDeviceId);
+                    // } else {
+                    //     $('.panelDeviceCount').text(`(0)`).addClass('fw-normal text-muted');
+                    // }
 
-                const renderDevices = (type, devices) => {
-                    const count = devices.length;
-                    const icon = equipmentIcons[type] || equipmentIcons['other'];
-                    const collapseID = `#${type}Collapse`;
-                    const countSelector = `.${type}DeviceCount`;
+                    const renderDevices = (type, devices) => {
+                        const count = devices.length;
+                        const icon = equipmentIcons[type] || equipmentIcons['other'];
+                        const collapseID = `#${type}Collapse`;
+                        const countSelector = `.${type}DeviceCount`;
 
-                    if (count > 0) {
-                        let html = "";
-                        devices.forEach(device => {
-                            const deviceId = device.mac || device.deviceId;
-                            const deviceName =
-                                device.videoDeviceModel ||
-                                device.access_pointDeviceModel ||
-                                device.zwaveDeviceModel ||
-                                device.liftmasterDeviceModel ||
-                                device.geoDeviceModel ||
-                                device.deviceName;
+                        if (count > 0) {
+                            let html = "";
+                            devices.forEach(device => {
+                                const deviceId = device.mac || device.deviceId;
+                                const deviceName =
+                                    device.videoDeviceModel ||
+                                    device.access_pointDeviceModel ||
+                                    device.zwaveDeviceModel ||
+                                    device.liftmasterDeviceModel ||
+                                    device.geoDeviceModel ||
+                                    device.deviceName;
 
-                            html += `
-                                <div class="px-3 border-top position-relative">
-                                    <div class="d-flex align-items-center mt-3 mb-3 gap-3">
-                                        <i class="${icon} fs-4 text-muted"></i>
-                                        <div class="d-flex flex-column">
-                                            <small class="text-muted upperEquipmentDetail">
-                                                ${deviceName}&ensp;
-                                                <span class="badge bg-primary opacity-50 alarmcomBadgeEquipment">alarm.com</span>
-                                            </small>
-                                            <strong class="text-muted">${device.webSiteDeviceName}</strong>
+                                html += `
+                                    <div class="px-3 border-top position-relative">
+                                        <div class="d-flex align-items-center mt-3 mb-3 gap-3">
+                                            <i class="${icon} fs-4 text-muted"></i>
+                                            <div class="d-flex flex-column">
+                                                <small class="text-muted upperEquipmentDetail">
+                                                    ${deviceName}&ensp;
+                                                    <span class="badge bg-primary opacity-50 alarmcomBadgeEquipment">alarm.com</span>
+                                                </small>
+                                                <strong class="text-muted">${device.webSiteDeviceName}</strong>
+                                            </div>
+                                            <div class="equipmentSerial ms-auto text-end">
+                                                <strong class="text-muted mx-1">${deviceId}</strong>
+                                                <span class="text-success opacity-75"><i class="fas fa-circle"></i></span>
+                                            </div>
                                         </div>
-                                        <div class="equipmentSerial ms-auto text-end">
-                                            <strong class="text-muted mx-1">${deviceId}</strong>
-                                            <span class="text-success opacity-75"><i class="fas fa-circle"></i></span>
-                                        </div>
-                                    </div>
-                                </div>`;
-                        });
+                                    </div>`;
+                            });
 
-                        $(collapseID).html(html);
-                        $(countSelector).text(`(${count})`).removeClass('fw-normal text-muted');
-                    } else {
-                        $(collapseID).html('');
-                        $(countSelector).text(`(0)`).addClass('fw-normal text-muted');
-                    }
-                };
+                            $(collapseID).html(html);
+                            $(countSelector).text(`(${count})`).removeClass('fw-normal text-muted');
+                        } else {
+                            $(collapseID).html('');
+                            $(countSelector).text(`(0)`).addClass('fw-normal text-muted');
+                        }
+                    };
 
-                renderDevices('sensor', equipmentDetails.sensor || []);
-                renderDevices('peripheral', equipmentDetails.peripheral || []);
-                renderDevices('video', equipmentDetails.video || []);
-                renderDevices('access_point', equipmentDetails.access_point || []);
-                renderDevices('zwave', equipmentDetails.zwave || []);
-                renderDevices('liftmaster', equipmentDetails.liftmaster || []);
-                renderDevices('geo', equipmentDetails.geo || []);
-                renderDevices('voice', equipmentDetails.voice || []);
+                    renderDevices('sensor', equipmentDetails.sensor || []);
+                    renderDevices('peripheral', equipmentDetails.peripheral || []);
+                    renderDevices('video', equipmentDetails.video || []);
+                    renderDevices('access_point', equipmentDetails.access_point || []);
+                    renderDevices('zwave', equipmentDetails.zwave || []);
+                    renderDevices('liftmaster', equipmentDetails.liftmaster || []);
+                    renderDevices('geo', equipmentDetails.geo || []);
+                    renderDevices('voice', equipmentDetails.voice || []);
+                } else { }
+
                 getCustomerEquipment("<?php echo $profile_info->prof_id; ?>");
                 getPanelLocation("<?php echo $profile_info->prof_id; ?>");
-
                 $('.equipmentAccordion').fadeIn('fast');
                 $('.equipmentLoader').hide();
                 $('.equipmentWidgetRefreshButton').removeClass('btn-secondary').addClass('btn-primary').removeAttr('disabled').html('<small>REFRESH</small>');
@@ -641,46 +644,48 @@
                 const data = JSON.parse(response);
                 $('.equipmentItemContainer').remove();
 
-                data.forEach(item => {
-                    const type = item.device_type || 'other';
-                    const icon = equipmentIcons[type] || equipmentIcons['other'];
-                    const collapseID = `#${type}Collapse`;
-                    const countSelector = `.${type}DeviceCount`;
+                if (data) {
+                    data.forEach(item => {
+                        const type = item.device_type || 'other';
+                        const icon = equipmentIcons[type] || equipmentIcons['other'];
+                        const collapseID = `#${type}Collapse`;
+                        const countSelector = `.${type}DeviceCount`;
 
-                    const html = `
-                        <div class="px-3 border-top position-relative equipmentItemContainer" data-id="${item.id}">
-                            <div class="d-flex align-items-center mt-3 mb-3 gap-3">
-                                <i class="${icon} fs-4 text-muted"></i>
-                                <div class="d-flex flex-column">
-                                    <small class="text-muted upperEquipmentDetail">
-                                        ${item.model_no}&ensp;
-                                        <span class="badge bg-primary opacity-50 equipmentItemBadge">nsmartrac</span>
-                                    </small>
-                                    <strong class="text-muted">
-                                        ${item.equipment}&ensp;
-                                        <small class="fw-normal">
-                                            <a class="text-decoration-none editEquipmentButton" href="javascript:void(0)" equipment_id="${item.id}" category="${item.category}" device_type="${item.device_type}" serial_no="${item.serial_no}" model_no="${item.model_no}" qty="${item.qty}" equipment_name="${item.equipment}" status="${item.status}">
-                                                <i class="fas fa-edit opacity-75"></i> Edit
-                                            </a>
+                        const html = `
+                            <div class="px-3 border-top position-relative equipmentItemContainer" data-id="${item.id}">
+                                <div class="d-flex align-items-center mt-3 mb-3 gap-3">
+                                    <i class="${icon} fs-4 text-muted"></i>
+                                    <div class="d-flex flex-column">
+                                        <small class="text-muted upperEquipmentDetail">
+                                            ${item.model_no}&ensp;
+                                            <span class="badge bg-primary opacity-50 equipmentItemBadge">nsmartrac</span>
                                         </small>
-                                    </strong>
-                                </div>
-                                <div class="equipmentSerial ms-auto text-end">
-                                    <strong class="text-muted mx-1">${item.serial_no}</strong>
-                                    ${
-                                        item.status === 'inactive'
-                                        ? `<span class="text-danger opacity-75"><i class="fas fa-circle"></i></span>`
-                                        : `<span class="text-success opacity-75"><i class="fas fa-circle"></i></span>`
-                                    }
+                                        <strong class="text-muted">
+                                            ${item.equipment}&ensp;
+                                            <small class="fw-normal">
+                                                <a class="text-decoration-none editEquipmentButton" href="javascript:void(0)" equipment_id="${item.id}" category="${item.category}" device_type="${item.device_type}" serial_no="${item.serial_no}" model_no="${item.model_no}" qty="${item.qty}" equipment_name="${item.equipment}" status="${item.status}">
+                                                    <i class="fas fa-edit opacity-75"></i> Edit
+                                                </a>
+                                            </small>
+                                        </strong>
+                                    </div>
+                                    <div class="equipmentSerial ms-auto text-end">
+                                        <strong class="text-muted mx-1">${item.serial_no}</strong>
+                                        ${
+                                            item.status === 'inactive'
+                                            ? `<span class="text-danger opacity-75"><i class="fas fa-circle"></i></span>`
+                                            : `<span class="text-success opacity-75"><i class="fas fa-circle"></i></span>`
+                                        }
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                    `;
+                        `;
 
-                    $(collapseID).prepend($(html).hide().fadeIn('fast')).collapse('show');
-                    const count = $(`${collapseID} .px-3.border-top.position-relative`).length;
-                    $(countSelector).text(`(${count})`).removeClass('fw-normal text-muted');
-                });
+                        $(collapseID).prepend($(html).hide().fadeIn('fast')).collapse('show');
+                        const count = $(`${collapseID} .px-3.border-top.position-relative`).length;
+                        $(countSelector).text(`(${count})`).removeClass('fw-normal text-muted');
+                    });
+                } else { }
             },
             error: function (xhr, status, error) {
                 console.error("Error fetching equipment:", error);
@@ -698,12 +703,15 @@
             beforeSend: function() {},
             success: function(response) {
                 const data = JSON.parse(response)[0];
-                $('select[ name="panelLocation"]').val(`${data.panel}`);
-                $('select[ name="transformerLocation"]').val(`${data.transformer}`);
-                let panelLocation = $('select[name="panelLocation"] option:selected').text();
-                let transformerLocation = $('select[name="transformerLocation"] option:selected').text();
-                $('.panelLocationLabel').text(`${panelLocation}`);
-                $('.transformerLocationLabel').text(`${transformerLocation}`);
+
+                if (data) {
+                    $('select[ name="panelLocation"]').val(`${data.panel}`);
+                    $('select[ name="transformerLocation"]').val(`${data.transformer}`);
+                    let panelLocation = $('select[name="panelLocation"] option:selected').text();
+                    let transformerLocation = $('select[name="transformerLocation"] option:selected').text();
+                    $('.panelLocationLabel').text(`${panelLocation}`);
+                    $('.transformerLocationLabel').text(`${transformerLocation}`);
+                } else { }
             },
             error: function() {}
         });

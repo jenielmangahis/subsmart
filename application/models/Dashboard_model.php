@@ -731,8 +731,6 @@ class Dashboard_model extends MY_Model
                     FROM acs_profile
                     LEFT JOIN invoices ON invoices.customer_id = acs_profile.prof_id
                     WHERE acs_profile.company_id = '{$company_id}'
-                    AND acs_profile.is_archived = 0
-                    AND invoices.view_flag = 0
                     GROUP BY acs_profile.prof_id, invoices.customer_id
                     ORDER BY acs_profile.first_name ASC
                 ");

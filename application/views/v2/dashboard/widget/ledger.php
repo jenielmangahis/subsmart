@@ -139,6 +139,7 @@
                             font-weight: bold;
                             margin-right: 12px;
                             font-size: 14px;
+                            flex: 0 0 auto;
                         ">${initials.toUpperCase()}</div>
                         <div style="max-width: 250px; word-wrap: break-word;">
                             <div style="font-weight: bold; word-wrap: break-word;">${escape(item.customer)}</div>

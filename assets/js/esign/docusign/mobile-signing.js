@@ -2150,6 +2150,7 @@ function Signing(hash) {
   async function storeFieldValue({ id, value, force = false }) {
     const { recipient } = data;
     const { id: recipient_id } = recipient;
+    const customer_id = data.document.customer_id;
 
     if (value instanceof File) {
       const formData = new FormData();
@@ -2182,6 +2183,7 @@ function Signing(hash) {
     const payload = {
       recipient_id,
       field_id: id,
+      customer_id: customer_id,
       value,
     };
 

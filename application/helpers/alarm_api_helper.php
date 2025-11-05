@@ -606,8 +606,16 @@ class AlarmApi extends MY_Model
         $this->load->database();
 
         $searchFields = [
-            'first_name', 'last_name', 'email', 'phone_no',
-            'company_name', 'street1', 'street2', 'city', 'state', 'zip'
+            'first_name', 
+            'last_name', 
+            'email', 
+            'phone_no',
+            'company_name', 
+            'street1', 
+            'street2', 
+            'city', 
+            'state', 
+            'zip'
         ];
 
         if (empty($nameSearch) || empty($fuzzySearch)) {
@@ -634,7 +642,7 @@ class AlarmApi extends MY_Model
 
         $bestMatch = null;
         $highestScore = -1;
-
+        
         foreach ($customers as $customer) {
             $score = 0;
 
@@ -661,5 +669,184 @@ class AlarmApi extends MY_Model
 
         return $bestMatch ?? ['message' => 'No match found'];
     }
+    
+    public function alarmApiRequest($apiType = null, $customer_id = null, $token = null,  $fields = [], $param = [])
+    {
+        $this->load->database();
 
+        switch ($apiType) {
+            case 'getCustomerIds':
+                $url = "https://alarmadmin.alarm.com/PartnerApi/v1/customers";
+
+                if (!empty($param) && is_array($param)) {
+                    $url .= '?' . http_build_query($param);
+                }
+
+                $ch = curl_init();
+                curl_setopt_array($ch, [
+                    CURLOPT_URL => $url,
+                    CURLOPT_RETURNTRANSFER => true,
+                    CURLOPT_HTTPHEADER => [
+                        "Authorization: Bearer {$token}",
+                        "Content-Type: application/json",
+                    ],
+                    CURLOPT_CONNECTTIMEOUT => 10,
+                    CURLOPT_TIMEOUT => 60,
+                    CURLOPT_LOW_SPEED_LIMIT => 1,
+                    CURLOPT_LOW_SPEED_TIME => 30, 
+                    CURLOPT_TCP_FASTOPEN => true,
+                    CURLOPT_FOLLOWLOCATION => true,
+                    CURLOPT_MAXREDIRS => 3
+                ]);
+
+                return $ch;
+            break;
+            case 'getCustomerById':
+                $query = $this->db->query("
+                    SELECT 
+                        first_name,
+                        last_name,
+                        email,
+                        phone_h,
+                        mail_add,
+                        county,
+                        state,
+                        zip_code,
+                        country,
+                        subdivision
+                    FROM acs_profile
+                    WHERE prof_id = '{$customer_id}'
+                    LIMIT 1
+                ");
+                $customerDetails = $query->result();
+            
+                if (empty($customerDetails)) {
+                    return ['message' => 'Customer profile not found'];
+                }
+            
+                $profile = (array)$customerDetails[0];
+            
+                $normalize = fn($str) => strtolower(preg_replace('/[\s\W]+/', '', $str));
+                $normalizedFullName = $normalize(($profile['first_name'] ?? '') . ($profile['last_name'] ?? ''));
+            
+                $fuzzyFields = [
+                    $profile['email'] ?? '',
+                    $profile['phone_h'] ?? '',
+                    $profile['mail_add'] ?? '',
+                    $profile['county'] ?? '',
+                    $profile['state'] ?? '',
+                    $profile['zip_code'] ?? '',
+                    $profile['country'] ?? '',
+                    $profile['subdivision'] ?? '',
+                ];
+            
+                $combinedFuzzy = $normalize(implode(' ', $fuzzyFields));
+            
+                $customers = $this->db->get('alarmcom_customers')->result_array();
+                if (empty($customers)) {
+                    return ['message' => 'No alarm.com customers found'];
+                }
+         
+                $filteredCustomers = [];
+            
+                foreach ($customers as $customer) {
+                    $fullName = $normalize(($customer['first_name'] ?? '') . ($customer['last_name'] ?? ''));
+            
+                    if (empty($fullName)) continue;
+            
+                    $lev = levenshtein($normalizedFullName, $fullName);
+                    $maxLen = max(strlen($normalizedFullName), strlen($fullName));
+                    $similarity = $maxLen > 0 ? 1 - ($lev / $maxLen) : 0;
+            
+                    if ($similarity >= 0.7) {
+                        $customer['name_similarity'] = round($similarity * 100, 2);
+                        $filteredCustomers[] = $customer;
+                    }
+                }
+            
+                $searchFields = [
+                    'first_name', 'last_name', 'email', 'phone_no',
+                    'company_name', 'street1', 'street2', 'city', 'state', 'zip'
+                ];
+            
+                $bestMatch = null;
+                $highestScore = -1;
+            
+                foreach ($filteredCustomers as $customer) {
+                    $score = 0;
+            
+                    foreach ($searchFields as $field) {
+                        $value = $normalize($customer[$field] ?? '');
+            
+                        if (strpos($value, $combinedFuzzy) !== false) {
+                            $score += 2;
+                        } else {
+                            $lev = levenshtein($combinedFuzzy, $value);
+                            $maxLen = max(strlen($combinedFuzzy), strlen($value));
+                            $similarity = $maxLen > 0 ? 1 - ($lev / $maxLen) : 0;
+                            $score += $similarity;
+                        }
+                    }
+            
+                    if ($score > $highestScore) {
+                        $highestScore = $score;
+                        $bestMatch = $customer;
+                        $bestMatch['match_type'] = 'fuzzy';
+                        $bestMatch['match_score'] = round($score, 4);
+                    }
+                }
+            
+                return $bestMatch;
+            break;
+            
+            case 'getCustomerDetailById':
+                $url = "https://alarmadmin.alarm.com/PartnerApi/v1/customers/{$customer_id}";
+
+                if (!empty($fields) && is_array($fields)) {
+                    $url .= '?fields=' . implode(',', $fields);
+                }
+
+                $ch = curl_init();
+                curl_setopt_array($ch, [
+                    CURLOPT_URL => $url,
+                    CURLOPT_RETURNTRANSFER => true,
+                    CURLOPT_HTTPHEADER => [
+                        "Authorization: Bearer {$token}",
+                        "Content-Type: application/json",
+                    ],
+                    CURLOPT_CONNECTTIMEOUT => 10,
+                    CURLOPT_TIMEOUT => 60,
+                    CURLOPT_LOW_SPEED_LIMIT => 1,
+                    CURLOPT_LOW_SPEED_TIME => 30, 
+                    CURLOPT_TCP_FASTOPEN => true,
+                    CURLOPT_FOLLOWLOCATION => true,
+                    CURLOPT_MAXREDIRS => 3
+                ]);
+
+                return $ch;
+            break;
+            case 'getEquipmentsById':
+                $url = "https://alarmadmin.alarm.com/PartnerApi/v1/customers/{$customer_id}/equipment";
+
+                $ch = curl_init();
+                curl_setopt_array($ch, [
+                    CURLOPT_URL => $url,
+                    CURLOPT_RETURNTRANSFER => true,
+                    CURLOPT_HTTPHEADER => [
+                        "Authorization: Bearer {$token}",
+                        "Content-Type: application/json",
+                    ],
+                    CURLOPT_CONNECTTIMEOUT => 10,
+                    CURLOPT_TIMEOUT => 60,
+                    CURLOPT_LOW_SPEED_LIMIT => 1,
+                    CURLOPT_LOW_SPEED_TIME => 30, 
+                    CURLOPT_TCP_FASTOPEN => true,
+                    CURLOPT_FOLLOWLOCATION => true,
+                    CURLOPT_MAXREDIRS => 3
+                ]);
+
+                return $ch;
+            break;
+        }
+    }
 }

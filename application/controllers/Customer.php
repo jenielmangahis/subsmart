@@ -1900,6 +1900,7 @@ class Customer extends MY_Controller
 
     public function preview($id = null)
     {
+        $this->load->helper(array('sms_helper', 'paypal_helper'));
         $this->load->model('jobs_model');
         $this->load->model('AcsProperties_model');
         $this->load->model('Workorder_model');
@@ -2000,20 +2001,18 @@ class Customer extends MY_Controller
         }
         
         // search Alarm.com customer
-        $this->load->helper(array('sms_helper', 'alarm_api_helper', 'paypal_helper'));
-        $alarm_api_helper = new AlarmApi();
+        $this->load->helper(array('alarm_api_helper'));    
+        $alarmApi = new AlarmApi();
         if (
             strpos($customer->status, 'Active w/RAR') !== false ||
             strpos($customer->status, 'Active w/RMR') !== false ||
             strpos($customer->status, 'Active w/RQR') !== false ||
             strpos($customer->status, 'Active w/RYR') !== false
         ) {
-            $nameKeyword = "{$customer->first_name} {$customer->last_name}";
-            $fuzzyKeyword = "{$customer->email} {$customer->phone_h} {$customer->mail_add} {$customer->county} {$customer->state} {$customer->zip_code} {$customer->country} {$customer->subdivision}";
+            $alarmCustomerDetails = $alarmApi->alarmApiRequest("getCustomerById", $customer->prof_id, null, null, null);
         }
-
-        $alarmCustomerDetails = $alarm_api_helper->searchAlarmCustomer($nameKeyword, $fuzzyKeyword);
         $this->page_data['alarmcom_info'] = $alarmCustomerDetails;
+
 
         $this->page_data['sales_area'] = $this->customer_ad_model->get_all(false, '', 'ASC', 'ac_salesarea', 'sa_id');
         $this->page_data['employees'] = $this->customer_ad_model->get_all(false, '', 'ASC', 'users', 'id');
@@ -2788,7 +2787,7 @@ class Customer extends MY_Controller
 
     public function module($id = null)
     {   
-        $this->load->helper(array('sms_helper', 'alarm_api_helper', 'paypal_helper'));        
+        $this->load->helper(array('sms_helper', 'paypal_helper'));            
         $this->load->model('Clients_model');
         $this->load->model('taskhub_model');
         $this->load->model('CustomerStatementClaim_model');
@@ -2921,18 +2920,16 @@ class Customer extends MY_Controller
                 $this->page_data['customerSignature'] = $customerSignature;
                 
                 // search Alarm.com customer
-                $alarm_api_helper = new AlarmApi();
+                $this->load->helper(array('alarm_api_helper'));    
+                $alarmApi = new AlarmApi();
                 if (
                     strpos($profile_info->status, 'Active w/RAR') !== false ||
                     strpos($profile_info->status, 'Active w/RMR') !== false ||
                     strpos($profile_info->status, 'Active w/RQR') !== false ||
                     strpos($profile_info->status, 'Active w/RYR') !== false
                 ) {
-                    $nameKeyword = "{$profile_info->first_name} {$profile_info->last_name}";
-                    $fuzzyKeyword = "{$profile_info->email} {$profile_info->phone_h} {$profile_info->mail_add} {$profile_info->county} {$profile_info->state} {$profile_info->zip_code} {$profile_info->country} {$profile_info->subdivision}";
+                    $alarmCustomerDetails = $alarmApi->alarmApiRequest("getCustomerById", $profile_info->prof_id, null, null, null);
                 }
-
-                $alarmCustomerDetails = $alarm_api_helper->searchAlarmCustomer($nameKeyword, $fuzzyKeyword);
                 $this->page_data['alarmcom_info'] = $alarmCustomerDetails;
 
                 // $this->page_data['esign_documents'] = $this->getCustomerGeneratedEsigns$id);
@@ -3841,6 +3838,7 @@ class Customer extends MY_Controller
 
     public function add_advance($id = null)
     {
+        $this->load->helper(array('sms_helper', 'paypal_helper'));
         $this->load->model('FinancingPaymentCategory_model');
         $this->load->model('IndustryType_model');
         $this->load->model('CompanyCustomerFormSetting_model');
@@ -4140,7 +4138,7 @@ class Customer extends MY_Controller
 
 
         // search Alarm.com customer
-        $this->load->helper(array('sms_helper', 'alarm_api_helper', 'paypal_helper'));
+        $this->load->helper(array('alarm_api_helper'));
         $alarm_api_helper = new AlarmApi();
         if (
             strpos($customer->status, 'Active w/RAR') !== false ||

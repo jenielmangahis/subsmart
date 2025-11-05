@@ -49,7 +49,7 @@
                         </button>
                     </div>
                     <div class="col lg-4">
-                        <select class="form-select searchCustomerDashboard">
+                        <select class="form-select w-100 searchCustomerDashboard">
                             <option value=""></option>
                         </select>
                     </div>
@@ -103,7 +103,7 @@
 <?php include viewPath('customer/adv_cust/js_list'); ?>
 
 <script>
-    const selectLedgerCustomerInput = $(".searchCustomerDashboard").selectize({
+    const selectSearchCustomerDashboardInput = $(".searchCustomerDashboard").selectize({
         placeholder: "Search and select customer...",
         valueField: 'id',
         labelField: 'customer',
@@ -132,6 +132,7 @@
                             font-weight: bold;
                             margin-right: 12px;
                             font-size: 14px;
+                            flex: 0 0 auto;
                         ">${initials.toUpperCase()}</div>
                         <div style="max-width: 250px; word-wrap: break-word;">
                             <div style="font-weight: bold; word-wrap: break-word;">${escape(item.customer)}</div>
@@ -146,7 +147,7 @@
         }
     });
 
-    const selectizeLedgerInstance = selectLedgerCustomerInput[0].selectize;
+    const selectizeSearchCustomerDashboardInstance = selectSearchCustomerDashboardInput[0].selectize;
 
     $.ajax({
         url: `${window.origin}/dashboard/thumbnailWidgetRequest`,
@@ -162,11 +163,11 @@
         },
         success: function (response) {
             const customers = JSON.parse(response);
-            selectizeLedgerInstance.clearOptions();
+            selectizeSearchCustomerDashboardInstance.clearOptions();
             customers.forEach(customer => {
-                selectizeLedgerInstance.addOption(customer);
+                selectizeSearchCustomerDashboardInstance.addOption(customer);
             });
-            selectizeLedgerInstance.refreshOptions(false);
+            selectizeSearchCustomerDashboardInstance.refreshOptions(false);
         },
         error: function () {
             console.error("Failed to fetch customer data.");
