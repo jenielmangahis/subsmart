@@ -176,6 +176,16 @@
                 <input type="text" class="form-control" name="business_name" id="business_name" value="<?php if(isset($profile_info)){ echo $profile_info->business_name; } ?>"/>
             </div>
         </div>
+        <?php if( $profile_info ){ ?>
+        <div class="row form_line">
+            <div class="col-md-4">
+                Customer ID <span class="required"> *</span>
+            </div>
+            <div class="col-md-8">
+                <input type="text" class="form-control" name="customer_no" id="customer_no" value="<?= $profile_info->customer_no; ?>" required/>
+            </div>
+        </div>
+        <?php } ?>
         <div class="row form_line">
             <div class="col-md-4">
                 First Name <span class="required"> *</span>
