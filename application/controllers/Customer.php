@@ -4393,6 +4393,8 @@ class Customer extends MY_Controller
                     if ($customer->adt_sales_project_id > 0) {
                         $input_profile['is_sync'] = 0;
                     }
+                    $input_profile['customer_no'] = $input['customer_no'];
+                    
                     $this->general->update_with_key_field($input_profile, $input['customer_id'], 'acs_profile', 'prof_id');
                     $profile_id = $input['customer_id'];
                     customerAuditLog(logged('id'), $profile_id, $profile_id, 'Customer', 'Updated customer '.$input['first_name'].' '.$input['last_name']);
