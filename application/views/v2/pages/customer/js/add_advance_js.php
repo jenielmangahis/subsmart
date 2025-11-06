@@ -1152,17 +1152,17 @@
             });
         });
 
-        $('#new_system_package_form').on('submit', function(e){
+        $('#quick-add-system-package-form').on('submit', function(e){
             e.preventDefault();
             $.ajax({
                 type: "POST",
                 url: base_url + 'customers/_create_system_package_type',
                 dataType: 'json',
-                data: $('#new_system_package_form').serialize(),
+                data: $('#quick-add-system-package-form').serialize(),
                 success: function(data) {    
                     $('#btn-save-service-package').html('Save');                   
                     if (data.is_success) {
-                        $('#new_system_package_modal').modal('hide');
+                        $('#quick_add_system_package_modal').modal('hide');
                         $('#communication_type').append($('<option>', {
                             value: data.package_name,
                             text: data.package_name,
@@ -1216,6 +1216,13 @@
         $('#btn-manage-account-type').on('click', function(){
             window.open(
                 base_url + 'customer/settings_account_types',
+                '_blank' 
+            );
+        });
+
+        $('#btn-manage-service-package').on('click', function(){
+            window.open(
+                base_url + 'customer/settings_system_package',
                 '_blank' 
             );
         });
@@ -1701,8 +1708,8 @@
         });
 
         $('#btn-quick-communication-type').on('click', function(){
-            $('#new_system_package_form')[0].reset();
-            $('#new_system_package_modal').modal('show');
+            $('#quick-add-system-package-form')[0].reset();
+            $('#quick_add_system_package_modal').modal('show');
         });
 
         function load_account_cost(){
