@@ -418,6 +418,12 @@
                                 <input type="number" step="any" placeholder="0.00" name="alarmnet_cost" id="edit_alarmnet_cost" class="nsm-field form-control mb-2" />
                             </div>
                         </div>
+                        <div class="col-sm-12 col-md-6">
+                            <label class="mb-2">Acct Cost</label>
+                            <div class="input-group mb-3">
+                                <input type="number" step="any" placeholder="0.00" name="acct_cost" id="edit_acct_cost" class="nsm-field form-control mb-2" />
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <div class="modal-footer">
