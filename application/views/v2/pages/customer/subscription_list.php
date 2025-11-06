@@ -220,11 +220,22 @@
 
                     sortedKeys.forEach((key) => {
                         loopCount += 1;
-                        const group = grouped[key].sort((a, b) => a.name.localeCompare(b.name));
+                        const group = grouped[key].sort((a, b) => {
+                            const monitorA = parseInt(a.monitor_id) || 0;
+                            const monitorB = parseInt(b.monitor_id) || 0;
+
+                            if (monitorA !== monitorB) {
+                                return monitorA - monitorB;
+                            }
+
+                            return a.name.localeCompare(b.name);
+                        });
                         const collapseId = `group${loopCount}Collapse`;
 
                         let rows = group.map(cust => {
+                            const is_verified = (cust.is_verified == 1) ? "checked" : "";
                             const customer_no = cust.customer_no ? cust.customer_no : "Not Specified";
+                            const customer_group = cust.customer_group ? cust.customer_group : "Not Specified";
                             const name = cust.name ? cust.name : "Not Specified";
                             const initials = name && name !== "Not Specified"
                                 ? name
@@ -241,11 +252,22 @@
                             const bill_start = cust.bill_start ? new Date(cust.bill_start).toLocaleDateString("en-US", { month: "2-digit", day: "2-digit", year: "numeric" }) : "Not Specified";
                             const bill_end = cust.bill_end ? new Date(cust.bill_end).toLocaleDateString("en-US", { month: "2-digit", day: "2-digit", year: "numeric" }) : "Not Specified";
                             const bill_mmr = cust.bill_mmr ? Number(cust.bill_mmr).toLocaleString("en-US", { style: "currency", currency: "USD" }) : Number(cust.alarm_bill_mmr).toLocaleString("en-US", { style: "currency", currency: "USD" });
+                            const monitor_id = cust.monitor_id ? cust.monitor_id : "—";
+                            const payment_method = cust.payment_method ? cust.payment_method : "—";
+                            const service_package = cust.service_package ? cust.service_package : "—";
+                            const panel_type = cust.panel_type ? cust.panel_type : "—";
+                            const alarm_bill_mmr = cust.alarm_bill_mmr ? Number(cust.alarm_bill_mmr).toLocaleString("en-US", { style: "currency", currency: "USD" }) : Number(cust.alarm_bill_mmr).toLocaleString("en-US", { style: "currency", currency: "USD" });
+                            const pass_thru_cost = cust.pass_thru_cost ? Number(cust.pass_thru_cost).toLocaleString("en-US", { style: "currency", currency: "USD" }) : Number(cust.pass_thru_cost).toLocaleString("en-US", { style: "currency", currency: "USD" });
+                            const account_cost = cust.account_cost ? Number(cust.account_cost).toLocaleString("en-US", { style: "currency", currency: "USD" }) : Number(cust.account_cost).toLocaleString("en-US", { style: "currency", currency: "USD" });
+                            const net_profit = (parseFloat(cust.alarm_bill_mmr) || 0)
+                                             - (parseFloat(cust.account_cost) || 0)
+                                             - (parseFloat(cust.pass_thru_cost) || 0);
+                            const net_profit_formatted = Number(net_profit).toLocaleString("en-US", { style: "currency", currency: "USD" });
 
-                            
 
                             return `
                                 <tr>
+                                    <td class="text-nowrap"><input class="form-check-input verifyActiveCustomer" style="width: 16px; height: 16px;" customer_id="${cust.id}" type="checkbox" ${is_verified}></td>
                                     <td class="text-nowrap">
                                         <div class="d-flex cursor-pointer" onclick="window.location.href = '${window.origin}/customer/module/${cust.id}'">
                                             <div class="nsm-profile">
@@ -258,21 +280,32 @@
                                         </div>
                                         </div>
                                     </td>
+                                    <td class="text-nowrap">${monitor_id}</td>
                                     <td class="text-nowrap">${type}</td>
                                     <td class="text-nowrap">${status}</td>
                                     <td class="text-nowrap">${address}</td>
+                                    <td class="text-nowrap">${payment_method}</td>
                                     <td class="text-nowrap">${bill_start}</td>
                                     <td class="text-nowrap">${bill_end}</td>
+                                    <td class="text-nowrap">${service_package}</td>
+                                    <td class="text-nowrap">${panel_type}</td>
                                     <td class="text-nowrap">${bill_mmr}</td>
+                                    <td class="text-nowrap">${alarm_bill_mmr}</td>
+                                    <td class="text-nowrap">${pass_thru_cost}</td>
+                                    <td class="text-nowrap">${account_cost}</td>
+                                    <td class="text-nowrap">${net_profit_formatted}</td>
                                     <td style="width: 0;" class="p-0">
                                         <div class='dropdown'>
                                             <button class='btn dropdown-toggle text-muted' type='button' id='activeCustomerButtonDropdown' data-bs-toggle='dropdown' aria-expanded='false'><i class='fas fa-ellipsis-v'></i></button>
                                             <ul class='dropdown-menu' aria-labelledby='activeCustomerButtonDropdown'>
                                                 <li><a class="dropdown-item" href="${window.origin}/customer/subscription/${cust.id}">View</a></li>
+                                                <li><a class="dropdown-item" href="${window.origin}/customer/add_advance/${cust.id}">Edit</a></li>
+                                                <li><a class="dropdown-item" href="${window.origin}/customer/module/${cust.id}">Dashboard</a></li>
                                                 <li><a class="dropdown-item view-payment-item" href="javascript:void(0);" data-customer-id="${cust.id}" data-billing-id="">Payment History</a></li>
                                             </ul>
                                         </div>
                                     </td>
+                                    <td class="d-none">${customer_group}</td>
                                 </tr>   
                             `;
                         }).join("");
@@ -289,14 +322,23 @@
                                             <table class="table table-bordered table-hover mb-0 align-middle">
                                                 <thead class="sticky-top">
                                                     <tr>
-                                                        <th>Name</th>
-                                                        <th>Type</th>
-                                                        <th>Status</th>
-                                                        <th>Address</th>
-                                                        <th>Bill Start</th>
-                                                        <th>Bill End</th>
-                                                        <th>MMR</th>
-                                                        <th class="w-0"></th>
+                                                        <th class="text-nowrap"><i class="fas fa-user-check text-success"></i></th>
+                                                        <th class="text-nowrap">Name</th>
+                                                        <th class="text-nowrap">Monitoring ID</th>
+                                                        <th class="text-nowrap">Type</th>
+                                                        <th class="text-nowrap">Status</th>
+                                                        <th class="text-nowrap">Address</th>
+                                                        <th class="text-nowrap">Payment Method</th>
+                                                        <th class="text-nowrap">Bill Start</th>
+                                                        <th class="text-nowrap">Bill End</th>
+                                                        <th class="text-nowrap">Security Package</th>
+                                                        <th class="text-nowrap">Panel Type</th>
+                                                        <th class="text-nowrap">MMR</th>
+                                                        <th class="text-nowrap">GMR</th>
+                                                        <th class="text-nowrap">Pass Thru Cost</th>
+                                                        <th class="text-nowrap">Account Cost</th>
+                                                        <th class="text-nowrap">Net Profit</th>
+                                                        <th class="text-nowrap" class="w-0"></th>
                                                     </tr>
                                                 </thead>
                                                 <tbody>
@@ -423,6 +465,93 @@
         });
     }
 
+    function getCustomerGroupBadge() {
+        $.ajax({
+            type: "POST",
+            url: `${window.origin}/dashboard/thumbnailWidgetRequest`,
+            data: {
+                category: "customer_groups",
+                dateFrom: "1970-01-01",
+                dateTo: "<?php echo date('Y-m-d'); ?>",
+                filter3: "active_only",
+                // filter4: "commercial",
+            },
+            beforeSend: function() { },
+            success: function(response) {
+                const data = JSON.parse(response).GRAPH;
+
+                let html = "";
+
+                const colorMap = {
+                    "ADT Solar Pro": { bg: "#FFD70010", border: "#FFD70020" },
+                    "Alarm.com": { bg: "#FFCC0010", border: "#FFCC0020" },
+                    "Alarm.com & DVR": { bg: "#FFC00010", border: "#FFC00020" },
+                    "AlarmNet": { bg: "#007BFF10", border: "#007BFF20" }, 
+                    "AlarmNet & PERS": { bg: "#3399FF10", border: "#3399FF20" },
+                    "DVR": { bg: "#8A2BE210", border: "#8A2BE220" },
+                    "Landline": { bg: "#80808010", border: "#80808020" },
+                    "Landline & Pers": { bg: "#A9A9A910", border: "#A9A9A920" },
+                    "Pers": { bg: "#32CD3210", border: "#32CD3220" },
+                    
+                    "Commercial": { bg: "#00CED110", border: "#00CED120" },
+                    "Residential": { bg: "#FF69B410", border: "#FF69B420" },
+                    "Enterprise": { bg: "#9932CC10", border: "#9932CC20" }, 
+                    "Unknown": { bg: "#0000000a", border: "#0000000f" },
+                };
+
+
+                if (data.length != 0) {
+                    Object.entries(data).forEach(([key, value]) => {
+                        if (key == "Alarm.com" || key == "AlarmNet") {
+                            const lowerKey = key.toLowerCase();
+                            let matchedColor = colorMap["Unknown"];
+
+                            for (const groupName in colorMap) {
+                                if (lowerKey.includes(groupName.toLowerCase())) {
+                                    matchedColor = colorMap[groupName];
+                                    break;
+                                }
+                            }
+
+                            html += `
+                                <div class="col-6 col-sm-4 col-md-3 col-lg-2 col-xl-2 text-center">
+                                    <div class="activeCustomerStatusCategory" style="background:${matchedColor.bg}; border:1px solid ${matchedColor.border};">
+                                        <small class="text-uppercase activeCustomerStatusName">${key}</small>
+                                        <h5 class="activeCustomerStatusCount">${value}</h5>
+                                    </div>
+                                </div>
+                            `;
+
+                            $('.activeCustomerCategoryFilter').append(`<option value="${key}">${key}</option>`);
+                        }
+                    });
+                } else {
+                    html += `
+                        <div class="col-lg-1">
+                            <div class="activeCustomerStatusCategory">
+                                <small class="text-uppercase activeCustomerStatusName">No Status Found</small>
+                                <h5 class="activeCustomerStatusCount">0</h5>
+                            </div>
+                        </div>
+                    `;
+                }
+
+                setTimeout(() => {
+                    $('.activeCustomerStatusContainer').append(html);
+                }, 500);
+            },
+            error: function() {
+                Swal.fire({
+                    icon: "error",
+                    title: "Network Error!",
+                    html: "An unexpected error occurred. Please try again!",
+                    showConfirmButton: true,
+                    confirmButtonText: "Okay",
+                });
+            },
+        });
+    }
+
     $(document).on('input change', '.activeCustomerGroupSearch, .activeCustomerCategoryFilter', function () {
         const searchQuery = $('.activeCustomerGroupSearch').val().trim().toLowerCase();
         const selectedCategory = $('.activeCustomerCategoryFilter').val();
@@ -460,6 +589,26 @@
     $(function () {
         getActiveCustomers();
         getStatusBadge();
+        getCustomerGroupBadge()
+    });
+
+    $(document).on('change', '.verifyActiveCustomer', function () {
+        const state = $(this).prop('checked');
+        const customer_id = $(this).attr('customer_id');
+
+        $.ajax({
+            type: "POST",
+            url: `${window.origin}/Customer/verifyCustomer`,
+            data: {
+                customer_id: `${customer_id}`,
+                state: `${state}`
+            },
+            beforeSend: function() {},
+            success: function(response) {
+                // const data = JSON.parse(response)[0];
+            },
+            error: function() {}
+        });
     });
 
     // $(document).on('click', '.dropdown-menu', function (e) {
