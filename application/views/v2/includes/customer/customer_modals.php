@@ -382,7 +382,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="nsm-button" data-bs-dismiss="modal">Close</button>
-                    <button type="submit" class="nsm-button primary" id="btn-save-service-package">Save</button>
+                    <button type="submit" class="nsm-button primary">Save</button>
                 </div>
             </form>
         </div>
