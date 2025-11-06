@@ -1036,6 +1036,7 @@ class AcsProfile_model extends MY_Model
         $this->db->where('customer_group_id', $customer_group_id);
         $this->db->where('is_checked', 0);
         $this->db->order_by('prof_id', 'ASC');
+        //$this->db->limit(10);
 
         $query = $this->db->get();
         return $query->result();

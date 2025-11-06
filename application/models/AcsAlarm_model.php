@@ -82,7 +82,7 @@ class AcsAlarm_model extends MY_Model
         return $this->db->affected_rows();
     }
 
-    public function updateByAlarmId($alarm_id, $data) {
+    public function updateByAlarmId($alarm_id, $data) {        
         $this->db->where('alarm_id', $alarm_id);
         $this->db->update($this->table, $data);
 
