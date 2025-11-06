@@ -3388,15 +3388,16 @@ class Debug extends MY_Controller {
                 $pass_thru_cost = $alarm->account_cost;
                 $account_cost   = $alarm->pass_thru_cost;
                 $data = [
+                    //'id' => $alarm->alarm_id,
                     'pass_thru_cost' => $pass_thru_cost,
                     'account_cost' => $account_cost
                 ]; 
-                $this->AcsAlarm_model->updateByAlarmId($alarm->alarm_id, $data);
-
-                $data = ['is_checked' => 1];
-                $this->AcsProfile_model->updateCustomerByProfId($c->prof_id, $data);
-
-                $total_updated++;
+                $is_updated = $this->AcsAlarm_model->updateByAlarmId($alarm->alarm_id, $data);
+                if( $is_updated > 0 ){
+                    $data = ['is_checked' => 1];
+                    $this->AcsProfile_model->updateCustomerByProfId($c->prof_id, $data);
+                    $total_updated++;
+                }
             }
         }
 
