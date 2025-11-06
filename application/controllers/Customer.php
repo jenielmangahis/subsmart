@@ -11973,6 +11973,7 @@ class Customer extends MY_Controller
                     'name' => $post['package_name'],
                     'alarmcom_cost' => $post['alarmcom_cost'] > 0 ? $post['alarmcom_cost'] : 0,
                     'alarmnet_cost' => $post['alarmnet_cost'] > 0 ? $post['alarmnet_cost'] : 0,
+                    'acct_cost' => $post['acct_cost'] > 0 ? $post['acct_cost'] : 0,
                 ];
                 
                 $this->SystemPackageType_model->update($isExists->id, $data);
