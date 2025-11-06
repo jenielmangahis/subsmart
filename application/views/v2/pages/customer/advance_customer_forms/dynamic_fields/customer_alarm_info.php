@@ -354,7 +354,7 @@
                         <option <?= isset($alarm_info) && $alarm_info->comm_type == $cType->name ?  'selected' : '';  ?> value="<?= $cType->name ?>"><?= $cType->name ?></option>
                     <?php endforeach; ?>
                 </select>
-                <a href="javascript:void(0);" class="nsm-button btn-small" id="btn-quick-communication-type"><span class="fa fa-plus"></span> Add Communication Type</a>   
+                <a href="javascript:void(0);" class="nsm-button btn-small" id="btn-quick-communication-type"><span class="fa fa-plus"></span> Add Service Package</a>   
             </div>
         </div>
         <div class="row form_line field-custom-name-container" <?= isCustomerFieldEnabled($companyFormSetting, 'alarm-information', 'addon_feature_cost') == 0 ? 'style="display:none;"' : ''; ?>>
