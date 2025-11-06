@@ -738,6 +738,17 @@ class Users_model extends MY_Model
         return $query->row();
     }
 
+    public function getCompanyAdmin($company_id)
+    {
+        $this->db->select('*');
+        $this->db->from($this->table);
+        $this->db->where('user_type', 7);
+        $this->db->where('company_id', $company_id);
+
+        $query = $this->db->get();
+        return $query->row();
+    }
+
     public function addPaySchedule($data)
     {
         $this->db->insert('pay_schedule', $data);

@@ -1121,6 +1121,7 @@
                 </div>
                 <div class="modal-body">                    
                     <form method="POST" id="frm-customer-cancellation-request" class="frm-customer-cancellation-request">
+                    <input type="hidden" id="request-cancellation-customer-id" name="customer_id" value="" />
                     <div class="row">
                         <div class="col-12 mt-2">
                             <label class="bold"><strong>Date Request Received</strong></label>
@@ -1166,7 +1167,7 @@
                     <div class="row">
                         <div class="col-12 mt-2">
                             <label class="bold"><strong>Equipment Return Date</strong></label>
-                            <input type="date" placeholder="" name="equpment_return_date" id="equpment_return_date" class="form-control mb-2" required />
+                            <input type="date" placeholder="" name="equipment_return_date" id="equipment_return_date" class="form-control mb-2" required />
                         </div>
                     </div>
                     </form>

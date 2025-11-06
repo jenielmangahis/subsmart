@@ -1240,7 +1240,7 @@ $route['customer/_get_customer_data'] = 'Customer/ajax_get_customer_data';
 $route['customer/_get_lead_data'] = 'Customer/ajax_get_lead_data';
 $route['customer/_convert_lead_to_customer'] = 'Customer/ajax_convert_lead_to_customer';
 $route['customer/_permanently_delete_selected_attachment'] = 'Customer/ajax_permanently_delete_selected_attachment';
-$route['customer/_send_customer_cancel_status_request'] = 'Customer/ajax_send_customer_cancel_status_request';
+$route['customer/_send_customer_cancellation_request'] = 'Customer/ajax_send_customer_cancellation_request';
 
 // workstatus
 $route['workstatus/_create_workorder_status'] = 'Workstatus/ajax_save_workorder_status';
