@@ -131,6 +131,15 @@ if ($this->session->userdata('usertimezone') == null) {
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.9.0/css/all.min.css" />
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-colorpicker/2.3.3/js/bootstrap-colorpicker.min.js"></script>
+
+
+
+    <!-- ✅ Selectize -->
+    <link rel="stylesheet" href="<?php echo base_url('assets/selectize/selectize.min.css') ?>">
+    <script src="<?php echo base_url('assets/selectize/selectize.min.js') ?>"></script>
+
+
+
     <style>
         #hdr-multi-account-list .nsm-loader{            
             height: 62px !important;
@@ -357,7 +366,8 @@ if ($this->session->userdata('usertimezone') == null) {
                             }
 
                             .searchCustomerNavigationAccountingClear {
-                                right: 35px;
+                                background: white;
+                                right: 14px;
                                 top: 6px;
                                 z-index: 999;
                                 cursor: pointer;
@@ -371,7 +381,7 @@ if ($this->session->userdata('usertimezone') == null) {
                             <div class="searchCustomerNavigationAccountingClear position-absolute text-muted"><i class="fas fa-times-circle"></i></div>
                         </div>
                         <script>
-                            const selectSearchCustomerAccountingInput = $(".searchCustomerNavigationAccountingAccounting").selectize({
+                            const selectSearchCustomerAccountingInput = $(".searchCustomerNavigationAccounting").selectize({
                                 placeholder: "Search and select customer...",
                                 valueField: 'id',
                                 labelField: 'customer',
