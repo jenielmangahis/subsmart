@@ -1025,6 +1025,21 @@ class AcsProfile_model extends MY_Model
         $this->db->delete($this->table);
         return $this->db->affected_rows();
     }
+
+    //For fixing data only
+    //This method needs is_checked field
+    public function getAllByCompanyIdAndCustomerGroupId($company_id, $customer_group_id)
+    {
+        $this->db->select('*');
+        $this->db->from($this->table);
+        $this->db->where('company_id', $company_id);
+        $this->db->where('customer_group_id', $customer_group_id);
+        $this->db->where('is_checked', 0);
+        $this->db->order_by('prof_id', 'ASC');
+
+        $query = $this->db->get();
+        return $query->result();
+    }
 }
 
 /* End of file AcsProfile_model.php */
