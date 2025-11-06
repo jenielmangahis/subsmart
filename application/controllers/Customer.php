@@ -4393,6 +4393,8 @@ class Customer extends MY_Controller
                     if ($customer->adt_sales_project_id > 0) {
                         $input_profile['is_sync'] = 0;
                     }
+                    $input_profile['customer_no'] = $input['customer_no'];
+                    
                     $this->general->update_with_key_field($input_profile, $input['customer_id'], 'acs_profile', 'prof_id');
                     $profile_id = $input['customer_id'];
                     customerAuditLog(logged('id'), $profile_id, $profile_id, 'Customer', 'Updated customer '.$input['first_name'].' '.$input['last_name']);
@@ -8889,37 +8891,45 @@ class Customer extends MY_Controller
 
         $query = $this->db->query("
             SELECT 
-                customer_list_view.prof_id AS id,
-                customer_list_view.company_id AS company_id,
-                customer_list_view.customer_no AS customer_no,
+                customer_list_view.prof_id AS `id`,
+                customer_list_view.company_id AS `company_id`,
+                customer_list_view.customer_no AS `customer_no`,
                 CASE 
                     WHEN customer_list_view.profile_business_name IS NOT NULL 
                         AND customer_list_view.profile_business_name != '' 
                         AND customer_list_view.profile_business_name != 'Not Specified' 
                     THEN customer_list_view.profile_business_name
                     ELSE customer_list_view.customer_name
-                END AS name,
-                customer_list_view.customer_group_name AS customer_group,
-                customer_list_view.profile_customer_group_id AS customer_group_id,
-                customer_list_view.profile_status AS status,
-                customer_list_view.office_lead_source AS source,
-                customer_list_view.office_sales_rep_name AS sales_rep_name,
-                customer_list_view.office_technician_name AS tech_rep_name,
-                customer_list_view.alarm_system_type AS service_package,
-                customer_list_view.profile_customer_type AS type,
-                customer_list_view.profile_full_address AS address,
-                customer_list_view.profile_email AS email,
-                customer_list_view.profile_phone_m AS phone_m,
-                customer_list_view.billing_bill_start_date AS bill_start,
-                customer_list_view.billing_bill_end_date AS bill_end,
-                customer_list_view.alarm_monthly_monitoring AS alarm_bill_mmr,
-                customer_list_view.billing_mmr AS bill_mmr
+                END AS `name`,
+                customer_list_view.customer_group_name AS `customer_group`,
+                customer_list_view.profile_customer_group_id AS `customer_group_id`,
+                customer_list_view.profile_status AS `status`,
+                customer_list_view.profile_customer_type AS `type`,
+                customer_list_view.profile_full_address AS `address`,
+                customer_list_view.profile_email AS `email`,
+                customer_list_view.profile_phone_m AS `phone_m`,
+                customer_list_view.profile_is_verified AS `is_verified`,
+                customer_list_view.office_lead_source AS `source`,
+                customer_list_view.office_sales_rep_name AS `sales_rep_name`,
+                customer_list_view.office_technician_name AS `tech_rep_name`,
+                customer_list_view.alarm_monitor_id AS `monitor_id`,
+                customer_list_view.alarm_panel_type AS `panel_type`,
+                customer_list_view.alarm_pass_thru_cost AS `pass_thru_cost`,
+                customer_list_view.alarm_account_cost AS `account_cost`,
+                customer_list_view.alarm_comm_type AS `service_package`,
+                customer_list_view.alarm_monthly_monitoring AS `alarm_bill_mmr`,
+                customer_list_view.alarm_feature_cost AS `feature_cost`,
+                customer_list_view.billing_bill_start_date AS `bill_start`,
+                customer_list_view.billing_bill_end_date AS `bill_end`,
+                customer_list_view.billing_mmr AS `bill_mmr`,
+                customer_list_view.billing_bill_method AS `payment_method`
             FROM customer_list_view
             WHERE customer_list_view.company_id = {$company_id}
-                {$statusFilter} 
+                {$statusFilter}
                 {$typeFilter}
             ORDER BY customer_list_view.customer_name ASC;
         ");
+
 
         $data = $query->result();
 
@@ -15244,6 +15254,18 @@ class Customer extends MY_Controller
         }
 
         $return = ['account_cost' => $account_cost];
+        echo json_encode($return);
+    }
+
+    public function ajax_send_customer_cancel_status_request()
+    {
+        $is_success = 1;
+        $msg = "Please do note that this function is under construction.";
+
+        $return = [
+            'is_success' => $is_success,
+            'msg' => $msg
+        ];
         echo json_encode($return);
     }
 }

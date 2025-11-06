@@ -247,7 +247,8 @@ if ($this->session->userdata('usertimezone') == null) {
                             }
 
                             .searchCustomerNavigationClear {
-                                right: 35px;
+                                background: white;
+                                right: 14px;
                                 top: 6px;
                                 z-index: 999;
                                 cursor: pointer;

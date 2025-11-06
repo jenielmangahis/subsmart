@@ -213,34 +213,27 @@ div#controls div#call-controls div#volume-indicators > div {
                 <div class="col-12">
                     <div class="d-flex align-items-center">
                         <div class="nsm-profile me-3">
-                            <?php if ($profile_info->customer_type === 'Business'): ?>
-                                <span>
-                                <?php 
-                                    $parts = explode(' ', strtoupper(trim($profile_info->business_name)));
-                                    echo count($parts) > 1 ? $parts[0][0] . end($parts)[0] : $parts[0][0];
-                                ?>
-                                </span>
-                            <?php else: ?>
-                                <?php 
-                                    $profile_info->first_name = trim($profile_info->first_name);
-                                    $profile_info->last_name  = trim($profile_info->last_name);
-                                ?>
-                                <span><?= ucwords(trim($profile_info->first_name[0])) . ucwords(trim($profile_info->last_name[0])) ?></span>
-                            <?php endif; ?>                            
+                            <?php 
+                                $profile_info->first_name = trim($profile_info->first_name);
+                                $profile_info->last_name  = trim($profile_info->last_name);
+                            ?>
+                            <span><?= ucwords(trim($profile_info->first_name[0])) . ucwords(trim($profile_info->last_name[0])) ?></span>                        
                         </div>
-
                         <div class="row w-100">
-                            <div class="col-6 col-md-6">
-                                <span class="content-title">
-                                    <?php if ($profile_info->customer_type === 'Business'): ?>
-                                        <?= $profile_info->business_name ?>
-                                    <?php else: ?>
-                                        <?= $profile_info->first_name . ' ' . $profile_info->last_name ?>
-                                    <?php endif; ?>    
-                                </span>                                
-                                <span class="content-subtitle d-block mt-1" style="font-size:14px;">ID# : <?= formatCustomerId($profile_info->customer_no) ?> </span>
+                            <div class="col-7 col-md-6">
+                                <?php 
+                                    $business_name = '---';
+                                    if( $profile_info->business_name != '' ){
+                                        $business_name = $profile_info->business_name;
+                                    }     
+                                ?>                                
+                                <?php if ($profile_info->customer_type == 'Business' || $profile_info->customer_type == 'Commercial'){ ?>
+                                <span class="content-title"><i class='bx bx-buildings'></i> <?= $business_name; ?> </span>
+                                <?php } ?>
+                                <span class="content-title"><i class='bx bx-user-circle' ></i> <?= $profile_info->first_name . ' ' . $profile_info->last_name; ?></span>
+                                <span class="content-subtitle d-block mt-1" style="font-size:14px;">ID# : <?= formatCustomerId($profile_info->customer_no); ?></span>                                
                             </div>
-                            <div class="col-6 col-md-6 text-end">
+                            <div class="col-5 col-md-6 text-end">
                                 <?php
                                 switch (strtoupper($profile_info->status)):
                                     case "INSTALLED":
@@ -281,8 +274,14 @@ div#controls div#call-controls div#volume-indicators > div {
                 </div>
                 <div class="col-6 col-md-4 mb-1">
                     <h6><i class='bx bx-envelope'></i> Email Address</h6>
-                    <p class="text-muted"><?= $profile_info->email != '' ? $profile_info->email : '---'; ?></p>
+                    <p class="text-muted" style="overflow-wrap:break-word;"><?= $profile_info->email != '' ? $profile_info->email : '---'; ?></p>
                 </div>
+                <?php if( $alarm_info ){ ?>
+                <div class="col-6 col-md-4 mb-1">
+                    <h6><i class='bx bx-package'></i> Security Package</h6>
+                    <p class="text-muted"><?= $alarm_info->comm_type != '' ? $alarm_info->comm_type : '---'; ?></p>
+                </div>
+                <?php } ?>
                 <div class="col-6 col-md-4 mb-1">
                     <h6><i class='bx bx-id-card'></i> CS Account #</h6>
                     <p class="text-muted"><?= $alarm_info->monitor_id != '' ? $alarm_info->monitor_id : '---'; ?></p>

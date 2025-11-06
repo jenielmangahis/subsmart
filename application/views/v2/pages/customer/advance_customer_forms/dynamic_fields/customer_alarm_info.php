@@ -94,7 +94,7 @@
                         <option <?= $account_type == $at->account_type ? 'selected="selected"' : ''; ?> value="<?= $at->account_type; ?>"><?= $at->account_type; ?></option>
                     <?php } ?>
                 </select>
-                <!-- <a href="javascript:void(0);" class="nsm-button btn-small" id="btn-quick-account-type"><span class="fa fa-plus"></span> Add Account Type</a>             -->
+                <a href="javascript:void(0);" class="nsm-button btn-small" id="btn-quick-account-type"><span class="fa fa-plus"></span> Add Account Type</a>            
             </div>
         </div>
         <div class="row form_line field-custom-name-container" <?= isCustomerFieldEnabled($companyFormSetting, 'alarm-information', 'site_type') == 0 ? 'style="display:none;"' : ''; ?>>

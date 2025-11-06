@@ -249,7 +249,8 @@
 
 <script src="<?= base_url("assets/js/v2/printThis.js") ?>"></script>
 <?php include viewPath('v2/includes/footer'); ?>
-    <script >
+
+<script >
     window.document.addEventListener("DOMContentLoaded", () => {
         const params = new Proxy(new URLSearchParams(window.location.search), {
             get: (searchParams, prop) => searchParams.get(prop),
@@ -416,6 +417,57 @@ $(document).on('click', '#btn-remove-row-edit-attachment', function(){
     });
             
 });    
+
+$('.status-select').on('change', function(){   
+    var status = $('.status-select').val(); 
+    if(status == 'Cancelled' || status == 'Cancel') {
+        $('#send_cancel_status_request_modal').modal('show');
+    }
+});
+
+
+$(document).on('submit', '#customer_cancel_status_request_form', function(e) {
+    e.preventDefault();
+
+    var url = base_url + 'customer/_send_customer_cancel_status_request';
+    $.ajax({
+        type: "POST",
+        url: url,
+        dataType: "json",
+        data: $('#customer_cancel_status_request_form').serialize(),
+        beforeSend: function(data) {
+            $("#btn-customer-cancel-status-request").html('<span class="bx bx-loader bx-spin"></span>');
+        },
+        success: function(o) {
+            $("#btn-customer-cancel-status-request").html('Send');
+            if (o.is_success == 1) {
+                Swal.fire({
+                    html: 'Email sent',
+                    icon: 'success',
+                    showCancelButton: false,
+                    confirmButtonText: 'Okay'
+                }).then((result) => {
+
+                });
+                $("#send_email_modal").modal('hide');
+            } else {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    html: o.msg
+                });
+            }
+        },
+        complete: function() {
+
+        },
+        error: function(e) {
+            console.log(e);
+        }
+    });
+
+    $("#btn-customer-cancel-status-request").html('<span class="bx bx-loader bx-spin"></span>');
+});
 
 </script>
 
