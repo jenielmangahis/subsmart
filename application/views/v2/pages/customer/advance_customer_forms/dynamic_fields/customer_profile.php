@@ -17,7 +17,7 @@
                 Status
             </div>
             <div class="col-md-8">
-                <select data-type="customer_status" id="status" name="status" data-customer-source="dropdown" class="input_select status-select" >
+                <select data-type="customer_status" id="status" name="status" data-customer-source="dropdown" class="input_select" >
                     <option  value=""></option>
                     <?php foreach ($customer_status as $status): ?>
                         <option <?= isset($profile_info) ? ($profile_info->status == $status->name ? 'selected' : '') : '' ?> value="<?= $status->name ?>"><?= $status->name ?></option>
@@ -100,20 +100,6 @@
                 </select>
             </div>
         </div>
-        <?php 
-            $business_name_css = 'display: none;';
-            if(isset($profile_info) && $profile_info->customer_type == 'Business' ) { 
-                $business_name_css = ''; 
-            }
-        ?>
-        <div class="row" id="businessName" style="<?= $business_name_css; ?>">
-            <div class="col-md-4" id="businessNameLabel">
-                <label for="" >Business Name
-            </div>
-            <div class="col-md-8" id="businessNameInput">
-                <input type="text" class="form-control" name="business_name" id="business_name" value="<?php if(isset($profile_info)){ echo $profile_info->business_name; } ?>"/>
-            </div>
-        </div>
         <div class="row form_line">
             <div class="col-md-4">
                 Customer Group
@@ -175,17 +161,21 @@
                 </select>
                 <a href="javascript:void(0);" class="nsm-button btn-small" id="btn-quick-add-sales-area"><span class="fa fa-plus"></span> Add Sales Area</a>                
             </div>
-        </div>        
-        <?php if( $profile_info ){ ?>
-        <div class="row form_line">
-            <div class="col-md-4">
-                Customer ID <span class="required"> *</span>
+        </div>
+        <?php 
+            $business_name_css = 'display: none;';
+            if(isset($profile_info) && $profile_info->customer_type == 'Commercial' ) { 
+                $business_name_css = ''; 
+            }
+        ?>
+        <div class="row" id="businessName" style="<?= $business_name_css; ?>">
+            <div class="col-md-4" id="businessNameLabel">
+                <label for="" >Business Name
             </div>
-            <div class="col-md-8">
-                <input type="text" class="form-control" name="customer_no" id="customer_no" value="<?= $profile_info->customer_no; ?>" required/>
+            <div class="col-md-8" id="businessNameInput">
+                <input type="text" class="form-control" name="business_name" id="business_name" value="<?php if(isset($profile_info)){ echo $profile_info->business_name; } ?>"/>
             </div>
         </div>
-        <?php } ?>
         <div class="row form_line">
             <div class="col-md-4">
                 First Name <span class="required"> *</span>

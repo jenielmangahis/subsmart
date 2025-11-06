@@ -226,6 +226,24 @@
             }
         });
 
+        $('#cancellation-request-reason').on('change', function(){
+            let reason = $(this).val();
+            let next_step = '';
+            if( reason == 'Moving' ){
+                next_step = 'New Location Address';
+            }else if( reason == 'Retirement Home' || reason == 'Financial' || reason == 'Switched' || reason == 'Moved in with family' ){
+                next_step = 'BOC';
+            }else if( reason == 'Not Happy with Service' ){
+                next_step = 'Field Audit to deliver BOC';
+            }else if( reason == 'Rates' ){
+                next_step = 'Reduce rates to keep if no BOC';
+            }else if( reason == 'Deceased' || reason == 'Medical' || reason == 'Other' || reason == 'Faulty Equipment' ){
+                next_step = 'Field Audit';
+            }
+
+            $('#cancellation_reason_next_step').val(next_step);
+        });
+
         $(".paper-chk").click(function() { 
             return false; 
         });
@@ -944,6 +962,10 @@
                     $('#btn-save-financing-category').html('<span class="bx bx-loader bx-spin"></span>');
                 }
             });
+        });
+
+        $('#frm-customer-cancellation-request').on('submit', function(e){
+            e.preventDefault();
         });
 
         $('#btn-quick-add-customer-status').on('click', function(){
