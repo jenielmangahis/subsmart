@@ -209,6 +209,7 @@
 
         $(document).on('change', '#status', function(){
             let status = $(this).val();
+            $('#send_cancel_status_request_modal').modal('show');
             if( status == 'Cancelled' || status == 'Cancel' || status == 'Charge Back' || status == 'Collection' || status == 'Competition Lost' ){
                 $('#office-info-cancel-date').attr('required', 'required');
                 $('#cancel_reason').attr('required', 'required');
@@ -1151,6 +1152,40 @@
             });
         });
 
+        $('#new_system_package_form').on('submit', function(e){
+            e.preventDefault();
+            $.ajax({
+                type: "POST",
+                url: base_url + 'customers/_create_system_package_type',
+                dataType: 'json',
+                data: $('#new_system_package_form').serialize(),
+                success: function(data) {    
+                    $('#btn-save-service-package').html('Save');                   
+                    if (data.is_success) {
+                        $('#new_system_package_modal').modal('hide');
+                        $('#communication_type').append($('<option>', {
+                            value: data.package_name,
+                            text: data.package_name,
+                        }));
+                        $('#communication_type').val(data.package_name);
+                    }else{
+                        Swal.fire({
+                            title: 'Error',
+                            text: data.msg,
+                            icon: 'error',
+                            showCancelButton: false,
+                            confirmButtonText: 'Okay'
+                        }).then((result) => {
+                            
+                        });
+                    }
+                },
+                beforeSend: function() {
+                    $('#btn-save-service-package').html('<span class="bx bx-loader bx-spin"></span>');
+                }
+            });
+        });
+
         $('#btn-quick-panel-type').on('click', function(){
             $('#frm-add-panel-type')[0].reset();
             $('#modal-add-panel-type').modal('show');
@@ -1663,6 +1698,11 @@
             if( selected == 'Contract Monitoring' ){
                 $('#acct_type').val('In-House').trigger('change');
             } 
+        });
+
+        $('#btn-quick-communication-type').on('click', function(){
+            $('#new_system_package_form')[0].reset();
+            $('#new_system_package_modal').modal('show');
         });
 
         function load_account_cost(){
