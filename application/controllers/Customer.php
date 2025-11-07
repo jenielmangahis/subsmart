@@ -15337,4 +15337,71 @@ class Customer extends MY_Controller
         ];
         echo json_encode($return);
     }
+
+    public function ajax_set_default_monitoring_company()
+    {
+        $this->load->model('AcsAlarmMonitoringCompany_model');
+
+        $is_success = 0;
+        $msg = 'Cannot find record';
+
+        $company_id = logged('company_id');
+        $post = $this->input->post();
+
+        $monitoringCompany = $this->AcsAlarmMonitoringCompany_model->getByIdAndCompanyId($post['id'], $company_id);
+        if ($monitoringCompany) {
+            $this->AcsAlarmMonitoringCompany_model->resetDefaultByCompanyId($company_id);
+            $this->AcsAlarmMonitoringCompany_model->update($monitoringCompany->id, ['is_default' => 'Yes']);
+
+            //Activity Logs
+            $activity_name = 'Monitoring Company : Set default value to ' . $monitoringCompany->name; 
+            createActivityLog($activity_name);
+
+            $is_success = 1;
+            $msg = '';
+        }
+
+        $json_data = [
+            'is_success' => $is_success,
+            'msg' => $msg,
+        ];
+
+        echo json_encode($json_data);
+    }
+
+    public function ajax_delete_selected_monitoring_companies()
+	{
+		$this->load->model('AcsAlarmMonitoringCompany_model');
+
+		$is_success = 0;
+        $msg    = 'Please select data';
+
+        $company_id  = logged('company_id');
+        $post = $this->input->post();
+
+        if( $post['monitoringCompanies'] ){
+
+            $filters[] = ['field' => 'company_id', 'value' => $company_id];
+            $total_deleted = $this->AcsAlarmMonitoringCompany_model->bulkDelete($post['monitoringCompanies'], $filters);
+
+			//Activity Logs
+            if( $total_delete > 1 ){
+                $activity_name = 'Monitoring Company : Deleted ' .$total_deleted. ' monitoring company'; 
+            }else{
+                $activity_name = 'Monitoring Company : Deleted ' .$total_deleted. ' monitoring companies'; 
+            }
+			
+			createActivityLog($activity_name);
+
+            $is_success = 1;
+            $msg    = '';
+        }
+
+        $return = [
+            'is_success' => $is_success,
+            'msg' => $msg
+        ];
+
+        echo json_encode($return);
+	}
 }
