@@ -15400,11 +15400,13 @@ class Customer extends MY_Controller
                 $email_data['cancellation_url'] = $cancellation_url;
                 $body = $this->load->view('v2/emails/customer_cancellation_request', $email_data, true);
 
+                $to_send = 'jeniel.mangahis@gmail.com'; //$companyAdmin->email;
+
                 if($is_live_mail_credentials) {
                     $mail = email__getInstance();
                     $mail->FromName = 'nSmarTrac';
                     $recipient_name = $companyAdmin->FName . ' ' . $companyAdmin->LName;
-                    $mail->addAddress($companyAdmin->email, $recipient_name);
+                    $mail->addAddress($to_send, $recipient_name);
                     $mail->isHTML(true);
                     $mail->Subject = "Customer Request for Cancellation";
                     $mail->Body = $body;
