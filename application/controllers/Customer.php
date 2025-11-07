@@ -4218,6 +4218,7 @@ class Customer extends MY_Controller
     public function cancellation_request($id = null)
     {
         $this->load->model('AcsCustomerCancellationRequest');
+        $this->load->model('CustomerGroup_model');
 
         $this->hasAccessModule(9);
         
@@ -4231,10 +4232,17 @@ class Customer extends MY_Controller
         $company_id  = logged('company_id');        
 
         $cancel_request_data = $this->AcsCustomerCancellationRequest->getByCustomerId($customer_id);
+        $profile_info   = $this->customer_ad_model->get_data_by_id('prof_id', $id, 'acs_profile');
+        $customerGroup  = $this->CustomerGroup_model->getById($profile_info->customer_group_id);
+        $alarm_info     = $this->customer_ad_model->get_data_by_id('fk_prof_id', $id, 'acs_alarm');  
         
+        $this->page_data['profile_info']   = $profile_info;
         $this->page_data['cancel_request_data'] = $cancel_request_data;
+        $this->page_data['sales_area']     = $this->customer_ad_model->get_all(false, '', 'ASC', 'ac_salesarea', 'sa_id');
+        $this->page_data['customer_group'] = $customerGroup;
+        $this->page_data['alarm_info']     = $alarm_info;
 
-        $this->page_data['page']->title = 'Customers';
+        $this->page_data['page']->title  = 'Customers';
         $this->page_data['page']->parent = 'Customers';        
         $this->load->view('v2/pages/customer/cancellation_request', $this->page_data);        
 
