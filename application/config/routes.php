@@ -2359,8 +2359,15 @@ $route['customer/settings_alarm_monitoring_companies'] = 'Customer/settings_alar
 $route['customers/_create_monitoring_company'] = 'Customer/ajax_create_monitoring_company';
 $route['customers/_update_monitoring_company'] = 'Customer/ajax_update_monitoring_company';
 $route['customers/_delete_monitoring_company'] = 'Customer/ajax_delete_monitoring_company';
+$route['customers/_delete_selected_monitoring_companies'] = 'Customer/ajax_delete_selected_monitoring_companies';
+$route['customer/_set_default_monitoring_company'] = 'Customer/ajax_set_default_monitoring_company';
 $route['customers/settings_panel_types'] = 'Tickets/settings_panel_types';
 $route['customer/_get_account_cost'] = 'Customer/ajax_get_account_cost';
+$route['customers/_create_receiver_phone_number'] = 'Customer/ajax_create_receiver_phone_number';
+$route['customers/_update_receiver_phone_number'] = 'Customer/ajax_update_receiver_phone_number';
+$route['customers/_delete_selected_receiver_numbers'] = 'Customer/ajax_delete_selected_receiver_numbers';
+$route['customers/_delete_receiver_number'] = 'Customer/ajax_delete_receiver_number';
+$route['customer/_set_default_receiver_phone_number'] = 'Customer/ajax_set_default_receiver_phone_number';
 
 //Benchmark for Testing
 $route['benchmark/test_customer_subscription'] = 'Benchmark/test_customer_subscription';
