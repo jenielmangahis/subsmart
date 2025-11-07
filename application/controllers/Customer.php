@@ -4219,6 +4219,39 @@ class Customer extends MY_Controller
         $this->load->view('v2/pages/customer/add_dynamic_fields', $this->page_data);
     }
 
+    public function cancellation_request($id = null)
+    {
+        $this->load->model('AcsCustomerCancellationRequest');
+        $this->load->model('CustomerGroup_model');
+
+        $this->hasAccessModule(9);
+        
+        if(!checkRoleCanAccessModule('customers', 'write')){
+			show403Error();
+			return false;
+		}
+
+        $customer_id = $id;
+        $user_id     = logged('id');
+        $company_id  = logged('company_id');        
+
+        $cancel_request_data = $this->AcsCustomerCancellationRequest->getByCustomerId($customer_id);
+        $profile_info   = $this->customer_ad_model->get_data_by_id('prof_id', $id, 'acs_profile');
+        $customerGroup  = $this->CustomerGroup_model->getById($profile_info->customer_group_id);
+        $alarm_info     = $this->customer_ad_model->get_data_by_id('fk_prof_id', $id, 'acs_alarm');  
+        
+        $this->page_data['profile_info']   = $profile_info;
+        $this->page_data['cancel_request_data'] = $cancel_request_data;
+        $this->page_data['sales_area']     = $this->customer_ad_model->get_all(false, '', 'ASC', 'ac_salesarea', 'sa_id');
+        $this->page_data['customer_group'] = $customerGroup;
+        $this->page_data['alarm_info']     = $alarm_info;
+
+        $this->page_data['page']->title  = 'Customers';
+        $this->page_data['page']->parent = 'Customers';        
+        $this->load->view('v2/pages/customer/cancellation_request', $this->page_data);        
+
+    }    
+
     public function leads()
     {
         $this->load->model('Lead_model');
@@ -15317,6 +15350,7 @@ class Customer extends MY_Controller
         $this->load->model('AcsCustomerCancellationRequest');
         $this->load->model('Users_model');
 
+        $is_live_mail_credentials = true;
         $is_success = 0;
         $msg    = 'Cannot find customer data';
 
@@ -15337,7 +15371,6 @@ class Customer extends MY_Controller
                     'next_action' => $post['next_step'],
                     'date_modified' => date("Y-m-d H:i:s"),
                 ];
-
                 $this->AcsCustomerCancellationRequest->update($cancellationRequest->id, $data);      
             }else{
                 $data = [
@@ -15354,8 +15387,9 @@ class Customer extends MY_Controller
                 ];
 
                 $this->AcsCustomerCancellationRequest->create($data);    
-                 
             }
+
+            $attachment = '';
 
             //Send email
             $companyAdmin = $this->Users_model->getCompanyAdmin($company_id);
@@ -15366,22 +15400,49 @@ class Customer extends MY_Controller
                 $email_data['cancellation_url'] = $cancellation_url;
                 $body = $this->load->view('v2/emails/customer_cancellation_request', $email_data, true);
 
-                $mail = email__getInstance();
-                $mail->FromName = 'nSmarTrac';
-                $recipient_name = $companyAdmin->FName . ' ' . $companyAdmin->LName;
-                $mail->addAddress($companyAdmin->email, $recipient_name);
-                $mail->isHTML(true);
-                $mail->Subject = "Customer Request for Cancellation";
-                $mail->Body = $body;
-                $mail->addAttachment($attachment);
-                $mail->Send();
+                if($is_live_mail_credentials) {
+                    $mail = email__getInstance();
+                    $mail->FromName = 'nSmarTrac';
+                    $recipient_name = $companyAdmin->FName . ' ' . $companyAdmin->LName;
+                    $mail->addAddress($companyAdmin->email, $recipient_name);
+                    $mail->isHTML(true);
+                    $mail->Subject = "Customer Request for Cancellation";
+                    $mail->Body = $body;
+                    if($attachment) {
+                        $mail->addAttachment($attachment);
+                    }
+                    $mail->Send();                    
+                } else {
+                    $host     = 'smtp.mailtrap.io';
+                    $port     = 2525;
+                    $username = 'd7c92e3b5e901d';
+                    $password = '203aafda110ab7';
+                    $from     = 'noreply@nsmartrac.com';       
+                    
+                    $mail = new PHPMailer;
+                    $mail->isSMTP();
+                    $mail->Host = $host;
+                    $mail->SMTPAuth = true;
+                    $mail->Username = $username;
+                    $mail->Password = $password;
+                    $mail->SMTPSecure = 'tls';
+                    $mail->Port = $port;            
+                                                                                          
+                    $mail->FromName = 'nSmarTrac';  
+                    $recipient_name = $companyAdmin->FName . ' ' . $companyAdmin->LName;
+                    $mail->setFrom('noreply@nsmartrac.com', 'nSmartrac');
+                    $mail->addAddress($companyAdmin->email, $recipient_name);
+                    $mail->isHTML(true);
+                    $mail->Subject = "Customer Request for Cancellation";
+                    $mail->Body = $body;
+                    $mail->addAttachment($attachment);
+                    $mail->Send();   
+                } 
             }
 
             $is_success = 1;
             $msg = '';
         }
-        
-        
         
         $return = [
             'is_success' => $is_success,
@@ -15389,6 +15450,37 @@ class Customer extends MY_Controller
         ];
         echo json_encode($return);
     }
+
+    public function ajax_update_customer_collection_request()
+    {
+        $this->load->model('AcsCustomerCancellationRequest');
+        $this->load->model('Customer_advance_model');
+
+        $company_id = logged('company_id');
+        $is_success = 0;
+        $msg = 'Cannot find customer data';
+
+        $post = $this->input->post();
+        if($post) {
+            $post_data['id'] = $post['id'];
+            $post_data['send_to_collection'] = $post['send_to_collection'];
+            $post_data['statement_of_claim'] = $post['statement_of_claim'];
+            $post_data['court_date'] = $post['court_date'];
+            $post_data['claim_amount'] = $post['claim_amount'];
+            $post_data['award_amount'] = $post['award_amount'];
+            $update_collection = $this->Customer_advance_model->update_data($post_data, 'acs_customer_cancellation_requests', 'id');
+            if($update_collection) {
+                $is_success = 1;
+                $msg = 'Customer collection has been updated successfully.';
+            }
+        }
+
+        $return = [
+            'is_success' => $is_success,
+            'msg' => $msg
+        ];
+        echo json_encode($return);
+    }    
 
     public function ajax_set_default_monitoring_company()
     {

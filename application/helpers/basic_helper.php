@@ -5445,9 +5445,10 @@ if(!function_exists('set_expense_graph_data')) {
         $CI = &get_instance();
         $CI->load->model('Clients_model');
         $industry_type_id = $CI->session->userdata('client_industry');
+        $company_id = logged('company_id');
 
         $is_solar = false;
-        if( $industry_type_id == $CI->Clients_model->solarIndustryId() ){
+        if( $industry_type_id == $CI->Clients_model->solarIndustryId() || $company_id == 1 ){
             $is_solar = true;
         }
 
@@ -5458,9 +5459,10 @@ if(!function_exists('set_expense_graph_data')) {
         $CI = &get_instance();
         $CI->load->model('Clients_model');
         $industry_type_id = $CI->session->userdata('client_industry');
+        $company_id = logged('company_id');
 
         $is_alarm = false;
-        if( $industry_type_id == $CI->Clients_model->alarmIndustryId() ){
+        if( $industry_type_id == $CI->Clients_model->alarmIndustryId() || $company_id == 1 ){
             $is_alarm = true;
         }
 

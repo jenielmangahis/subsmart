@@ -38,7 +38,8 @@ define('ENVIRONMENT', 'development');
 switch (ENVIRONMENT)
 {
 	case 'development':
-		error_reporting(3);
+		error_reporting(E_ERROR | E_PARSE);
+		//error_reporting(3);
 		ini_set('display_errors', 'E_ALL');
 	break;
 
