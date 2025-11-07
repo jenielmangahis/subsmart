@@ -1250,31 +1250,31 @@
                         <div class="row">
                             <div class="col-12 mt-2">
                                 <label class="bold"><strong>Send to Collection</strong></label>
-                                <input type="text" placeholder="" name="send_to_collection" id="send_to_collection" class="form-control mb-2" value="" required />
+                                <input type="text" placeholder="" name="send_to_collection" id="send_to_collection" class="form-control mb-2" value="<?php echo $cancel_request_data->send_to_collection ? $cancel_request_data->send_to_collection : ''; ?>" required />
                             </div>
                         </div>
                         <div class="row">
                             <div class="col-12 mt-2">
                                 <label class="bold"><strong>Statement of Claim</strong></label>
-                                <input type="text" placeholder="" name="statement_of_claim" id="statement_of_claim" class="form-control mb-2" value="" required />
+                                <input type="text" placeholder="" name="statement_of_claim" id="statement_of_claim" class="form-control mb-2" value="<?php echo $cancel_request_data->statement_of_claim ? $cancel_request_data->statement_of_claim : ''; ?>" required />
                             </div>
                         </div>
                         <div class="row">
                             <div class="col-12 mt-2">
                                 <label class="bold"><strong>Court Date</strong></label>
-                                <input type="date" placeholder="" name="court_date" id="court_date" class="form-control mb-2" value="" required />
+                                <input type="date" placeholder="" name="court_date" id="court_date" class="form-control mb-2" value="<?php echo $cancel_request_data->court_date ? $cancel_request_data->court_date : ''; ?>" required />
                             </div>
                         </div>
                         <div class="row">
                             <div class="col-12 mt-2">
                                 <label class="bold"><strong>Claim $</strong></label>
-                                <input type="number" placeholder="" name="claim_amount" id="claim_amount" class="form-control mb-2" value="" required />
+                                <input type="number" placeholder="" name="claim_amount" id="claim_amount" class="form-control mb-2" value="<?php echo $cancel_request_data->claim_amount > 0 ? $cancel_request_data->claim_amount : ''; ?>" required />
                             </div>
                         </div> 
                         <div class="row">
                             <div class="col-12 mt-2">
                                 <label class="bold"><strong>Award Amount</strong></label>
-                                <input type="number" placeholder="" name="award_amount" id="award_amount" class="form-control mb-2" value="" required />
+                                <input type="number" placeholder="" name="award_amount" id="award_amount" class="form-control mb-2" value="<?php echo $cancel_request_data->award_amount > 0 ? $cancel_request_data->award_amount : ''; ?>" required />
                             </div>
                         </div>
                     </form>
