@@ -3883,6 +3883,7 @@ class Customer extends MY_Controller
         $this->load->model('Customer_model');
         $this->load->model('PanelType_model');
         $this->load->model('AcsAccountType_model');
+        $this->load->model('AcsAlarmMonitoringCompany_model');
 
         $this->hasAccessModule(9);
 
@@ -4159,7 +4160,8 @@ class Customer extends MY_Controller
         $panelTypes = $this->PanelType_model->getAllByCompanyId($company_id);
         $accountTypes = $this->AcsAccountType_model->getAllByCompanyId($company_id);
         $defaultAccountType  = $this->AcsAccountType_model->getCompanyDefaultValue($company_id);
-
+        $monitoringCompanies = $this->AcsAlarmMonitoringCompany_model->getAllByCompanyId($company_id);
+        $defaultMonitoringCompany = $this->AcsAlarmMonitoringCompany_model->getCompanyDefaultValue($company_id);
 
         // search Alarm.com customer
         $this->load->helper(array('alarm_api_helper'));
@@ -4211,6 +4213,8 @@ class Customer extends MY_Controller
         $this->page_data['defaultInstallerCode'] = $defaultInstallerCode;
         $this->page_data['accountTypes'] = $accountTypes;
         $this->page_data['defaultAccountType'] = $defaultAccountType;
+        $this->page_data['monitoringCompanies'] = $monitoringCompanies;
+        $this->page_data['defaultMonitoringCompany'] = $defaultMonitoringCompany;
         //$this->load->view('v2/pages/customer/add', $this->page_data);
         $this->load->view('v2/pages/customer/add_dynamic_fields', $this->page_data);
     }
@@ -15203,8 +15207,8 @@ class Customer extends MY_Controller
                 'date_updated' => date("Y-m-d H:i:s")
             ];
 
-            $site_type_id = $this->AcsAlarmMonitoringCompany_model->create($data);
-            $site_type_name = $post['monitoring_company'];
+            $monitoring_company_id = $this->AcsAlarmMonitoringCompany_model->create($data);
+            $monitoring_company_name = $post['monitoring_company'];
 
             //Activity Logs
             $activity_name = 'Monitoring Companies : Created monitoring company ' . $post['monitoring_company']; 
@@ -15433,10 +15437,10 @@ class Customer extends MY_Controller
             $total_deleted = $this->AcsAlarmMonitoringCompany_model->bulkDelete($post['monitoringCompanies'], $filters);
 
 			//Activity Logs
-            if( $total_delete > 1 ){
-                $activity_name = 'Monitoring Company : Deleted ' .$total_deleted. ' monitoring company'; 
-            }else{
+            if( $total_deleted > 1 ){
                 $activity_name = 'Monitoring Company : Deleted ' .$total_deleted. ' monitoring companies'; 
+            }else{
+                $activity_name = 'Monitoring Company : Deleted ' .$total_deleted. ' monitoring company'; 
             }
 			
 			createActivityLog($activity_name);
@@ -15452,6 +15456,7 @@ class Customer extends MY_Controller
 
         echo json_encode($return);
 	}
+
     public function verifyCustomer()
     {
         $company_id  = logged('company_id');
@@ -15463,5 +15468,240 @@ class Customer extends MY_Controller
         $execute = $this->db->update('acs_profile', ['is_verified' => $state]);
 
         echo $execute;
+    }
+
+    public function settings_alarm_receiver_phone_numbers()
+    {
+        $this->load->model('AcsAlarmReceiverPhoneNumber_model');
+
+        if(!checkRoleCanAccessModule('customer-settings', 'read')){
+			show403Error();
+			return false;
+		}
+
+        $company_id = logged('company_id');
+        $receiverPhoneNumbers = $this->AcsAlarmReceiverPhoneNumber_model->getAllByCompanyId($company_id);
+
+        $this->page_data['receiverPhoneNumbers'] = $receiverPhoneNumbers;
+        $this->page_data['page']->title = 'Alarm Receiver Phone Numbers';
+        $this->page_data['page']->parent = 'Customers';
+        $this->load->view('v2/pages/customer/settings_alarm_receiver_phone_numbers', $this->page_data);
+    }
+
+    public function ajax_create_receiver_phone_number()
+    {
+        $this->load->model('AcsAlarmReceiverPhoneNumber_model');
+
+        if(!checkRoleCanAccessModule('customer-settings', 'write')){
+			show403Error();
+			return false;
+		}
+
+        $is_success = 0;
+        $msg = 'Cannot save data';
+        $receiver_number_id   = 0;
+        $receiver_number = '';
+
+        $company_id = logged('company_id');
+        $post = $this->input->post();
+
+        $isExists = $this->AcsAlarmReceiverPhoneNumber_model->getByReceiverNumberAndCompanyId($post['receiver_number'], $company_id);
+        if( $isExists ){
+            $msg = 'Receiver phone number ' . $post['receiver_number'] . ' already exists.';
+        }elseif( $post['receiver_number'] == '' ){
+            $msg = 'Please enter receiver phone number';
+        }else{
+            $data = [
+                'company_id' => $company_id,
+                'receiver_number' => $post['receiver_number'],
+                'date_created' => date("Y-m-d H:i:s"),
+                'date_updated' => date("Y-m-d H:i:s")
+            ];
+
+            $receiver_number_id = $this->AcsAlarmReceiverPhoneNumber_model->create($data);
+            $receiver_number    = $post['receiver_number'];
+
+            //Activity Logs
+            $activity_name = 'Receiver Phone Number : Created receiver phone number ' . $post['receiver_number']; 
+            createActivityLog($activity_name);
+
+            $is_success = 1;
+            $msg = '';
+        }
+
+        $return = ['is_success' => $is_success, 'msg' => $msg, 'receiver_number_id' => $receiver_number_id, 'receiver_number' => $receiver_number];
+        echo json_encode($return);
+    }
+
+    public function ajax_update_receiver_phone_number()
+    {
+        $this->load->model('AcsAlarmReceiverPhoneNumber_model');
+
+        if(!checkRoleCanAccessModule('customer-settings', 'write')){
+			show403Error();
+			return false;
+		}
+
+        $is_success = 0;
+        $msg = 'Cannot find data';
+
+        $company_id = logged('company_id');
+        $post = $this->input->post();
+
+        $isExists = $this->AcsAlarmReceiverPhoneNumber_model->getByReceiverNumberAndCompanyId($post['receiver_number'], $company_id);
+        if( $isExists && $post['receiver_phone_number_id'] != $isExists->id ){
+            $msg = 'Receiver phone number ' . $post['receiver_number'] . ' already exists.';
+        }elseif( $post['receiver_number'] == '' ){
+            $msg = 'Please enter receiver phone number';
+        }else{
+            $receiverPhoneNumber = $this->AcsAlarmReceiverPhoneNumber_model->getByIdAndCompanyId($post['receiver_phone_number_id'], $company_id);
+            if( $receiverPhoneNumber ){
+                $data = [
+                    'receiver_number' => $post['receiver_number'],
+                    'date_updated' => date("Y-m-d H:i:s")
+                ];
+
+                $this->AcsAlarmReceiverPhoneNumber_model->update($receiverPhoneNumber->id, $data);
+
+                //Activity Logs
+                $activity_name = 'Receiver Phone Number : Updated receiver phone number ' . $post['receiver_number']; 
+                createActivityLog($activity_name);
+
+                $is_success = 1;
+                $msg = '';
+            }
+            
+        }
+
+        $return = ['is_success' => $is_success, 'msg' => $msg];
+        echo json_encode($return);
+    }
+
+    public function ajax_delete_monitoring_company()
+	{
+		$this->load->model('AcsAlarmMonitoringCompany_model');
+
+		$is_success = 0;
+        $msg    = 'Please select data';
+
+        $company_id  = logged('company_id');
+        $post = $this->input->post();
+
+        $monitoringCompany = $this->AcsAlarmMonitoringCompany_model->getByIdAndCompanyId($post['id'], $company_id);
+        if ($monitoringCompany) {
+            $this->AcsAlarmMonitoringCompany_model->delete($monitoringCompany->id);
+
+            //Activity Logs
+            $activity_name = 'Monitoring Companies : Deleted monitoring company ' . $monitoringCompany->name; 
+            createActivityLog($activity_name);
+
+            $is_success = 1;
+            $msg = '';
+        }
+
+        $return = [
+            'is_success' => $is_success,
+            'msg' => $msg,
+        ];
+
+        echo json_encode($return);
+	}
+
+    public function ajax_delete_receiver_number()
+	{
+		$this->load->model('AcsAlarmReceiverPhoneNumber_model');
+
+		$is_success = 0;
+        $msg    = 'Please select data';
+
+        $company_id  = logged('company_id');
+        $post = $this->input->post();
+
+        $receiverPhoneNumber = $this->AcsAlarmReceiverPhoneNumber_model->getByIdAndCompanyId($post['id'], $company_id);
+        if ($receiverPhoneNumber) {
+            $this->AcsAlarmReceiverPhoneNumber_model->delete($receiverPhoneNumber->id);
+
+            //Activity Logs
+            $activity_name = 'Receiver Phone Number : Deleted receiver phone number ' . $receiverPhoneNumber->receiver_number; 
+            createActivityLog($activity_name);
+
+            $is_success = 1;
+            $msg = '';
+        }
+
+        $return = [
+            'is_success' => $is_success,
+            'msg' => $msg,
+        ];
+        
+
+        echo json_encode($return);
+	}
+
+    public function ajax_delete_selected_receiver_numbers()
+	{
+		$this->load->model('AcsAlarmReceiverPhoneNumber_model');
+
+		$is_success = 0;
+        $msg    = 'Please select data';
+
+        $company_id  = logged('company_id');
+        $post = $this->input->post();
+
+        if( $post['receiverPhoneNumbers'] ){
+
+            $filters[] = ['field' => 'company_id', 'value' => $company_id];
+            $total_deleted = $this->AcsAlarmReceiverPhoneNumber_model->bulkDelete($post['receiverPhoneNumbers'], $filters);
+
+			//Activity Logs
+            if( $total_delete > 1 ){
+                $activity_name = 'Receiver Phone Number : Deleted ' .$total_deleted. ' phone numbers'; 
+            }else{
+                $activity_name = 'Receiver Phone Number : Deleted ' .$total_deleted. ' phone number'; 
+            }
+			
+			createActivityLog($activity_name);
+
+            $is_success = 1;
+            $msg    = '';
+        }
+
+        $return = [
+            'is_success' => $is_success,
+            'msg' => $msg
+        ];
+
+        echo json_encode($return);
+	}
+
+    public function ajax_set_default_receiver_phone_number()
+    {
+        $this->load->model('AcsAlarmReceiverPhoneNumber_model');
+
+        $is_success = 0;
+        $msg = 'Cannot find record';
+
+        $company_id = logged('company_id');
+        $post = $this->input->post();
+
+        $receiverPhoneNumber = $this->AcsAlarmReceiverPhoneNumber_model->getByIdAndCompanyId($post['id'], $company_id);
+        if ($receiverPhoneNumber) {
+            $this->AcsAlarmReceiverPhoneNumber_model->resetDefaultByCompanyId($company_id);
+            $this->AcsAlarmReceiverPhoneNumber_model->update($receiverPhoneNumber->id, ['is_default' => 'Yes']);
+
+            //Activity Logs
+            $activity_name = 'Receiver Phone Number : Set default value to ' . $receiverPhoneNumber->receiver_number; 
+            createActivityLog($activity_name);
+
+            $is_success = 1;
+            $msg = '';
+        }
+
+        $return = [
+            'is_success' => $is_success,
+            'msg' => $msg,
+        ];
+
+        echo json_encode($return);
     }
 }
