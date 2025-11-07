@@ -193,21 +193,6 @@
         cursor: pointer
     }
 
-    .customerManagementTable th:nth-child(1),
-    .customerManagementTable th:nth-child(2),
-    .customerManagementTable td:nth-child(1),
-    .customerManagementTable td:nth-child(2) {
-        position: sticky;
-        left: 0;
-        background: white;
-        z-index: 3;
-    }
-
-    .customerManagementTable th:nth-child(2),
-    .customerManagementTable td:nth-child(2) {
-        left: 80px;
-    }
-
     .customerManagementTable th {
         z-index: 4;
     }

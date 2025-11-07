@@ -62,7 +62,13 @@ class Serversidetable_model extends MY_Model {
 
         // Apply the where condition if it is set
         if (!empty($this->where)) {
-            $this->db->where($this->where);
+            foreach ($this->where as $key => $value) {
+                if (is_array($value)) {
+                    $this->db->where_in($key, $value);
+                } else {
+                    $this->db->where($key, $value);
+                }
+            }
         }
  
         $i = 0;

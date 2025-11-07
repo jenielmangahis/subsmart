@@ -401,7 +401,13 @@
                         <label class="content-subtitle fw-bold">Secondary System Type</label>
                     </div>
                     <div class="col-12 col-md-6">
-                        <label class="content-subtitle"><?= !empty($alarm_info->radio_serial_number) ? $alarm_info->radio_serial_number : '---'; ?></label>
+                        <?php 
+                            $secondary_system_type = 'GSM';
+                            if( $alarm_info && $alarm_info->secondary_system_type != '' ){
+                                $secondary_system_type = $alarm_info->secondary_system_type;
+                            }
+                        ?>
+                        <label class="content-subtitle"><?= $secondary_system_type; ?></label>
                     </div>
                 </div>
                 <div class="row p-0">    
