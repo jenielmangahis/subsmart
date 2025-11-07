@@ -9,7 +9,6 @@
 
 <div class="row page-content g-0">
     <div class="col-12 mb-3">
-        <?php //include viewPath('v2/includes/page_navigations/customer_settings_tabs'); ?>
         <?php include viewPath('v2/includes/page_navigations/customer_tabs'); ?>
     </div>
     <div class="col-12">
@@ -30,12 +29,12 @@
                             <div class="nsm-card-header">
                                 <div class="nsm-card-title">
                                     <span><i class='bx bx-fw bx-file'></i> Customer Cancellation Request Details</span>
-                                    <div class="form-check" style="float:right;">
-                                        <input class="form-check-input" type="checkbox" value="1" name="is_collection" id="chk-collection">
+                                    <!-- <div class="form-check" style="float:right;">
+                                        <input class="form-check-input chk-collection" type="checkbox" value="1" name="is_collection" id="chk-collection">
                                         <label class="form-check-label" for="chk-collection">
                                             Collection
                                         </label>
-                                    </div>                            
+                                    </div> -->                        
                                 </div>
                             </div>
                             <div class="nsm-card-content">
@@ -69,7 +68,7 @@
                                         <label class="content-subtitle fw-bold">BOC Amount</label>
                                     </div>
                                     <div class="col-12 col-md-8">
-                                        <label class="content-subtitle"><?php echo number_format($cancel_request_data->boc_amount,2); ?></label>
+                                        <label class="content-subtitle">$<?php echo number_format($cancel_request_data->boc_amount,2); ?></label>
                                     </div>
                                 </div>
                                 <div class="row g-1 mb-3">
@@ -98,7 +97,7 @@
                                 </div>
                             </div>
 
-                            <div id="cust-collection-req-container" class="cust-collection-req-container" style="">
+                            <div id="cust-collection-req-container" class="cust-collection-req-container">
                                 <br />
                                 <div class="nsm-card-header">
                                     <div class="nsm-card-title">
@@ -110,6 +109,46 @@
                                 </div>
                                 <div class="nsm-card-content">
                                     <hr>
+                                    <div class="row g-1 mb-3">
+                                        <div class="col-12 col-md-4">
+                                            <label class="content-subtitle fw-bold">Send to Collection</label>
+                                        </div>
+                                        <div class="col-12 col-md-8">
+                                            <label class="content-subtitle"><?php echo $cancel_request_data->send_to_collection != null ? $cancel_request_data->send_to_collection : '--'; ?></label>
+                                        </div>
+                                    </div>
+                                    <div class="row g-1 mb-3">
+                                        <div class="col-12 col-md-4">
+                                            <label class="content-subtitle fw-bold">Statement of Claim</label>
+                                        </div>
+                                        <div class="col-12 col-md-8">
+                                            <label class="content-subtitle"><?php echo $cancel_request_data->statement_of_claim != null ? $cancel_request_data->statement_of_claim : '--'; ?></label>
+                                        </div>
+                                    </div>
+                                    <div class="row g-1 mb-3">
+                                        <div class="col-12 col-md-4">
+                                            <label class="content-subtitle fw-bold">Court Date</label>
+                                        </div>
+                                        <div class="col-12 col-md-8">
+                                            <label class="content-subtitle"><?php echo $cancel_request_data->court_date != null ? date('m/d/Y', strtotime($cancel_request_data->court_date)) : '--'; ?></label>
+                                        </div>
+                                    </div>
+                                    <div class="row g-1 mb-3">
+                                        <div class="col-12 col-md-4">
+                                            <label class="content-subtitle fw-bold">Claim $</label>
+                                        </div>
+                                        <div class="col-12 col-md-8">
+                                            <label class="content-subtitle"><?php echo $cancel_request_data->claim_amount > 0 ? $cancel_request_data->claim_amount : '--'; ?></label>
+                                        </div>
+                                    </div>
+                                    <div class="row g-1 mb-3">
+                                        <div class="col-12 col-md-4">
+                                            <label class="content-subtitle fw-bold">Award Amount</label>
+                                        </div>
+                                        <div class="col-12 col-md-8">
+                                            <label class="content-subtitle"><?php echo $cancel_request_data->award_amount > 0 ? $cancel_request_data->award_amount : '--'; ?></label>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
 
@@ -143,17 +182,24 @@
 
 <script type="text/javascript">
     $(document).ready(function() {
-        $(".nsm-table").nsmPagination();
 
-        $("#search_field").on("input", debounce(function() {
-            tableSearch($(this));        
-        }, 1000));  
-
-        $("#new_customer_status_form").on("submit", function(e) {
+        $('#chk-collection').change(function() {
+            $('#cust-collection-req-container').toggle(this.checked);
+        });       
+        
+        $("#btn-quick-edit-customer-collection").click(function() {
+            let cancellation_id = "<?= $cancel_request_data->id ? $cancel_request_data->id : 0; ?>";
+            if( cancellation_id > 0 ){
+                $('#request-cancellation-id').val(cancellation_id);
+                $('#modal_customer_cancel_request_collection_update_modal').modal('show');
+            }             
+        });    
+        
+        $("#frm-customer-cancellation-collection-update").on("submit", function(e) { 
             let _this = $(this);
             e.preventDefault();
 
-            var url = base_url + "customers/_create_customer_status";
+            var url = base_url + "customer/_update_customer_collection_request";
             _this.find("button[type=submit]").html("Saving");
             _this.find("button[type=submit]").prop("disabled", true);
 
@@ -162,21 +208,22 @@
                 url: url,
                 data: _this.serialize(),
                 dataType:'json',
+                beforeSend: function(data) {
+                    $("#btn-customer-update-collection-request").html('<span class="bx bx-loader bx-spin"></span>');
+                },                
                 success: function(result) {
                     if (result.is_success === 1) {
-                        $("#new_customer_status_modal").modal('hide');
+                        $('#modal_customer_cancel_request_collection_update_modal').modal('hide');
                         _this.trigger("reset");
                         
                         Swal.fire({
-                            title: 'Customer Status',
-                            text: "New customer status has been created successfully.",
+                            title: 'Customer Collection',
+                            text: "Customer collection has been updated successfully.",
                             icon: 'success',
                             showCancelButton: false,
                             confirmButtonText: 'Okay'
                         }).then((result) => {
-                            //if (result.value) {
-                                location.reload();
-                            //}
+                            location.reload();
                         });
                     } else {
                         Swal.fire({
@@ -186,12 +233,13 @@
                         });
                     }
 
-                    _this.find("button[type=submit]").html("Save");
+                    $("#btn-customer-update-collection-request").html("Update");
                     _this.find("button[type=submit]").prop("disabled", false);
                 },
             });
         });
-\
+ 
+
     });
 </script>
 <?php include viewPath('v2/includes/footer'); ?>

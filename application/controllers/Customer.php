@@ -4217,9 +4217,7 @@ class Customer extends MY_Controller
 
     public function cancellation_request($id = null)
     {
-        //$this->load->model('AcsProfile_model');
         $this->load->model('AcsCustomerCancellationRequest');
-        //$this->load->model('Users_model');
 
         $this->hasAccessModule(9);
         
@@ -15440,6 +15438,37 @@ class Customer extends MY_Controller
         ];
         echo json_encode($return);
     }
+
+    public function ajax_update_customer_collection_request()
+    {
+        $this->load->model('AcsCustomerCancellationRequest');
+        $this->load->model('Customer_advance_model');
+
+        $company_id = logged('company_id');
+        $is_success = 0;
+        $msg = 'Cannot find customer data';
+
+        $post = $this->input->post();
+        if($post) {
+            $post_data['id'] = $post['id'];
+            $post_data['send_to_collection'] = $post['send_to_collection'];
+            $post_data['statement_of_claim'] = $post['statement_of_claim'];
+            $post_data['court_date'] = $post['court_date'];
+            $post_data['claim_amount'] = $post['claim_amount'];
+            $post_data['award_amount'] = $post['award_amount'];
+            $update_collection = $this->Customer_advance_model->update_data($post_data, 'acs_customer_cancellation_requests', 'id');
+            if($update_collection) {
+                $is_success = 1;
+                $msg = 'Customer collection has been updated successfully.';
+            }
+        }
+
+        $return = [
+            'is_success' => $is_success,
+            'msg' => $msg
+        ];
+        echo json_encode($return);
+    }    
 
     public function ajax_set_default_monitoring_company()
     {

@@ -1179,3 +1179,53 @@
         </div>
     </div>
 </div>
+
+<div class="modal fade nsm-modal fade" id="modal_customer_cancel_request_collection_update_modal" data-bs-backdrop="static" tabindex="-1" aria-labelledby="modal_customer_cancel_request_collection_update_modal_label" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">        
+        <div class="modal-content">            
+                <div class="modal-header">
+                    <span class="modal-title content-title">Collection Update</span>
+                    <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
+                </div>
+                <div class="modal-body">                    
+                    <form method="POST" id="frm-customer-cancellation-collection-update" class="frm-customer-cancellation-collection-update">
+                        <input type="hidden" id="request-cancellation-id" name="id" value="" />
+                        <div class="row">
+                            <div class="col-12 mt-2">
+                                <label class="bold"><strong>Send to Collection</strong></label>
+                                <input type="text" placeholder="" name="send_to_collection" id="send_to_collection" class="form-control mb-2" value="" required />
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-12 mt-2">
+                                <label class="bold"><strong>Statement of Claim</strong></label>
+                                <input type="text" placeholder="" name="statement_of_claim" id="statement_of_claim" class="form-control mb-2" value="" required />
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-12 mt-2">
+                                <label class="bold"><strong>Court Date</strong></label>
+                                <input type="date" placeholder="" name="court_date" id="court_date" class="form-control mb-2" value="" required />
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-12 mt-2">
+                                <label class="bold"><strong>Claim $</strong></label>
+                                <input type="number" placeholder="" name="claim_amount" id="claim_amount" class="form-control mb-2" value="" required />
+                            </div>
+                        </div> 
+                        <div class="row">
+                            <div class="col-12 mt-2">
+                                <label class="bold"><strong>Award Amount</strong></label>
+                                <input type="number" placeholder="" name="award_amount" id="award_amount" class="form-control mb-2" value="" required />
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="nsm-button" data-bs-dismiss="modal">Close</button>
+                    <button type="submit" id="btn-customer-update-collection-request" class="nsm-button primary btn-customer-update-collection-request" form="frm-customer-cancellation-collection-update">Update</button>
+                </div>            
+        </div>
+    </div>
+</div>
