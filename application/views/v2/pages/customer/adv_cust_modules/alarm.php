@@ -226,7 +226,13 @@
                         </div>
                         <div class="col-12 col-md-6">
                             <span class="content-subtitle">
-                                <?= $alarm_info && $alarm_info->secondary_system_type != '' ? $alarm_info->secondary_system_type : '---'; ?>    
+                                <?php 
+                                    $secondary_system_type = 'GSM';
+                                    if( $alarm_info && $alarm_info->secondary_system_type != '' ){
+                                        $secondary_system_type = $alarm_info->secondary_system_type;
+                                    }
+                                ?>
+                                <?= $secondary_system_type; ?>    
                             </span>
                         </div> 
 

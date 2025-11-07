@@ -209,6 +209,14 @@
 
         $(document).on('change', '#status', function(){
             let status = $(this).val();
+            let customer_id = "<?= $profile_info ? $profile_info->prof_id : 0; ?>";
+
+            if( customer_id > 0 ){
+                $('#request-cancellation-customer-id').val(customer_id);
+                $('#send_cancel_status_request_modal').modal('show');
+            }
+            
+            
             if( status == 'Cancelled' || status == 'Cancel' || status == 'Charge Back' || status == 'Collection' || status == 'Competition Lost' ){
                 $('#office-info-cancel-date').attr('required', 'required');
                 $('#cancel_reason').attr('required', 'required');
@@ -966,6 +974,54 @@
 
         $('#frm-customer-cancellation-request').on('submit', function(e){
             e.preventDefault();
+            Swal.fire({
+                title: 'Customer Cancellation Request',
+                html: "Are all entries correct? This will send customer request for cancellation email to admin for approval.<br/><Br/>Would you like to proceed?",
+                icon: 'question',
+                confirmButtonText: 'Yes',
+                showCancelButton: true,
+                cancelButtonText: "No"
+            }).then((result) => {
+                if (result.value) {
+                    $.ajax({
+                        type: "POST",
+                        url: base_url + 'customer/_send_customer_cancellation_request',
+                        dataType: 'json',
+                        data: $('#frm-customer-cancellation-request').serialize(),
+                        success: function(data) {    
+                            $('#btn-customer-cancel-status-request').html('Save');                   
+                            if (data.is_success) {
+                                Swal.fire({
+                                    title: 'Customer Cancellation Request',
+                                    text: "Email was successfully sent to admin. Customer status will be updated once admin approved the request.",
+                                    icon: 'success',
+                                    showCancelButton: false,
+                                    confirmButtonText: 'Okay'
+                                }).then((result) => {
+                                    //if (result.value) {
+                                        $('#send_cancel_status_request_modal').modal('hide');
+                                    //}
+                                });
+                            }else{
+                                Swal.fire({
+                                    title: 'Error',
+                                    text: data.msg,
+                                    icon: 'error',
+                                    showCancelButton: false,
+                                    confirmButtonText: 'Okay'
+                                }).then((result) => {
+                                    
+                                });
+                            }
+                        },
+                        beforeSend: function() {
+                            $('#btn-customer-cancel-status-request').html('<span class="bx bx-loader bx-spin"></span>');
+                        }
+                    });
+                }
+            });
+
+            
         });
 
         $('#btn-quick-add-customer-status').on('click', function(){
@@ -1151,6 +1207,40 @@
             });
         });
 
+        $('#quick-add-system-package-form').on('submit', function(e){
+            e.preventDefault();
+            $.ajax({
+                type: "POST",
+                url: base_url + 'customers/_create_system_package_type',
+                dataType: 'json',
+                data: $('#quick-add-system-package-form').serialize(),
+                success: function(data) {    
+                    $('#btn-save-service-package').html('Save');                   
+                    if (data.is_success) {
+                        $('#quick_add_system_package_modal').modal('hide');
+                        $('#communication_type').append($('<option>', {
+                            value: data.package_name,
+                            text: data.package_name,
+                        }));
+                        $('#communication_type').val(data.package_name);
+                    }else{
+                        Swal.fire({
+                            title: 'Error',
+                            text: data.msg,
+                            icon: 'error',
+                            showCancelButton: false,
+                            confirmButtonText: 'Okay'
+                        }).then((result) => {
+                            
+                        });
+                    }
+                },
+                beforeSend: function() {
+                    $('#btn-save-service-package').html('<span class="bx bx-loader bx-spin"></span>');
+                }
+            });
+        });
+
         $('#btn-quick-panel-type').on('click', function(){
             $('#frm-add-panel-type')[0].reset();
             $('#modal-add-panel-type').modal('show');
@@ -1181,6 +1271,13 @@
         $('#btn-manage-account-type').on('click', function(){
             window.open(
                 base_url + 'customer/settings_account_types',
+                '_blank' 
+            );
+        });
+
+        $('#btn-manage-service-package').on('click', function(){
+            window.open(
+                base_url + 'customer/settings_system_package',
                 '_blank' 
             );
         });
@@ -1663,6 +1760,11 @@
             if( selected == 'Contract Monitoring' ){
                 $('#acct_type').val('In-House').trigger('change');
             } 
+        });
+
+        $('#btn-quick-communication-type').on('click', function(){
+            $('#quick-add-system-package-form')[0].reset();
+            $('#quick_add_system_package_modal').modal('show');
         });
 
         function load_account_cost(){

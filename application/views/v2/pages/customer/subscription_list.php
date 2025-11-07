@@ -70,7 +70,362 @@
     .collapse, .collapsing {
         transition: none !important;
     }
+
+    .activeCustomerFilters {
+        width: 450px;
+    }
+
+    .activeCustomerManageMode {
+        background: #6a4a86;
+        border: 1px solid #6a4a86;
+    }
 </style>
+
+
+<style>
+    .row-adt-project {
+    background-color: #d1b3ff !important;
+    }
+
+    .badge-primary {
+        background-color: #007bff;
+    }
+
+    .badge {
+        display: inline-block;
+        padding: 0.25em 0.4em;
+        font-size: 75%;
+        font-weight: 700;
+        line-height: 1;
+        text-align: center;
+        white-space: nowrap;
+        vertical-align: baseline;
+        border-radius: 0.25rem;
+        margin-top: 9px;
+    }
+
+    /* Disabled: Unable to see context menu when only few items showing  */
+    /* .cont {
+        overflow-x: auto;
+    } */
+
+    .customerTbl>thead {
+        color: #888888;
+        font-weight: bold;
+        font-size: 14px;
+    }
+
+    .customerTbl td {
+        padding: 0.8rem 0.5rem;
+    }
+
+    .customerTbl>tbody td {
+        border-bottom: 1px solid #e8e8e8;
+    }
+
+    .customerTbl td .bx {
+        color: #888888;
+    }
+
+    .customerTbl>tbody>tr:hover {
+        background-color: #f7f7f7;
+    }
+
+    .customerTbl {
+        width: 100%;
+        font-size: 15px;
+    }
+
+    .customerTbl>tfoot td {
+        padding: 0.8rem 0 0 0;
+    }
+
+    .customerTbl .table-icon {
+        width: 1%;
+    }
+
+    table {
+        width: 100% !important;
+    }
+
+    .dataTables_filter,
+    .dataTables_length {
+        display: none;
+    }
+
+    table.dataTable thead th,
+    table.dataTable thead td {
+        padding: 10px !important;
+        border-bottom: 1px solid lightgray;
+    }
+
+    table.dataTable.no-footer {
+        border-bottom: 0px solid #111;
+        margin-bottom: 10px;
+    }
+
+    #customerDuplicateTable td,
+    #commercialDuplicateTable td {
+        padding: 0.8rem 0rem;
+    }
+
+    #customerDuplicateTable_info,
+    #commercialDuplicateTable_info {
+        display: none;
+    }
+
+    table.dataTable thead th,
+    table.dataTable thead td {
+        padding: 10px 18px;
+        border-bottom: 1px solid lightgray !important;
+    }
+
+    /* table.dataTable.no-footer {
+        border-bottom: 1px solid lightgray !important;
+    } */
+
+    .customCheckbox {
+        width: 20px;
+        height: 20px;
+    }
+
+    .flexWrapUnset {
+        flex-wrap: unset;
+    }
+
+    .scrollable-content {
+        overflow-x: auto;
+        white-space: nowrap;
+    }
+
+    .fieldColumn {
+        width: 170px;
+        vertical-align: middle;
+    }
+
+    .mergeProfile {
+        margin-left: 50px;
+    }
+
+    .fw-xnormal {
+        font-weight: 500;
+        cursor: pointer;
+    }
+
+    .checkSize {
+        font-size: 21px;
+        margin-left: 10px;
+        display: none;
+    }
+
+    .padding2px {
+        padding: 1.75px !important;
+    }
+
+    .mergeProfile>label>small {
+        margin-left: 10px;
+    }
+
+    .displayHide {
+        display: none;
+    }
+
+    .modal-content {
+        padding: unset;
+    }
+
+    .mergeOutputEntryWidth {
+        width: 400px;
+    }
+
+    .nav-pills .nav-link.active,
+    .nav-pills .show>.nav-link {
+        color: #fff;
+        background-color: #6a4a86;
+        border-radius: 50px;
+        font-weight: bold;
+    }
+
+    #customerDuplicateTable>tbody>tr>td,
+    #commercialDuplicateTable>tbody>tr>td {
+        vertical-align: middle;
+    }
+
+    #customerDuplicateTable>thead>tr>th,
+    #commercialDuplicateTable>thead>tr>th {
+        color: gray;
+    }
+
+    #customerDuplicateTable>tbody>tr:hover {
+        cursor: pointer;
+    }
+
+    .removeDuplicatedEntry2:focus,
+    .removeDuplicatedEntry2:active:focus,
+    .removeDuplicatedEntry2.active:focus {
+        outline: none;
+        box-shadow: none;
+    }
+
+    #customer-list .nsm-badge {
+        font-size: 14px;
+    }
+
+    .select-filter-card {
+        cursor: pointer
+    }
+
+    .customerManagementTable th {
+        z-index: 4;
+    }
+
+    .tableUpdaterDiv {
+        width: max-content;
+        max-width: 100%;
+        /* height: 550px; */
+        overflow: auto;
+        position: relative;
+
+    }
+
+    .actionButton,
+    .textPreview {
+        cursor: pointer;
+    }
+
+    .customerManagementTable, .updateHistoryTable {
+        width: 100% !important;
+        border-collapse: collapse !important;
+    }
+
+    .customerManagementTable>tbody>tr>td, .updateHistoryTable>tbody>tr>td {
+        position: relative;
+    }
+
+    .textPreview:hover {
+        color: red;
+        font-weight: bolder;
+    }
+
+    .customerManagementTable th,
+    .customerManagementTable td,
+    .updateHistoryTable th,
+    .updateHistoryTable td {
+        border: 1px solid lightgray;
+        padding: 8px !important;
+        text-align: left !important;
+        text-wrap: nowrap;
+    }
+
+    .customerManagementTable th, .updateHistoryTable th {
+        background-color: #f2f2f2 !important;
+    }
+
+    .customerManagementTable~.dataTables_info {
+        display: none;
+    }
+
+    .customerManagementTable~.dataTables_paginate, .updateHistoryTable~.dataTables_paginate {
+        /* position: fixed; */
+        /* float: left !important; */
+        margin-bottom: 35px;
+    }
+
+    .customerManagementTable {
+        vertical-align: middle;
+    }
+
+    .searchpdateHistoryRecords {
+        width: 30% !important;
+    }
+
+    .customerProfileBanner {
+        font-family: sans-serif;
+        margin: 0;
+    }
+
+    .dropdownFilterWidth {
+        width: max-content;
+    }
+
+    .searchCustomerListInput {
+        width: 60% !important;
+    }
+
+    .applyRevert {
+        background: #6a4a86;
+        color: white;
+    }
+
+    .applyRevert:hover {
+        border: 1px solid black;
+        color: white;
+    }
+
+    .custom-loader {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        text-align: center;
+        background-color: rgba(255, 255, 255, 0.8);
+        padding: 20px;
+        border-radius: 10px;
+        border: 1px solid #d3d3d3;
+        z-index: 9999;
+    }
+
+    .custom-loader p {
+        margin: 0;
+        font-size: 16px;
+        font-weight: bold;
+        color: #333;
+    }
+
+    .drag_handle {
+        position: absolute;
+        width: 10px;
+        height: 10px;
+        bottom: 0;
+        right: 0;
+        background-color: green;
+        cursor: pointer;
+        visibility: hidden;
+    }
+
+    .cell_dragging {
+        border: 2px solid green !important;
+    }
+
+    .cell_dragging_action {
+        cursor: grabbing;
+    }
+
+    .default_cell {
+        border: 1px solid lightgray;
+    }
+
+    .table > :not(:last-child) > :last-child > * {
+        border-bottom: 1px solid #dee2e6;
+    }
+    .dropdown-menu {
+        overflow: hidden;
+        overflow-y: auto;
+        max-height: calc(100vh - 500px);
+    }
+    #customer-list td:nth-child(1) {  
+      vertical-align:middle;
+    }
+    #customer-list_wrapper{
+        overflow:auto;
+    }
+    .nsm-callout {
+        margin-bottom: unset;
+    }
+</style>
+
+
+
 <div class="row page-content g-0">
     <div class="col-12 mb-3">
         <?php include viewPath('v2/includes/page_navigations/customer_tabs'); ?>
@@ -97,14 +452,59 @@
                 </div>
                 <div class="row mb-3 table-responsive activeCustomerStatusContainer"></div>
                 <div class="row">
-                    <div class="col-lg-3 mb-3">
-                        <div class="input-group">
-                            <input type="text" class="form-control activeCustomerGroupSearch" placeholder="Search Customer">
-                            <select class="form-select activeCustomerCategoryFilter">
-                                <option value="">None</option>
-                            </select>
+                    <div class="col-lg-6 mb-3">
+                        <div class="float-start activeCustomerFilters">
+                            <div class="input-group">
+                                <input type="text" class="form-control activeCustomerGroupSearch" placeholder="Search Customer">
+                                <select class="form-select activeCustomerCategoryFilter">
+                                    <option value="">None</option>
+                                </select>
+                            </div>
                         </div>
                     </div>
+                    <div class="col-lg-6 mb-3">
+                        <div class="float-end">
+                            <button class="btn btn-primary fw-bold activeCustomerManageMode"><i class="fas fa-user-cog"></i>&ensp;Manage</button>
+                            <button class="btn btn-danger fw-bold activeCustomerExitManageMode display_none"><i class="fas fa-sign-out-alt"></i>&ensp;Exit Manage Mode</button>
+                        </div>
+                    </div>
+
+                    <script>
+                        // $(document).on('click', '.activeCustomerManageMode', function () {
+                        //     $('.activeCustomerManageMode').hide();
+                        //     $('.activeCustomerExitManageMode').show();
+                        // });
+
+                        $(document).on('click', '.activeCustomerManageMode', function() {
+                            const content = $('.activeCustomerBatchUpdaterContent').find('.batchUpdaterContent').length;
+
+                            $('.activeCustomerManageMode, .activeCustomerListContent, .activeCustomerFilters').hide();
+                            $('.activeCustomerListContent').html("");
+                            $('.activeCustomerExitManageMode, .activeCustomerBatchUpdaterContent').show();
+
+                            if (content == 0) {
+                                $.ajax({
+                                    type: "POST",
+                                    // data: { statusFilter: 'active_only' }, 
+                                    url: `${window.origin}/Customer/toolContent/batchUpdater`,
+                                    success: function(response) {
+                                        $('.activeCustomerBatchUpdaterContent').append(response);
+                                        $('.customerUpdaterContentLoader, .batchUpdaterTitle, .modalExitButton').remove();
+                                    },
+                                });
+                            }
+                        });
+
+                        $(document).on('click', '.activeCustomerExitManageMode', function () {
+                            $('.activeCustomerManageMode, .activeCustomerListContent, .activeCustomerFilters').show();
+                            $('.activeCustomerExitManageMode, .activeCustomerBatchUpdaterContent').hide();
+                            getActiveCustomers();
+                        });
+                    </script>
+
+
+
+
                     <div class="col-lg-12">
                         <div class="col mt-3 activeCustomerLoader">
                             <div class="text-center">
@@ -115,11 +515,83 @@
                         </div>
                     </div>
                     <div class="col-lg-12 activeCustomerListContent display_none"></div>
+                    <div class="col-lg-12 activeCustomerBatchUpdaterContent display_none">
+                        <span class="customerUpdaterContentLoader">Please wait while fetching the tool content...</span>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
+
+<div class="modal fade activeCustomerManageModal" role="dialog" data-bs-backdrop="static" data-bs-keyboard="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <span class="modal-title content-title" style="font-size: 17px;">Manage Customer</span>
+                <button class="border-0 rounded mx-1" data-bs-dismiss="modal" style="cursor: pointer;"><i class="fas fa-times m-0 text-muted"></i></button>
+            </div>
+            <div class="modal-body">
+                <form class="activeCustomerManageForm">
+                    <div class="row">
+                        <div class="col-lg-3 mb-3">
+                            <label class="form-label fw-xnormal">Bill End</label>
+                            <input type="date" class="form-control" name="bill_end" required>
+                        </div>
+                        <div class="col-lg-5 mb-3">
+                            <label class="form-label fw-xnormal">Security Package</label>
+                            <select class="form-select" name="" required>
+
+                            </select>
+                        </div>
+                        <div class="col-lg-4 mb-3">
+                            <label class="form-label fw-xnormal">Panel Type</label>
+                            <select class="form-select" name="" required>
+
+                            </select>
+                        </div>
+                        <div class="col-lg-3 mb-3">
+                            <label class="form-label fw-xnormal">MMR</label>
+                            <input type="number" class="form-control" name="bill_end" step="any" required>
+                        </div>
+                        <div class="col-lg-3 mb-3">
+                            <label class="form-label fw-xnormal">GMR</label>
+                            <input type="number" class="form-control" name="bill_end" step="any" required>
+                        </div>
+                        <div class="col-lg-3 mb-3">
+                            <label class="form-label fw-xnormal">Pass Thru Cost</label>
+                            <input type="number" class="form-control" name="bill_end" step="any" required>
+                        </div>
+                        <div class="col-lg-3 mb-3">
+                            <label class="form-label fw-xnormal">Account Cost</label>
+                            <input type="number" class="form-control" name="bill_end" step="any" required>
+                        </div>
+                        <div class="col-lg-12">
+                            <button type="submit" class="btn btn-primary fw-bold float-end checkEditSubmitButton"><i class="fas fa-file-import"></i>&ensp;Update</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- <th class="text-nowrap">Bill End</th> -->
+<!-- <th class="text-nowrap">Security Package</th> -->
+<!-- <th class="text-nowrap">Panel Type</th> -->
+<!-- <th class="text-nowrap">MMR</th> -->
+<!-- <th class="text-nowrap">GMR</th> -->
+<!-- <th class="text-nowrap">Pass Thru Cost</th> -->
+<!-- <th class="text-nowrap">Account Cost</th> -->
+
+
+
+
+
+
+
+
+
 
 <!-- <div class="row g-3 mb-3">
     <div class="col-12 col-md-12">
@@ -300,6 +772,7 @@
                                             <ul class='dropdown-menu' aria-labelledby='activeCustomerButtonDropdown'>
                                                 <li><a class="dropdown-item" href="${window.origin}/customer/subscription/${cust.id}">View</a></li>
                                                 <li><a class="dropdown-item" href="${window.origin}/customer/add_advance/${cust.id}">Edit</a></li>
+                                                <li class="d-none"><a class="dropdown-item activeCustomerManage" href="javascript:void(0);" customer_id="${cust.id}">Manage</a></li>
                                                 <li><a class="dropdown-item" href="${window.origin}/customer/module/${cust.id}">Dashboard</a></li>
                                                 <li><a class="dropdown-item view-payment-item" href="javascript:void(0);" data-customer-id="${cust.id}" data-billing-id="">Payment History</a></li>
                                             </ul>
@@ -609,6 +1082,10 @@
             },
             error: function() {}
         });
+    });
+
+    $(document).on('click', '.activeCustomerManage', function () {
+        $('.activeCustomerManageModal').modal('show');
     });
 
     // $(document).on('click', '.dropdown-menu', function (e) {

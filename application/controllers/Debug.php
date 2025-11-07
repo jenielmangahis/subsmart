@@ -20,6 +20,35 @@ class Debug extends MY_Controller {
         exit;
     }
 
+    public function stripeVerify()
+    {
+        $this->load->helper(array('stripe_helper'));
+
+        $stripeHelper = new Stripe;
+        $card_info = [
+            'number' => '4242424242424242',
+            'exp_month' => 12,
+            'exp_year' => 2026,
+            'cvc' => '123',
+        ];
+
+        $response = $stripeHelper->validateCardDetailsV2($card_info);
+        if( $response['token'] ){
+            $amount = '69.99';
+            $stripeHelper->createPaymentIntent($amount);
+        }
+        echo "<pre>";
+        print_r($response);
+    }
+
+    public function jobNumber()
+    {
+        $next_num    = '2280';
+        $job_number = 'JOB-' . str_pad($next_num, 5, '0', STR_PAD_LEFT);
+
+        echo $job_number;
+    }
+
     public function generateEmployeeNumber()
     {   
         $this->load->helper(array('url', 'hashids_helper'));
@@ -3341,6 +3370,39 @@ class Debug extends MY_Controller {
         }
 
         echo 'Total updated : ' . $total_updated . ' / ' . 'Total deleted ' . $total_deleted;
+    }
+
+    public function fixAdiCustomerAccountCost()
+    {
+        $this->load->model('AcsProfile_model');
+        $this->load->model('AcsAlarm_model');
+
+        $company_id = 31;
+        $group_id   = 5;
+        $customers = $this->AcsProfile_model->getAllByCompanyIdAndCustomerGroupId($company_id, $group_id);
+
+        $total_updated = 0;
+        foreach($customers as $c){
+            $alarm = $this->AcsAlarm_model->getByCustmerId($c->prof_id);
+            if($alarm){
+                $pass_thru_cost = $alarm->account_cost;
+                $account_cost   = $alarm->pass_thru_cost;
+                $data = [
+                    //'id' => $alarm->alarm_id,
+                    'pass_thru_cost' => $pass_thru_cost,
+                    'account_cost' => $account_cost
+                ]; 
+                $is_updated = $this->AcsAlarm_model->updateByAlarmId($alarm->alarm_id, $data);
+                if( $is_updated > 0 ){
+                    $data = ['is_checked' => 1];
+                    $this->AcsProfile_model->updateCustomerByProfId($c->prof_id, $data);
+                    $total_updated++;
+                }
+            }
+        }
+
+        echo "Total Updated : " . $total_updated;
+
     }
 }
 /* End of file Debug.php */

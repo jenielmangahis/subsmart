@@ -1270,6 +1270,7 @@ class Customer extends MY_Controller
     public function customerServersideLoad() 
     {
         $company_id = logged('company_id');
+        $postData = $this->input->post('statusFilter');
         // ===============
         $getSalesArea = ['where' => ['fk_comp_id' => logged('company_id')], 'table' => 'ac_salesarea', 'select' => 'sa_id, sa_name'];
         $getSalesAreaData = $this->general->get_data_with_param($getSalesArea);
@@ -1284,7 +1285,8 @@ class Customer extends MY_Controller
         // ===============
         $getAccountType = array('In-House', 'Purchase', 'Commercial', 'Rental', 'Residential',);
         // ===============
-        $getPanelType = array('AERIONICS', 'AlarmNet', 'Alarm.com', 'Alula', 'Bosch', 'DSC', 'ELK', 'FBI', 'GRI', 'GE', 'Honeywell', 'Honeywell Touch', 'Honeywell 3000', 'Honeywell', 'Honeywell Vista with Sem', 'Honeywell Lyric', 'IEI', 'MIER', '2 GIG', '2 GIG Go Panel 2', '2 GIG Go Panel 3', 'Qolsys', 'Qolsys IQ Panel 2', 'Qolsys IQ Panel 2 Plus', 'Qolsys IQ Panel 3',);
+        $getPanelType = ['where' => ['company_id' => logged('company_id')], 'table' => 'panel_types', 'select' => 'id, name'];
+        $getPanelTypeData = $this->general->get_data_with_param($getPanelType);
         // ===============
         $getSystemType = ['where' => ['company_id' => logged('company_id')], 'table' => 'ac_system_package_type', 'select' => 'id, name'];
         $getSystemTypeData = $this->general->get_data_with_param($getSystemType);
@@ -1304,6 +1306,17 @@ class Customer extends MY_Controller
         $getContractTermData = array('0', '1', '6', '12', '18', '24', '36', '42', '48', '60', '72');
         // ===============
         $getBillingMethod = array('CC', 'DC', 'CHECK', 'CASH', 'ACH', 'VENMO', 'PP', 'SQ', 'WW', 'HOF', 'eT', 'Invoicing', 'OCCP', 'OPT',);
+        // ===============
+
+        $where = array('company_id' => $company_id);
+        if (!empty($postData) && $postData === 'active_only') {
+            $where['profile_status'] = [
+                'Active w/RMR',
+                'Active w/RQR',
+                'Active w/RYR',
+                'Inactive w/RMM'
+            ];
+        }
 
         // Initialize Table Information
         $initializeTable = $this->serverside_table->initializeTable(
@@ -1311,9 +1324,7 @@ class Customer extends MY_Controller
             array('profile_first_name',  'profile_last_name',  'profile_business_name',  'profile_customer_type',  'profile_fk_sa_id',  'profile_mail_add',  'profile_city',  'profile_state',  'profile_zip_code',  'profile_ssn',  'profile_date_of_birth',  'profile_email',  'profile_phone_m',  'profile_status', 'office_sales_rep', 'office_install_date', 'alarm_monitor_comp', 'alarm_monitor_id', 'alarm_acct_type', 'alarm_passcode', 'alarm_panel_type', 'alarm_system_type', 'alarm_warranty_type', 'alarm_comm_type', 'alarm_monthly_monitoring', 'alarm_account_cost', 'alarm_pass_thru_cost', 'billing_mmr',  'billing_bill_freq',  'billing_bill_day', 'billing_contract_term',  'billing_bill_start_date',  'billing_bill_end_date',  'billing_bill_method', 'billing_check_num', 'billing_routing_num', 'billing_acct_number', 'billing_credit_card_num', 'billing_credit_card_exp', 'profile_customer_group_id', 'office_technician',),
             array('profile_first_name',  'profile_last_name',  'profile_business_name',  'profile_customer_type',  'profile_fk_sa_id',  'profile_mail_add',  'profile_city',  'profile_state',  'profile_zip_code',  'profile_ssn',  'profile_date_of_birth',  'profile_email',  'profile_phone_m', 'profile_status', 'office_sales_rep', 'office_install_date', 'alarm_monitor_comp', 'alarm_monitor_id', 'alarm_acct_type', 'alarm_passcode', 'alarm_panel_type', 'alarm_system_type', 'alarm_warranty_type', 'alarm_comm_type', 'alarm_monthly_monitoring', 'alarm_account_cost', 'alarm_pass_thru_cost', 'billing_mmr',  'billing_bill_freq',  'billing_bill_day', 'billing_contract_term',  'billing_bill_start_date',  'billing_bill_end_date',  'billing_bill_method', 'billing_check_num', 'billing_routing_num', 'billing_acct_number', 'billing_credit_card_num', 'billing_credit_card_exp', 'profile_customer_group_id', 'office_technician',),
             null,  
-            array(
-                'company_id' => $company_id,    
-            ),
+            $where
         );
 
         // Define the where condition
@@ -1448,12 +1459,12 @@ class Customer extends MY_Controller
                 $panelType = "<small class='text-muted'><i>Not Specified</i></small>";
                 // ===============
                 $panelTypeDropdown = "<select class='form-select form-select-sm updateInputValue' data-customername='$firstName $lastName' data-id='$getDatas->prof_id' data-category='alarm' data-column='panel_type'>";
-                for ($i = 0; $i < count($getPanelType); $i++) {
-                    if ($getDatas->alarm_panel_type == $getPanelType[$i]) {
-                        $panelType = "$getPanelType[$i]";
-                        $panelTypeDropdown .= "<option selected value='$getPanelType[$i]'>$getPanelType[$i]</option>";
+                foreach ($getPanelTypeData as $getPanelTypeDatas) {
+                    if ($getDatas->alarm_panel_type == $getPanelTypeDatas->name) {
+                        $panelType = "$getPanelTypeDatas->name";
+                        $panelTypeDropdown .= "<option selected value='$getPanelTypeDatas->name'>$getPanelTypeDatas->name</option>";
                     } else {
-                        $panelTypeDropdown .= "<option value='$getPanelType[$i]'>$getPanelType[$i]</option>";
+                        $panelTypeDropdown .= "<option value='$getPanelTypeDatas->name'>$getPanelTypeDatas->name</option>";
                     }
                 }
                 $panelTypeDropdown .= "</select>";
@@ -1497,7 +1508,11 @@ class Customer extends MY_Controller
                 }
                 $communicationTypeDropdown .= "</select>";
                 // ===============
-                $monthlyMonitoringRate = (!empty($getDatas->alarm_monthly_monitoring)) ? '$' . number_format($getDatas->alarm_monthly_monitoring, 2) : "<small class='text-muted'><i>Not Specified</i></small>";
+                $monthlyMonitoringRate = (!empty($getDatas->billing_mmr)) ? '$' . number_format($getDatas->billing_mmr, 2) : "<small class='text-muted'><i>Not Specified</i></small>";
+                // ===============
+                $grossMonitoringRate = (!empty($getDatas->alarm_monthly_monitoring)) ? '$' . number_format($getDatas->alarm_monthly_monitoring, 2) : "<small class='text-muted'><i>Not Specified</i></small>";
+                // ===============
+                $addonFeatureCost = (!empty($getDatas->alarm_feature_cost)) ? '$' . number_format($getDatas->alarm_feature_cost, 2) : "<small class='text-muted'><i>Not Specified</i></small>";
                 // ===============
                 $accountCost = (!empty($getDatas->alarm_account_cost)) ? '$' . number_format($getDatas->alarm_account_cost, 2) : "<small class='text-muted'><i>Not Specified</i></small>";
                 // ===============
@@ -1591,7 +1606,7 @@ class Customer extends MY_Controller
                 // ===============
                 $creditCardExpiration = (!empty($getDatas->billing_credit_card_exp)) ? $getDatas->billing_credit_card_exp : "<small class='text-muted'><i>Not Specified</i></small>";
                 // ===============
-                $mmr_profit = number_format((floatval($getDatas->alarm_monthly_monitoring) - floatval($getDatas->alarm_account_cost)), 2);
+                $mmr_profit = number_format((floatval($getDatas->alarm_monthly_monitoring) - floatval($getDatas->alarm_feature_cost) - floatval($getDatas->alarm_pass_thru_cost)), 2);
 
                 if ($mmr_profit < 0) {
                     $mmr_profit = '-$' . number_format(abs($mmr_profit), 2);
@@ -1599,7 +1614,10 @@ class Customer extends MY_Controller
                     $mmr_profit = '$' . number_format($mmr_profit, 2);
                 }
 
+                $is_verified = ($getDatas->profile_is_verified == 1) ? "checked" : "";
+
                 $data[] = array(
+                    "<div class='text-nowrap'><input class='form-check-input verifyActiveCustomer' style='width: 16px; height: 16px;' customer_id='$getDatas->prof_id' type='checkbox' $is_verified></div>",
                     "<div class='drag_handle'></div><span class='textPreview'>$firstName</span> <div class='input-group input-group-sm inputMode' style='width: 250px; display: none;'> <input  class='form-control form-control-sm updateInputValue' data-customername='$firstName $lastName' data-id='$getDatas->prof_id' data-category='profile' data-column='first_name' type='text' value='$getDatas->profile_first_name'> <span class='input-group-text actionButton saveChanges'><i class='fas fa-check text-success'></i></span> <span class='input-group-text actionButton cancelEdit'><i class='fas fa-times text-danger'></i></span> </div>",
                     "<div class='drag_handle'></div><span class='textPreview'>$lastName</span> <div class='input-group input-group-sm inputMode' style='width: 250px; display: none;'> <input  class='form-control form-control-sm updateInputValue' data-customername='$firstName $lastName' data-id='$getDatas->prof_id' data-category='profile' data-column='last_name' type='text' value='$getDatas->profile_last_name'> <span class='input-group-text actionButton saveChanges'><i class='fas fa-check text-success'></i></span> <span class='input-group-text actionButton cancelEdit'><i class='fas fa-times text-danger'></i></span> </div>",
                     "<div class='drag_handle'></div><span class='textPreview'>$businessName</span> <div class='input-group input-group-sm inputMode' style='width: 250px; display: none;'> <input  class='form-control form-control-sm updateInputValue' data-customername='$firstName $lastName' data-id='$getDatas->prof_id' data-category='profile' data-column='business_name' type='text' value='$getDatas->profile_business_name'> <span class='input-group-text actionButton saveChanges'><i class='fas fa-check text-success'></i></span> <span class='input-group-text actionButton cancelEdit'><i class='fas fa-times text-danger'></i></span> </div>",
@@ -1625,7 +1643,13 @@ class Customer extends MY_Controller
                     "<div class='drag_handle'></div><span class='textPreview'>$systemType</span> <div class='input-group input-group-sm inputMode' style='width: 250px; display: none;'>$systemTypeDropdown<span class='input-group-text actionButton saveChanges'><i class='fas fa-check text-success'></i></span> <span class='input-group-text actionButton cancelEdit'><i class='fas fa-times text-danger'></i></span> </div>",
                     "<div class='drag_handle'></div><span class='textPreview'>$warrantyType</span> <div class='input-group input-group-sm inputMode' style='width: 250px; display: none;'>$warrantyTypeDropdown<span class='input-group-text actionButton saveChanges'><i class='fas fa-check text-success'></i></span> <span class='input-group-text actionButton cancelEdit'><i class='fas fa-times text-danger'></i></span> </div>",
                     "<div class='drag_handle'></div><span class='textPreview'>$communicationType</span> <div class='input-group input-group-sm inputMode' style='width: 250px; display: none;'>$communicationTypeDropdown<span class='input-group-text actionButton saveChanges'><i class='fas fa-check text-success'></i></span> <span class='input-group-text actionButton cancelEdit'><i class='fas fa-times text-danger'></i></span> </div>",
-                    "<div class='drag_handle'></div><span class='textPreview'>$monthlyMonitoringRate</span> <div class='input-group input-group-sm inputMode' style='width: 250px; display: none;'> <input oninput='validateDecimal(this)' class='form-control form-control-sm updateInputValue moneyInput' data-customername='$firstName $lastName' data-id='$getDatas->prof_id' data-category='alarm' data-column='monthly_monitoring' type='number' value='$getDatas->alarm_monthly_monitoring'> <span class='input-group-text actionButton saveChanges'><i class='fas fa-check text-success'></i></span> <span class='input-group-text actionButton cancelEdit'><i class='fas fa-times text-danger'></i></span> </div>",
+                    
+                    "<div class='drag_handle'></div><span class='textPreview'>$monthlyMonitoringRate</span> <div class='input-group input-group-sm inputMode' style='width: 250px; display: none;'> <input oninput='validateDecimal(this)' class='form-control form-control-sm updateInputValue moneyInput' data-customername='$firstName $lastName' data-id='$getDatas->prof_id' data-category='billing' data-column='mmr' type='number' value='$getDatas->billing_mmr'> <span class='input-group-text actionButton saveChanges'><i class='fas fa-check text-success'></i></span> <span class='input-group-text actionButton cancelEdit'><i class='fas fa-times text-danger'></i></span> </div>",
+
+                    "<div class='drag_handle'></div><span class='textPreview'>$grossMonitoringRate</span> <div class='input-group input-group-sm inputMode' style='width: 250px; display: none;'> <input oninput='validateDecimal(this)' class='form-control form-control-sm updateInputValue moneyInput' data-customername='$firstName $lastName' data-id='$getDatas->prof_id' data-category='alarm' data-column='monthly_monitoring' type='number' value='$getDatas->alarm_monthly_monitoring'> <span class='input-group-text actionButton saveChanges'><i class='fas fa-check text-success'></i></span> <span class='input-group-text actionButton cancelEdit'><i class='fas fa-times text-danger'></i></span> </div>",
+
+                    "<div class='drag_handle'></div><span class='textPreview'>$addonFeatureCost</span> <div class='input-group input-group-sm inputMode' style='width: 250px; display: none;'> <input oninput='validateDecimal(this)' class='form-control form-control-sm updateInputValue moneyInput' data-customername='$firstName $lastName' data-id='$getDatas->prof_id' data-category='alarm' data-column='addon_feature_cost' type='number' value='$getDatas->alarm_feature_cost'> <span class='input-group-text actionButton saveChanges'><i class='fas fa-check text-success'></i></span> <span class='input-group-text actionButton cancelEdit'><i class='fas fa-times text-danger'></i></span> </div>",
+
                     "<div class='drag_handle'></div><span class='textPreview'>$accountCost</span> <div class='input-group input-group-sm inputMode' style='width: 250px; display: none;'> <input oninput='validateDecimal(this)' class='form-control form-control-sm updateInputValue moneyInput' data-customername='$firstName $lastName' data-id='$getDatas->prof_id' data-category='alarm' data-column='account_cost' type='number' value='$getDatas->alarm_account_cost'> <span class='input-group-text actionButton saveChanges'><i class='fas fa-check text-success'></i></span> <span class='input-group-text actionButton cancelEdit'><i class='fas fa-times text-danger'></i></span> </div>",
                     "<div class='drag_handle'></div><span class='textPreview'>$passThruCost</span> <div class='input-group input-group-sm inputMode' style='width: 250px; display: none;'> <input oninput='validateDecimal(this)' class='form-control form-control-sm updateInputValue moneyInput' data-customername='$firstName $lastName' data-id='$getDatas->prof_id' data-category='alarm' data-column='pass_thru_cost' type='number' value='$getDatas->alarm_pass_thru_cost'> <span class='input-group-text actionButton saveChanges'><i class='fas fa-check text-success'></i></span> <span class='input-group-text actionButton cancelEdit'><i class='fas fa-times text-danger'></i></span> </div>",
                     "<div class='drag_handle'></div><span class='textPreview'>$ratePlan</span> <div class='input-group input-group-sm inputMode' style='width: 250px; display: none;'>$ratePlanDropdown<span class='input-group-text actionButton saveChanges'><i class='fas fa-check text-success'></i></span> <span class='input-group-text actionButton cancelEdit'><i class='fas fa-times text-danger'></i></span> </div>",
@@ -11175,7 +11199,29 @@ class Customer extends MY_Controller
     public function toolContent($tool)
     {
         $company_id = logged('company_id');
+        $postData = $this->input->post('statusFilter');
         $page = "";
+
+        $getMonitoringIds = [
+            'select' => 'acs_alarm.monitor_id',
+            'table' => 'acs_alarm',
+            'join' => [
+                [
+                    'table' => 'acs_profile',
+                    'statement' => 'acs_profile.prof_id = acs_alarm.fk_prof_id',
+                    'join_as' => 'left'
+                ]
+            ],
+            'where' => [
+                'acs_profile.company_id' => $company_id,
+                'acs_alarm.monitor_id !=' => '',
+            ],
+            'order' => [
+                'order_by' => 'acs_alarm.monitor_id',
+                'ordering' => 'ASC'
+            ],
+            'groupBy' => 'acs_alarm.monitor_id'
+        ];
 
         $getCustomerStatus = [
             'select' => '*',
@@ -11228,6 +11274,7 @@ class Customer extends MY_Controller
                 break;
         }
 
+        $this->page_data['status_filter'] = $postData;
         $this->page_data['rate_plan'] = $this->general->get_data_with_param($getRatePlanData);
         $this->page_data['customer_status'] = $this->general->get_data_with_param($getCustomerStatus);
         $this->page_data['customer_group'] = $this->general->get_data_with_param($getCustomerGroup);
@@ -11235,6 +11282,7 @@ class Customer extends MY_Controller
         $this->page_data['customer_status'] = $this->general->get_data_with_param($getCustomerStatusData);
         $this->page_data['salesRep'] = $this->general->get_data_with_param($getSalesRepData);
         $this->page_data['technician'] = $this->general->get_data_with_param($getTechnicianData);
+        $this->page_data['monitoring_ids'] = $this->general->get_data_with_param($getMonitoringIds);
         $this->load->view("v2/pages/customer/$page", $this->page_data);
     }
 
@@ -11926,6 +11974,7 @@ class Customer extends MY_Controller
                     'name' => $post['package_name'],
                     'alarmcom_cost' => $post['alarmcom_cost'] > 0 ? $post['alarmcom_cost'] : 0,
                     'alarmnet_cost' => $post['alarmnet_cost'] > 0 ? $post['alarmnet_cost'] : 0,
+                    'acct_cost' => $post['acct_cost'] > 0 ? $post['acct_cost'] : 0,
                     'date_created' => date("Y-m-d H:i:s")
                 ];
     
@@ -11972,6 +12021,7 @@ class Customer extends MY_Controller
                     'name' => $post['package_name'],
                     'alarmcom_cost' => $post['alarmcom_cost'] > 0 ? $post['alarmcom_cost'] : 0,
                     'alarmnet_cost' => $post['alarmnet_cost'] > 0 ? $post['alarmnet_cost'] : 0,
+                    'acct_cost' => $post['acct_cost'] > 0 ? $post['acct_cost'] : 0,
                 ];
                 
                 $this->SystemPackageType_model->update($isExists->id, $data);
@@ -15257,15 +15307,95 @@ class Customer extends MY_Controller
         echo json_encode($return);
     }
 
-    public function ajax_send_customer_cancel_status_request()
+    public function ajax_send_customer_cancellation_request()
     {
-        $is_success = 1;
-        $msg = "Please do note that this function is under construction.";
+        $this->load->model('AcsProfile_model');
+        $this->load->model('AcsCustomerCancellationRequest');
+        $this->load->model('Users_model');
 
+        $is_success = 0;
+        $msg    = 'Cannot find customer data';
+
+        $post = $this->input->post();
+        $company_id = logged('company_id');
+
+        $cancellationRequest = $this->AcsCustomerCancellationRequest->getByCustomerId($post['customer_id']);
+        $customer = $this->AcsProfile_model->getByProfId($post['customer_id']);
+        if( $customer && $customer->company_id == $company_id ){
+            if( $cancellationRequest ){
+                $data = [
+                    'request_date' => date("Y-m-d",strtotime($post['date_request_received'])),
+                    'reason' => $post['reason'],
+                    'boc_amount' => $post['boc_amount'],
+                    'boc_received_date' => date("Y-m-d",strtotime($post['boc_received_date'])),
+                    'cs_close_date' => date("Y-m-d",strtotime($post['cs_closed_ate'])),
+                    'equipment_return_date' => date("Y-m-d",strtotime($post['equipment_return_date'])),
+                    'next_action' => $post['next_step'],
+                    'date_modified' => date("Y-m-d H:i:s"),
+                ];
+
+                $this->AcsCustomerCancellationRequest->update($cancellationRequest->id, $data);      
+            }else{
+                $data = [
+                    'customer_id' => $customer->prof_id,
+                    'request_date' => date("Y-m-d",strtotime($post['date_request_received'])),
+                    'reason' => $post['reason'],
+                    'boc_amount' => $post['boc_amount'],
+                    'boc_received_date' => date("Y-m-d",strtotime($post['boc_received_date'])),
+                    'cs_close_date' => date("Y-m-d",strtotime($post['cs_closed_ate'])),
+                    'equipment_return_date' => date("Y-m-d",strtotime($post['equipment_return_date'])),
+                    'next_action' => $post['next_step'],
+                    'date_created' => date("Y-m-d H:i:s"),
+                    'date_modified' => date("Y-m-d H:i:s"),
+                ];
+
+                $this->AcsCustomerCancellationRequest->create($data);    
+                 
+            }
+
+            //Send email
+            $companyAdmin = $this->Users_model->getCompanyAdmin($company_id);
+            if( $companyAdmin && $companyAdmin->email != '' ){
+                $email_data['name'] = $companyAdmin->FName;
+                $email_data['customer_name'] = $customer->first_name . ' ' . $customer->last_name;
+                $cancellation_url = base_url('customer/cancellation_request/'.$customer->prof_id);
+                $email_data['cancellation_url'] = $cancellation_url;
+                $body = $this->load->view('v2/emails/customer_cancellation_request', $email_data, true);
+
+                $mail = email__getInstance();
+                $mail->FromName = 'nSmarTrac';
+                $recipient_name = $companyAdmin->FName . ' ' . $companyAdmin->LName;
+                $mail->addAddress($companyAdmin->email, $recipient_name);
+                $mail->isHTML(true);
+                $mail->Subject = "Customer Request for Cancellation";
+                $mail->Body = $body;
+                $mail->addAttachment($attachment);
+                $mail->Send();
+            }
+
+            $is_success = 1;
+            $msg = '';
+        }
+        
+        
+        
         $return = [
             'is_success' => $is_success,
             'msg' => $msg
         ];
         echo json_encode($return);
+    }
+
+    public function verifyCustomer()
+    {
+        $company_id  = logged('company_id');
+        $customer_id = $this->input->post('customer_id');
+        $state       = $this->input->post('state') === 'true' ? 1 : 0;
+
+        $this->db->where('prof_id', $customer_id);
+        $this->db->where('company_id', $company_id);
+        $execute = $this->db->update('acs_profile', ['is_verified' => $state]);
+
+        echo $execute;
     }
 }

@@ -31,8 +31,8 @@
 <div class="hiddenColumnStyles"></div>
 <div class="row batchUpdaterContent">
     <div class="col-lg-12">
-        <div class="container-fluid mb-3 mt-3">
-            <div class="row">
+        <div class="mb-3 mt-3">
+            <div class="row batchUpdaterTitle">
                 <h4 class="fw-bold">Batch Updater Tool</h4>
                 <p>Search and select specific customers to update.</p>
             </div>
@@ -40,7 +40,7 @@
         </div>
     </div>
     <div class="col-lg-12 mb-3">
-        <div class="container-fluid mb-3">
+        <div class="mb-3">
             <div class="row">
                 <div class="col-xl-3 mb-3">
                     <label class="text-muted">Customer / Business Filter</label>
@@ -55,6 +55,17 @@
                     </div>
                 </div>
                 <div class="col-xl-2 mb-3 dropdownFilterWidth">
+                    <label class="text-muted">Monitoring ID</label>
+                    <select class="form-select searchMonitoringID mt-2" tabindex="-1">
+                        <option value="">None</option>
+                        <?php
+                            foreach ($monitoring_ids as $monitoring_id) {
+                                echo "<option value='$monitoring_id->monitor_id'>$monitoring_id->monitor_id</option>";
+                            }
+                        ?>
+                    </select>
+                </div>
+                <div class="col-xl-3 mb-3 dropdownFilterWidth">
                     <label class="text-muted">Customer Type</label>
                     <select class="form-select searchCustomerType mt-2" tabindex="-1">
                         <option value="">None</option>
@@ -119,6 +130,7 @@
                     <label class="text-muted">Status Filter</label>
                     <select class="form-select searchStatus mt-2" tabindex="-1">
                         <option value="">None</option>
+                        <option value="all_active">All Active</option>
                         <?php
                             foreach ($customer_status as $status) {
                                 echo "<option value='$status->name'>$status->name</option>";
@@ -239,47 +251,50 @@
                         <table class="table table-hover customerManagementTable">
                             <thead>
                                 <tr>
+                                    <th><i class="fas fa-user-check text-success"></i></th>
                                     <th>Firstname</th>
                                     <th>Lastname</th>
                                     <th>Business Name</th>
-                                    <th>Customer Type&emsp;&emsp;<i class="fas fa-times columnButtonRemover" data-column="3"></i></th>
-                                    <th>Sales Area&emsp;&emsp;<i class="fas fa-times columnButtonRemover" data-column="4"></i></th>
-                                    <th>Address&emsp;&emsp;<i class="fas fa-times columnButtonRemover" data-column="5"></i></th>
-                                    <th>City&emsp;&emsp;<i class="fas fa-times columnButtonRemover" data-column="6"></i></th>
-                                    <th>State&emsp;&emsp;<i class="fas fa-times columnButtonRemover" data-column="7"></i></th>
-                                    <th>Zip Code&emsp;&emsp;<i class="fas fa-times columnButtonRemover" data-column="8"></i></th>
-                                    <th>Social Security No.&emsp;&emsp;<i class="fas fa-times columnButtonRemover" data-column="9"></i></th>
-                                    <th>Birthdate&emsp;&emsp;<i class="fas fa-times columnButtonRemover" data-column="10"></i></th>
-                                    <th>Email&emsp;&emsp;<i class="fas fa-times columnButtonRemover" data-column="11"></i></th>
-                                    <th>Phone (M)&emsp;&emsp;<i class="fas fa-times columnButtonRemover" data-column="12"></i></th>
-                                    <th>Status&emsp;&emsp;<i class="fas fa-times columnButtonRemover" data-column="13"></i></th>
-                                    <th>Sales Rep&emsp;&emsp;<i class="fas fa-times columnButtonRemover" data-column="14"></i></th>
-                                    <th>Technician&emsp;&emsp;<i class="fas fa-times columnButtonRemover" data-column="15"></i></th>
-                                    <th>Install Date&emsp;&emsp;<i class="fas fa-times columnButtonRemover" data-column="16"></i></th>
-                                    <th>Monitoring Company&emsp;&emsp;<i class="fas fa-times columnButtonRemover" data-column="17"></i></th>
-                                    <th>Monitoring ID&emsp;&emsp;<i class="fas fa-times columnButtonRemover" data-column="18"></i></th>
-                                    <th>Account Type&emsp;&emsp;<i class="fas fa-times columnButtonRemover" data-column="19"></i></th>
-                                    <th>Abort Code/Password&emsp;&emsp;<i class="fas fa-times columnButtonRemover" data-column="20"></i></th>
-                                    <th>Panel Type&emsp;&emsp;<i class="fas fa-times columnButtonRemover" data-column="21"></i></th>
-                                    <th>System Package Type&emsp;&emsp;<i class="fas fa-times columnButtonRemover" data-column="22"></i></th>
-                                    <th>Warranty Type&emsp;&emsp;<i class="fas fa-times columnButtonRemover" data-column="23"></i></th>
-                                    <th>Communication Type&emsp;&emsp;<i class="fas fa-times columnButtonRemover" data-column="24"></i></th>
-                                    <th>Monthly Monitoring Rate&emsp;&emsp;<i class="fas fa-times columnButtonRemover" data-column="25"></i></th>
-                                    <th>Account Cost&emsp;&emsp;<i class="fas fa-times columnButtonRemover" data-column="26"></i></th>
-                                    <th>Pass Thru Cost&emsp;&emsp;<i class="fas fa-times columnButtonRemover" data-column="27"></i></th>
-                                    <th>Rate Plan&emsp;&emsp;<i class="fas fa-times columnButtonRemover" data-column="28"></i></th>
-                                    <th>Billing Frequency&emsp;&emsp;<i class="fas fa-times columnButtonRemover" data-column="29"></i></th>
-                                    <th>Billing Day of Month&emsp;&emsp;<i class="fas fa-times columnButtonRemover" data-column="30"></i></th>
-                                    <th>Contract Term&emsp;&emsp;<i class="fas fa-times columnButtonRemover" data-column="31"></i></th>
-                                    <th>Billing Start Date&emsp;&emsp;<i class="fas fa-times columnButtonRemover" data-column="32"></i></th>
-                                    <th>Billing End Date&emsp;&emsp;<i class="fas fa-times columnButtonRemover" data-column="33"></i></th>
-                                    <th>Billing Method&emsp;&emsp;<i class="fas fa-times columnButtonRemover" data-column="34"></i></th>
-                                    <th>Check No.&emsp;&emsp;<i class="fas fa-times columnButtonRemover" data-column="35"></i></th>
-                                    <th>Routing No.&emsp;&emsp;<i class="fas fa-times columnButtonRemover" data-column="36"></i></th>
-                                    <th>Account No.&emsp;&emsp;<i class="fas fa-times columnButtonRemover" data-column="37"></i></th>
-                                    <th>Credit Card No.&emsp;&emsp;<i class="fas fa-times columnButtonRemover" data-column="38"></i></th>
-                                    <th>Credit Card Expiration&emsp;&emsp;<i class="fas fa-times columnButtonRemover" data-column="39"></i></th>
-                                    <th>MMR Profit</th>
+                                    <th>Customer Type&emsp;&emsp;<i class="fas fa-times columnButtonRemover" data-column="4"></i></th>
+                                    <th>Sales Area&emsp;&emsp;<i class="fas fa-times columnButtonRemover" data-column="5"></i></th>
+                                    <th>Address&emsp;&emsp;<i class="fas fa-times columnButtonRemover" data-column="6"></i></th>
+                                    <th>City&emsp;&emsp;<i class="fas fa-times columnButtonRemover" data-column="7"></i></th>
+                                    <th>State&emsp;&emsp;<i class="fas fa-times columnButtonRemover" data-column="8"></i></th>
+                                    <th>Zip Code&emsp;&emsp;<i class="fas fa-times columnButtonRemover" data-column="9"></i></th>
+                                    <th>Social Security No.&emsp;&emsp;<i class="fas fa-times columnButtonRemover" data-column="10"></i></th>
+                                    <th>Birthdate&emsp;&emsp;<i class="fas fa-times columnButtonRemover" data-column="11"></i></th>
+                                    <th>Email&emsp;&emsp;<i class="fas fa-times columnButtonRemover" data-column="12"></i></th>
+                                    <th>Phone (M)&emsp;&emsp;<i class="fas fa-times columnButtonRemover" data-column="13"></i></th>
+                                    <th>Status&emsp;&emsp;<i class="fas fa-times columnButtonRemover" data-column="14"></i></th>
+                                    <th>Sales Rep&emsp;&emsp;<i class="fas fa-times columnButtonRemover" data-column="15"></i></th>
+                                    <th>Technician&emsp;&emsp;<i class="fas fa-times columnButtonRemover" data-column="16"></i></th>
+                                    <th>Install Date&emsp;&emsp;<i class="fas fa-times columnButtonRemover" data-column="17"></i></th>
+                                    <th>Monitoring Company&emsp;&emsp;<i class="fas fa-times columnButtonRemover" data-column="18"></i></th>
+                                    <th>Monitoring ID&emsp;&emsp;<i class="fas fa-times columnButtonRemover" data-column="19"></i></th>
+                                    <th>Account Type&emsp;&emsp;<i class="fas fa-times columnButtonRemover" data-column="20"></i></th>
+                                    <th>Abort Code/Password&emsp;&emsp;<i class="fas fa-times columnButtonRemover" data-column="21"></i></th>
+                                    <th>Panel Type&emsp;&emsp;<i class="fas fa-times columnButtonRemover" data-column="22"></i></th>
+                                    <th>Communication Type&emsp;&emsp;<i class="fas fa-times columnButtonRemover" data-column="23"></i></th>
+                                    <th>Warranty Type&emsp;&emsp;<i class="fas fa-times columnButtonRemover" data-column="24"></i></th>
+                                    <th>System Package&emsp;&emsp;<i class="fas fa-times columnButtonRemover" data-column="25"></i></th>
+                                    <th>Monthly Monitoring Rate&emsp;&emsp;<i class="fas fa-times columnButtonRemover" data-column="26"></i></th>
+                                    <th>Gross Monitoring Rate&emsp;&emsp;<i class="fas fa-times columnButtonRemover" data-column="27"></i></th>
+                                    <th>Add-on Feature Cost&emsp;&emsp;<i class="fas fa-times columnButtonRemover" data-column="28"></i></th>
+                                    <th>Account Cost&emsp;&emsp;<i class="fas fa-times columnButtonRemover" data-column="29"></i></th>
+                                    <th>Pass Thru Cost&emsp;&emsp;<i class="fas fa-times columnButtonRemover" data-column="30"></i></th>
+                                    <th>Rate Plan&emsp;&emsp;<i class="fas fa-times columnButtonRemover" data-column="31"></i></th>
+                                    <th>Billing Frequency&emsp;&emsp;<i class="fas fa-times columnButtonRemover" data-column="32"></i></th>
+                                    <th>Billing Day of Month&emsp;&emsp;<i class="fas fa-times columnButtonRemover" data-column="33"></i></th>
+                                    <th>Contract Term&emsp;&emsp;<i class="fas fa-times columnButtonRemover" data-column="34"></i></th>
+                                    <th>Billing Start Date&emsp;&emsp;<i class="fas fa-times columnButtonRemover" data-column="35"></i></th>
+                                    <th>Billing End Date&emsp;&emsp;<i class="fas fa-times columnButtonRemover" data-column="36"></i></th>
+                                    <th>Billing Method&emsp;&emsp;<i class="fas fa-times columnButtonRemover" data-column="37"></i></th>
+                                    <th>Check No.&emsp;&emsp;<i class="fas fa-times columnButtonRemover" data-column="38"></i></th>
+                                    <th>Routing No.&emsp;&emsp;<i class="fas fa-times columnButtonRemover" data-column="39"></i></th>
+                                    <th>Account No.&emsp;&emsp;<i class="fas fa-times columnButtonRemover" data-column="40"></i></th>
+                                    <th>Credit Card No.&emsp;&emsp;<i class="fas fa-times columnButtonRemover" data-column="41"></i></th>
+                                    <th>Credit Card Expiration&emsp;&emsp;<i class="fas fa-times columnButtonRemover" data-column="42"></i></th>
+                                    <th>Net Profit</th>
                                 </tr>
                             </thead>
                         </table>
@@ -344,9 +359,9 @@
                             <option value="Account Type">Account Type</option>
                             <option value="Abort Code/Password">Abort Code/Password</option>
                             <option value="Panel Type">Panel Type</option>
-                            <option value="System Package Type">System Package Type</option>
+                            <option value="System Package Type">Communication Type</option>
                             <option value="Warranty Type">Warranty Type</option>
-                            <option value="Communication Type">Communication Type</option>
+                            <option value="Communication Type">System Package</option>
                             <option value="Monthly Monitorinng Rate">Monthly Monitorinng Rate</option>
                             <option value="Account Cost">Account Cost</option>
                             <option value="Pass Thru Cost">Pass Thru Cost</option>
@@ -385,7 +400,6 @@
             </div>
     </div>
 </div>
-
 <script>
     var lastOptionInAccType = "";
     var lastOptionInAccTypeCount = 0;
@@ -411,10 +425,14 @@
         "pageLength": 10,
         "ajax": {
             "url": "<?= base_url('customer/customerServersideLoad'); ?>",
+            "data": { statusFilter: '<?php echo $status_filter; ?>' }, 
             "type": "POST",
         },
         "language": {
             "processing": "<div class='custom-loader'><p>Processing, please wait...</p></div>"
+        },
+        drawCallback: function () {
+            applyStickyOffsets('.customerManagementTable', [0, 1, 2]);
         }
     });
 
@@ -430,6 +448,13 @@
         "language": {
             "processing": "<div class='custom-loader'><p>Processing, please wait...</p></div>"
         }
+    });
+
+    
+
+    $('.searchMonitoringID').change(function(e) {
+        var filterData = $(this).val();
+        customerManagementTable.columns(17).search(filterData).draw();
     });
 
     $('.searchCustomerType').change(function(e) {
@@ -643,7 +668,7 @@
 
                         $.ajax({
                             type: "POST",
-                            url: URL_ORIGIN + "/Customer/customerServersideLoadSave",
+                            url: `${window.origin}/Customer/customerServersideLoadSave`,
                             data: ajaxData,
                             beforeSend: function() {
                                 Swal.fire({
@@ -863,7 +888,7 @@
 
                             $.ajax({
                                 type: "POST",
-                                url: URL_ORIGIN + "/Customer/customerServersideLoadSave",
+                                url: `${window.origin}/Customer/customerServersideLoadSave`,
                                 data: ajaxData,
                                 beforeSend: function() {
                                     Swal.fire({
@@ -1216,7 +1241,7 @@
             if (result.isConfirmed) {
                 $.ajax({
                     type: "POST",
-                    url: URL_ORIGIN + "/Customer/customerServersideLoadSave",
+                    url: `${window.origin}/Customer/customerServersideLoadSave`,
                     data: ajaxData,
                     beforeSend: function() {
                         Swal.fire({
@@ -1363,4 +1388,41 @@
         });
     });
 
+    function applyStickyOffsets(tableSelector = '.customerManagementTable', stickyIndexes = [0, 1, 2]) {
+        const table = document.querySelector(tableSelector);
+        if (!table) return;
+
+        let offset = 0;
+
+        stickyIndexes.forEach(index => {
+            const cells = table.querySelectorAll(`th:nth-child(${index + 1}), td:nth-child(${index + 1})`);
+            const sampleCell = table.querySelector(`tbody td:nth-child(${index + 1})`) || table.querySelector(`thead th:nth-child(${index + 1})`);
+            const width = sampleCell?.offsetWidth || 100;
+
+            cells.forEach(cell => {
+                cell.style.position = 'sticky';
+                cell.style.left = `${offset - 1}px`;
+                cell.style.zIndex = '3';
+                cell.style.background = 'white';
+            });
+
+            offset += width - 2;
+        });
+    }
+
+    const table = $('.customerManagementTable').DataTable();
+    const $paginate = $(table.table().container()).find('.dataTables_paginate');
+
+    $paginate.css({
+        float: 'left',
+        position: 'fixed',
+        left: '10px',
+        bottom: '-25px',
+        'margin-top': '0',
+        'z-index': '5',
+        'background': '#ffffff',
+        'padding': '5px',
+        'outline': '1px solid lightgray',
+        'border-radius': '5px;',
+    });
 </script>

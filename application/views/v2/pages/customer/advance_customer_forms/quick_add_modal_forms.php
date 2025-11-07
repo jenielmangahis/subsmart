@@ -440,3 +440,49 @@
         </div>
     </div>
 </div>
+
+<div class="modal fade nsm-modal fade" id="quick_add_system_package_modal" data-bs-backdrop="static" tabindex="-1" aria-labelledby="quick_add_system_package_modal_label" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <form method="POST" id="quick-add-system-package-form">
+                <div class="modal-header">
+                    <span class="modal-title content-title">Add Service Package</span>
+                    <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <label class="mb-2">Package Name</label>
+                            <div class="input-group mb-3">
+                                <input type="text" placeholder="" name="package_name" id="system_name" class="nsm-field form-control mb-2" required />
+                            </div>
+                        </div> 
+                        <div class="col-sm-12 col-md-6">
+                            <label class="mb-2">Alarm.com</label>
+                            <div class="input-group mb-3">
+                                <input type="number" step="any" placeholder="0.00" name="alarmcom_cost" id="alarmcom_cost" class="nsm-field form-control mb-2" />
+                            </div>
+                        </div>
+                        <div class="col-sm-12 col-md-6">
+                            <label class="mb-2">AlarmNet</label>
+                            <div class="input-group mb-3">
+                                <input type="number" step="any" placeholder="0.00" name="alarmnet_cost" id="alarmnet_cost" class="nsm-field form-control mb-2" />
+                            </div>
+                        </div> 
+                        <div class="col-sm-12 col-md-6">
+                            <label class="mb-2">Acct Cost</label>
+                            <div class="input-group mb-3">
+                                <input type="number" step="any" placeholder="0.00" name="acct_cost" id="acct_cost" class="nsm-field form-control mb-2" />
+                            </div>
+                        </div> 
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="nsm-button" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="nsm-button btn-fixed-width" id="btn-manage-service-package">Manage</button>
+                    <button type="submit" class="nsm-button primary" id="btn-save-service-package">Save</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
