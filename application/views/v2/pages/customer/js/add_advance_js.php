@@ -1241,6 +1241,40 @@
             });
         });
 
+        $('#quick-add-monitoring-company').on('submit', function(e){
+            e.preventDefault();
+            $.ajax({
+                type: "POST",
+                url: base_url + 'customers/_create_monitoring_company',
+                dataType: 'json',
+                data: $('#quick-add-monitoring-company').serialize(),
+                success: function(data) {    
+                    $('#btn-quick-add-monitoring-company').html('Save');                   
+                    if (data.is_success) {
+                        $('#quick_add_monitoring_company_modal').modal('hide');
+                        $('#monitor_comp').append($('<option>', {
+                            value: data.monitoring_company_name,
+                            text: data.monitoring_company_name,
+                        }));
+                        $('#monitor_comp').val(data.monitoring_company_name);
+                    }else{
+                        Swal.fire({
+                            title: 'Error',
+                            text: data.msg,
+                            icon: 'error',
+                            showCancelButton: false,
+                            confirmButtonText: 'Okay'
+                        }).then((result) => {
+                            
+                        });
+                    }
+                },
+                beforeSend: function() {
+                    $('#btn-quick-add-monitoring-company').html('<span class="bx bx-loader bx-spin"></span>');
+                }
+            });
+        });
+
         $('#btn-quick-panel-type').on('click', function(){
             $('#frm-add-panel-type')[0].reset();
             $('#modal-add-panel-type').modal('show');
@@ -1266,6 +1300,11 @@
         $('#btn-quick-account-type').on('click', function(){
             $('#frm-quick-add-account-type')[0].reset();
             $('#quick_add_account_type').modal('show');
+        });
+
+        $('#btn-quick-monitoring-company').on('click', function(){
+            $('#quick-add-monitoring-company')[0].reset();
+            $('#quick_add_monitoring_company_modal').modal('show');
         });
 
         $('#btn-manage-account-type').on('click', function(){
