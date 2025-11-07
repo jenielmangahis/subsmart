@@ -104,6 +104,7 @@
                         <?php } ?>
                     <?php //} ?>
                     <?php if( isAlarmCompany() ){ ?>
+                        <li><a class="dropdown-item" href="<?php echo base_url('customer/settings_alarm_monitoring_companies') ?>">Alarm Monitoring Companies</a></li>
                         <li><a class="dropdown-item" href="<?php echo base_url('customer/settings_alarm_installer_codes') ?>">Alarm Installer Codes</a></li>
                         <li><a class="dropdown-item" href="<?php echo base_url('customer/settings_alarm_site_types') ?>">Alarm Site Types</a></li>
                     <?php } ?>
