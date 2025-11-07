@@ -1242,6 +1242,9 @@ $route['customer/_convert_lead_to_customer'] = 'Customer/ajax_convert_lead_to_cu
 $route['customer/_permanently_delete_selected_attachment'] = 'Customer/ajax_permanently_delete_selected_attachment';
 $route['customer/_send_customer_cancellation_request'] = 'Customer/ajax_send_customer_cancellation_request';
 
+//$route['customer/cancellation_request'] = 'Customer/cancellation_request';
+$route['customer/cancellation_request/(:num)'] = 'Customer/cancellation_request/$1';
+
 // workstatus
 $route['workstatus/_create_workorder_status'] = 'Workstatus/ajax_save_workorder_status';
 $route['workstatus/_update_workorder_status'] = 'Workstatus/ajax_update_workorder_status';
