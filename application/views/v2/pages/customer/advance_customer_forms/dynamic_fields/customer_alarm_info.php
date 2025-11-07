@@ -36,22 +36,24 @@
         <div class="row form_line field-custom-name-container" <?= isCustomerFieldEnabled($companyFormSetting, 'alarm-information', 'monitor_comp') == 0 ? 'style="display:none;"' : ''; ?>>
             <div class="col-md-6"><?= getCustomerFieldValue($companyFormSetting, 'alarm-information', 'monitor_comp'); ?></div>
             <div class="col-md-6">
-                <select id="monitor_comp" name="monitor_comp" data-customer-source="dropdown" class="input_select" >
-                    <option value=""></option>
-                    <option <?= isset($alarm_info) && $alarm_info->monitor_comp == 'ADT' ?  'selected' : '';?> value="ABT">ADT</option>
-                    <option <?= isset($alarm_info) && $alarm_info->monitor_comp == 'CMS' ?  'selected' : '';?> value="CMS">CMS</option>
-                    <option <?= isset($alarm_info) && $alarm_info->monitor_comp == 'COPS' ?  'selected' : '';?> value="COPS">COPS</option>
-                    <option <?= isset($alarm_info) && $alarm_info->monitor_comp == 'FrontPoint' ?  'selected' : '';?> value="FrontPoint">FrontPoint</option>
-                    <option <?= isset($alarm_info) && $alarm_info->monitor_comp == 'ProtectionOne' ?  'selected' : '';?> value="ProtectionOne">ProtectionOne</option>
-                    <option <?= isset($alarm_info) && $alarm_info->monitor_comp == 'Stanley' ?  'selected' : '';?> value="Stanley">Stanley</option>
-                    <option <?= isset($alarm_info) && $alarm_info->monitor_comp == 'Guardian' ?  'selected' : '';?> value="Guardian">Guardian</option>
-                    <option <?= isset($alarm_info) && $alarm_info->monitor_comp == 'Vector' ?  'selected' : '';?> value="Vector">Vector</option>
-                    <option <?= isset($alarm_info) && $alarm_info->monitor_comp == 'Central' ?  'selected' : '';?> value="Central">Central</option>
-                    <option <?= isset($alarm_info) && $alarm_info->monitor_comp == 'Brinks' ?  'selected' : '';?> value="Brinks">Brinks</option>
-                    <option <?= isset($alarm_info) && $alarm_info->monitor_comp == 'Equipment Funding' ?  'selected' : '';?> value="Equipment Funding">Equipment Funding</option>
-                    <option <?= isset($alarm_info) && $alarm_info->monitor_comp == 'Other' ?  'selected' : '';?> value="Other">Other</option>
-                </select>
+                <?php 
+                    $monitoring_company = '';
+                    if( $defaultMonitoringCompany ){
+                        $monitoring_company = $defaultMonitoringCompany->name;
+                    }
 
+                    if( $alarm_info && $alarm_info->monitor_comp != '' ){
+                        $monitoring_company = $alarm_info->monitor_comp;
+                    }
+
+                ?>
+                <select id="monitor_comp" name="monitor_comp" data-customer-source="dropdown" class="input_select" >
+                    <option <?= $monitoring_company == '' ? 'selected="selected"' : ''; ?> value=""></option>
+                    <?php foreach($monitoringCompanies as $mc){ ?>
+                        <option <?= $monitoring_company == $mc->name ? 'selected="selected"' : ''; ?> value="<?= $mc->name; ?>"><?= $mc->name; ?></option>
+                    <?php } ?>
+                </select>
+                <a href="javascript:void(0);" class="nsm-button btn-small" id="btn-quick-monitoring-company"><span class="fa fa-plus"></span> Add Monitoring Company</a>  
             </div>
         </div>
         <div class="row form_line field-custom-name-container" <?= isCustomerFieldEnabled($companyFormSetting, 'alarm-information', 'contract_status') == 0 ? 'style="display:none;"' : ''; ?>>
@@ -348,7 +350,7 @@
         <div class="row form_line" <?= isCustomerFieldEnabled($companyFormSetting, 'alarm-information', 'comm_type') == 0 ? 'style="display:none;"' : ''; ?>>
             <div class="col-md-6"><?= getCustomerFieldValue($companyFormSetting, 'alarm-information', 'comm_type'); ?></div>
             <div class="col-md-6">
-                <select id='communication_type' name="comm_type"  class="form-control" >
+                <select id='communication_type' name="comm_type"  class="form-control" required="">
                     <option value=""></option>
                     <?php foreach($system_package_type as $cType): ?>
                         <option <?= isset($alarm_info) && $alarm_info->comm_type == $cType->name ?  'selected' : '';  ?> value="<?= $cType->name ?>"><?= $cType->name ?></option>

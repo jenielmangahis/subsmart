@@ -191,7 +191,7 @@
                     if (result.value) {
                         $.ajax({
                             method: 'POST',
-                            url: base_url + 'customers/_delete_selected_site_types',
+                            url: base_url + 'customers/_delete_selected_monitoring_companies',
                             dataType: 'json',
                             data: $('#frm-with-selected').serialize(),
                             success: function(result) {                        
@@ -382,7 +382,7 @@
 
             Swal.fire({
                 title: 'Set As Default',
-                html: `Are you sure you want to set Monitoring Company <b>${value}</b> as default?`,
+                html: `Are you sure you want to set monitoring company <b>${value}</b> as default?`,
                 icon: 'question',
                 confirmButtonText: 'Proceed',
                 showCancelButton: true,
@@ -391,7 +391,7 @@
                 if (result.value) {
                     $.ajax({
                         type: 'POST',
-                        url: base_url + "customer/_set_default_site_type",
+                        url: base_url + "customer/_set_default_monitoring_company",
                         data: {id: id},
                         dataType: "JSON",
                         success: function(result) {
