@@ -1179,3 +1179,60 @@
         </div>
     </div>
 </div>
+
+<div class="modal fade nsm-modal fade" id="modal-add-receiver-phone-number" tabindex="-1" aria-labelledby="modal-add-receiver-phone-number_label" aria-hidden="true">
+    <div class="modal-dialog modal-md modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <span class="modal-title content-title">Add Receiver Phone Number</span>
+                <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
+            </div>
+            <div class="modal-body">
+                <form id="frm-save-receiver-phone-number">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <label class="mb-2">Receiver Phone Number</label>
+                        <div class="input-group mb-3">
+                            <input type="text" name="receiver_number" id="receiver_number" value="" maxlength="12" placeholder="xxx-xxx-xxxx" class="form-control phone_number_format" required="" autocomplete="off" />
+                        </div>
+                    </div>                 
+                </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="nsm-button" data-bs-dismiss="modal">Close</button>
+                <button type="submit" class="nsm-button primary" id="btn-save-receiver-phone-number" form="frm-save-receiver-phone-number">Save</button>
+            </div>
+            </form>                
+        </div>
+    </div>
+</div>
+
+<div class="modal fade nsm-modal fade" id="modal-edit-receiver-phone-number" tabindex="-1" aria-labelledby="modal-edit-receiver-phone-number_label" aria-hidden="true">
+    <div class="modal-dialog modal-md modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <span class="modal-title content-title">Edit Receiver Phone Number</span>
+                <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
+            </div>
+            <div class="modal-body">
+                <form id="frm-update-receiver-phone-number">
+                <input type="hidden" id="receiver-phone-number-id" name="receiver_phone_number_id" value="" />
+                <div class="row">
+                    <div class="col-sm-12">
+                        <label class="mb-2">Receiver Phone Number</label>
+                        <div class="input-group mb-3">
+                            <input type="text" name="receiver_number" id="edit-receiver-phone-number" value="" maxlength="12" placeholder="xxx-xxx-xxxx" class="form-control phone_number_format" required="" autocomplete="off" />
+                        </div>
+                    </div>                 
+                </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="nsm-button" data-bs-dismiss="modal">Close</button>
+                <button type="submit" class="nsm-button primary" id="btn-update-receiver-phone-number" form="frm-update-receiver-phone-number">Save</button>
+            </div>
+            </form>                
+        </div>
+    </div>
+</div>
