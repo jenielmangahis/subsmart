@@ -80,6 +80,11 @@
                 <form id="customer_form" enctype="multipart/form-data">
                     <div class="row g-3 align-items-start" id="customer-add-advance">
                         <?php 
+                            $status_cancelled_hide_section = '';
+                            if( $profile_info && $profile_info->status == 'Cancelled' ){
+                                $status_cancelled_hide_section = 'display:none;';
+                            } 
+
                             if( in_array(logged('company_id'), adi_company_ids()) ){
                                 if( $formGroups ){
                                     if( $formGroups['customer-papers']['total_enabled'] > 0 ){

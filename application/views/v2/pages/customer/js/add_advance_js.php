@@ -214,8 +214,7 @@
             if( customer_id > 0 ){
                 $('#request-cancellation-customer-id').val(customer_id);
                 $('#send_cancel_status_request_modal').modal('show');
-            }
-            
+            }            
             
             if( status == 'Cancelled' || status == 'Cancel' || status == 'Charge Back' || status == 'Collection' || status == 'Competition Lost' ){
                 $('#office-info-cancel-date').attr('required', 'required');
@@ -232,6 +231,25 @@
                 //$('#office-info-collect-amount').removeAttr('required');
                 $('#cancelled-related-fields-container-a').hide();
             }
+
+            //Hide show sections
+            if( status == 'Cancelled' ){
+                $('#add-advance-alarm-section').hide();
+                $('#add-advance-custom-fields').hide();
+                $('#add-advance-billing-info').hide();
+                $('#add-advance-payment-schedule').hide();
+                $('#add-advance-customer-papers').hide();
+                $('#funding-information-container').hide();
+                $('#add-advance-access-info').hide();
+            }else{
+                $('#add-advance-alarm-section').show();
+                $('#add-advance-custom-fields').show();
+                $('#add-advance-billing-info').show();
+                $('#add-advance-payment-schedule').show();
+                $('#add-advance-customer-papers').show();
+                $('#funding-information-container').show();
+                $('#add-advance-access-info').show();
+            }   
         });
 
         $('#cancellation-request-reason').on('change', function(){
@@ -1819,8 +1837,10 @@
                     service_package_type:service_package_type
                 },
                 success: function(o) {
-                    let account_cost = parseFloat(o.account_cost);
+                    let account_cost   = parseFloat(o.account_cost);
+                    let pass_thru_cost = parseFloat(o.pass_thru_cost);
                     $('#account_cost').val(account_cost.toFixed(2));
+                    $('#pass_thru_cost').val(pass_thru_cost.toFixed(2))
                 },
             });
         }

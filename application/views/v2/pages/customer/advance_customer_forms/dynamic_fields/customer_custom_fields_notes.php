@@ -1,4 +1,4 @@
-<div class="nsm-card primary">
+<div class="nsm-card primary" style="<?= $status_cancelled_hide_section; ?>" id="add-advance-custom-fields">
     <div class="nsm-card-header">
         <div class="nsm-card-title">
             <span><i class='bx bx-fw bx-customize'></i> Custom Fields</span>

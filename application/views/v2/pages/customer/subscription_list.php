@@ -485,11 +485,11 @@
                             if (content == 0) {
                                 $.ajax({
                                     type: "POST",
-                                    // data: { statusFilter: 'active_only' }, 
+                                    data: { statusFilter: 'active_only' }, 
                                     url: `${window.origin}/Customer/toolContent/batchUpdater`,
                                     success: function(response) {
                                         $('.activeCustomerBatchUpdaterContent').append(response);
-                                        $('.customerUpdaterContentLoader, .batchUpdaterTitle, .modalExitButton').remove();
+                                        $('.customerUpdaterContentLoader, .batchUpdaterTitleContainer, .modalExitButton').remove();
                                     },
                                 });
                             }
@@ -515,7 +515,7 @@
                         </div>
                     </div>
                     <div class="col-lg-12 activeCustomerListContent display_none"></div>
-                    <div class="col-lg-12 activeCustomerBatchUpdaterContent display_none">
+                    <div class="activeCustomerBatchUpdaterContent display_none">
                         <span class="customerUpdaterContentLoader">Please wait while fetching the tool content...</span>
                     </div>
                 </div>

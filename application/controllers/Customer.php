@@ -1291,6 +1291,8 @@ class Customer extends MY_Controller
         $getSystemType = ['where' => ['company_id' => logged('company_id')], 'table' => 'ac_system_package_type', 'select' => 'id, name'];
         $getSystemTypeData = $this->general->get_data_with_param($getSystemType);
         // ===============
+        $getConnectionTypeData = array('GSM', 'Digi', 'Wireless');
+        // ===============
         $getWarrantyType = array('None', 'Limited. 90 Days', '1 Year', '$25 Trip', '$50 Trip and $65 Deductible', 'Extended',);
         // ===============
         $getRatePlan = ['where' => ['company_id' => logged('company_id')],'table' => 'ac_rateplan','select' => 'id, plan_name, amount,'];
@@ -1311,10 +1313,12 @@ class Customer extends MY_Controller
         $where = array('company_id' => $company_id);
         if (!empty($postData) && $postData === 'active_only') {
             $where['profile_status'] = [
+                'Active w/RAR',
                 'Active w/RMR',
                 'Active w/RQR',
                 'Active w/RYR',
-                'Inactive w/RMM'
+                'Inactive w/RMM',
+                'Inactive w/RAR',
             ];
         }
 
@@ -1346,6 +1350,7 @@ class Customer extends MY_Controller
                 $customerType = (!empty($getDatas->profile_customer_type)) ? $getDatas->profile_customer_type : "<small class='text-muted'><i>Not Specified</i></small>";
                 // ===============
                 $customerTypeDropdown = "<select class='form-select form-select-sm updateInputValue' data-customername='$firstName $lastName' data-id='$getDatas->prof_id' data-category='profile' data-column='customer_type'>";
+                $customerTypeDropdown .= "<option value=''>None</option>";
                 if ($getDatas->profile_customer_type == "Residential") {
                     $customerTypeDropdown .= "<option selected value='Residential'>Residential</option>";
                     $customerTypeDropdown .= "<option value='Commercial'>Commercial</option>";
@@ -1358,6 +1363,7 @@ class Customer extends MY_Controller
                 $salesArea = "<small class='text-muted'><i>Not Specified</i></small>";
                 // ===============
                 $salesAreaDropdown = "<select class='form-select form-select-sm updateInputValue' data-customername='$firstName $lastName' data-id='$getDatas->prof_id' data-category='profile' data-column='fk_sa_id'>";
+                $salesAreaDropdown .= "<option value=''>None</option>";
                 foreach ($getSalesAreaData as $getSalesAreaDatas) {
                     if ($getDatas->profile_fk_sa_id == $getSalesAreaDatas->sa_id) {
                         $salesArea = $getSalesAreaDatas->sa_name;
@@ -1387,6 +1393,7 @@ class Customer extends MY_Controller
                 $customerStatus = "<small class='text-muted'><i>Not Specified</i></small>";
                 // ===============
                 $customerStatusDropdown = "<select class='form-select form-select-sm updateInputValue' data-customername='$firstName $lastName' data-id='$getDatas->prof_id' data-category='profile' data-column='status'>";
+                $customerStatusDropdown .= "<option value=''>None</option>";
                 foreach ($getCustomerStatusData as $getCustomerStatusDatas) {
                     if ($getDatas->profile_status == $getCustomerStatusDatas->name) {
                         $customerStatus = $getCustomerStatusDatas->name;
@@ -1400,6 +1407,7 @@ class Customer extends MY_Controller
                 $salesRep = "<small class='text-muted'><i>Not Specified</i></small>";
                 // ===============
                 $salesRepDropdown = "<select class='form-select form-select-sm updateInputValue' data-customername='$firstName $lastName' data-id='$getDatas->prof_id' data-category='office' data-column='fk_sales_rep_office'>";
+                $salesRepDropdown .= "<option selected value=''>None</option>";
                 foreach ($getSalesRepData as $getSalesRepDatas) {
                     if ($getDatas->office_sales_rep == $getSalesRepDatas->id) {
                         $salesRep = "$getSalesRepDatas->FName $getSalesRepDatas->LName";
@@ -1413,6 +1421,7 @@ class Customer extends MY_Controller
                 $technician = "<small class='text-muted'><i>Not Specified</i></small>";
                 // ===============
                 $technicianDropdown = "<select class='form-select form-select-sm updateInputValue' data-customername='$firstName $lastName' data-id='$getDatas->prof_id' data-category='office' data-column='technician'>";
+                $technicianDropdown .= "<option value=''>None</option>";
                 foreach ($getTechnicianData as $getTechnicianDatas) {
                     if ($getDatas->office_technician == $getTechnicianDatas->id) {
                         $technician = "$getTechnicianDatas->FName $getTechnicianDatas->LName";
@@ -1428,6 +1437,7 @@ class Customer extends MY_Controller
                 $monitoringCompany = "<small class='text-muted'><i>Not Specified</i></small>";
                 // ===============
                 $monitoringCompanyDropdown = "<select class='form-select form-select-sm updateInputValue' data-customername='$firstName $lastName' data-id='$getDatas->prof_id' data-category='alarm' data-column='monitor_comp'>";
+                $monitoringCompanyDropdown .= "<option value=''>None</option>";
                 for ($i = 0; $i < count($getMonitoringCompany); $i++) {
                     if ($getDatas->alarm_monitor_comp == $getMonitoringCompany[$i]) {
                         $monitoringCompany = "$getMonitoringCompany[$i]";
@@ -1443,6 +1453,7 @@ class Customer extends MY_Controller
                 $accountType = "<small class='text-muted'><i>Not Specified</i></small>";
                 // ===============
                 $accountTypeDropdown = "<select class='form-select form-select-sm updateInputValue' data-customername='$firstName $lastName' data-id='$getDatas->prof_id' data-category='alarm' data-column='acct_type'>";
+                $accountTypeDropdown .= "<option value=''>None</option>";
                 $accountTypeDropdown .= "<option value=''>Not Specified</option>";
                 for ($i = 0; $i < count($getAccountType); $i++) {
                     if ($getDatas->alarm_acct_type == $getAccountType[$i]) {
@@ -1459,6 +1470,7 @@ class Customer extends MY_Controller
                 $panelType = "<small class='text-muted'><i>Not Specified</i></small>";
                 // ===============
                 $panelTypeDropdown = "<select class='form-select form-select-sm updateInputValue' data-customername='$firstName $lastName' data-id='$getDatas->prof_id' data-category='alarm' data-column='panel_type'>";
+                $panelTypeDropdown .= "<option value=''>None</option>";
                 foreach ($getPanelTypeData as $getPanelTypeDatas) {
                     if ($getDatas->alarm_panel_type == $getPanelTypeDatas->name) {
                         $panelType = "$getPanelTypeDatas->name";
@@ -1472,6 +1484,7 @@ class Customer extends MY_Controller
                 $systemType = "<small class='text-muted'><i>Not Specified</i></small>";
                 // ===============
                 $systemTypeDropdown = "<select class='form-select form-select-sm updateInputValue' data-customername='$firstName $lastName' data-id='$getDatas->prof_id' data-category='alarm' data-column='system_type'>";
+                $systemTypeDropdown .= "<option value=''>None</option>";
                 foreach ($getSystemTypeData as $getSystemTypeDatas) {
                     if ($getDatas->alarm_system_type == $getSystemTypeDatas->name) {
                         $systemType = $getSystemTypeDatas->name;
@@ -1485,6 +1498,7 @@ class Customer extends MY_Controller
                 $warrantyType = "<small class='text-muted'><i>Not Specified</i></small>";
                 // ===============
                 $warrantyTypeDropdown = "<select class='form-select form-select-sm updateInputValue' data-customername='$firstName $lastName' data-id='$getDatas->prof_id' data-category='alarm' data-column='warranty_type'>";
+                $warrantyTypeDropdown .= "<option value=''>None</option>";
                 for ($i = 0; $i < count($getWarrantyType); $i++) {
                     if ($getDatas->alarm_warranty_type == $getWarrantyType[$i]) {
                         $warrantyType = "$getWarrantyType[$i]";
@@ -1495,18 +1509,19 @@ class Customer extends MY_Controller
                 }
                 $warrantyTypeDropdown .= "</select>";
                 // ===============
-                $communicationType = "<small class='text-muted'><i>Not Specified</i></small>";
+                $connectionType = "<small class='text-muted'><i>Not Specified</i></small>";
                 // ===============
-                $communicationTypeDropdown = "<select class='form-select form-select-sm updateInputValue' data-customername='$firstName $lastName' data-id='$getDatas->prof_id' data-category='alarm' data-column='comm_type'>";
-                foreach ($getSystemTypeData as $getSystemTypeDatas) {
-                    if ($getDatas->alarm_comm_type == $getSystemTypeDatas->name) {
-                        $communicationType = $getSystemTypeDatas->name;
-                        $communicationTypeDropdown .= "<option selected value='$getSystemTypeDatas->name'>$getSystemTypeDatas->name</option>";
+                $connectionTypeDropdown = "<select class='form-select form-select-sm updateInputValue' data-customername='$firstName $lastName' data-id='$getDatas->prof_id' data-category='alarm' data-column='connection_type'>";
+                $connectionTypeDropdown .= "<option value=''>None</option>";
+                for ($i = 0; $i < count($getConnectionTypeData); $i++) {
+                    if ($getDatas->alarm_connection_type == $getConnectionTypeData[$i]) {
+                        $connectionType = $getConnectionTypeData[$i];
+                        $connectionTypeDropdown .= "<option selected value='$getConnectionTypeData[$i]'>$getConnectionTypeData[$i]</option>";
                     } else {
-                        $communicationTypeDropdown .= "<option value='$getSystemTypeDatas->name'>$getSystemTypeDatas->name</option>";
+                        $connectionTypeDropdown .= "<option value='$getConnectionTypeData[$i]'>$getConnectionTypeData[$i]</option>";
                     }
                 }
-                $communicationTypeDropdown .= "</select>";
+                $connectionTypeDropdown .= "</select>";
                 // ===============
                 $monthlyMonitoringRate = (!empty($getDatas->billing_mmr)) ? '$' . number_format($getDatas->billing_mmr, 2) : "<small class='text-muted'><i>Not Specified</i></small>";
                 // ===============
@@ -1522,6 +1537,7 @@ class Customer extends MY_Controller
                 $ratePlan = "<small class='text-muted'><i>Not Specified</i></small>";
                 // ===============
                 $ratePlanDropdown = "<select class='form-select form-select-sm updateInputValue' data-customername='$firstName $lastName' data-id='$getDatas->prof_id' data-category='billing' data-column='mmr'>";
+                $ratePlanDropdown .= "<option value=''>None</option>";
                 foreach ($getRatePlanData as $getRatePlanDatas) {
                     if ($getDatas->billing_mmr == $getRatePlanDatas->amount) {
                         $ratePlan =  "$getRatePlanDatas->plan_name - $$getRatePlanDatas->amount";
@@ -1535,6 +1551,7 @@ class Customer extends MY_Controller
                 $card_billingFrequency = "<small class='text-muted'><i>Not Specified</i></small>";
                 // ===============
                 $card_billingFrequencyDropdown = "<select class='form-select form-select-sm updateInputValue' data-customername='$firstName $lastName' data-id='$getDatas->prof_id' data-category='billing' data-column='bill_freq'>";
+                $card_billingFrequencyDropdown .= "<option value=''>None</option>";
                 for ($i = 0; $i < count($getBillingFrequencyData); $i++) {
                     if ($getDatas->billing_bill_freq == $getBillingFrequencyData[$i]) {
                         $card_billingFrequency = $getBillingFrequencyData[$i];
@@ -1548,6 +1565,7 @@ class Customer extends MY_Controller
                 $card_billingDay = "<small class='text-muted'><i>Not Specified</i></small>";
                 // ===============
                 $card_billingDayDropdown = "<select class='form-select form-select-sm updateInputValue' data-customername='$firstName $lastName' data-id='$getDatas->prof_id' data-category='billing' data-column='bill_day'>";
+                $card_billingDayDropdown .= "<option value=''>None</option>";
                 for ($i = 0; $i < count($getBillingDayData); $i++) {
                     if ($getDatas->billing_bill_day == $getBillingDayData[$i]) {
                         $card_billingDay = "$getBillingDayData[$i]";
@@ -1561,6 +1579,7 @@ class Customer extends MY_Controller
                 $card_contractTerm = "<small class='text-muted'><i>Not Specified</i></small>";
                 // ===============
                 $card_contractTermDropdown = "<select class='form-select form-select-sm updateInputValue' data-customername='$firstName $lastName' data-id='$getDatas->prof_id' data-category='billing' data-column='contract_term'>";
+                $card_contractTermDropdown .= "<option value=''>None</option>";
                 for ($i = 0; $i < count($getContractTermData); $i++) {
                     if ($getDatas->billing_contract_term == $getContractTermData[$i]) {
                         $card_contractTerm = "$getContractTermData[$i] months";
@@ -1578,6 +1597,7 @@ class Customer extends MY_Controller
                 $billingMethod = "<small class='text-muted'><i>Not Specified</i></small>";
                 // ===============
                 $billingMethodDropdown = "<select class='form-select form-select-sm updateInputValue' data-customername='$firstName $lastName' data-id='$getDatas->prof_id' data-category='billing' data-column='bill_method'>";
+                $billingMethodDropdown .= "<option value=''>None</option>";
                 for ($i = 0; $i < count($getBillingMethod); $i++) {
                     if ($getDatas->billing_bill_method == $getBillingMethod[$i]) {
                         if ($getDatas->billing_bill_method == "eT") {
@@ -1618,9 +1638,9 @@ class Customer extends MY_Controller
 
                 $data[] = array(
                     "<div class='text-nowrap'><input class='form-check-input verifyActiveCustomer' style='width: 16px; height: 16px;' customer_id='$getDatas->prof_id' type='checkbox' $is_verified></div>",
-                    "<div class='drag_handle'></div><span class='textPreview'>$firstName</span> <div class='input-group input-group-sm inputMode' style='width: 250px; display: none;'> <input  class='form-control form-control-sm updateInputValue' data-customername='$firstName $lastName' data-id='$getDatas->prof_id' data-category='profile' data-column='first_name' type='text' value='$getDatas->profile_first_name'> <span class='input-group-text actionButton saveChanges'><i class='fas fa-check text-success'></i></span> <span class='input-group-text actionButton cancelEdit'><i class='fas fa-times text-danger'></i></span> </div>",
-                    "<div class='drag_handle'></div><span class='textPreview'>$lastName</span> <div class='input-group input-group-sm inputMode' style='width: 250px; display: none;'> <input  class='form-control form-control-sm updateInputValue' data-customername='$firstName $lastName' data-id='$getDatas->prof_id' data-category='profile' data-column='last_name' type='text' value='$getDatas->profile_last_name'> <span class='input-group-text actionButton saveChanges'><i class='fas fa-check text-success'></i></span> <span class='input-group-text actionButton cancelEdit'><i class='fas fa-times text-danger'></i></span> </div>",
-                    "<div class='drag_handle'></div><span class='textPreview'>$businessName</span> <div class='input-group input-group-sm inputMode' style='width: 250px; display: none;'> <input  class='form-control form-control-sm updateInputValue' data-customername='$firstName $lastName' data-id='$getDatas->prof_id' data-category='profile' data-column='business_name' type='text' value='$getDatas->profile_business_name'> <span class='input-group-text actionButton saveChanges'><i class='fas fa-check text-success'></i></span> <span class='input-group-text actionButton cancelEdit'><i class='fas fa-times text-danger'></i></span> </div>",
+                    "<div class='drag_handle'></div><span class='textPreview namePreviewEdit'>$firstName</span> <div class='input-group input-group-sm inputMode' style='width: 250px; display: none;'> <input  class='form-control form-control-sm updateInputValue' data-customername='$firstName $lastName' data-id='$getDatas->prof_id' data-category='profile' data-column='first_name' type='text' value='$getDatas->profile_first_name'> <span class='input-group-text actionButton saveChanges'><i class='fas fa-check text-success'></i></span> <span class='input-group-text actionButton cancelEdit'><i class='fas fa-times text-danger'></i></span> </div>",
+                    "<div class='drag_handle'></div><span class='textPreview namePreviewEdit'>$lastName</span> <div class='input-group input-group-sm inputMode' style='width: 250px; display: none;'> <input  class='form-control form-control-sm updateInputValue' data-customername='$firstName $lastName' data-id='$getDatas->prof_id' data-category='profile' data-column='last_name' type='text' value='$getDatas->profile_last_name'> <span class='input-group-text actionButton saveChanges'><i class='fas fa-check text-success'></i></span> <span class='input-group-text actionButton cancelEdit'><i class='fas fa-times text-danger'></i></span> </div>",
+                    "<div class='drag_handle'></div><span class='textPreview namePreviewEdit'>$businessName</span> <div class='input-group input-group-sm inputMode' style='width: 250px; display: none;'> <input  class='form-control form-control-sm updateInputValue' data-customername='$firstName $lastName' data-id='$getDatas->prof_id' data-category='profile' data-column='business_name' type='text' value='$getDatas->profile_business_name'> <span class='input-group-text actionButton saveChanges'><i class='fas fa-check text-success'></i></span> <span class='input-group-text actionButton cancelEdit'><i class='fas fa-times text-danger'></i></span> </div>",
                     "<div class='drag_handle'></div><span class='textPreview'>$customerType</span> <div class='input-group input-group-sm inputMode' style='width: 250px; display: none;'>$customerTypeDropdown<span class='input-group-text actionButton saveChanges'><i class='fas fa-check text-success'></i></span> <span class='input-group-text actionButton cancelEdit'><i class='fas fa-times text-danger'></i></span> </div>",
                     "<div class='drag_handle'></div><span class='textPreview'>$salesArea</span> <div class='input-group input-group-sm inputMode' style='width: 250px; display: none;'>$salesAreaDropdown<span class='input-group-text actionButton saveChanges'><i class='fas fa-check text-success'></i></span> <span class='input-group-text actionButton cancelEdit'><i class='fas fa-times text-danger'></i></span> </div>",
                     "<div class='drag_handle'></div><span class='textPreview'>$address</span> <div class='input-group input-group-sm inputMode' style='width: 250px; display: none;'> <input  class='form-control form-control-sm updateInputValue' data-customername='$firstName $lastName' data-id='$getDatas->prof_id' data-category='profile' data-column='mail_add' type='text' value='$getDatas->profile_mail_add'> <span class='input-group-text actionButton saveChanges'><i class='fas fa-check text-success'></i></span> <span class='input-group-text actionButton cancelEdit'><i class='fas fa-times text-danger'></i></span> </div>",
@@ -1640,16 +1660,12 @@ class Customer extends MY_Controller
                     "<div class='drag_handle'></div><span class='textPreview'>$accountType</span> <div class='input-group input-group-sm inputMode' style='width: 250px; display: none;'>$accountTypeDropdown<span class='input-group-text actionButton saveChanges'><i class='fas fa-check text-success'></i></span> <span class='input-group-text actionButton cancelEdit'><i class='fas fa-times text-danger'></i></span> </div>",
                     "<div class='drag_handle'></div><span class='textPreview'>$abortCodePassword</span> <div class='input-group input-group-sm inputMode' style='width: 250px; display: none;'> <input  class='form-control form-control-sm updateInputValue' data-customername='$firstName $lastName' data-id='$getDatas->prof_id' data-category='alarm' data-column='passcode' type='text' value='$getDatas->alarm_passcode'> <span class='input-group-text actionButton saveChanges'><i class='fas fa-check text-success'></i></span> <span class='input-group-text actionButton cancelEdit'><i class='fas fa-times text-danger'></i></span> </div>",
                     "<div class='drag_handle'></div><span class='textPreview'>$panelType</span> <div class='input-group input-group-sm inputMode' style='width: 250px; display: none;'>$panelTypeDropdown<span class='input-group-text actionButton saveChanges'><i class='fas fa-check text-success'></i></span> <span class='input-group-text actionButton cancelEdit'><i class='fas fa-times text-danger'></i></span> </div>",
-                    "<div class='drag_handle'></div><span class='textPreview'>$systemType</span> <div class='input-group input-group-sm inputMode' style='width: 250px; display: none;'>$systemTypeDropdown<span class='input-group-text actionButton saveChanges'><i class='fas fa-check text-success'></i></span> <span class='input-group-text actionButton cancelEdit'><i class='fas fa-times text-danger'></i></span> </div>",
+                    "<div class='drag_handle'></div><span class='textPreview'>$connectionType</span> <div class='input-group input-group-sm inputMode' style='width: 250px; display: none;'>$connectionTypeDropdown<span class='input-group-text actionButton saveChanges'><i class='fas fa-check text-success'></i></span> <span class='input-group-text actionButton cancelEdit'><i class='fas fa-times text-danger'></i></span> </div>",
                     "<div class='drag_handle'></div><span class='textPreview'>$warrantyType</span> <div class='input-group input-group-sm inputMode' style='width: 250px; display: none;'>$warrantyTypeDropdown<span class='input-group-text actionButton saveChanges'><i class='fas fa-check text-success'></i></span> <span class='input-group-text actionButton cancelEdit'><i class='fas fa-times text-danger'></i></span> </div>",
-                    "<div class='drag_handle'></div><span class='textPreview'>$communicationType</span> <div class='input-group input-group-sm inputMode' style='width: 250px; display: none;'>$communicationTypeDropdown<span class='input-group-text actionButton saveChanges'><i class='fas fa-check text-success'></i></span> <span class='input-group-text actionButton cancelEdit'><i class='fas fa-times text-danger'></i></span> </div>",
-                    
+                   "<div class='drag_handle'></div><span class='textPreview'>$systemType</span> <div class='input-group input-group-sm inputMode' style='width: 250px; display: none;'>$systemTypeDropdown<span class='input-group-text actionButton saveChanges'><i class='fas fa-check text-success'></i></span> <span class='input-group-text actionButton cancelEdit'><i class='fas fa-times text-danger'></i></span> </div>",
                     "<div class='drag_handle'></div><span class='textPreview'>$monthlyMonitoringRate</span> <div class='input-group input-group-sm inputMode' style='width: 250px; display: none;'> <input oninput='validateDecimal(this)' class='form-control form-control-sm updateInputValue moneyInput' data-customername='$firstName $lastName' data-id='$getDatas->prof_id' data-category='billing' data-column='mmr' type='number' value='$getDatas->billing_mmr'> <span class='input-group-text actionButton saveChanges'><i class='fas fa-check text-success'></i></span> <span class='input-group-text actionButton cancelEdit'><i class='fas fa-times text-danger'></i></span> </div>",
-
                     "<div class='drag_handle'></div><span class='textPreview'>$grossMonitoringRate</span> <div class='input-group input-group-sm inputMode' style='width: 250px; display: none;'> <input oninput='validateDecimal(this)' class='form-control form-control-sm updateInputValue moneyInput' data-customername='$firstName $lastName' data-id='$getDatas->prof_id' data-category='alarm' data-column='monthly_monitoring' type='number' value='$getDatas->alarm_monthly_monitoring'> <span class='input-group-text actionButton saveChanges'><i class='fas fa-check text-success'></i></span> <span class='input-group-text actionButton cancelEdit'><i class='fas fa-times text-danger'></i></span> </div>",
-
                     "<div class='drag_handle'></div><span class='textPreview'>$addonFeatureCost</span> <div class='input-group input-group-sm inputMode' style='width: 250px; display: none;'> <input oninput='validateDecimal(this)' class='form-control form-control-sm updateInputValue moneyInput' data-customername='$firstName $lastName' data-id='$getDatas->prof_id' data-category='alarm' data-column='addon_feature_cost' type='number' value='$getDatas->alarm_feature_cost'> <span class='input-group-text actionButton saveChanges'><i class='fas fa-check text-success'></i></span> <span class='input-group-text actionButton cancelEdit'><i class='fas fa-times text-danger'></i></span> </div>",
-
                     "<div class='drag_handle'></div><span class='textPreview'>$accountCost</span> <div class='input-group input-group-sm inputMode' style='width: 250px; display: none;'> <input oninput='validateDecimal(this)' class='form-control form-control-sm updateInputValue moneyInput' data-customername='$firstName $lastName' data-id='$getDatas->prof_id' data-category='alarm' data-column='account_cost' type='number' value='$getDatas->alarm_account_cost'> <span class='input-group-text actionButton saveChanges'><i class='fas fa-check text-success'></i></span> <span class='input-group-text actionButton cancelEdit'><i class='fas fa-times text-danger'></i></span> </div>",
                     "<div class='drag_handle'></div><span class='textPreview'>$passThruCost</span> <div class='input-group input-group-sm inputMode' style='width: 250px; display: none;'> <input oninput='validateDecimal(this)' class='form-control form-control-sm updateInputValue moneyInput' data-customername='$firstName $lastName' data-id='$getDatas->prof_id' data-category='alarm' data-column='pass_thru_cost' type='number' value='$getDatas->alarm_pass_thru_cost'> <span class='input-group-text actionButton saveChanges'><i class='fas fa-check text-success'></i></span> <span class='input-group-text actionButton cancelEdit'><i class='fas fa-times text-danger'></i></span> </div>",
                     "<div class='drag_handle'></div><span class='textPreview'>$ratePlan</span> <div class='input-group input-group-sm inputMode' style='width: 250px; display: none;'>$ratePlanDropdown<span class='input-group-text actionButton saveChanges'><i class='fas fa-check text-success'></i></span> <span class='input-group-text actionButton cancelEdit'><i class='fas fa-times text-danger'></i></span> </div>",
@@ -11311,6 +11327,31 @@ class Customer extends MY_Controller
                 break;
         }
 
+        
+        if ($postData === 'active_only') {
+            $getMonitoringIds['where_in'] = [
+                'acs_profile.status' => [
+                    'Active w/RAR',
+                    'Active w/RMR',
+                    'Active w/RQR',
+                    'Active w/RYR',
+                    'Inactive w/RMM',
+                    'Inactive w/RMR'
+                ]
+            ];
+
+            $getCustomerStatusData['where_in'] = [
+                'acs_cust_status.name' => [
+                    'Active w/RAR',
+                    'Active w/RMR',
+                    'Active w/RQR',
+                    'Active w/RYR',
+                    'Inactive w/RMM',
+                    'Inactive w/RMR'
+                ]
+            ];
+        }
+
         $this->page_data['status_filter'] = $postData;
         $this->page_data['rate_plan'] = $this->general->get_data_with_param($getRatePlanData);
         $this->page_data['customer_status'] = $this->general->get_data_with_param($getCustomerStatus);
@@ -15327,20 +15368,23 @@ class Customer extends MY_Controller
     {
         $this->load->model('SystemPackageType_model');
 
-        $account_cost = 0;
+        $account_cost   = 0;
+        $pass_thru_cost = 0;
         $company_id   = logged('company_id');
         $post         = $this->input->post();
 
         $systemPackage = $this->SystemPackageType_model->getByNameAndCompanyId($post['service_package_type'], $company_id);
         if( $systemPackage ){
             if( $post['service_provider'] == 'Alarm.com' ){
-                $account_cost = $systemPackage->alarmcom_cost > 0 ? $systemPackage->alarmcom_cost : 0;
+                $pass_thru_cost = $systemPackage->alarmcom_cost > 0 ? $systemPackage->alarmcom_cost : 0;                
             }elseif( $post['service_provider'] == 'AlarmNet' ){
-                $account_cost = $systemPackage->alarmnet_cost > 0 ? $systemPackage->alarmnet_cost : 0;
+                $pass_thru_cost = $systemPackage->alarmnet_cost > 0 ? $systemPackage->alarmnet_cost : 0;
             }
+
+            $account_cost = $systemPackage->acct_cost;
         }
 
-        $return = ['account_cost' => $account_cost];
+        $return = ['account_cost' => $account_cost, 'pass_thru_cost' => $pass_thru_cost];
         echo json_encode($return);
     }
 
