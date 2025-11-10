@@ -1453,6 +1453,10 @@ class Invoice extends MY_Controller
 
         $total_balance = $objInvoice->grand_total + $late_fee;
         //$total_balance = $grand_total + $late_fee;
+        //Set balance to 0 if status paid
+        if( $post['status'] == 'paid' ){
+            $total_balance = 0;
+        }   
 
         $job_location = $post['jobs_location'] . ' ' . $post['jobs_city'] . ', ' . $post['jobs_state'] . ' ' . $post['jobs_zip'];
         $update_data = array(
@@ -1524,6 +1528,7 @@ class Invoice extends MY_Controller
                 }
             }
         }
+        
         //Update job status to 'Approved' if invoice status is paid - end
 
         $delete2 = $this->invoice_model->delete_items($id);
