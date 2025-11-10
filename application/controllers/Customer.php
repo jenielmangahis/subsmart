@@ -2940,6 +2940,12 @@ class Customer extends MY_Controller
                     }
                 });
 
+                $customer_certificates = array_filter($customerDocuments, function($doc){
+                    if( $doc['document_type'] == 'client_certificate' ){
+                        return $doc;
+                    }
+                });
+
                 $customer_photo_id_copy = array_filter($customerDocuments, function($doc){
                     if( $doc['document_type'] == 'photo_id_copy' ){
                         return $doc;
@@ -2955,6 +2961,7 @@ class Customer extends MY_Controller
                 $this->page_data['customer_client_agreements'] = $customer_client_agreements;
                 $this->page_data['total_customer_documents'] = $total_customer_documents;
                 $this->page_data['customer_site_photos'] = $customer_site_photos;
+                $this->page_data['customer_certificates'] = $customer_certificates;
                 $this->page_data['customer_photo_id_copy'] = $customer_photo_id_copy;
                 $this->page_data['customer_documents'] = $customerDocuments;
                 $this->page_data['customerSignature'] = $customerSignature;
@@ -15394,7 +15401,7 @@ class Customer extends MY_Controller
         $this->load->model('AcsCustomerCancellationRequest');
         $this->load->model('Users_model');
 
-        $is_live_mail_credentials = true;
+        $is_live_mail_credentials = false;
         $is_success = 0;
         $msg    = 'Cannot find customer data';
 
@@ -15444,7 +15451,7 @@ class Customer extends MY_Controller
                 $email_data['cancellation_url'] = $cancellation_url;
                 $body = $this->load->view('v2/emails/customer_cancellation_request', $email_data, true);
 
-                $to_send = 'jeniel.mangahis@gmail.com'; //$companyAdmin->email;
+                $to_send = 'bryann.revina03@gmail.com'; //$companyAdmin->email;
 
                 if($is_live_mail_credentials) {
                     $mail = email__getInstance();

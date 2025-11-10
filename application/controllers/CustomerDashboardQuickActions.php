@@ -254,7 +254,7 @@ class CustomerDashboardQuickActions extends MYF_Controller
 
         $document = $_FILES['document'];
         ['document_type' => $documentType, 'customer_id' => $customerId, 'document_label' => $documentLabel, 'is_document_limit' => $isDocumentLimit] = $this->input->post();
-
+        
         $filePath = $this->getCustomerDocumentPath($customerId);
 
         $maxSizeInMB = 8;
@@ -301,6 +301,7 @@ class CustomerDashboardQuickActions extends MYF_Controller
             }else{
                 $predefinedTypes = [
                     'client_agreement',
+                    'client_certificate',
                     'photo_id_copy',
                     'proof_of_residency',
                     'personal_guarantee',
