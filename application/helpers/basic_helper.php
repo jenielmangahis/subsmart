@@ -4760,6 +4760,17 @@ if (!function_exists('is_admin_logged')) {
         return $adi_company_ids;
     }
 
+    function isAdiCompany(){
+        $is_adi = false;
+        $company_id = logged('company_id');
+        $adi_company_ids = [24,31,58,1,3696,139];
+        if( in_array($company_id, $adi_company_ids) ){
+            $is_adi = true;
+        }
+
+        return $is_adi;
+    }
+
     function customerAuditLog($user_id, $prof_id, $obj_id, $module, $remarks){
         $CI =& get_instance();
         $CI->load->model('CustomerAuditLog_model');
