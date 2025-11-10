@@ -22,94 +22,99 @@
                         </div>
                     </div>
                 </div>
-
-                <div class="">
-                    <div class="col-12 col-md-8 mb-2" style="margin: 0 auto;">
+                <div class="row">
+                    <div class="col-12 col-md-4 mb-2">
                         <div class="nsm-card primary">
-                            <div class="nsm-card-header">
-                                <div class="nsm-card-title">
-                                    <span><i class='bx bx-fw bx-file'></i> Customer Cancellation Request Details</span>
-                                    <!-- <div class="form-check" style="float:right;">
-                                        <input class="form-check-input chk-collection" type="checkbox" value="1" name="is_collection" id="chk-collection">
-                                        <label class="form-check-label" for="chk-collection">
-                                            Collection
-                                        </label>
-                                    </div> -->                        
-                                </div>
-                            </div>
                             <div class="nsm-card-content">
-                                <hr>
-                                <div class="row g-1 mb-3">
-                                    <div class="col-12 col-md-4">
-                                        <label class="content-subtitle fw-bold">Date Request Received</label>
-                                    </div>
-                                    <div class="col-12 col-md-8">
-                                        <label class="content-subtitle"><?php echo date('m/d/Y', strtotime($cancel_request_data->request_date)); ?></label>
-                                    </div>
-                                </div>  
-                                <div class="row g-1 mb-3">
-                                    <div class="col-12 col-md-4">
-                                        <label class="content-subtitle fw-bold">Reason</label>
-                                    </div>
-                                    <div class="col-12 col-md-8">
-                                        <label class="content-subtitle"><?php echo $cancel_request_data->reason; ?></label>
-                                    </div>
-                                </div>                       
-                                <div class="row g-1 mb-3">
-                                    <div class="col-12 col-md-4">
-                                        <label class="content-subtitle fw-bold">Next Step</label>
-                                    </div>
-                                    <div class="col-12 col-md-8">
-                                        <label class="content-subtitle"><?php echo $cancel_request_data->next_action; ?></label>
+                                <div class="row mb-3">
+                                    <div class="col-12">
+                                        <div class="nsm-card-title">
+                                            <span><i class='bx bx-fw bx-file'></i> Customer Cancellation Request Details</span>
+                                        </div>
                                     </div>
                                 </div>
-                                <div class="row g-1 mb-3">
-                                    <div class="col-12 col-md-4">
-                                        <label class="content-subtitle fw-bold">BOC Amount</label>
-                                    </div>
-                                    <div class="col-12 col-md-8">
-                                        <label class="content-subtitle">$<?php echo number_format($cancel_request_data->boc_amount,2); ?></label>
-                                    </div>
-                                </div>
-                                <div class="row g-1 mb-3">
-                                    <div class="col-12 col-md-4">
-                                        <label class="content-subtitle fw-bold">BOC Received Date</label>
-                                    </div>
-                                    <div class="col-12 col-md-8">
-                                        <label class="content-subtitle"><?php echo date('m/d/Y', strtotime($cancel_request_data->boc_received_date)); ?></label>
-                                    </div>
-                                </div>
-                                <div class="row g-1 mb-3">
-                                    <div class="col-12 col-md-4">
-                                        <label class="content-subtitle fw-bold">CS Closed Date</label>
-                                    </div>
-                                    <div class="col-12 col-md-8">
-                                        <label class="content-subtitle"><?php echo date('m/d/Y', strtotime($cancel_request_data->cs_close_date)); ?></label>
-                                    </div>
-                                </div>
-                                <div class="row g-1 mb-3">
-                                    <div class="col-12 col-md-4">
-                                        <label class="content-subtitle fw-bold">Equipment Return Date</label>
-                                    </div>
-                                    <div class="col-12 col-md-8">
-                                        <label class="content-subtitle"><?php echo date('m/d/Y', strtotime($cancel_request_data->equipment_return_date)); ?></label>
-                                    </div>
-                                </div>
-                            </div>
 
-                            <div id="cust-collection-req-container" class="cust-collection-req-container">
-                                <br />
-                                <div class="nsm-card-header">
-                                    <div class="nsm-card-title">
-                                        <span><i class='bx bx-fw bx-file'></i> Collections</span>                           
-                                    </div>
-                                    <div class="form-check" style="float:right;">
-                                        <a href="javascript:void(0);" class="nsm-button btn-small" id="btn-quick-edit-customer-collection"><span class="fa fa-edit"></span> Edit</a>
-                                    </div>                                    
-                                </div>
-                                <div class="nsm-card-content">
-                                    <hr>
+                                <div class="row mb-3">
+                                    <div class="col-12">
+                                        <div class="row g-1 mb-3">
+                                        <div class="col-12 col-md-4">
+                                            <label class="content-subtitle fw-bold">Date Request Received</label>
+                                        </div>
+                                        <div class="col-12 col-md-8">
+                                            <label class="content-subtitle"><?php echo date('m/d/Y', strtotime($cancel_request_data->request_date)); ?></label>
+                                        </div>
+                                    </div>  
                                     <div class="row g-1 mb-3">
+                                        <div class="col-12 col-md-4">
+                                            <label class="content-subtitle fw-bold">Reason</label>
+                                        </div>
+                                        <div class="col-12 col-md-8">
+                                            <label class="content-subtitle"><?php echo $cancel_request_data->reason; ?></label>
+                                        </div>
+                                    </div>                       
+                                    <div class="row g-1 mb-3">
+                                        <div class="col-12 col-md-4">
+                                            <label class="content-subtitle fw-bold">Next Step</label>
+                                        </div>
+                                        <div class="col-12 col-md-8">
+                                            <label class="content-subtitle"><?php echo $cancel_request_data->next_action; ?></label>
+                                        </div>
+                                    </div>
+                                    <div class="row g-1 mb-3">
+                                        <div class="col-12 col-md-4">
+                                            <label class="content-subtitle fw-bold">BOC Amount</label>
+                                        </div>
+                                        <div class="col-12 col-md-8">
+                                            <label class="content-subtitle">$<?php echo number_format($cancel_request_data->boc_amount,2); ?></label>
+                                        </div>
+                                    </div>
+                                    <div class="row g-1 mb-3">
+                                        <div class="col-12 col-md-4">
+                                            <label class="content-subtitle fw-bold">BOC Received Date</label>
+                                        </div>
+                                        <div class="col-12 col-md-8">
+                                            <label class="content-subtitle"><?php echo date('m/d/Y', strtotime($cancel_request_data->boc_received_date)); ?></label>
+                                        </div>
+                                    </div>
+                                    <div class="row g-1 mb-3">
+                                        <div class="col-12 col-md-4">
+                                            <label class="content-subtitle fw-bold">CS Closed Date</label>
+                                        </div>
+                                        <div class="col-12 col-md-8">
+                                            <label class="content-subtitle"><?php echo date('m/d/Y', strtotime($cancel_request_data->cs_close_date)); ?></label>
+                                        </div>
+                                    </div>
+                                    <div class="row g-1 mb-3">
+                                        <div class="col-12 col-md-4">
+                                            <label class="content-subtitle fw-bold">Equipment Return Date</label>
+                                        </div>
+                                        <div class="col-12 col-md-8">
+                                            <label class="content-subtitle"><?php echo date('m/d/Y', strtotime($cancel_request_data->equipment_return_date)); ?></label>
+                                        </div>
+                                    </div>
+                                    <div class="row mt-4">
+                                        <div class="col-12 col-md-12">
+                                        <button class="nsm-button primary" id="btn-approve-request">Approve Request</button>    
+                                        <button class="nsm-button primary nsm-danger" id="btn-disapprove-request">Disapprove Request</button>    
+                                        </div>
+                                    </div>
+                                    </div>
+                                </div>   
+                                
+                                
+                                <div class="row mb-3" id="cust-collection-req-container" class="cust-collection-req-container">
+                                    <div class="col-12">
+                                            <hr />
+                                            <div class="nsm-card-title">
+                                                <span><i class='bx bx-fw bx-file'></i> Collections</span>  
+                                            </div>
+                                            <div class="form-check" style="float:right;">
+                                                <a href="javascript:void(0);" class="nsm-button btn-small" id="btn-quick-edit-customer-collection"><span class="fa fa-edit"></span> Edit</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row mb-3">
+                                        <div class="row g-1 mb-3">
                                         <div class="col-12 col-md-4">
                                             <label class="content-subtitle fw-bold">Send to Collection</label>
                                         </div>
@@ -151,15 +156,17 @@
                                     </div>
                                 </div>
                             </div>
+                        </div>
+                    </div>
 
-                            <br />
+                    <div class="col-12 col-md-4 mb-2">
+                        <div class="nsm-card primary">
                             <div class="nsm-card-header">
                                 <div class="nsm-card-title">
-                                    <span><i class='bx bx-fw bx-file'></i> Customer Profile</span>                           
+                                    <span><i class='bx bx-fw bx-file'></i> Customer Profile</span>   
                                 </div>
                             </div>
                             <div class="nsm-card-content">
-                                <hr>
                                 <div class="row g-1">
                                     <div class="col-12 col-md-6">
                                         <label class="content-subtitle fw-bold">Customer Type</label>
@@ -317,47 +324,414 @@
                                     <div class="col-12 col-md-6">
                                         <label class="content-subtitle"><?= isset($profile_info) && !empty($profile_info->phone_m) ? formatPhoneNumber($profile_info->phone_m) : '---'; ?></label>
                                     </div>
-                                </div>                                
+                                </div>  
                             </div>
+                        </div>
+                    </div>
 
-                            <br />
+                    <div class="col-12 col-md-4 mb-2">
+                        <div class="nsm-card primary">
                             <div class="nsm-card-header">
                                 <div class="nsm-card-title">
-                                    <span><i class='bx bx-fw bx-file'></i> Alarm Details</span>                           
+                                    <span><i class='bx bx-fw bx-file'></i> Alarm Details</span>      
                                 </div>
                             </div>
                             <div class="nsm-card-content">
-                                <hr>
                                 <div class="row g-1 mb-5">
                                     <div class="col-12 col-md-6">
-                                        <label class="content-subtitle fw-bold">Monitoring ID</label>
+                                        <div class="row g-2">
+                                            <div class="col-12 col-md-6">
+                                                <label class="content-title purple-label">Account Type</label>
+                                            </div>
+                                            <div class="col-12 col-md-6">
+                                                <span class="content-subtitle purple-label">
+                                                    <?= $alarm_info && $alarm_info->acct_type != '' ? $alarm_info->acct_type : '---'; ?>                                   
+                                                </span>
+                                            </div>
+                                            <div class="col-12 col-md-6">
+                                                <label class="content-title">Dealer Number</label>
+                                            </div>
+                                            <div class="col-12 col-md-6">
+                                                <span class="content-subtitle">
+                                                    <?php 
+                                                        $dealer_number = $default_dealer_number;
+                                                        if( $alarm_info && $alarm_info->dealer_number != '' ){
+                                                            $dealer_number = $alarm_info->dealer_number;
+                                                        }
+                                                    ?>
+                                                <?= $dealer_number; ?>
+                                                </span>
+                                            </div> 
+                                            <div class="col-12 col-md-6">
+                                                <label class="content-title">Site Type</label>
+                                            </div>
+                                            <div class="col-12 col-md-6">
+                                                <span class="content-subtitle">
+                                                    <?php 
+                                                        $site_type = '---';
+                                                        if( $defaultAlarmSiteType ){
+                                                            $site_type = $defaultAlarmSiteType->name;
+                                                        }
+
+                                                        if( $alarm_info && $alarm_info->site_type != '' ){
+                                                            $site_type = $alarm_info->site_type;
+                                                        }
+                                                    ?>
+                                                <?= $site_type; ?>  
+                                                </span>
+                                            </div>      
+                                            <div class="col-12 col-md-6">
+                                                <label class="content-title">Monitoring Company</label>
+                                            </div>
+                                            <div class="col-12 col-md-6">
+                                                <span class="content-subtitle">
+                                                    <?= $alarm_customer_info && $alarm_customer_info['dealer']['data'] ? $alarm_customer_info['dealer']['data']->dealerName : '---'; ?> 
+                                                </span>
+                                            </div>     
+                                            <div class="col-12 col-md-6">
+                                                <label class="content-title">Monitoring ID</label>
+                                            </div>
+                                            <div class="col-12 col-md-6">
+                                                <span class="content-subtitle">
+                                                    <?= $alarm_info && $alarm_info->monitor_id != '' ? $alarm_info->monitor_id : '---'; ?>                                                                
+                                                </span>
+                                            </div>  
+                                            <div class="col-12 col-md-6">
+                                                <label class="content-title">Site Customer Type</label>
+                                            </div>
+                                            <div class="col-12 col-md-6">
+                                                <span class="content-subtitle">
+                                                    <?= $profile_info->customer_type; ?>
+                                                </span>
+                                            </div>                                                                      
+                                            <div class="col-12 col-md-6">
+                                                <label class="content-title">Online</label>
+                                            </div>
+                                            <div class="col-12 col-md-6">
+                                                <span class="content-subtitle">
+                                                    <?= $alarm_info && $alarm_info->online != '' ? $alarm_info->online : 'No'; ?>      
+                                                </span>
+                                            </div>
+                                            <div class="col-12 col-md-6">
+                                                <label class="content-title">In Service</label>
+                                            </div>
+                                            <div class="col-12 col-md-6">
+                                                <span class="content-subtitle">
+                                                    <?= $alarm_info && $alarm_info->in_service != '' ? $alarm_info->in_service : 'No'; ?>      
+                                                </span>
+                                            </div>  
+                                            <div class="col-12 col-md-6">
+                                                <label class="content-title">Warranty Type</label>
+                                            </div>
+                                            <div class="col-12 col-md-6">
+                                                <span class="content-subtitle">
+                                                    <?php 
+                                                        if ($alarm_info->warranty_type) {
+                                                            echo $alarm_info->warranty_type; 
+                                                        } else {
+                                                            echo "---";
+                                                        }
+                                                    ?>
+                                                </span>
+                                            </div>                       
+                                            <div class="col-12 col-md-6">
+                                                <label class="content-title">Abort Code / Password</label>
+                                            </div>
+                                            <div class="col-12 col-md-6">
+                                                <span class="content-subtitle">
+                                                    <?php 
+                                                        $passcode = '---';
+                                                        if( $woLatest ){
+                                                            $passcode = $woLatest->password;
+                                                        }
+
+                                                        if( $alarm_info && $alarm_info->passcode != '' ){
+                                                            $passcode = $alarm_info->passcode;
+                                                        }
+
+                                                        echo $passcode;
+                                                    ?>
+                                                </span>
+                                            </div>  
+                                            <div class="col-12 col-md-6">
+                                                <label class="content-title">Installer Code</label>
+                                            </div>
+                                            <div class="col-12 col-md-6">
+                                                <span class="content-subtitle">
+                                                    <?php 
+                                                        $installer_code = '---';
+
+                                                        if( $defaultInstallerCode ){
+                                                            $installer_code = $defaultInstallerCode->installer_code;
+                                                        }
+
+                                                        if( $alarm_info && $alarm_info->install_code != '' ){
+                                                            $installer_code = $alarm_info->install_code;
+                                                        }
+                                                        
+                                                    ?>
+                                                    <?= $installer_code; ?>      
+                                                </span>
+                                            </div>   
+                                            <div class="col-12 col-md-12">
+                                                <label class="content-title"></label>
+                                            </div>                      
+                                            <div class="col-12 col-md-12">
+                                                <label class="content-title"></label>
+                                            </div>                      
+                                            <div class="col-12 col-md-6">
+                                                <label class="content-title purple-label">Service Package</label>
+                                            </div>
+                                            <div class="col-12 col-md-6">
+                                                <span class="content-subtitle purple-label">
+                                                    <?= $alarm_info && $alarm_info->comm_type != '' ? $alarm_info->comm_type : '---'; ?>      
+                                                </span>
+                                            </div>   
+                                            
+                                            <div class="col-12 col-md-6">
+                                                <label class="content-title">Account Cost</label>
+                                            </div>
+                                            <div class="col-12 col-md-6">
+                                                <span class="content-subtitle">
+                                                    <?php 
+                                                        if ($alarm_info->account_cost) {
+                                                            echo "$".$alarm_info->account_cost; 
+                                                        } else {
+                                                            echo "---";
+                                                        }
+                                                    ?>
+                                                </span>
+                                            </div>
+                                            <div class="col-12 col-md-6">
+                                                <label class="content-title">Pass Thru Cost</label>
+                                            </div>
+                                            <div class="col-12 col-md-6">
+                                                <span class="content-subtitle">
+                                                    <?= $alarm_info && $alarm_info->pass_thru_cost > 0 ? $alarm_info->pass_thru_cost : '0'; ?>   
+                                                </span>
+                                            </div>
+                                            <div class="col-12 col-md-6">
+                                                <label class="content-title">Program and Setup</label>
+                                            </div>
+                                            <div class="col-12 col-md-6">
+                                                <span class="content-subtitle">
+                                                    <?= $alarm_info && $alarm_info->otps > 0 ? $alarm_info->otps : '0'; ?>   
+                                                </span>
+                                            </div>
+                                            <div class="col-12 col-md-6">
+                                                <label class="content-title">Equipment Cost</label>
+                                            </div>
+                                            <div class="col-12 col-md-6">
+                                                <span class="content-subtitle">
+                                                    <?= $alarm_info && $alarm_info->equipment_cost > 0 ? $alarm_info->equipment_cost : '0'; ?>   
+                                                </span>
+                                            </div>
+                                            <div class="col-12 col-md-6">
+                                                <label class="content-title">Gross Monitoring Rate</label>
+                                            </div>
+                                            <div class="col-12 col-md-6">
+                                                <span class="content-subtitle">
+                                                    <?= $alarm_info && $alarm_info->monthly_monitoring > 0 ? $alarm_info->monthly_monitoring : '0'; ?>   
+                                                </span>
+                                            </div> 
+                                        </div>
                                     </div>
                                     <div class="col-12 col-md-6">
-                                        <label class="content-subtitle"><?php if(isset($alarm_info)){ echo $alarm_info->monitor_id != '0' ? $alarm_info->monitor_id : '---' ; } ?></label>
+                                        <div class="row g-2">
+                                            <div class="col-12 col-md-6">
+                                                <label class="content-title purple-label">Panel Type</label>
+                                            </div>
+                                            <div class="col-12 col-md-6">
+                                                <span class="content-subtitle purple-label">
+                                                    <?= $alarm_info && $alarm_info->panel_type != '' ? $alarm_info->panel_type : '---'; ?>      
+                                                </span>
+                                            </div>                                     
+                                            <div class="col-12 col-md-6">
+                                                <label class="content-title">Secondary System Type</label>
+                                            </div>
+                                            <div class="col-12 col-md-6">
+                                                <span class="content-subtitle">
+                                                    <?php 
+                                                        $secondary_system_type = 'GSM';
+                                                        if( $alarm_info && $alarm_info->secondary_system_type != '' ){
+                                                            $secondary_system_type = $alarm_info->secondary_system_type;
+                                                        }
+                                                    ?>
+                                                    <?= $secondary_system_type; ?>    
+                                                </span>
+                                            </div> 
+
+                                            <div class="col-12 col-md-6">
+                                                <label class="content-title">Radio Serial Number</label>
+                                            </div>
+                                            <div class="col-12 col-md-6">
+                                                <span class="content-subtitle">
+                                                    <?= $alarm_info && $alarm_info->radio_serial_number != '' ? $alarm_info->radio_serial_number : '---'; ?>    
+                                                </span>
+                                            </div> 
+
+                                            <div class="col-12 col-md-6">
+                                                <label class="content-title">Panel Location</label>
+                                            </div>
+                                            <div class="col-12 col-md-6">
+                                                <span class="content-subtitle">
+                                                    <?= $alarm_info && $alarm_info->panel_location != '' ? $alarm_info->panel_location : '---'; ?>    
+                                                </span>
+                                            </div> 
+
+                                            <div class="col-12 col-md-6">
+                                                <label class="content-title">Transformer Location</label>
+                                            </div>
+                                            <div class="col-12 col-md-6">
+                                                <span class="content-subtitle">
+                                                    <?= $alarm_info && $alarm_info->transformer_location != '' ? $alarm_info->transformer_location : '---'; ?>    
+                                                </span>
+                                            </div> 
+
+                                            <div class="col-12 col-md-6">
+                                                <label class="content-title">Dealer Number</label>
+                                            </div>
+                                            <div class="col-12 col-md-6">
+                                                <span class="content-subtitle">
+                                                    <?= $alarm_info && $alarm_info->dealer_number != '' ? $alarm_info->dealer_number : '---'; ?>    
+                                                </span>
+                                            </div> 
+                                            <div class="col-12 col-md-12"></div>                                                                     
+
+                                            <div class="col-12 col-md-6">
+                                                <label class="content-title purple-label">Install Type</label>
+                                            </div>
+                                            <div class="col-12 col-md-6">
+                                                <span class="content-subtitle purple-label">
+                                                    <?= $alarm_info && $alarm_info->install_type != '' ? $alarm_info->install_type : '---'; ?>    
+                                                </span>
+                                            </div> 
+
+                                            <div class="col-12 col-md-6">
+                                                <label class="content-title">DSL Voip</label>
+                                            </div>
+                                            <div class="col-12 col-md-6">
+                                                <span class="content-subtitle">
+                                                    <?= $alarm_info && $alarm_info->dsl_voip != '' ? $alarm_info->dsl_voip : '---'; ?>    
+                                                </span>
+                                            </div> 
+
+                                            <div class="col-12 col-md-6">
+                                                <label class="content-title">Contract Status</label>
+                                            </div>
+                                            <div class="col-12 col-md-6">
+                                                <span class="content-subtitle">
+                                                    <?= $alarm_info && $alarm_info->contract_status != '' ? $alarm_info->contract_status : '---'; ?>    
+                                                </span>
+                                            </div> 
+
+                                            <div class="col-12 col-md-6">
+                                                <label class="content-title">CSID Number</label>
+                                            </div>
+                                            <div class="col-12 col-md-6">
+                                                <span class="content-subtitle">
+                                                    <?= $alarm_info && $alarm_info->csid_number != '' ? $alarm_info->csid_number : '---'; ?>    
+                                                </span>
+                                            </div> 
+
+                                            <div class="col-12 col-md-6">
+                                                <label class="content-title">Panel Phone Number</label>
+                                            </div>
+                                            <div class="col-12 col-md-6">
+                                                <span class="content-subtitle">
+                                                    <?= $alarm_info && $alarm_info->panel_phone_number != '' ? $alarm_info->panel_phone_number : '---'; ?>    
+                                                </span>
+                                            </div> 
+
+                                            <div class="col-12 col-md-6">
+                                                <label class="content-title">Connection Type</label>
+                                            </div>
+                                            <div class="col-12 col-md-6">
+                                                <span class="content-subtitle">
+                                                    <?php 
+                                                    $connection_type = '---';
+                                                    if( $alarm_info ){
+                                                        $connection_type = 'Wireless';
+                                                        if( $alarm_info->connection_type != ''){
+                                                            $connection_type = $alarm_info->connection_type;
+                                                        } 
+                                                    }
+
+                                                    ?>
+                                                    <?= $connection_type; ?>    
+                                                </span>
+                                            </div> 
+
+                                            <div class="col-12 col-md-6">
+                                                <label class="content-title">Report Format</label>
+                                            </div>
+                                            <div class="col-12 col-md-6">
+                                                <span class="content-subtitle">
+                                                    <?= $alarm_info && $alarm_info->report_format != '' ? $alarm_info->report_format : '---'; ?>    
+                                                </span>
+                                            </div>
+                                            
+                                            <div class="col-12 col-md-6">
+                                                <label class="content-title">Receiver Phone Number</label>
+                                            </div>
+                                            <div class="col-12 col-md-6">
+                                                <span class="content-subtitle">
+                                                    <?= $alarm_info && $alarm_info->receiver_phone_number != '' ? $alarm_info->receiver_phone_number : '---'; ?>    
+                                                </span>
+                                            </div>
+
+                                            <div class="col-12 col-md-6">
+                                                <label class="content-title">Master Code</label>
+                                            </div>
+                                            <div class="col-12 col-md-6">
+                                                <span class="content-subtitle">
+                                                    <?= $alarm_info && $alarm_info->master_code != '' ? $alarm_info->master_code : '---'; ?>    
+                                                </span>
+                                            </div>
+
+                                            <?php if( $alarm_customer_info ){ ?>
+                                                <div class="col-12 col-md-6">
+                                                    <label class="content-title">ID</label>
+                                                </div>
+                                                <div class="col-12 col-md-6">
+                                                    <span class="content-subtitle">
+                                                        <?= $alarm_customer_info && $alarm_customer_info['customer'] ? $alarm_customer_info['customer']->customerId : '---'; ?>
+                                                    </span>
+                                                </div>   
+                                            <?php } ?>            
+                                            <div class="col-12 col-md-12"></div>                                             
+                                            <div class="col-12 col-md-12"></div>
+                                            <div class="col-12 col-md-6">
+                                                <label class="content-title purple-label">Service Provider</label>
+                                            </div>
+                                            <div class="col-12 col-md-6">
+                                                <span class="content-subtitle purple-label">
+                                                    <?= $alarm_info && $alarm_info->dealer != '' ? trim($alarm_info->dealer) : '---'; ?>   
+                                                </span>
+                                            </div>
+                                            <div class="col-12 col-md-6">
+                                                <label class="content-title">Customer ID</label>
+                                            </div>
+                                            <div class="col-12 col-md-6">
+                                                <span class="content-subtitle">
+                                                    <?= $alarm_info && $alarm_info->alarm_customer_id != '' ? $alarm_info->alarm_customer_id : '---'; ?>   
+                                                </span>
+                                            </div>
+                                            <div class="col-12 col-md-6">
+                                                <label class="content-title">Login</label>
+                                            </div>
+                                            <div class="col-12 col-md-6">
+                                                <span class="content-subtitle">
+                                                    <?= $alarm_info && $alarm_info->alarm_login != '' ? $alarm_info->alarm_login : '---'; ?>   
+                                                </span>
+                                            </div>
+                                        </div>
                                     </div>
-                                    <div class="col-12 col-md-6">
-                                        <label class="content-subtitle fw-bold">Panel Type</label>
-                                    </div>
-                                    <div class="col-12 col-md-6">
-                                        <label class="content-subtitle"><?= isset($alarm_info) ? $alarm_info->panel_type : "" ?></label>
-                                    </div>
-                                    <div class="col-12 col-md-6">
-                                        <label class="content-subtitle fw-bold">Security Package</label>
-                                    </div>
-                                    <div class="col-12 col-md-6">
-                                        <label class="content-subtitle">---</label>
-                                    </div>
-                                    <div class="col-12 col-md-6">
-                                        <label class="content-subtitle fw-bold">Rate Plan</label>
-                                    </div>
-                                    <div class="col-12 col-md-6">
-                                        <label class="content-subtitle">---</label>
-                                    </div>
-                                </div>                                        
+                                </div>    
                             </div>
                         </div>
-                        
                     </div>
+
                 </div>
             </div>
         </div>

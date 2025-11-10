@@ -20,7 +20,7 @@
                 <select data-type="customer_status" id="status" name="status" data-customer-source="dropdown" class="input_select status-select" >
                     <option  value=""></option>
                     <?php foreach ($customer_status as $status): ?>
-                        <option <?= isset($profile_info) ? ($profile_info->status == $status->name ? 'selected' : '') : '' ?> value="<?= $status->name ?>"><?= $status->name ?></option>
+                        <option data-custom-value="<?= $status->name; ?>" <?= isset($profile_info) ? ($profile_info->status == $status->name ? 'selected' : '') : '' ?> value="<?= $status->name ?>"><?= $status->name ?></option>
                     <?php endforeach; ?>
                 </select>
                 <a href="javascript:void(0);" class="nsm-button btn-small" id="btn-quick-add-customer-status"><span class="fa fa-plus"></span> Add Status</a>

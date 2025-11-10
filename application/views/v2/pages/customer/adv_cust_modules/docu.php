@@ -228,6 +228,45 @@
                         </div>
                     </div>
 
+                    <div class="col-12" data-document-type="client_certificate">
+                        <div class="row g-2 align-items-center">
+                            <div class="col-12 col-md-6 row-header">
+                                <div class="form-check d-inline-block">
+                                    <input class="form-check-input docu-chk" type="checkbox" <?= count($customer_certificates) > 0 ? 'checked="checked"' : ''; ?> value="1" id="client_certificate" name="client_certificate">
+                                    <label class="form-check-label" for="client_certificate" data-type="document_label">
+                                        Client Certificate
+                                    </label>                                    
+                                </div>                                
+                            </div>
+                            <div class="col-12 col-md-6 row-header text-end buttons <?= $__documentExists('client_certificate') ? 'has-document' : ''; ?>">
+                                <button type="button" class="nsm-button btn-sm" data-action="upload" data-type="client_certificate">
+                                    Upload
+                                </button>
+                            </div>
+                            <div class="client-agreement-list">
+                                <?php if( $customer_certificates ){ ?>
+                                    <ul>
+                                        <?php foreach($customer_certificates as $ca){ ?>
+                                            <li>
+                                                <div class="row">
+                                                    <div class="col-md-6"><span><?= $ca['file_name']; ?></span></div>
+                                                    <div class="col-md-6 text-end buttons has-document">
+                                                        <button type="button" class="nsm-button btn-sm download-client-agreement" data-id="<?= $ca['id']; ?>">
+                                                            Download
+                                                        </button>
+                                                        <button type="button" class="nsm-button error btn-sm delete-client-agreement" data-id="<?= $ca['id']; ?>">
+                                                            Delete
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </li>
+                                        <?php } ?>
+                                    </ul>
+                                <?php } ?>
+                            </div>
+                        </div>
+                    </div>
+
                     <div class="col-12 mt-2" data-document-type="customer_signature">
                         <div class="row g-2 align-items-center">
                             <div class="col-12 col-md-6 row-header">
