@@ -1291,6 +1291,8 @@ class Customer extends MY_Controller
         $getSystemType = ['where' => ['company_id' => logged('company_id')], 'table' => 'ac_system_package_type', 'select' => 'id, name'];
         $getSystemTypeData = $this->general->get_data_with_param($getSystemType);
         // ===============
+        $getConnectionTypeData = array('GSM', 'Digi', 'Wireless');
+        // ===============
         $getWarrantyType = array('None', 'Limited. 90 Days', '1 Year', '$25 Trip', '$50 Trip and $65 Deductible', 'Extended',);
         // ===============
         $getRatePlan = ['where' => ['company_id' => logged('company_id')],'table' => 'ac_rateplan','select' => 'id, plan_name, amount,'];
@@ -1311,10 +1313,12 @@ class Customer extends MY_Controller
         $where = array('company_id' => $company_id);
         if (!empty($postData) && $postData === 'active_only') {
             $where['profile_status'] = [
+                'Active w/RAR',
                 'Active w/RMR',
                 'Active w/RQR',
                 'Active w/RYR',
-                'Inactive w/RMM'
+                'Inactive w/RMM',
+                'Inactive w/RAR',
             ];
         }
 
@@ -1346,6 +1350,7 @@ class Customer extends MY_Controller
                 $customerType = (!empty($getDatas->profile_customer_type)) ? $getDatas->profile_customer_type : "<small class='text-muted'><i>Not Specified</i></small>";
                 // ===============
                 $customerTypeDropdown = "<select class='form-select form-select-sm updateInputValue' data-customername='$firstName $lastName' data-id='$getDatas->prof_id' data-category='profile' data-column='customer_type'>";
+                $customerTypeDropdown .= "<option value=''>None</option>";
                 if ($getDatas->profile_customer_type == "Residential") {
                     $customerTypeDropdown .= "<option selected value='Residential'>Residential</option>";
                     $customerTypeDropdown .= "<option value='Commercial'>Commercial</option>";
@@ -1358,6 +1363,7 @@ class Customer extends MY_Controller
                 $salesArea = "<small class='text-muted'><i>Not Specified</i></small>";
                 // ===============
                 $salesAreaDropdown = "<select class='form-select form-select-sm updateInputValue' data-customername='$firstName $lastName' data-id='$getDatas->prof_id' data-category='profile' data-column='fk_sa_id'>";
+                $salesAreaDropdown .= "<option value=''>None</option>";
                 foreach ($getSalesAreaData as $getSalesAreaDatas) {
                     if ($getDatas->profile_fk_sa_id == $getSalesAreaDatas->sa_id) {
                         $salesArea = $getSalesAreaDatas->sa_name;
@@ -1387,6 +1393,7 @@ class Customer extends MY_Controller
                 $customerStatus = "<small class='text-muted'><i>Not Specified</i></small>";
                 // ===============
                 $customerStatusDropdown = "<select class='form-select form-select-sm updateInputValue' data-customername='$firstName $lastName' data-id='$getDatas->prof_id' data-category='profile' data-column='status'>";
+                $customerStatusDropdown .= "<option value=''>None</option>";
                 foreach ($getCustomerStatusData as $getCustomerStatusDatas) {
                     if ($getDatas->profile_status == $getCustomerStatusDatas->name) {
                         $customerStatus = $getCustomerStatusDatas->name;
@@ -1400,6 +1407,7 @@ class Customer extends MY_Controller
                 $salesRep = "<small class='text-muted'><i>Not Specified</i></small>";
                 // ===============
                 $salesRepDropdown = "<select class='form-select form-select-sm updateInputValue' data-customername='$firstName $lastName' data-id='$getDatas->prof_id' data-category='office' data-column='fk_sales_rep_office'>";
+                $salesRepDropdown .= "<option selected value=''>None</option>";
                 foreach ($getSalesRepData as $getSalesRepDatas) {
                     if ($getDatas->office_sales_rep == $getSalesRepDatas->id) {
                         $salesRep = "$getSalesRepDatas->FName $getSalesRepDatas->LName";
@@ -1413,6 +1421,7 @@ class Customer extends MY_Controller
                 $technician = "<small class='text-muted'><i>Not Specified</i></small>";
                 // ===============
                 $technicianDropdown = "<select class='form-select form-select-sm updateInputValue' data-customername='$firstName $lastName' data-id='$getDatas->prof_id' data-category='office' data-column='technician'>";
+                $technicianDropdown .= "<option value=''>None</option>";
                 foreach ($getTechnicianData as $getTechnicianDatas) {
                     if ($getDatas->office_technician == $getTechnicianDatas->id) {
                         $technician = "$getTechnicianDatas->FName $getTechnicianDatas->LName";
@@ -1428,6 +1437,7 @@ class Customer extends MY_Controller
                 $monitoringCompany = "<small class='text-muted'><i>Not Specified</i></small>";
                 // ===============
                 $monitoringCompanyDropdown = "<select class='form-select form-select-sm updateInputValue' data-customername='$firstName $lastName' data-id='$getDatas->prof_id' data-category='alarm' data-column='monitor_comp'>";
+                $monitoringCompanyDropdown .= "<option value=''>None</option>";
                 for ($i = 0; $i < count($getMonitoringCompany); $i++) {
                     if ($getDatas->alarm_monitor_comp == $getMonitoringCompany[$i]) {
                         $monitoringCompany = "$getMonitoringCompany[$i]";
@@ -1443,6 +1453,7 @@ class Customer extends MY_Controller
                 $accountType = "<small class='text-muted'><i>Not Specified</i></small>";
                 // ===============
                 $accountTypeDropdown = "<select class='form-select form-select-sm updateInputValue' data-customername='$firstName $lastName' data-id='$getDatas->prof_id' data-category='alarm' data-column='acct_type'>";
+                $accountTypeDropdown .= "<option value=''>None</option>";
                 $accountTypeDropdown .= "<option value=''>Not Specified</option>";
                 for ($i = 0; $i < count($getAccountType); $i++) {
                     if ($getDatas->alarm_acct_type == $getAccountType[$i]) {
@@ -1459,6 +1470,7 @@ class Customer extends MY_Controller
                 $panelType = "<small class='text-muted'><i>Not Specified</i></small>";
                 // ===============
                 $panelTypeDropdown = "<select class='form-select form-select-sm updateInputValue' data-customername='$firstName $lastName' data-id='$getDatas->prof_id' data-category='alarm' data-column='panel_type'>";
+                $panelTypeDropdown .= "<option value=''>None</option>";
                 foreach ($getPanelTypeData as $getPanelTypeDatas) {
                     if ($getDatas->alarm_panel_type == $getPanelTypeDatas->name) {
                         $panelType = "$getPanelTypeDatas->name";
@@ -1472,6 +1484,7 @@ class Customer extends MY_Controller
                 $systemType = "<small class='text-muted'><i>Not Specified</i></small>";
                 // ===============
                 $systemTypeDropdown = "<select class='form-select form-select-sm updateInputValue' data-customername='$firstName $lastName' data-id='$getDatas->prof_id' data-category='alarm' data-column='system_type'>";
+                $systemTypeDropdown .= "<option value=''>None</option>";
                 foreach ($getSystemTypeData as $getSystemTypeDatas) {
                     if ($getDatas->alarm_system_type == $getSystemTypeDatas->name) {
                         $systemType = $getSystemTypeDatas->name;
@@ -1485,6 +1498,7 @@ class Customer extends MY_Controller
                 $warrantyType = "<small class='text-muted'><i>Not Specified</i></small>";
                 // ===============
                 $warrantyTypeDropdown = "<select class='form-select form-select-sm updateInputValue' data-customername='$firstName $lastName' data-id='$getDatas->prof_id' data-category='alarm' data-column='warranty_type'>";
+                $warrantyTypeDropdown .= "<option value=''>None</option>";
                 for ($i = 0; $i < count($getWarrantyType); $i++) {
                     if ($getDatas->alarm_warranty_type == $getWarrantyType[$i]) {
                         $warrantyType = "$getWarrantyType[$i]";
@@ -1495,18 +1509,19 @@ class Customer extends MY_Controller
                 }
                 $warrantyTypeDropdown .= "</select>";
                 // ===============
-                $communicationType = "<small class='text-muted'><i>Not Specified</i></small>";
+                $connectionType = "<small class='text-muted'><i>Not Specified</i></small>";
                 // ===============
-                $communicationTypeDropdown = "<select class='form-select form-select-sm updateInputValue' data-customername='$firstName $lastName' data-id='$getDatas->prof_id' data-category='alarm' data-column='comm_type'>";
-                foreach ($getSystemTypeData as $getSystemTypeDatas) {
-                    if ($getDatas->alarm_comm_type == $getSystemTypeDatas->name) {
-                        $communicationType = $getSystemTypeDatas->name;
-                        $communicationTypeDropdown .= "<option selected value='$getSystemTypeDatas->name'>$getSystemTypeDatas->name</option>";
+                $connectionTypeDropdown = "<select class='form-select form-select-sm updateInputValue' data-customername='$firstName $lastName' data-id='$getDatas->prof_id' data-category='alarm' data-column='connection_type'>";
+                $connectionTypeDropdown .= "<option value=''>None</option>";
+                for ($i = 0; $i < count($getConnectionTypeData); $i++) {
+                    if ($getDatas->alarm_connection_type == $getConnectionTypeData[$i]) {
+                        $connectionType = $getConnectionTypeData[$i];
+                        $connectionTypeDropdown .= "<option selected value='$getConnectionTypeData[$i]'>$getConnectionTypeData[$i]</option>";
                     } else {
-                        $communicationTypeDropdown .= "<option value='$getSystemTypeDatas->name'>$getSystemTypeDatas->name</option>";
+                        $connectionTypeDropdown .= "<option value='$getConnectionTypeData[$i]'>$getConnectionTypeData[$i]</option>";
                     }
                 }
-                $communicationTypeDropdown .= "</select>";
+                $connectionTypeDropdown .= "</select>";
                 // ===============
                 $monthlyMonitoringRate = (!empty($getDatas->billing_mmr)) ? '$' . number_format($getDatas->billing_mmr, 2) : "<small class='text-muted'><i>Not Specified</i></small>";
                 // ===============
@@ -1522,6 +1537,7 @@ class Customer extends MY_Controller
                 $ratePlan = "<small class='text-muted'><i>Not Specified</i></small>";
                 // ===============
                 $ratePlanDropdown = "<select class='form-select form-select-sm updateInputValue' data-customername='$firstName $lastName' data-id='$getDatas->prof_id' data-category='billing' data-column='mmr'>";
+                $ratePlanDropdown .= "<option value=''>None</option>";
                 foreach ($getRatePlanData as $getRatePlanDatas) {
                     if ($getDatas->billing_mmr == $getRatePlanDatas->amount) {
                         $ratePlan =  "$getRatePlanDatas->plan_name - $$getRatePlanDatas->amount";
@@ -1535,6 +1551,7 @@ class Customer extends MY_Controller
                 $card_billingFrequency = "<small class='text-muted'><i>Not Specified</i></small>";
                 // ===============
                 $card_billingFrequencyDropdown = "<select class='form-select form-select-sm updateInputValue' data-customername='$firstName $lastName' data-id='$getDatas->prof_id' data-category='billing' data-column='bill_freq'>";
+                $card_billingFrequencyDropdown .= "<option value=''>None</option>";
                 for ($i = 0; $i < count($getBillingFrequencyData); $i++) {
                     if ($getDatas->billing_bill_freq == $getBillingFrequencyData[$i]) {
                         $card_billingFrequency = $getBillingFrequencyData[$i];
@@ -1548,6 +1565,7 @@ class Customer extends MY_Controller
                 $card_billingDay = "<small class='text-muted'><i>Not Specified</i></small>";
                 // ===============
                 $card_billingDayDropdown = "<select class='form-select form-select-sm updateInputValue' data-customername='$firstName $lastName' data-id='$getDatas->prof_id' data-category='billing' data-column='bill_day'>";
+                $card_billingDayDropdown .= "<option value=''>None</option>";
                 for ($i = 0; $i < count($getBillingDayData); $i++) {
                     if ($getDatas->billing_bill_day == $getBillingDayData[$i]) {
                         $card_billingDay = "$getBillingDayData[$i]";
@@ -1561,6 +1579,7 @@ class Customer extends MY_Controller
                 $card_contractTerm = "<small class='text-muted'><i>Not Specified</i></small>";
                 // ===============
                 $card_contractTermDropdown = "<select class='form-select form-select-sm updateInputValue' data-customername='$firstName $lastName' data-id='$getDatas->prof_id' data-category='billing' data-column='contract_term'>";
+                $card_contractTermDropdown .= "<option value=''>None</option>";
                 for ($i = 0; $i < count($getContractTermData); $i++) {
                     if ($getDatas->billing_contract_term == $getContractTermData[$i]) {
                         $card_contractTerm = "$getContractTermData[$i] months";
@@ -1578,6 +1597,7 @@ class Customer extends MY_Controller
                 $billingMethod = "<small class='text-muted'><i>Not Specified</i></small>";
                 // ===============
                 $billingMethodDropdown = "<select class='form-select form-select-sm updateInputValue' data-customername='$firstName $lastName' data-id='$getDatas->prof_id' data-category='billing' data-column='bill_method'>";
+                $billingMethodDropdown .= "<option value=''>None</option>";
                 for ($i = 0; $i < count($getBillingMethod); $i++) {
                     if ($getDatas->billing_bill_method == $getBillingMethod[$i]) {
                         if ($getDatas->billing_bill_method == "eT") {
@@ -1618,9 +1638,9 @@ class Customer extends MY_Controller
 
                 $data[] = array(
                     "<div class='text-nowrap'><input class='form-check-input verifyActiveCustomer' style='width: 16px; height: 16px;' customer_id='$getDatas->prof_id' type='checkbox' $is_verified></div>",
-                    "<div class='drag_handle'></div><span class='textPreview'>$firstName</span> <div class='input-group input-group-sm inputMode' style='width: 250px; display: none;'> <input  class='form-control form-control-sm updateInputValue' data-customername='$firstName $lastName' data-id='$getDatas->prof_id' data-category='profile' data-column='first_name' type='text' value='$getDatas->profile_first_name'> <span class='input-group-text actionButton saveChanges'><i class='fas fa-check text-success'></i></span> <span class='input-group-text actionButton cancelEdit'><i class='fas fa-times text-danger'></i></span> </div>",
-                    "<div class='drag_handle'></div><span class='textPreview'>$lastName</span> <div class='input-group input-group-sm inputMode' style='width: 250px; display: none;'> <input  class='form-control form-control-sm updateInputValue' data-customername='$firstName $lastName' data-id='$getDatas->prof_id' data-category='profile' data-column='last_name' type='text' value='$getDatas->profile_last_name'> <span class='input-group-text actionButton saveChanges'><i class='fas fa-check text-success'></i></span> <span class='input-group-text actionButton cancelEdit'><i class='fas fa-times text-danger'></i></span> </div>",
-                    "<div class='drag_handle'></div><span class='textPreview'>$businessName</span> <div class='input-group input-group-sm inputMode' style='width: 250px; display: none;'> <input  class='form-control form-control-sm updateInputValue' data-customername='$firstName $lastName' data-id='$getDatas->prof_id' data-category='profile' data-column='business_name' type='text' value='$getDatas->profile_business_name'> <span class='input-group-text actionButton saveChanges'><i class='fas fa-check text-success'></i></span> <span class='input-group-text actionButton cancelEdit'><i class='fas fa-times text-danger'></i></span> </div>",
+                    "<div class='drag_handle'></div><span class='textPreview namePreviewEdit'>$firstName</span> <div class='input-group input-group-sm inputMode' style='width: 250px; display: none;'> <input  class='form-control form-control-sm updateInputValue' data-customername='$firstName $lastName' data-id='$getDatas->prof_id' data-category='profile' data-column='first_name' type='text' value='$getDatas->profile_first_name'> <span class='input-group-text actionButton saveChanges'><i class='fas fa-check text-success'></i></span> <span class='input-group-text actionButton cancelEdit'><i class='fas fa-times text-danger'></i></span> </div>",
+                    "<div class='drag_handle'></div><span class='textPreview namePreviewEdit'>$lastName</span> <div class='input-group input-group-sm inputMode' style='width: 250px; display: none;'> <input  class='form-control form-control-sm updateInputValue' data-customername='$firstName $lastName' data-id='$getDatas->prof_id' data-category='profile' data-column='last_name' type='text' value='$getDatas->profile_last_name'> <span class='input-group-text actionButton saveChanges'><i class='fas fa-check text-success'></i></span> <span class='input-group-text actionButton cancelEdit'><i class='fas fa-times text-danger'></i></span> </div>",
+                    "<div class='drag_handle'></div><span class='textPreview namePreviewEdit'>$businessName</span> <div class='input-group input-group-sm inputMode' style='width: 250px; display: none;'> <input  class='form-control form-control-sm updateInputValue' data-customername='$firstName $lastName' data-id='$getDatas->prof_id' data-category='profile' data-column='business_name' type='text' value='$getDatas->profile_business_name'> <span class='input-group-text actionButton saveChanges'><i class='fas fa-check text-success'></i></span> <span class='input-group-text actionButton cancelEdit'><i class='fas fa-times text-danger'></i></span> </div>",
                     "<div class='drag_handle'></div><span class='textPreview'>$customerType</span> <div class='input-group input-group-sm inputMode' style='width: 250px; display: none;'>$customerTypeDropdown<span class='input-group-text actionButton saveChanges'><i class='fas fa-check text-success'></i></span> <span class='input-group-text actionButton cancelEdit'><i class='fas fa-times text-danger'></i></span> </div>",
                     "<div class='drag_handle'></div><span class='textPreview'>$salesArea</span> <div class='input-group input-group-sm inputMode' style='width: 250px; display: none;'>$salesAreaDropdown<span class='input-group-text actionButton saveChanges'><i class='fas fa-check text-success'></i></span> <span class='input-group-text actionButton cancelEdit'><i class='fas fa-times text-danger'></i></span> </div>",
                     "<div class='drag_handle'></div><span class='textPreview'>$address</span> <div class='input-group input-group-sm inputMode' style='width: 250px; display: none;'> <input  class='form-control form-control-sm updateInputValue' data-customername='$firstName $lastName' data-id='$getDatas->prof_id' data-category='profile' data-column='mail_add' type='text' value='$getDatas->profile_mail_add'> <span class='input-group-text actionButton saveChanges'><i class='fas fa-check text-success'></i></span> <span class='input-group-text actionButton cancelEdit'><i class='fas fa-times text-danger'></i></span> </div>",
@@ -1640,16 +1660,12 @@ class Customer extends MY_Controller
                     "<div class='drag_handle'></div><span class='textPreview'>$accountType</span> <div class='input-group input-group-sm inputMode' style='width: 250px; display: none;'>$accountTypeDropdown<span class='input-group-text actionButton saveChanges'><i class='fas fa-check text-success'></i></span> <span class='input-group-text actionButton cancelEdit'><i class='fas fa-times text-danger'></i></span> </div>",
                     "<div class='drag_handle'></div><span class='textPreview'>$abortCodePassword</span> <div class='input-group input-group-sm inputMode' style='width: 250px; display: none;'> <input  class='form-control form-control-sm updateInputValue' data-customername='$firstName $lastName' data-id='$getDatas->prof_id' data-category='alarm' data-column='passcode' type='text' value='$getDatas->alarm_passcode'> <span class='input-group-text actionButton saveChanges'><i class='fas fa-check text-success'></i></span> <span class='input-group-text actionButton cancelEdit'><i class='fas fa-times text-danger'></i></span> </div>",
                     "<div class='drag_handle'></div><span class='textPreview'>$panelType</span> <div class='input-group input-group-sm inputMode' style='width: 250px; display: none;'>$panelTypeDropdown<span class='input-group-text actionButton saveChanges'><i class='fas fa-check text-success'></i></span> <span class='input-group-text actionButton cancelEdit'><i class='fas fa-times text-danger'></i></span> </div>",
-                    "<div class='drag_handle'></div><span class='textPreview'>$systemType</span> <div class='input-group input-group-sm inputMode' style='width: 250px; display: none;'>$systemTypeDropdown<span class='input-group-text actionButton saveChanges'><i class='fas fa-check text-success'></i></span> <span class='input-group-text actionButton cancelEdit'><i class='fas fa-times text-danger'></i></span> </div>",
+                    "<div class='drag_handle'></div><span class='textPreview'>$connectionType</span> <div class='input-group input-group-sm inputMode' style='width: 250px; display: none;'>$connectionTypeDropdown<span class='input-group-text actionButton saveChanges'><i class='fas fa-check text-success'></i></span> <span class='input-group-text actionButton cancelEdit'><i class='fas fa-times text-danger'></i></span> </div>",
                     "<div class='drag_handle'></div><span class='textPreview'>$warrantyType</span> <div class='input-group input-group-sm inputMode' style='width: 250px; display: none;'>$warrantyTypeDropdown<span class='input-group-text actionButton saveChanges'><i class='fas fa-check text-success'></i></span> <span class='input-group-text actionButton cancelEdit'><i class='fas fa-times text-danger'></i></span> </div>",
-                    "<div class='drag_handle'></div><span class='textPreview'>$communicationType</span> <div class='input-group input-group-sm inputMode' style='width: 250px; display: none;'>$communicationTypeDropdown<span class='input-group-text actionButton saveChanges'><i class='fas fa-check text-success'></i></span> <span class='input-group-text actionButton cancelEdit'><i class='fas fa-times text-danger'></i></span> </div>",
-                    
+                   "<div class='drag_handle'></div><span class='textPreview'>$systemType</span> <div class='input-group input-group-sm inputMode' style='width: 250px; display: none;'>$systemTypeDropdown<span class='input-group-text actionButton saveChanges'><i class='fas fa-check text-success'></i></span> <span class='input-group-text actionButton cancelEdit'><i class='fas fa-times text-danger'></i></span> </div>",
                     "<div class='drag_handle'></div><span class='textPreview'>$monthlyMonitoringRate</span> <div class='input-group input-group-sm inputMode' style='width: 250px; display: none;'> <input oninput='validateDecimal(this)' class='form-control form-control-sm updateInputValue moneyInput' data-customername='$firstName $lastName' data-id='$getDatas->prof_id' data-category='billing' data-column='mmr' type='number' value='$getDatas->billing_mmr'> <span class='input-group-text actionButton saveChanges'><i class='fas fa-check text-success'></i></span> <span class='input-group-text actionButton cancelEdit'><i class='fas fa-times text-danger'></i></span> </div>",
-
                     "<div class='drag_handle'></div><span class='textPreview'>$grossMonitoringRate</span> <div class='input-group input-group-sm inputMode' style='width: 250px; display: none;'> <input oninput='validateDecimal(this)' class='form-control form-control-sm updateInputValue moneyInput' data-customername='$firstName $lastName' data-id='$getDatas->prof_id' data-category='alarm' data-column='monthly_monitoring' type='number' value='$getDatas->alarm_monthly_monitoring'> <span class='input-group-text actionButton saveChanges'><i class='fas fa-check text-success'></i></span> <span class='input-group-text actionButton cancelEdit'><i class='fas fa-times text-danger'></i></span> </div>",
-
                     "<div class='drag_handle'></div><span class='textPreview'>$addonFeatureCost</span> <div class='input-group input-group-sm inputMode' style='width: 250px; display: none;'> <input oninput='validateDecimal(this)' class='form-control form-control-sm updateInputValue moneyInput' data-customername='$firstName $lastName' data-id='$getDatas->prof_id' data-category='alarm' data-column='addon_feature_cost' type='number' value='$getDatas->alarm_feature_cost'> <span class='input-group-text actionButton saveChanges'><i class='fas fa-check text-success'></i></span> <span class='input-group-text actionButton cancelEdit'><i class='fas fa-times text-danger'></i></span> </div>",
-
                     "<div class='drag_handle'></div><span class='textPreview'>$accountCost</span> <div class='input-group input-group-sm inputMode' style='width: 250px; display: none;'> <input oninput='validateDecimal(this)' class='form-control form-control-sm updateInputValue moneyInput' data-customername='$firstName $lastName' data-id='$getDatas->prof_id' data-category='alarm' data-column='account_cost' type='number' value='$getDatas->alarm_account_cost'> <span class='input-group-text actionButton saveChanges'><i class='fas fa-check text-success'></i></span> <span class='input-group-text actionButton cancelEdit'><i class='fas fa-times text-danger'></i></span> </div>",
                     "<div class='drag_handle'></div><span class='textPreview'>$passThruCost</span> <div class='input-group input-group-sm inputMode' style='width: 250px; display: none;'> <input oninput='validateDecimal(this)' class='form-control form-control-sm updateInputValue moneyInput' data-customername='$firstName $lastName' data-id='$getDatas->prof_id' data-category='alarm' data-column='pass_thru_cost' type='number' value='$getDatas->alarm_pass_thru_cost'> <span class='input-group-text actionButton saveChanges'><i class='fas fa-check text-success'></i></span> <span class='input-group-text actionButton cancelEdit'><i class='fas fa-times text-danger'></i></span> </div>",
                     "<div class='drag_handle'></div><span class='textPreview'>$ratePlan</span> <div class='input-group input-group-sm inputMode' style='width: 250px; display: none;'>$ratePlanDropdown<span class='input-group-text actionButton saveChanges'><i class='fas fa-check text-success'></i></span> <span class='input-group-text actionButton cancelEdit'><i class='fas fa-times text-danger'></i></span> </div>",
@@ -3883,6 +3899,7 @@ class Customer extends MY_Controller
         $this->load->model('Customer_model');
         $this->load->model('PanelType_model');
         $this->load->model('AcsAccountType_model');
+        $this->load->model('AcsAlarmMonitoringCompany_model');
 
         $this->hasAccessModule(9);
 
@@ -4159,7 +4176,8 @@ class Customer extends MY_Controller
         $panelTypes = $this->PanelType_model->getAllByCompanyId($company_id);
         $accountTypes = $this->AcsAccountType_model->getAllByCompanyId($company_id);
         $defaultAccountType  = $this->AcsAccountType_model->getCompanyDefaultValue($company_id);
-
+        $monitoringCompanies = $this->AcsAlarmMonitoringCompany_model->getAllByCompanyId($company_id);
+        $defaultMonitoringCompany = $this->AcsAlarmMonitoringCompany_model->getCompanyDefaultValue($company_id);
 
         // search Alarm.com customer
         $this->load->helper(array('alarm_api_helper'));
@@ -4211,9 +4229,44 @@ class Customer extends MY_Controller
         $this->page_data['defaultInstallerCode'] = $defaultInstallerCode;
         $this->page_data['accountTypes'] = $accountTypes;
         $this->page_data['defaultAccountType'] = $defaultAccountType;
+        $this->page_data['monitoringCompanies'] = $monitoringCompanies;
+        $this->page_data['defaultMonitoringCompany'] = $defaultMonitoringCompany;
         //$this->load->view('v2/pages/customer/add', $this->page_data);
         $this->load->view('v2/pages/customer/add_dynamic_fields', $this->page_data);
     }
+
+    public function cancellation_request($id = null)
+    {
+        $this->load->model('AcsCustomerCancellationRequest');
+        $this->load->model('CustomerGroup_model');
+
+        $this->hasAccessModule(9);
+        
+        if(!checkRoleCanAccessModule('customers', 'write')){
+			show403Error();
+			return false;
+		}
+
+        $customer_id = $id;
+        $user_id     = logged('id');
+        $company_id  = logged('company_id');        
+
+        $cancel_request_data = $this->AcsCustomerCancellationRequest->getByCustomerId($customer_id);
+        $profile_info   = $this->customer_ad_model->get_data_by_id('prof_id', $id, 'acs_profile');
+        $customerGroup  = $this->CustomerGroup_model->getById($profile_info->customer_group_id);
+        $alarm_info     = $this->customer_ad_model->get_data_by_id('fk_prof_id', $id, 'acs_alarm');  
+        
+        $this->page_data['profile_info']   = $profile_info;
+        $this->page_data['cancel_request_data'] = $cancel_request_data;
+        $this->page_data['sales_area']     = $this->customer_ad_model->get_all(false, '', 'ASC', 'ac_salesarea', 'sa_id');
+        $this->page_data['customer_group'] = $customerGroup;
+        $this->page_data['alarm_info']     = $alarm_info;
+
+        $this->page_data['page']->title  = 'Customers';
+        $this->page_data['page']->parent = 'Customers';        
+        $this->load->view('v2/pages/customer/cancellation_request', $this->page_data);        
+
+    }    
 
     public function leads()
     {
@@ -11274,6 +11327,31 @@ class Customer extends MY_Controller
                 break;
         }
 
+        
+        if ($postData === 'active_only') {
+            $getMonitoringIds['where_in'] = [
+                'acs_profile.status' => [
+                    'Active w/RAR',
+                    'Active w/RMR',
+                    'Active w/RQR',
+                    'Active w/RYR',
+                    'Inactive w/RMM',
+                    'Inactive w/RMR'
+                ]
+            ];
+
+            $getCustomerStatusData['where_in'] = [
+                'acs_cust_status.name' => [
+                    'Active w/RAR',
+                    'Active w/RMR',
+                    'Active w/RQR',
+                    'Active w/RYR',
+                    'Inactive w/RMM',
+                    'Inactive w/RMR'
+                ]
+            ];
+        }
+
         $this->page_data['status_filter'] = $postData;
         $this->page_data['rate_plan'] = $this->general->get_data_with_param($getRatePlanData);
         $this->page_data['customer_status'] = $this->general->get_data_with_param($getCustomerStatus);
@@ -15203,8 +15281,8 @@ class Customer extends MY_Controller
                 'date_updated' => date("Y-m-d H:i:s")
             ];
 
-            $site_type_id = $this->AcsAlarmMonitoringCompany_model->create($data);
-            $site_type_name = $post['monitoring_company'];
+            $monitoring_company_id = $this->AcsAlarmMonitoringCompany_model->create($data);
+            $monitoring_company_name = $post['monitoring_company'];
 
             //Activity Logs
             $activity_name = 'Monitoring Companies : Created monitoring company ' . $post['monitoring_company']; 
@@ -15290,20 +15368,23 @@ class Customer extends MY_Controller
     {
         $this->load->model('SystemPackageType_model');
 
-        $account_cost = 0;
+        $account_cost   = 0;
+        $pass_thru_cost = 0;
         $company_id   = logged('company_id');
         $post         = $this->input->post();
 
         $systemPackage = $this->SystemPackageType_model->getByNameAndCompanyId($post['service_package_type'], $company_id);
         if( $systemPackage ){
             if( $post['service_provider'] == 'Alarm.com' ){
-                $account_cost = $systemPackage->alarmcom_cost > 0 ? $systemPackage->alarmcom_cost : 0;
+                $pass_thru_cost = $systemPackage->alarmcom_cost > 0 ? $systemPackage->alarmcom_cost : 0;                
             }elseif( $post['service_provider'] == 'AlarmNet' ){
-                $account_cost = $systemPackage->alarmnet_cost > 0 ? $systemPackage->alarmnet_cost : 0;
+                $pass_thru_cost = $systemPackage->alarmnet_cost > 0 ? $systemPackage->alarmnet_cost : 0;
             }
+
+            $account_cost = $systemPackage->acct_cost;
         }
 
-        $return = ['account_cost' => $account_cost];
+        $return = ['account_cost' => $account_cost, 'pass_thru_cost' => $pass_thru_cost];
         echo json_encode($return);
     }
 
@@ -15313,6 +15394,7 @@ class Customer extends MY_Controller
         $this->load->model('AcsCustomerCancellationRequest');
         $this->load->model('Users_model');
 
+        $is_live_mail_credentials = true;
         $is_success = 0;
         $msg    = 'Cannot find customer data';
 
@@ -15333,7 +15415,6 @@ class Customer extends MY_Controller
                     'next_action' => $post['next_step'],
                     'date_modified' => date("Y-m-d H:i:s"),
                 ];
-
                 $this->AcsCustomerCancellationRequest->update($cancellationRequest->id, $data);      
             }else{
                 $data = [
@@ -15350,8 +15431,9 @@ class Customer extends MY_Controller
                 ];
 
                 $this->AcsCustomerCancellationRequest->create($data);    
-                 
             }
+
+            $attachment = '';
 
             //Send email
             $companyAdmin = $this->Users_model->getCompanyAdmin($company_id);
@@ -15362,22 +15444,51 @@ class Customer extends MY_Controller
                 $email_data['cancellation_url'] = $cancellation_url;
                 $body = $this->load->view('v2/emails/customer_cancellation_request', $email_data, true);
 
-                $mail = email__getInstance();
-                $mail->FromName = 'nSmarTrac';
-                $recipient_name = $companyAdmin->FName . ' ' . $companyAdmin->LName;
-                $mail->addAddress($companyAdmin->email, $recipient_name);
-                $mail->isHTML(true);
-                $mail->Subject = "Customer Request for Cancellation";
-                $mail->Body = $body;
-                $mail->addAttachment($attachment);
-                $mail->Send();
+                $to_send = 'jeniel.mangahis@gmail.com'; //$companyAdmin->email;
+
+                if($is_live_mail_credentials) {
+                    $mail = email__getInstance();
+                    $mail->FromName = 'nSmarTrac';
+                    $recipient_name = $companyAdmin->FName . ' ' . $companyAdmin->LName;
+                    $mail->addAddress($to_send, $recipient_name);
+                    $mail->isHTML(true);
+                    $mail->Subject = "Customer Request for Cancellation";
+                    $mail->Body = $body;
+                    if($attachment) {
+                        $mail->addAttachment($attachment);
+                    }
+                    $mail->Send();                    
+                } else {
+                    $host     = 'smtp.mailtrap.io';
+                    $port     = 2525;
+                    $username = 'd7c92e3b5e901d';
+                    $password = '203aafda110ab7';
+                    $from     = 'noreply@nsmartrac.com';       
+                    
+                    $mail = new PHPMailer;
+                    $mail->isSMTP();
+                    $mail->Host = $host;
+                    $mail->SMTPAuth = true;
+                    $mail->Username = $username;
+                    $mail->Password = $password;
+                    $mail->SMTPSecure = 'tls';
+                    $mail->Port = $port;            
+                                                                                          
+                    $mail->FromName = 'nSmarTrac';  
+                    $recipient_name = $companyAdmin->FName . ' ' . $companyAdmin->LName;
+                    $mail->setFrom('noreply@nsmartrac.com', 'nSmartrac');
+                    $mail->addAddress($companyAdmin->email, $recipient_name);
+                    $mail->isHTML(true);
+                    $mail->Subject = "Customer Request for Cancellation";
+                    $mail->Body = $body;
+                    $mail->addAttachment($attachment);
+                    $mail->Send();   
+                } 
             }
 
             $is_success = 1;
             $msg = '';
         }
-        
-        
         
         $return = [
             'is_success' => $is_success,
@@ -15385,6 +15496,104 @@ class Customer extends MY_Controller
         ];
         echo json_encode($return);
     }
+
+    public function ajax_update_customer_collection_request()
+    {
+        $this->load->model('AcsCustomerCancellationRequest');
+        $this->load->model('Customer_advance_model');
+
+        $company_id = logged('company_id');
+        $is_success = 0;
+        $msg = 'Cannot find customer data';
+
+        $post = $this->input->post();
+        if($post) {
+            $post_data['id'] = $post['id'];
+            $post_data['send_to_collection'] = $post['send_to_collection'];
+            $post_data['statement_of_claim'] = $post['statement_of_claim'];
+            $post_data['court_date'] = $post['court_date'];
+            $post_data['claim_amount'] = $post['claim_amount'];
+            $post_data['award_amount'] = $post['award_amount'];
+            $update_collection = $this->Customer_advance_model->update_data($post_data, 'acs_customer_cancellation_requests', 'id');
+            if($update_collection) {
+                $is_success = 1;
+                $msg = 'Customer collection has been updated successfully.';
+            }
+        }
+
+        $return = [
+            'is_success' => $is_success,
+            'msg' => $msg
+        ];
+        echo json_encode($return);
+    }    
+
+    public function ajax_set_default_monitoring_company()
+    {
+        $this->load->model('AcsAlarmMonitoringCompany_model');
+
+        $is_success = 0;
+        $msg = 'Cannot find record';
+
+        $company_id = logged('company_id');
+        $post = $this->input->post();
+
+        $monitoringCompany = $this->AcsAlarmMonitoringCompany_model->getByIdAndCompanyId($post['id'], $company_id);
+        if ($monitoringCompany) {
+            $this->AcsAlarmMonitoringCompany_model->resetDefaultByCompanyId($company_id);
+            $this->AcsAlarmMonitoringCompany_model->update($monitoringCompany->id, ['is_default' => 'Yes']);
+
+            //Activity Logs
+            $activity_name = 'Monitoring Company : Set default value to ' . $monitoringCompany->name; 
+            createActivityLog($activity_name);
+
+            $is_success = 1;
+            $msg = '';
+        }
+
+        $json_data = [
+            'is_success' => $is_success,
+            'msg' => $msg,
+        ];
+
+        echo json_encode($json_data);
+    }
+
+    public function ajax_delete_selected_monitoring_companies()
+	{
+		$this->load->model('AcsAlarmMonitoringCompany_model');
+
+		$is_success = 0;
+        $msg    = 'Please select data';
+
+        $company_id  = logged('company_id');
+        $post = $this->input->post();
+
+        if( $post['monitoringCompanies'] ){
+
+            $filters[] = ['field' => 'company_id', 'value' => $company_id];
+            $total_deleted = $this->AcsAlarmMonitoringCompany_model->bulkDelete($post['monitoringCompanies'], $filters);
+
+			//Activity Logs
+            if( $total_deleted > 1 ){
+                $activity_name = 'Monitoring Company : Deleted ' .$total_deleted. ' monitoring companies'; 
+            }else{
+                $activity_name = 'Monitoring Company : Deleted ' .$total_deleted. ' monitoring company'; 
+            }
+			
+			createActivityLog($activity_name);
+
+            $is_success = 1;
+            $msg    = '';
+        }
+
+        $return = [
+            'is_success' => $is_success,
+            'msg' => $msg
+        ];
+
+        echo json_encode($return);
+	}
 
     public function verifyCustomer()
     {
@@ -15397,5 +15606,240 @@ class Customer extends MY_Controller
         $execute = $this->db->update('acs_profile', ['is_verified' => $state]);
 
         echo $execute;
+    }
+
+    public function settings_alarm_receiver_phone_numbers()
+    {
+        $this->load->model('AcsAlarmReceiverPhoneNumber_model');
+
+        if(!checkRoleCanAccessModule('customer-settings', 'read')){
+			show403Error();
+			return false;
+		}
+
+        $company_id = logged('company_id');
+        $receiverPhoneNumbers = $this->AcsAlarmReceiverPhoneNumber_model->getAllByCompanyId($company_id);
+
+        $this->page_data['receiverPhoneNumbers'] = $receiverPhoneNumbers;
+        $this->page_data['page']->title = 'Alarm Receiver Phone Numbers';
+        $this->page_data['page']->parent = 'Customers';
+        $this->load->view('v2/pages/customer/settings_alarm_receiver_phone_numbers', $this->page_data);
+    }
+
+    public function ajax_create_receiver_phone_number()
+    {
+        $this->load->model('AcsAlarmReceiverPhoneNumber_model');
+
+        if(!checkRoleCanAccessModule('customer-settings', 'write')){
+			show403Error();
+			return false;
+		}
+
+        $is_success = 0;
+        $msg = 'Cannot save data';
+        $receiver_number_id   = 0;
+        $receiver_number = '';
+
+        $company_id = logged('company_id');
+        $post = $this->input->post();
+
+        $isExists = $this->AcsAlarmReceiverPhoneNumber_model->getByReceiverNumberAndCompanyId($post['receiver_number'], $company_id);
+        if( $isExists ){
+            $msg = 'Receiver phone number ' . $post['receiver_number'] . ' already exists.';
+        }elseif( $post['receiver_number'] == '' ){
+            $msg = 'Please enter receiver phone number';
+        }else{
+            $data = [
+                'company_id' => $company_id,
+                'receiver_number' => $post['receiver_number'],
+                'date_created' => date("Y-m-d H:i:s"),
+                'date_updated' => date("Y-m-d H:i:s")
+            ];
+
+            $receiver_number_id = $this->AcsAlarmReceiverPhoneNumber_model->create($data);
+            $receiver_number    = $post['receiver_number'];
+
+            //Activity Logs
+            $activity_name = 'Receiver Phone Number : Created receiver phone number ' . $post['receiver_number']; 
+            createActivityLog($activity_name);
+
+            $is_success = 1;
+            $msg = '';
+        }
+
+        $return = ['is_success' => $is_success, 'msg' => $msg, 'receiver_number_id' => $receiver_number_id, 'receiver_number' => $receiver_number];
+        echo json_encode($return);
+    }
+
+    public function ajax_update_receiver_phone_number()
+    {
+        $this->load->model('AcsAlarmReceiverPhoneNumber_model');
+
+        if(!checkRoleCanAccessModule('customer-settings', 'write')){
+			show403Error();
+			return false;
+		}
+
+        $is_success = 0;
+        $msg = 'Cannot find data';
+
+        $company_id = logged('company_id');
+        $post = $this->input->post();
+
+        $isExists = $this->AcsAlarmReceiverPhoneNumber_model->getByReceiverNumberAndCompanyId($post['receiver_number'], $company_id);
+        if( $isExists && $post['receiver_phone_number_id'] != $isExists->id ){
+            $msg = 'Receiver phone number ' . $post['receiver_number'] . ' already exists.';
+        }elseif( $post['receiver_number'] == '' ){
+            $msg = 'Please enter receiver phone number';
+        }else{
+            $receiverPhoneNumber = $this->AcsAlarmReceiverPhoneNumber_model->getByIdAndCompanyId($post['receiver_phone_number_id'], $company_id);
+            if( $receiverPhoneNumber ){
+                $data = [
+                    'receiver_number' => $post['receiver_number'],
+                    'date_updated' => date("Y-m-d H:i:s")
+                ];
+
+                $this->AcsAlarmReceiverPhoneNumber_model->update($receiverPhoneNumber->id, $data);
+
+                //Activity Logs
+                $activity_name = 'Receiver Phone Number : Updated receiver phone number ' . $post['receiver_number']; 
+                createActivityLog($activity_name);
+
+                $is_success = 1;
+                $msg = '';
+            }
+            
+        }
+
+        $return = ['is_success' => $is_success, 'msg' => $msg];
+        echo json_encode($return);
+    }
+
+    public function ajax_delete_monitoring_company()
+	{
+		$this->load->model('AcsAlarmMonitoringCompany_model');
+
+		$is_success = 0;
+        $msg    = 'Please select data';
+
+        $company_id  = logged('company_id');
+        $post = $this->input->post();
+
+        $monitoringCompany = $this->AcsAlarmMonitoringCompany_model->getByIdAndCompanyId($post['id'], $company_id);
+        if ($monitoringCompany) {
+            $this->AcsAlarmMonitoringCompany_model->delete($monitoringCompany->id);
+
+            //Activity Logs
+            $activity_name = 'Monitoring Companies : Deleted monitoring company ' . $monitoringCompany->name; 
+            createActivityLog($activity_name);
+
+            $is_success = 1;
+            $msg = '';
+        }
+
+        $return = [
+            'is_success' => $is_success,
+            'msg' => $msg,
+        ];
+
+        echo json_encode($return);
+	}
+
+    public function ajax_delete_receiver_number()
+	{
+		$this->load->model('AcsAlarmReceiverPhoneNumber_model');
+
+		$is_success = 0;
+        $msg    = 'Please select data';
+
+        $company_id  = logged('company_id');
+        $post = $this->input->post();
+
+        $receiverPhoneNumber = $this->AcsAlarmReceiverPhoneNumber_model->getByIdAndCompanyId($post['id'], $company_id);
+        if ($receiverPhoneNumber) {
+            $this->AcsAlarmReceiverPhoneNumber_model->delete($receiverPhoneNumber->id);
+
+            //Activity Logs
+            $activity_name = 'Receiver Phone Number : Deleted receiver phone number ' . $receiverPhoneNumber->receiver_number; 
+            createActivityLog($activity_name);
+
+            $is_success = 1;
+            $msg = '';
+        }
+
+        $return = [
+            'is_success' => $is_success,
+            'msg' => $msg,
+        ];
+        
+
+        echo json_encode($return);
+	}
+
+    public function ajax_delete_selected_receiver_numbers()
+	{
+		$this->load->model('AcsAlarmReceiverPhoneNumber_model');
+
+		$is_success = 0;
+        $msg    = 'Please select data';
+
+        $company_id  = logged('company_id');
+        $post = $this->input->post();
+
+        if( $post['receiverPhoneNumbers'] ){
+
+            $filters[] = ['field' => 'company_id', 'value' => $company_id];
+            $total_deleted = $this->AcsAlarmReceiverPhoneNumber_model->bulkDelete($post['receiverPhoneNumbers'], $filters);
+
+			//Activity Logs
+            if( $total_delete > 1 ){
+                $activity_name = 'Receiver Phone Number : Deleted ' .$total_deleted. ' phone numbers'; 
+            }else{
+                $activity_name = 'Receiver Phone Number : Deleted ' .$total_deleted. ' phone number'; 
+            }
+			
+			createActivityLog($activity_name);
+
+            $is_success = 1;
+            $msg    = '';
+        }
+
+        $return = [
+            'is_success' => $is_success,
+            'msg' => $msg
+        ];
+
+        echo json_encode($return);
+	}
+
+    public function ajax_set_default_receiver_phone_number()
+    {
+        $this->load->model('AcsAlarmReceiverPhoneNumber_model');
+
+        $is_success = 0;
+        $msg = 'Cannot find record';
+
+        $company_id = logged('company_id');
+        $post = $this->input->post();
+
+        $receiverPhoneNumber = $this->AcsAlarmReceiverPhoneNumber_model->getByIdAndCompanyId($post['id'], $company_id);
+        if ($receiverPhoneNumber) {
+            $this->AcsAlarmReceiverPhoneNumber_model->resetDefaultByCompanyId($company_id);
+            $this->AcsAlarmReceiverPhoneNumber_model->update($receiverPhoneNumber->id, ['is_default' => 'Yes']);
+
+            //Activity Logs
+            $activity_name = 'Receiver Phone Number : Set default value to ' . $receiverPhoneNumber->receiver_number; 
+            createActivityLog($activity_name);
+
+            $is_success = 1;
+            $msg = '';
+        }
+
+        $return = [
+            'is_success' => $is_success,
+            'msg' => $msg,
+        ];
+
+        echo json_encode($return);
     }
 }

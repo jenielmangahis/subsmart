@@ -199,6 +199,13 @@ div#controls div#call-controls div#volume-indicators > div {
     font-size: 13px;
     margin-right: 3px;
 }
+@media only screen and (min-device-width: 390px){
+    /* .name-acro{
+        position:relative;
+        bottom:30px;
+    } */
+}
+
 </style>
 <div class="col-12 col-md-4" data-id="<?= $id ?>" id="<?= $id ?>">
     <div class="nsm-card nsm-grid">
@@ -212,14 +219,14 @@ div#controls div#call-controls div#volume-indicators > div {
             <div class="row g-3">
                 <div class="col-12">
                     <div class="d-flex align-items-center">
-                        <div class="nsm-profile me-3">
+                        <div class="nsm-profile me-3 name-acro">
                             <?php 
                                 $profile_info->first_name = trim($profile_info->first_name);
                                 $profile_info->last_name  = trim($profile_info->last_name);
                             ?>
                             <span><?= ucwords(trim($profile_info->first_name[0])) . ucwords(trim($profile_info->last_name[0])) ?></span>                        
                         </div>
-                        <div class="row w-100">
+                        <div class="row w-100 position-relative">
                             <div class="col-7 col-md-6">
                                 <?php 
                                     $business_name = '---';
@@ -231,7 +238,31 @@ div#controls div#call-controls div#volume-indicators > div {
                                 <span class="content-title"><i class='bx bx-buildings'></i> <?= $business_name; ?> </span>
                                 <?php } ?>
                                 <span class="content-title"><i class='bx bx-user-circle' ></i> <?= $profile_info->first_name . ' ' . $profile_info->last_name; ?></span>
-                                <span class="content-subtitle d-block mt-1" style="font-size:14px;">ID# : <?= formatCustomerId($profile_info->customer_no); ?></span>                                
+                                <span class="content-subtitle d-block mt-1" style="font-size:14px;">ID# : <?= formatCustomerId($profile_info->customer_no); ?></span>   
+                                <div class="verificationCheckboxContainer position-absolute" style="top: 40px;">
+                                <?php $is_verified = ($profile_info->is_verified == 1) ? "checked" : ""; ?>
+                                    <input id="verifyActiveCustomer" class="form-check-input verifyActiveCustomer" style="width: 16px; height: 16px;" customer_id="<?php echo $profile_info->prof_id; ?>" type="checkbox" <?php echo $is_verified; ?>>&ensp;<label class="text-muted" for="verifyActiveCustomer">Verify</label>
+                                    <script>
+                                        $(document).on('change', '.verifyActiveCustomer', function () {
+                                            const state = $(this).prop('checked');
+                                            const customer_id = $(this).attr('customer_id');
+
+                                            $.ajax({
+                                                type: "POST",
+                                                url: `${window.origin}/Customer/verifyCustomer`,
+                                                data: {
+                                                    customer_id: `${customer_id}`,
+                                                    state: `${state}`
+                                                },
+                                                beforeSend: function() {},
+                                                success: function(response) {
+                                                    // const data = JSON.parse(response)[0];
+                                                },
+                                                error: function() {}
+                                            });
+                                        });
+                                    </script>
+                                </div>                               
                             </div>
                             <div class="col-5 col-md-6 text-end">
                                 <?php
@@ -253,7 +284,7 @@ div#controls div#call-controls div#volume-indicators > div {
                                         break;
                                 endswitch;
                                 ?>
-                                <span class="nsm-badge" style="margin-bottom:4px;display:inline-block;"><?= $alarm_info && $alarm_info->panel_type != '' ? $alarm_info->panel_type : '---'; ?></span><br />
+                                <span class="nsm-badge" style="white-space:normal !important;overflow-wrap:break-word;margin-bottom:4px;display:inline-block;text-align:left;width:auto;"><?= $alarm_info && $alarm_info->panel_type != '' ? $alarm_info->panel_type : '---'; ?></span><br />
                                 <span class="nsm-badge <?= $badge ?>"><?= $profile_info->status != '' ? $profile_info->status : 'Pending'; ?></span><br />                         
                                 <?php if( $billing_info->mmr > 0 ){ ?>       
                                     <span class="profile-mmr" style="display:inline-block;margin-top:7px;">MMR : $<?= $billing_info->mmr > 0 ? number_format($billing_info->mmr,2,'.',',') : '0.00'; ?></span>       

@@ -15,7 +15,14 @@ class Dashboard_model extends MY_Model
                 $this->db->where("DATE_FORMAT(acs_billing.bill_start_date, '%Y-%m-%d') >=", $dateFrom);
                 $this->db->where("DATE_FORMAT(acs_billing.bill_start_date, '%Y-%m-%d') <=", $dateTo);
                 if ($filter3 == "all_status") {
-                    $this->db->where_in('acs_profile.status', ['Active w/RAR', 'Active w/RMR', 'Active w/RQR', 'Active w/RYR', 'Inactive w/RMM']);
+                    $this->db->where_in('acs_profile.status', [
+                        'Active w/RAR', 
+                        'Active w/RMR', 
+                        'Active w/RQR', 
+                        'Active w/RYR', 
+                        'Inactive w/RMM',
+                        'Inactive w/RMR'
+                    ]);
                 }
                 else {
                     $this->db->where('acs_profile.status', $filter3);
@@ -165,7 +172,14 @@ class Dashboard_model extends MY_Model
                 $this->db->where('acs_profile.is_archived', 0);
                 
                 if ($filter3 == "active_only") {
-                    $this->db->where_in('acs_profile.status', ['Active w/RAR', 'Active w/RMR', 'Active w/RQR', 'Active w/RYR', 'Inactive w/RMM']);
+                    $this->db->where_in('acs_profile.status', [
+                        'Active w/RAR', 
+                        'Active w/RMR', 
+                        'Active w/RQR', 
+                        'Active w/RYR', 
+                        'Inactive w/RMM',
+                        'Inactive w/RMR'
+                    ]);
                 }
 
                 if ($filter4 == "commercial") {
@@ -276,7 +290,14 @@ class Dashboard_model extends MY_Model
                 $this->db->where('acs_profile.status !=', "");
 
                 if ($filter3 == "active_only") {
-                    $this->db->where_in('acs_profile.status', ['Active w/RAR', 'Active w/RMR', 'Active w/RQR', 'Active w/RYR', 'Inactive w/RMM']);
+                    $this->db->where_in('acs_profile.status', [
+                        'Active w/RAR', 
+                        'Active w/RMR', 
+                        'Active w/RQR', 
+                        'Active w/RYR', 
+                        'Inactive w/RMM',
+                        'Inactive w/RMR'
+                    ]);
                 }
 
                 $this->db->where("DATE_FORMAT(acs_profile.updated_at, '%Y-%m-%d') >=", $dateFrom);
@@ -659,7 +680,7 @@ class Dashboard_model extends MY_Model
                     FROM acs_profile
                     LEFT JOIN acs_billing ON acs_billing.fk_prof_id = acs_profile.prof_id
                     WHERE acs_profile.company_id = '{$company_id}' 
-                        AND acs_profile.status IN ('Active w/RAR', 'Active w/RQR','Active w/RMR', 'Active w/RYR', 'Inactive w/RMM')
+                        AND acs_profile.status IN ('Active w/RAR', 'Active w/RQR','Active w/RMR', 'Active w/RYR', 'Inactive w/RMR', 'Inactive w/RMM')
                         AND acs_profile.is_archived = 0
                     --    AND DATE_FORMAT(acs_billing.bill_start_date, '%Y-%m-%d') >= '{$dateFrom}'
                     --    AND DATE_FORMAT(acs_billing.bill_start_date, '%Y-%m-%d') <= '{$dateTo}'
@@ -681,7 +702,7 @@ class Dashboard_model extends MY_Model
                     FROM acs_profile
                     LEFT JOIN acs_billing ON acs_billing.fk_prof_id = acs_profile.prof_id
                     WHERE acs_profile.company_id = '{$company_id}' 
-                        AND acs_profile.status IN ('Active w/RAR', 'Active w/RQR','Active w/RMR', 'Active w/RYR', 'Inactive w/RMM')
+                        AND acs_profile.status IN ('Active w/RAR', 'Active w/RQR','Active w/RMR', 'Active w/RYR', 'Inactive w/RMR', 'Inactive w/RMM')
                         AND acs_profile.is_archived = 0
                         AND DATE_FORMAT(acs_billing.bill_start_date, '%Y-%m-%d') >= '{$dateFrom}'
                         AND DATE_FORMAT(acs_billing.bill_start_date, '%Y-%m-%d') <= '{$dateTo}'
@@ -693,7 +714,7 @@ class Dashboard_model extends MY_Model
                     FROM acs_profile
                     LEFT JOIN acs_billing ON acs_billing.fk_prof_id = acs_profile.prof_id
                     WHERE acs_profile.company_id = '{$company_id}' 
-                        AND acs_profile.status IN ('Active w/RAR', 'Active w/RQR','Active w/RMR', 'Active w/RYR', 'Inactive w/RMM')
+                        AND acs_profile.status IN ('Active w/RAR', 'Active w/RQR','Active w/RMR', 'Active w/RYR', 'Inactive w/RMR', 'Inactive w/RMM')
                         AND acs_profile.is_archived = 0
                         AND DATE(acs_billing.bill_end_date) BETWEEN '{$currentDate}' AND '{$next30Days}'
                     UNION
@@ -704,7 +725,7 @@ class Dashboard_model extends MY_Model
                     FROM acs_profile
                     LEFT JOIN acs_billing ON acs_billing.fk_prof_id = acs_profile.prof_id
                     WHERE acs_profile.company_id = '{$company_id}' 
-                        AND acs_profile.status IN ('Active w/RAR', 'Active w/RQR','Active w/RMR', 'Active w/RYR', 'Inactive w/RMM')
+                        AND acs_profile.status IN ('Active w/RAR', 'Active w/RQR','Active w/RMR', 'Active w/RYR', 'Inactive w/RMR', 'Inactive w/RMM')
                         AND acs_profile.is_archived = 0
                         AND DATE_FORMAT(acs_billing.bill_start_date, '%Y-%m-%d') >= '{$dateFrom}'
                         AND DATE_FORMAT(acs_billing.bill_start_date, '%Y-%m-%d') <= '{$dateTo}'
@@ -958,7 +979,7 @@ class Dashboard_model extends MY_Model
                     FROM acs_profile
                     LEFT JOIN acs_billing ON acs_billing.fk_prof_id = acs_profile.prof_id
                     WHERE acs_profile.company_id = '{$company_id}' 
-                        AND acs_profile.status IN ('Active w/RAR', 'Active w/RQR','Active w/RMR', 'Active w/RYR', 'Inactive w/RMM')
+                        AND acs_profile.status IN ('Active w/RAR', 'Active w/RQR','Active w/RMR', 'Active w/RYR', 'Inactive w/RMR', 'Inactive w/RMM')
                         AND acs_profile.is_archived = 0
                         AND (
                             DATE(acs_billing.bill_start_date) BETWEEN '{$firstDayOfThisWeek}' AND '{$lastDayOfThisWeek}'
@@ -1058,7 +1079,14 @@ class Dashboard_model extends MY_Model
                 $this->db->where('acs_profile.company_id', $company_id);
                 $this->db->where('acs_profile.is_archived', 0);
                 $this->db->where('acs_profile.state !=', "");
-                $this->db->where_in('acs_profile.status', ['Active w/RAR', 'Active w/RMR', 'Active w/RQR', 'Active w/RYR', 'Inactive w/RMM']);
+                $this->db->where_in('acs_profile.status', [
+                    'Active w/RAR', 
+                    'Active w/RMR', 
+                    'Active w/RQR', 
+                    'Active w/RYR', 
+                    'Inactive w/RMM',
+                    'Inactive w/RMR'
+                ]);
                 $this->db->where("DATE_FORMAT(acs_profile.created_at, '%Y-%m-%d') >=", $dateFrom);
                 $this->db->where("DATE_FORMAT(acs_profile.created_at, '%Y-%m-%d') <=", $dateTo);
                 $this->db->group_by('acs_profile.state');

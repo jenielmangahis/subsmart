@@ -1,4 +1,4 @@
-<div class="nsm-card primary">
+<div class="nsm-card primary" id="add-advance-access-info" style="<?= $status_cancelled_hide_section; ?>">
     <div class="nsm-card-header">
         <div class="nsm-card-title">
             <span><i class='bx bx-fw bx-cog'></i> Access Information</span>

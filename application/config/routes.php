@@ -1241,6 +1241,10 @@ $route['customer/_get_lead_data'] = 'Customer/ajax_get_lead_data';
 $route['customer/_convert_lead_to_customer'] = 'Customer/ajax_convert_lead_to_customer';
 $route['customer/_permanently_delete_selected_attachment'] = 'Customer/ajax_permanently_delete_selected_attachment';
 $route['customer/_send_customer_cancellation_request'] = 'Customer/ajax_send_customer_cancellation_request';
+$route['customer/_update_customer_collection_request'] = 'Customer/ajax_update_customer_collection_request';
+
+//$route['customer/cancellation_request'] = 'Customer/cancellation_request';
+$route['customer/cancellation_request/(:num)'] = 'Customer/cancellation_request/$1';
 
 // workstatus
 $route['workstatus/_create_workorder_status'] = 'Workstatus/ajax_save_workorder_status';
@@ -2359,8 +2363,15 @@ $route['customer/settings_alarm_monitoring_companies'] = 'Customer/settings_alar
 $route['customers/_create_monitoring_company'] = 'Customer/ajax_create_monitoring_company';
 $route['customers/_update_monitoring_company'] = 'Customer/ajax_update_monitoring_company';
 $route['customers/_delete_monitoring_company'] = 'Customer/ajax_delete_monitoring_company';
+$route['customers/_delete_selected_monitoring_companies'] = 'Customer/ajax_delete_selected_monitoring_companies';
+$route['customer/_set_default_monitoring_company'] = 'Customer/ajax_set_default_monitoring_company';
 $route['customers/settings_panel_types'] = 'Tickets/settings_panel_types';
 $route['customer/_get_account_cost'] = 'Customer/ajax_get_account_cost';
+$route['customers/_create_receiver_phone_number'] = 'Customer/ajax_create_receiver_phone_number';
+$route['customers/_update_receiver_phone_number'] = 'Customer/ajax_update_receiver_phone_number';
+$route['customers/_delete_selected_receiver_numbers'] = 'Customer/ajax_delete_selected_receiver_numbers';
+$route['customers/_delete_receiver_number'] = 'Customer/ajax_delete_receiver_number';
+$route['customer/_set_default_receiver_phone_number'] = 'Customer/ajax_set_default_receiver_phone_number';
 
 //Benchmark for Testing
 $route['benchmark/test_customer_subscription'] = 'Benchmark/test_customer_subscription';

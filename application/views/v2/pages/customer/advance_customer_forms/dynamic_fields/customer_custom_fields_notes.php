@@ -1,4 +1,4 @@
-<div class="nsm-card primary">
+<div class="nsm-card primary" style="<?= $status_cancelled_hide_section; ?>" id="add-advance-custom-fields">
     <div class="nsm-card-header">
         <div class="nsm-card-title">
             <span><i class='bx bx-fw bx-customize'></i> Custom Fields</span>
@@ -68,12 +68,12 @@
                     <?php foreach ($customer_notes as $note) : ?>
                         <?php if( trim($note->note) != '' ){ ?>
                         <tr>
-                            <td style="width: 880px; text-align: left; vertical-align: top; font-size: 11px; color: #336699; padding:5px;background-color: #d9d9d9;border: 1px; border-style: solid; border-color: #999999;">
-                                <i class='bx bxs-calendar-event'></i> <?= $note->datetime; ?>
+                            <td style="width: 880px; text-align: left; vertical-align: top; color: #ffffff; padding:5px;background-color: #6a4a86;border: 1px; border-style: solid; border-color: #6a4a86;">
+                                <i class='bx bxs-calendar-event'></i> <?= date("m/d/Y h:i A",strtotime($note->datetime)); ?>
                             </td>
                         </tr>
                         <tr>
-                            <td style="text-align: left; border: 1px; border-style: solid; border-color: #999999; background-color: #FFFF71; font-size: 11px;padding:5px">
+                            <td style="text-align: left; border: 1px; padding:5px">
                                 <?= $note->note; ?>
                             </td>
                         </tr>

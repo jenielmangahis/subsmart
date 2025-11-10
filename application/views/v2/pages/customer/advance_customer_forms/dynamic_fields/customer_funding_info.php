@@ -1,6 +1,6 @@
 <?php 
     $is_container_hidden = '';
-    if( isset($alarm_info) && $alarm_info->acct_type == 'In-House' ){
+    if( isset($alarm_info) && $alarm_info->acct_type == 'In-House' || ($profile_info && $profile_info->status == 'Cancelled') ){
         $is_container_hidden = 'style="display:none;"';
     }
 ?>

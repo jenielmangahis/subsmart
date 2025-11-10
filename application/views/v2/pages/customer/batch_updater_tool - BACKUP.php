@@ -27,14 +27,10 @@
     .hiddenColumnSection {
         display: none;
     }
-
-    .saveChanges {
-        display: none;
-    }
 </style>
 <div class="hiddenColumnStyles"></div>
 <div class="row batchUpdaterContent">
-    <div class="col-lg-12 batchUpdaterTitleContainer">
+    <div class="col-lg-12">
         <div class="mb-3 mt-3">
             <div class="row batchUpdaterTitle">
                 <h4 class="fw-bold">Batch Updater Tool</h4>
@@ -52,15 +48,9 @@
                         <input class="searchCustomerListInput form-control mt-2" type="text" placeholder="Search entry here..." tabindex="-1">
                         <select class="form-select displayCustomerList mt-2" tabindex="-1">
                             <option selected value="10">10</option>
-                            <option value="20">20</option>
-                            <option value="30">30</option>
-                            <option value="40">40</option>
                             <option value="50">50</option>
-                            <option value="60">60</option>
-                            <option value="70">70</option>
-                            <option value="80">80</option>
-                            <option value="90">90</option>
                             <option value="100">100</option>
+                            <option value="500">500</option>
                         </select>
                     </div>
                 </div>
@@ -140,6 +130,7 @@
                     <label class="text-muted">Status Filter</label>
                     <select class="form-select searchStatus mt-2" tabindex="-1">
                         <option value="">None</option>
+                        <option value="all_active">All Active</option>
                         <?php
                             foreach ($customer_status as $status) {
                                 echo "<option value='$status->name'>$status->name</option>";
@@ -912,7 +903,7 @@
                                     });
                                 },
                                 success: function(response) {
-                                    // $('.customerManagementTable').DataTable().draw(false); 
+                                    $('.customerManagementTable').DataTable().draw(false); 
                                     $('.updateHistoryTable').DataTable().draw(false); 
                                     $('.customerManagementTable td.cell_dragging').each(function() {
                                         if (initialValue) {
@@ -1124,11 +1115,7 @@
         $(this).closest('td').find('.inputMode').hide();
     });
 
-    $(document).on('click', '.namePreviewEdit', function() {
-        $('.scrollToStart').click();
-    });
-
-    $(document).on('change', '.updateInputValue', function() {
+    $(document).on('click', '.saveChanges', function() {
         valueOnText = $(this).closest('td').find('.updateInputValue').is('select') ? $(this).closest('td').find('.updateInputValue option:selected').text() : $(this).closest('td').find('.updateInputValue').val();
         currentInputElement = $(this).closest('td');
         const updateID = $(this).closest('td').find('.updateInputValue').attr('data-id');
@@ -1244,14 +1231,14 @@
             }
         }
 
-        // Swal.fire({
-        //     icon: "warning",
-        //     title: "Cell Update",
-        //     html: "Do you want to apply changes in column <strong>" + columnName + "</strong> for customer <strong>" + customerName + "</strong>?<br><hr><strong class='text-success'>" + valueOnText + "</strong> value will apply",
-        //     showCancelButton: true,
-        //     confirmButtonText: "Proceed",
-        // }).then((result) => {
-            // if (result.isConfirmed) {
+        Swal.fire({
+            icon: "warning",
+            title: "Cell Update",
+            html: "Do you want to apply changes in column <strong>" + columnName + "</strong> for customer <strong>" + customerName + "</strong>?<br><hr><strong class='text-success'>" + valueOnText + "</strong> value will apply",
+            showCancelButton: true,
+            confirmButtonText: "Proceed",
+        }).then((result) => {
+            if (result.isConfirmed) {
                 $.ajax({
                     type: "POST",
                     url: `${window.origin}/Customer/customerServersideLoadSave`,
@@ -1269,7 +1256,7 @@
                         });
                     },
                     success: function(response) {
-                        // $('.customerManagementTable').DataTable().draw(false); 
+                        $('.customerManagementTable').DataTable().draw(false); 
                         $('.updateHistoryTable').DataTable().draw(false); 
                         iziToast.success({
                             displayMode: 2,
@@ -1277,8 +1264,8 @@
                             timeout: 3000,
                             position: 'topCenter',
                         });
-                        currentInputElement.find('.textPreview').show();
-                        currentInputElement.find('.inputMode').hide();
+                        // currentInputElement.find('.textPreview').show();
+                        // currentInputElement.find('.inputMode').hide();
                         $('.drag_handle').css('visibility', 'hidden');
                         $('.customerManagementTable > tbody > tr > td').removeClass('cell_dragging');
                         if (updateColumn == "contract_term" || updateColumn == "bill_start_date") {
@@ -1305,8 +1292,8 @@
                         }, 3000);
                     },
                 });
-            // }
-        // });
+            }
+        });
     }
 
     function toggleColumn(selector, columnIndex, showOrHide) {
@@ -1415,7 +1402,7 @@
             cells.forEach(cell => {
                 cell.style.position = 'sticky';
                 cell.style.left = `${offset - 1}px`;
-                cell.style.zIndex = '999';
+                cell.style.zIndex = '3';
                 cell.style.background = 'white';
             });
 
@@ -1432,7 +1419,7 @@
         left: '10px',
         bottom: '-25px',
         'margin-top': '0',
-        'z-index': '9999',
+        'z-index': '5',
         'background': '#ffffff',
         'padding': '5px',
         'outline': '1px solid lightgray',
