@@ -3173,14 +3173,12 @@ class Invoice extends MY_Controller
                     move_uploaded_file($tmp_name, $invoiceAttachmentFolderPath.$attachment);
                 }
                 
-                $late_fee = $invoice->late_fee;
+                $late_fee = 0;
+                $invoice_late_fee = $invoice->late_fee;
                 if( $post['late_fee_amount'] && $post['late_fee_amount'] > 0 ){
                     $new_balance = $invoice->balance - ($post['amount'] + $post['late_fee_amount']);    
-                    if( $post['late_fee_amount'] > $late_fee ){
-                        $late_fee = 0; 
-                    }else{
-                        $late_fee = $late_fee - $post['late_fee']; 
-                    }
+                    $late_fee = $post['late_fee_amount']; 
+                    $invoice_late_fee = $post['late_fee_amount'] > $invoice_late_fee ? 0  : $invoice_late_fee - $post['late_fee_amount']; 
                 }else{
                     $new_balance = $invoice->balance - $post['amount'];
                 }
@@ -3215,6 +3213,7 @@ class Invoice extends MY_Controller
                 
                 $invoice_data = [
                     'status' => $status,
+                    'late_fee' => $invoice_late_fee,
                     'balance' => $new_balance
                 ];
 
