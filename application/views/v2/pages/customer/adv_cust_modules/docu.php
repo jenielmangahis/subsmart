@@ -12,6 +12,10 @@
     border:1px #e6e6e6 solid;
     width:100%;
 }
+.img-doc-certificate{
+    border:1px #e6e6e6 solid;
+    width:100%;
+}
 </style>
 <div class="col-12 col-md-4" data-id="<?= $id ?>" id="<?= $id ?>" module-id="profiledocuments">
     <div class="nsm-card nsm-grid">
@@ -249,12 +253,14 @@
                                         <?php foreach($customer_certificates as $ca){ ?>
                                             <li>
                                                 <div class="row">
-                                                    <div class="col-md-6"><span><?= $ca['file_name']; ?></span></div>
+                                                    <div class="col-md-6">
+                                                        <img class="img-thumbnail img-doc-certificate" src="<?= base_url('uploads/customerdocuments/'.$ca['customer_id'].'/'.$ca['file_name']); ?>" />
+                                                    </div>
                                                     <div class="col-md-6 text-end buttons has-document">
                                                         <button type="button" class="nsm-button btn-sm download-client-agreement" data-id="<?= $ca['id']; ?>">
                                                             Download
                                                         </button>
-                                                        <button type="button" class="nsm-button error btn-sm delete-client-agreement" data-id="<?= $ca['id']; ?>">
+                                                        <button type="button" class="nsm-button error btn-sm delete-client-certificate" data-id="<?= $ca['id']; ?>">
                                                             Delete
                                                         </button>
                                                     </div>
@@ -887,6 +893,51 @@ $(function(){
                 $.ajax({
                     type: 'POST',
                     url: base_url + "customer/_delete_client_agreement",
+                    data: {cdi:cdi},
+                    dataType: 'json',            
+                    success: function(o) {
+                        if( o.is_success == 1 ){   
+                            location.reload();
+                        }else{
+                            Swal.fire({
+                            icon: 'error',
+                            title: 'Error!',
+                            html: o.msg
+                            });
+                        }
+                    },
+                    beforeSend: function(){
+                        Swal.fire({
+                            icon: "info",
+                            title: "Processing",
+                            html: "Please wait while the process is running...",
+                            allowOutsideClick: false,
+                            allowEscapeKey: false,
+                            showConfirmButton: false,
+                            didOpen: () => {
+                                Swal.showLoading();
+                            },
+                        });
+                    }
+                });
+            }
+        });
+    });
+
+    $(document).on('click', '.delete-client-certificate', function(){
+        var cdi = $(this).attr('data-id');
+        Swal.fire({
+            title: 'Delete Client Certificate',
+            html: "Are you sure you want to delete selected client certificate file?",
+            icon: 'question',
+            confirmButtonText: 'Proceed',
+            showCancelButton: true,
+            cancelButtonText: "Cancel"
+        }).then((result) => {
+            if (result.value) {
+                $.ajax({
+                    type: 'POST',
+                    url: base_url + "customer/_delete_client_certificate",
                     data: {cdi:cdi},
                     dataType: 'json',            
                     success: function(o) {
