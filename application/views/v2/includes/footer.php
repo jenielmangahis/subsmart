@@ -280,6 +280,73 @@ $(document).ready(function() {
         }
     });
 
+    $(document).on('click', '.notification-item', function(){
+        let notification_type = $(this).attr('data-type');
+        let object_id         = $(this).attr('data-entity-id');
+
+        if( notification_type == 'late-fee' ){
+            $('#modalNotificationRecordPaymentForm').modal('show');
+            showLoader($("#modalNotificationRecordPaymentForm #notification-record-payment-container")); 
+            $('#notification_record_payment_invoice_id').val(object_id);
+
+            $.ajax({
+                url: base_url + "invoice/_load_record_payment_form",
+                type: "POST",
+                data: {
+                    invoice_id: object_id
+                },
+                success: function (response) {
+                    $("#modalNotificationRecordPaymentForm #notification-record-payment-container").html(response);
+                },
+            });
+        } 
+    });
+
+    $(document).on('submit', '#frm-notification-record-payment', function(e){
+        e.preventDefault();
+        var url  = base_url + 'invoice/_create_payment';
+
+        var formData = new FormData($('#frm-notification-record-payment')[0]);
+        formData.append('attachment',$('#payment-attachment').get(0).files[0]);
+
+        var form = $(this);
+        $.ajax({
+            type: "POST",
+            url: url,
+            dataType:'json',
+            data: formData, 
+            contentType: false,
+            cache: false,
+            processData: false,
+            success: function(data) {
+                if( data.is_success == 1 ){
+                    $('#modalNotificationRecordPaymentForm').modal('hide');
+                    
+                    Swal.fire({
+                        text: 'Invoice payment was successfully created',
+                        icon: 'success',
+                        showCancelButton: false,
+                        confirmButtonColor: '#6a4a86',
+                        cancelButtonColor: '#d33',
+                        confirmButtonText: 'Ok'
+                    }).then((result) => {
+                        location.reload();
+                    });    
+                }else{
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error!',
+                        html: data.msg
+                    });
+                }
+                
+                $("#modalNotificationRecordPaymentForm #btn-notification-record-payment").html('Save');
+            }, beforeSend: function() {
+                $("#modalNotificationRecordPaymentForm #btn-notification-record-payment").html('<span class="bx bx-loader bx-spin"></span>');
+            }
+        });
+    });
+
     $(document).on('submit', '#sidebar-add-multi-account-form', function(e) {
         e.preventDefault();
 
