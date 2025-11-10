@@ -1514,6 +1514,27 @@ class Invoice extends MY_Controller
         );
 
         $addQuery   = $this->invoice_model->update_invoice_data($update_data);
+
+        if( $objInvoice->status != $new_status && $post['status'] == 'Paid' ){
+            //If paid must create record in invoice payment
+            $payment_data = [
+                'invoice_id' => $objInvoice->id,
+                'user_id' => logged('id'),
+                'company_id' => logged('company_id'),
+                'customer_id' => $objInvoice->customer_id,
+                'invoice_amount' => $objInvoice->grand_total,
+                'invoice_tip' => $objInvoice->tip > 0 ? $objInvoice->tip : 0,
+                'balance' => 0,
+                'late_fee' => $objInvoice->late_fee,
+                'payment_date' => date('Y-m-d'),
+                'payment_method' => 'cash',
+                'invoice_number' => $objInvoice->invoice_number,
+                'reference_number' => '',
+                'notes' => 'Auto payment recorded from changing invoice status to paid',
+                'attachment' => '',
+            ];
+            $this->payment_records_model->create($payment_data);
+        }
         customerAuditLog(logged('id'), $this->input->post('customer_id'), $this->input->post('invoiceDataID'), 'Invoice', 'Updated invoice #'.$objInvoice->invoice_number);
 
         //Update job status to 'Approved' if invoice status is paid
@@ -3035,11 +3056,22 @@ class Invoice extends MY_Controller
         // foreach($payments as $p){
         //     $balance = $balance - $p->invoice_amount;
         // }
+
+        $total_invoice_without_late_fee = $invoice->grand_total - $invoice->late_fee;
+
+        $late_fee_popover_text = '';
+        if( $total_late_fee_days > 1 ){
+            $late_fee_popover_text = 'Total ' . $total_late_fee_days . ' days late.';
+        }elseif( $total_late_fee_days == 1 ){
+            $late_fee_popover_text = 'Total ' . $total_late_fee_days . ' day late.';
+        }
         
         $this->page_data['total_late_fee_days']  = $total_late_fee_days - $deduct_days;
         $this->page_data['invoice']  = $invoice;
         $this->page_data['balance']  = $balance;
         $this->page_data['late_fee'] = $invoice->late_fee;
+        $this->page_data['total_invoice_without_late_fee'] = $total_invoice_without_late_fee;
+        $this->page_data['late_fee_popover_text'] = $late_fee_popover_text;
         $this->load->view('v2/pages/invoice/record_payment_form', $this->page_data);
     }
 
@@ -3140,8 +3172,19 @@ class Invoice extends MY_Controller
                     $attachment = "invoice_payment_attachment_".time().'.'.$extension;
                     move_uploaded_file($tmp_name, $invoiceAttachmentFolderPath.$attachment);
                 }
-
-                $new_balance = $invoice->balance - $post['amount'];
+                
+                $late_fee = $invoice->late_fee;
+                if( $post['late_fee_amount'] && $post['late_fee_amount'] > 0 ){
+                    $new_balance = $invoice->balance - ($post['amount'] + $post['late_fee_amount']);    
+                    if( $post['late_fee_amount'] > $late_fee ){
+                        $late_fee = 0; 
+                    }else{
+                        $late_fee = $late_fee - $post['late_fee']; 
+                    }
+                }else{
+                    $new_balance = $invoice->balance - $post['amount'];
+                }
+                
                 $invoice_id = $this->payment_records_model->create([
                     'invoice_id' => $invoice->id,
                     'user_id' => $uid,
@@ -3150,6 +3193,7 @@ class Invoice extends MY_Controller
                     'invoice_amount' => $post['amount'],
                     'invoice_tip' => $post['amount_tip'],
                     'balance' => $new_balance,
+                    'late_fee' => $late_fee,
                     'payment_date' => date('Y-m-d', strtotime($post['date_payment'])),
                     'payment_method' => $post['payment_method'],
                     'invoice_number' => $invoice->invoice_number,
