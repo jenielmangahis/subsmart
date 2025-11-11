@@ -322,6 +322,7 @@
                         <option <?= $receiver_phone_number == $rp->receiver_number ? 'selected="selected"' : ''; ?> value="<?= $rp->receiver_number; ?>"><?= $rp->receiver_number; ?></option>
                     <?php } ?>
                 </select>
+                <a href="javascript:void(0);" class="nsm-button btn-small" id="btn-quick-receiver-phone-number"><span class="fa fa-plus"></span> Add Receiver Phone Number</a>   
             </div>
         </div>
         <div class="row form_line field-custom-name-container" <?= isCustomerFieldEnabled($companyFormSetting, 'alarm-information', 'panel_phone_number') == 0 ? 'style="display:none;"' : ''; ?>>
