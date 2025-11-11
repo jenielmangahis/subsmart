@@ -39,10 +39,15 @@ class User_notification_model extends MY_Model
         $date_2days_ago = date_format($date, "Y-m-d H:i:s");
 
         $and_query = "";
+        // $query = $this->db->query(
+        //     "SELECT * from users as u JOIN user_notification ON u.id = user_notification.user_id 
+        //     where user_notification.company_id = " . $company_id . " AND user_notification.status = " . $status . " 
+        //     AND user_notification.date_created >= '" . $date_2days_ago . "' " . $and_query . " 
+        //     order by user_notification.date_created Desc limit " . $limit);
+
         $query = $this->db->query(
             "SELECT * from users as u JOIN user_notification ON u.id = user_notification.user_id 
-            where user_notification.company_id = " . $company_id . " AND user_notification.status = " . $status . " 
-            AND user_notification.date_created >= '" . $date_2days_ago . "' " . $and_query . " 
+            where user_notification.company_id = " . $company_id . " AND user_notification.status = " . $status . "  
             order by user_notification.date_created Desc limit " . $limit);
 
         return $query->result();

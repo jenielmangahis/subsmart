@@ -6,12 +6,15 @@
 </style>
 <div class="nsm-card primary">
     <div class="nsm-card-content">
-    <p>Record a full or partial payment for Invoice# <span><b><?php echo $invoice->invoice_number?></span></b></p>
-    <div class="pbar-top">
+    <p style="margin-bottom:2px;">Record a full or partial payment for Invoice# <span><b><?php echo $invoice->invoice_number?></span></b></p>
+    <?php if( $invoice->late_fee > 0 ){ ?>
+    <p>Late fee amount is included in total due.</p>
+    <?php } ?>
+    <div class="pbar-top mt-2">
         <div class="row">
             <div class="col-6">
                 <label class="row-label">Due : </label>
-                <span class="row-value">$<?php echo number_format($invoice->grand_total, 2, '.', ',') ?></label>
+                <span class="row-value">$<?php echo number_format($invoice->grand_total, 2, '.', ',') ?></label>                
             </div>
             <div class="col-6">
                 <label class="row-label">Balance : </label>
@@ -39,13 +42,13 @@
             <div class="col-sm-6">
                 <label>Invoice Amount</label>
                 <i id="help-popover-invoice-amount" class='bx bx-fw bx-help-circle'></i></label>  
-                    <div class="input-group mb-3">
-                        <div class="input-group-prepend">
-                            <span class="input-group-text">$</span>
-                        </div>                        
-                        <input type="number" step="any" class="form-control" name="amount" value="<?= $invoice->grand_total; ?>" aria-label="Amount (to the nearest dollar)">
-                    </div>
+                <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">$</span>
+                    </div>                        
+                    <input type="number" step="any" class="form-control" name="amount" placeholder="0.00" value="<?= $total_invoice_without_late_fee; ?>" aria-label="Amount (to the nearest dollar)">
                 </div>
+            </div>
 
             <div class="col-sm-6">
                 <label>Tip </label> <span class="help">(optional)</span>
@@ -54,9 +57,21 @@
                     <div class="input-group-prepend">
                         <span class="input-group-text">$</span>
                     </div>
-                    <input type="text" class="form-control" data-payment-modal="amount-tip" name="amount_tip" value="0">
+                    <input type="text" class="form-control" data-payment-modal="amount-tip" placeholder="0.00" name="amount_tip" value="0">
                 </div>
             </div>
+            <?php if($late_fee > 0) { ?>
+            <div class="col-sm-6">
+                <label>Late Fee</label>
+                <i id="help-popover-late-fee" class='bx bx-fw bx-help-circle'></i></label>  
+                <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">$</span>
+                    </div>                        
+                    <input type="number" step="any" class="form-control" name="late_fee_amount" placeholder="0.00" value="<?= $late_fee; ?>" aria-label="Amount (to the nearest dollar)">
+                </div>
+            </div>
+            <?php } ?>
         </div>
     </div>
     <div class="form-group" style="margin-bottom: 0px !important;">
@@ -109,6 +124,15 @@ $(function(){
         trigger: "hover focus",
         content: function() {
             return 'Amount received for invoice';
+        }
+    });
+
+    $('#help-popover-late-fee').popover({
+        placement: 'top',
+        html: true,
+        trigger: "hover focus",
+        content: function() {
+            return 'Extra charge for a payment that is not made by its due date. <?= $late_fee_popover_text; ?>';
         }
     });
 

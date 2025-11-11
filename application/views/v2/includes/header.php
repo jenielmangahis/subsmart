@@ -859,6 +859,28 @@ $newtasks = getTasks();
                         </div>
                     </div>
 
+                    <!-- Quick Invoice Record Payment -->
+                    <div class="modal fade nsm-modal fade" id="modalNotificationRecordPaymentForm" tabindex="-1" aria-labelledby="modalNotificationRecordPaymentForm_label" aria-hidden="true">
+                        <div class="modal-dialog modal-md modal-dialog-centered">                    
+                            <div class="modal-content" style="width:580px;">
+                                <div class="modal-header">
+                                    <span class="modal-title content-title">Record Payment</span>
+                                    <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
+                                </div>
+                                <div class="modal-body">
+                                    <form id="frm-notification-record-payment" method="POST">
+                                        <input type="hidden" name="invoice_id" id="notification_record_payment_invoice_id" value="" />
+                                        <div id="notification-record-payment-container"></div>
+                                    </form>
+                                </div>
+                                <div class="modal-footer">                    
+                                    <button type="button" class="nsm-button" data-bs-dismiss="modal">Cancel</button>
+                                    <button type="submit" id="btn-notification-record-payment" class="nsm-button primary" form="frm-notification-record-payment">Save</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
                     <!-- Customer Search -->
                     <div class="modal fade nsm-modal fade" id="modal-quick-customer-search" tabindex="-1" aria-labelledby="modal-customize-menuLabel" aria-hidden="true">
                         <div class="modal-dialog modal-md modal-dialog-centered modal-dialog-scrollable">

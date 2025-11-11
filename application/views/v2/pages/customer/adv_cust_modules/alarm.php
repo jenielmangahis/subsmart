@@ -59,8 +59,8 @@
                             <label class="content-title">Monitoring Company</label>
                         </div>
                         <div class="col-12 col-md-6">
-                            <span class="content-subtitle">
-                                <?= $alarm_customer_info && $alarm_customer_info['dealer']['data'] ? $alarm_customer_info['dealer']['data']->dealerName : '---'; ?> 
+                            <span class="content-subtitle">                                
+                                <?= $alarm_info && $alarm_info->monitor_comp != '' ? $alarm_info->monitor_comp : '---'; ?>
                             </span>
                         </div>     
                         <div class="col-12 col-md-6">

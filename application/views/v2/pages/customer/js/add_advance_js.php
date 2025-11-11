@@ -210,19 +210,18 @@
         $(document).on('change', '#status', function(){
             let status = $(this).val();
             let customer_id = "<?= $profile_info ? $profile_info->prof_id : 0; ?>";
-
-            if( customer_id > 0 ){
-                $('#request-cancellation-customer-id').val(customer_id);
-                $('#send_cancel_status_request_modal').modal('show');
-            }            
             
-            if( status == 'Cancelled' || status == 'Cancel' || status == 'Charge Back' || status == 'Collection' || status == 'Competition Lost' ){
+            <?php if( isAdiCompany() && $profile_info ){ ?>
+            /*if( status == 'Cancelled' || status == 'Cancel' || status == 'Charge Back' || status == 'Collection' || status == 'Competition Lost' ){
                 $('#office-info-cancel-date').attr('required', 'required');
                 $('#cancel_reason').attr('required', 'required');
                 //$('#collections').attr('required', 'required');
                 //$('#office-use-collection-date').attr('required', 'required');
                 //$('#office-info-collect-amount').attr('required', 'required');
                 $('#cancelled-related-fields-container-a').show();
+                //let previous_status = "<?= $profile_info->status; ?>";
+
+                //$('#status').val(previous_status).trigger("change");
             }else{
                 $('#office-info-cancel-date').removeAttr('required');
                 $('#cancel_reason').removeAttr('required');
@@ -230,9 +229,33 @@
                 //$('#office-use-collection-date').removeAttr('required');
                 //$('#office-info-collect-amount').removeAttr('required');
                 $('#cancelled-related-fields-container-a').hide();
+            }*/
+
+            if( status == 'Cancelled' || status == 'Cancel' || status == 'Charge Back' || status == 'Collection' || status == 'Competition Lost' || status == 'Non Compliance Audit Needed' ){                    
+                $('#request-cancellation-customer-id').val(customer_id);
+                $('#send_cancel_status_request_modal').modal('show');
             }
 
-            //Hide show sections
+            if( status == 'Non Compliance Audit Needed' ){
+                $('#cancellation-request-form-group-2').show();
+                $('#cancellation-request-form-group-1').hide();
+                $('#cancellation-request-form-group-3').hide();
+            }else if( status == 'Collection' ) {
+                $('#cancellation-request-form-group-3').show();
+                $('#cancellation-request-form-group-1').hide();
+                $('#cancellation-request-form-group-2').hide();                
+            }else{
+                $('#cancellation-request-form-group-1').show();
+                $('#cancellation-request-form-group-2').hide();
+                $('#cancellation-request-form-group-3').hide();
+            }
+
+            if( status == 'Cancelled' ){
+                let previous_status = "<?= $profile_info->status; ?>";
+                $('#status').val(previous_status).trigger("change");
+            }
+
+            //Hide show sections - only for adi companies            
             if( status == 'Cancelled' ){
                 $('#add-advance-alarm-section').hide();
                 $('#add-advance-custom-fields').hide();
@@ -240,7 +263,7 @@
                 $('#add-advance-payment-schedule').hide();
                 $('#add-advance-customer-papers').hide();
                 $('#funding-information-container').hide();
-                $('#add-advance-access-info').hide();
+                $('#add-advance-access-info').hide();                
             }else{
                 $('#add-advance-alarm-section').show();
                 $('#add-advance-custom-fields').show();
@@ -249,7 +272,10 @@
                 $('#add-advance-customer-papers').show();
                 $('#funding-information-container').show();
                 $('#add-advance-access-info').show();
-            }   
+            }               
+            <?php } ?>
+
+            
         });
 
         $('#cancellation-request-reason').on('change', function(){

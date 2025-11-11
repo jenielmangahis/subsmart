@@ -307,7 +307,21 @@
         <div class="row form_line field-custom-name-container" <?= isCustomerFieldEnabled($companyFormSetting, 'alarm-information', 'receiver_phone_number') == 0 ? 'style="display:none;"' : ''; ?>>
             <div class="col-md-6"><?= getCustomerFieldValue($companyFormSetting, 'alarm-information', 'receiver_phone_number'); ?></div>
             <div class="col-md-6">
-                <input type="text" class="form-control" name="receiver_phone_number" id="receiver_phone_number" value="<?= $alarm_info ? ($alarm_info->receiver_phone_number != '' ? $alarm_info->receiver_phone_number : '') : '';  ?>"/>
+                <?php 
+                    $receiver_phone_number = '';
+                    if( $defaultReceiverPhoneNumber ){
+                        $receiver_phone_number = $defaultReceiverPhoneNumber->receiver_number;
+                    }
+
+                    if( $alarm_info && $alarm_info->receiver_phone_number != '' ){
+                        $receiver_phone_number = $alarm_info->receiver_phone_number;
+                    }
+                ?>
+                <select name="receiver_phone_number" id="receiver_phone_number" class="form-select input_select">
+                    <?php foreach($receiverPhoneNumbers as $rp){ ?>
+                        <option <?= $receiver_phone_number == $rp->receiver_number ? 'selected="selected"' : ''; ?> value="<?= $rp->receiver_number; ?>"><?= $rp->receiver_number; ?></option>
+                    <?php } ?>
+                </select>
             </div>
         </div>
         <div class="row form_line field-custom-name-container" <?= isCustomerFieldEnabled($companyFormSetting, 'alarm-information', 'panel_phone_number') == 0 ? 'style="display:none;"' : ''; ?>>
@@ -319,7 +333,7 @@
         <div class="row form_line field-custom-name-container" <?= isCustomerFieldEnabled($companyFormSetting, 'alarm-information', 'dsl_voip') == 0 ? 'style="display:none;"' : ''; ?>>
             <div class="col-md-6"><?= getCustomerFieldValue($companyFormSetting, 'alarm-information', 'dsl_voip'); ?></div>
             <div class="col-md-6">
-                <select id="dsl_voip" name="dsl_voip" data-customer-source="dropdown" class="form-select input_select" >
+                <select id="dsl_voip" name="dsl_voip" data-customer-source="dropdown" class="form-select input_select">
                     <option value="" selected=""></option>
                     <option <?= $alarm_info && $alarm_info->dsl_voip == 'DSL' ? 'selected="selected"' : ''; ?> value="DSL">DSL</option>
                     <option <?= $alarm_info && $alarm_info->dsl_voip == 'VOIP' ? 'selected="selected"' : ''; ?> value="VOIP">VOIP</option>

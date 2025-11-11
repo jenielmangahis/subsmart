@@ -107,6 +107,7 @@
                         <li><a class="dropdown-item" href="<?php echo base_url('customer/settings_alarm_monitoring_companies') ?>">Alarm Monitoring Companies</a></li>
                         <li><a class="dropdown-item" href="<?php echo base_url('customer/settings_alarm_installer_codes') ?>">Alarm Installer Codes</a></li>
                         <li><a class="dropdown-item" href="<?php echo base_url('customer/settings_alarm_site_types') ?>">Alarm Site Types</a></li>
+                        <li><a class="dropdown-item" href="<?php echo base_url('customer/settings_alarm_receiver_phone_numbers') ?>">Alarm Receiver Phone Numbers</a></li>
                     <?php } ?>
                     <li><a class="dropdown-item" href="<?php echo base_url('customer/settings_headers') ?>">Header</a></li>
                     <li><a class="dropdown-item" href="<?= base_url('customer/settings_import') ?>">Import Settings</a></li>

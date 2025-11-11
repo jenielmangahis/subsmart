@@ -36,12 +36,11 @@ class Notifications extends MY_Controller
 
         $post         = $this->input->post();
         $user_id      = logged('id');
-        $company_id   = logged('company_id');
+        $company_id   = logged('company_id');        
         $notif_status = 1; //1=unread,0=read
 
         $notification = $this->User_notification_model->get_notifications($company_id, $user_id, $notif_status);
         $html = '';
-        
         if ($notification != null) {
             $notifyCount = count($notification);
             foreach ($notification as $notify) {
@@ -145,7 +144,7 @@ class Notifications extends MY_Controller
                     if( $notify->entity_id > 0) {
                         $redirect_url = site_url("invoice/genview/") . $notify->entity_id . '?notif_id=' . $notify->id;
                     }
-                    $html .= '<div class="list-item" onclick="location.href=\'' . $redirect_url . '\'" data-id="' . $notify->id . '">
+                    $html .= '<div class="list-item notification-item" data-type="late-fee" data-entity-id="'.$notify->entity_id.'" data-id="' . $notify->id . '">
                                 <div class="nsm-notification-item">';
 
                     /*if (is_null($image)) :

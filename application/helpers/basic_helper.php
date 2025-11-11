@@ -4760,6 +4760,17 @@ if (!function_exists('is_admin_logged')) {
         return $adi_company_ids;
     }
 
+    function isAdiCompany(){
+        $is_adi = false;
+        $company_id = logged('company_id');
+        $adi_company_ids = [24,31,58,1,3696,139];
+        if( in_array($company_id, $adi_company_ids) ){
+            $is_adi = true;
+        }
+
+        return $is_adi;
+    }
+
     function customerAuditLog($user_id, $prof_id, $obj_id, $module, $remarks){
         $CI =& get_instance();
         $CI->load->model('CustomerAuditLog_model');
@@ -5445,9 +5456,10 @@ if(!function_exists('set_expense_graph_data')) {
         $CI = &get_instance();
         $CI->load->model('Clients_model');
         $industry_type_id = $CI->session->userdata('client_industry');
+        $company_id = logged('company_id');
 
         $is_solar = false;
-        if( $industry_type_id == $CI->Clients_model->solarIndustryId() ){
+        if( $industry_type_id == $CI->Clients_model->solarIndustryId() || $company_id == 1 ){
             $is_solar = true;
         }
 
@@ -5458,9 +5470,10 @@ if(!function_exists('set_expense_graph_data')) {
         $CI = &get_instance();
         $CI->load->model('Clients_model');
         $industry_type_id = $CI->session->userdata('client_industry');
+        $company_id = logged('company_id');
 
         $is_alarm = false;
-        if( $industry_type_id == $CI->Clients_model->alarmIndustryId() ){
+        if( $industry_type_id == $CI->Clients_model->alarmIndustryId() || $company_id == 1 ){
             $is_alarm = true;
         }
 
