@@ -15432,6 +15432,7 @@ class Customer extends MY_Controller
                         'equipment_return_date' => date("Y-m-d",strtotime($post['equipment_return_date'])),
                         'next_action' => $post['next_step'],
                         'date_modified' => date("Y-m-d H:i:s"),
+                        'status' => 'pending'
                     ];
                 }elseif($post['status_request'] == 'Collection') {
                     $data = [
@@ -15442,12 +15443,14 @@ class Customer extends MY_Controller
                         'court_date' => $post['court_date'],
                         'judgement_amount' => $post['judgement_amount'],
                         'date_modified' => date("Y-m-d H:i:s"),
+                        'status' => 'pending'
                     ];                    
                 }elseif($post['status_request'] == 'Non Compliance Audit Needed') {
                     $data = [
                         'status_request' => $post['status_request'],
                         'audit_date' => $post['audit_date'],
                         'date_modified' => date("Y-m-d H:i:s"),
+                        'status' => 'pending'
                     ];
                 }
 
@@ -15507,6 +15510,7 @@ class Customer extends MY_Controller
 
             //Send email
             $companyAdmin = $this->Users_model->getCompanyAdmin($company_id);
+            $ownerAdmin   = $this->Users_model->getOwnerAdmin($company_id);
             if( $companyAdmin && $companyAdmin->email != '' ){
                 $email_data['name'] = $companyAdmin->FName;
                 $email_data['customer_name'] = $customer->first_name . ' ' . $customer->last_name;
@@ -15514,13 +15518,18 @@ class Customer extends MY_Controller
                 $email_data['cancellation_url'] = $cancellation_url;
                 $body = $this->load->view('v2/emails/customer_cancellation_request', $email_data, true);
 
-                $to_send = 'bryann.revina03@gmail.com'; //$companyAdmin->email;
+                //$toAdminEmail = 'bryann.revina03@gmail.com';
+                $toAdminEmail = $companyAdmin->email;
+                $toOwnerEmail = $ownerAdmin->email;
 
                 if($is_live_mail_credentials) {
                     $mail = email__getInstance();
                     $mail->FromName = 'nSmarTrac';
                     $recipient_name = $companyAdmin->FName . ' ' . $companyAdmin->LName;
-                    $mail->addAddress($to_send, $recipient_name);
+                    $mail->addAddress($toAdminEmail, $recipient_name);
+                    if($toOwnerEmail) {
+                        $mail->addCC($toOwnerEmail, $toOwnerEmail);
+                    }  
                     $mail->isHTML(true);
                     $mail->Subject = "Customer Request for Cancellation";
                     $mail->Body = $body;
