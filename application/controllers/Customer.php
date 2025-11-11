@@ -3907,6 +3907,7 @@ class Customer extends MY_Controller
         $this->load->model('PanelType_model');
         $this->load->model('AcsAccountType_model');
         $this->load->model('AcsAlarmMonitoringCompany_model');
+        $this->load->model('AcsAlarmReceiverPhoneNumber_model');
 
         $this->hasAccessModule(9);
 
@@ -4185,6 +4186,8 @@ class Customer extends MY_Controller
         $defaultAccountType  = $this->AcsAccountType_model->getCompanyDefaultValue($company_id);
         $monitoringCompanies = $this->AcsAlarmMonitoringCompany_model->getAllByCompanyId($company_id);
         $defaultMonitoringCompany = $this->AcsAlarmMonitoringCompany_model->getCompanyDefaultValue($company_id);
+        $receiverPhoneNumbers = $this->AcsAlarmReceiverPhoneNumber_model->getAllByCompanyId($company_id);
+        $defaultReceiverPhoneNumber = $this->AcsAlarmReceiverPhoneNumber_model->getCompanyDefaultValue($company_id);
 
         // search Alarm.com customer
         $this->load->helper(array('alarm_api_helper'));
@@ -4238,6 +4241,8 @@ class Customer extends MY_Controller
         $this->page_data['defaultAccountType'] = $defaultAccountType;
         $this->page_data['monitoringCompanies'] = $monitoringCompanies;
         $this->page_data['defaultMonitoringCompany'] = $defaultMonitoringCompany;
+        $this->page_data['receiverPhoneNumbers'] = $receiverPhoneNumbers;
+        $this->page_data['defaultReceiverPhoneNumber'] = $defaultReceiverPhoneNumber;
         //$this->load->view('v2/pages/customer/add', $this->page_data);
         $this->load->view('v2/pages/customer/add_dynamic_fields', $this->page_data);
     }
