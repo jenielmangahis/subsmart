@@ -1180,6 +1180,38 @@
                             </div>
                         </div>
                     </div>
+                    <div id="cancellation-request-form-group-3">
+                        <div class="row">
+                            <div class="col-12 mt-2">
+                                <label class="bold"><strong>Audit Date</strong></label>
+                                <input type="date" placeholder="" name="audit_date" id="audit_date" class="form-control mb-2" required />
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-12 mt-2">
+                                <label class="bold"><strong>Collection Status</strong></label>
+                                <input type="text" placeholder="" name="collection_status" id="collection_status" class="form-control mb-2" required />
+                            </div>
+                        </div>   
+                        <div class="row">
+                            <div class="col-12 mt-2">
+                                <label class="bold"><strong>Statement of Claim</strong></label>
+                                <input type="text" placeholder="" name="statement_of_claim" id="statement_of_claim" class="form-control mb-2" required />
+                            </div>
+                        </div>     
+                        <div class="row">
+                            <div class="col-12 mt-2">
+                                <label class="bold"><strong>Court Date</strong></label>
+                                <input type="date" placeholder="" name="court_date" id="court_date" class="form-control mb-2" required />
+                            </div>
+                        </div>   
+                        <div class="row">
+                            <div class="col-12 mt-2">
+                                <label class="bold"><strong>Judgement Amount</strong></label>
+                                <input type="text" placeholder="" name="judgement_amount" id="judgement_amount" class="form-control mb-2" required />
+                            </div>
+                        </div>              
+                    </div>
                     </form>
                 </div>
                 <div class="modal-footer">

@@ -239,9 +239,15 @@
             if( status == 'Non Compliance Audit Needed' ){
                 $('#cancellation-request-form-group-2').show();
                 $('#cancellation-request-form-group-1').hide();
+                $('#cancellation-request-form-group-3').hide();
+            }else if( status == 'Collection' ) {
+                $('#cancellation-request-form-group-3').show();
+                $('#cancellation-request-form-group-1').hide();
+                $('#cancellation-request-form-group-2').hide();                
             }else{
                 $('#cancellation-request-form-group-1').show();
                 $('#cancellation-request-form-group-2').hide();
+                $('#cancellation-request-form-group-3').hide();
             }
 
             if( status == 'Cancelled' ){
