@@ -753,7 +753,7 @@ class Dashboard_model extends MY_Model
                     LEFT JOIN invoices ON invoices.customer_id = acs_profile.prof_id
                     WHERE acs_profile.company_id = '{$company_id}'
                     GROUP BY acs_profile.prof_id, invoices.customer_id
-                    ORDER BY acs_profile.first_name ASC
+                    ORDER BY acs_profile.prof_id DESC
                 ");
 
                 $data = $query->result();
