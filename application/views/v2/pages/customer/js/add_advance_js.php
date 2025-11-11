@@ -233,6 +233,7 @@
 
             if( status == 'Cancelled' || status == 'Cancel' || status == 'Charge Back' || status == 'Collection' || status == 'Competition Lost' || status == 'Non Compliance Audit Needed' ){                    
                 $('#request-cancellation-customer-id').val(customer_id);
+                $('#request-cancellation-status-request').val(status);
                 $('#send_cancel_status_request_modal').modal('show');
             }
 
@@ -240,14 +241,26 @@
                 $('#cancellation-request-form-group-2').show();
                 $('#cancellation-request-form-group-1').hide();
                 $('#cancellation-request-form-group-3').hide();
+
+                $('#cancellation-request-form-group-1').find('input, select, textarea, button').prop('disabled', true);
+                $('#cancellation-request-form-group-2').find('input, select, textarea, button').prop('disabled', false);
+                $('#cancellation-request-form-group-3').find('input, select, textarea, button').prop('disabled', true);
             }else if( status == 'Collection' ) {
                 $('#cancellation-request-form-group-3').show();
                 $('#cancellation-request-form-group-1').hide();
-                $('#cancellation-request-form-group-2').hide();                
+                $('#cancellation-request-form-group-2').hide(); 
+                
+                $('#cancellation-request-form-group-1').find('input, select, textarea, button').prop('disabled', true);
+                $('#cancellation-request-form-group-2').find('input, select, textarea, button').prop('disabled', true);
+                $('#cancellation-request-form-group-3').find('input, select, textarea, button').prop('disabled', false);
             }else{
                 $('#cancellation-request-form-group-1').show();
                 $('#cancellation-request-form-group-2').hide();
                 $('#cancellation-request-form-group-3').hide();
+
+                $('#cancellation-request-form-group-1').find('input, select, textarea, button').prop('disabled', false);
+                $('#cancellation-request-form-group-2').find('input, select, textarea, button').prop('disabled', true);
+                $('#cancellation-request-form-group-3').find('input, select, textarea, button').prop('disabled', true);
             }
 
             if( status == 'Cancelled' ){

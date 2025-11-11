@@ -15412,37 +15412,92 @@ class Customer extends MY_Controller
 
         $post = $this->input->post();
         $company_id = logged('company_id');
+        $data = [];
 
         $cancellationRequest = $this->AcsCustomerCancellationRequest->getByCustomerId($post['customer_id']);
         $customer = $this->AcsProfile_model->getByProfId($post['customer_id']);
         if( $customer && $customer->company_id == $company_id ){
             if( $cancellationRequest ){
-                $data = [
-                    'request_date' => date("Y-m-d",strtotime($post['date_request_received'])),
-                    'reason' => $post['reason'],
-                    'boc_amount' => $post['boc_amount'],
-                    'boc_received_date' => date("Y-m-d",strtotime($post['boc_received_date'])),
-                    'cs_close_date' => date("Y-m-d",strtotime($post['cs_closed_ate'])),
-                    'equipment_return_date' => date("Y-m-d",strtotime($post['equipment_return_date'])),
-                    'next_action' => $post['next_step'],
-                    'date_modified' => date("Y-m-d H:i:s"),
-                ];
-                $this->AcsCustomerCancellationRequest->update($cancellationRequest->id, $data);      
-            }else{
-                $data = [
-                    'customer_id' => $customer->prof_id,
-                    'request_date' => date("Y-m-d",strtotime($post['date_request_received'])),
-                    'reason' => $post['reason'],
-                    'boc_amount' => $post['boc_amount'],
-                    'boc_received_date' => date("Y-m-d",strtotime($post['boc_received_date'])),
-                    'cs_close_date' => date("Y-m-d",strtotime($post['cs_closed_ate'])),
-                    'equipment_return_date' => date("Y-m-d",strtotime($post['equipment_return_date'])),
-                    'next_action' => $post['next_step'],
-                    'date_created' => date("Y-m-d H:i:s"),
-                    'date_modified' => date("Y-m-d H:i:s"),
-                ];
+                if($post['status_request'] == 'Cancelled') {
+                    $data = [
+                        'status_request' => $post['status_request'],
+                        'request_date' => date("Y-m-d",strtotime($post['date_request_received'])),
+                        'reason' => $post['reason'],
+                        'boc_amount' => $post['boc_amount'],
+                        'boc_received_date' => date("Y-m-d",strtotime($post['boc_received_date'])),
+                        'cs_close_date' => date("Y-m-d",strtotime($post['cs_closed_ate'])),
+                        'equipment_return_date' => date("Y-m-d",strtotime($post['equipment_return_date'])),
+                        'next_action' => $post['next_step'],
+                        'date_modified' => date("Y-m-d H:i:s"),
+                    ];
+                }elseif($post['status_request'] == 'Collection') {
+                    $data = [
+                        'status_request' => $post['status_request'],
+                        'audit_date' => $post['audit_date'],
+                        'collection_status' => $post['collection_status'],
+                        'statement_of_claim' => $post['statement_of_claim'],
+                        'court_date' => $post['court_date'],
+                        'judgement_amount' => $post['judgement_amount'],
+                        'date_modified' => date("Y-m-d H:i:s"),
+                    ];                    
+                }elseif($post['status_request'] == 'Non Compliance Audit Needed') {
+                    $data = [
+                        'status_request' => $post['status_request'],
+                        'audit_date' => $post['audit_date'],
+                        'date_modified' => date("Y-m-d H:i:s"),
+                    ];
+                }
 
-                $this->AcsCustomerCancellationRequest->create($data);    
+                if($data) {
+                    $this->AcsCustomerCancellationRequest->update($cancellationRequest->id, $data);  
+                }
+            }else{
+                if($post['status_request'] == 'Cancelled') {
+                    $data = [
+                        'status_request' => $post['status_request'],
+                        'customer_id' => $customer->prof_id,
+                        'request_date' => !empty($post['date_request_received']) ? date("Y-m-d",strtotime($post['date_request_received'])) : date("Y-m-d"),
+                        'reason' => !empty($post['reason']) ? $post['reason'] : '',
+                        'boc_amount' => $post['boc_amount'],
+                        'boc_received_date' => date("Y-m-d",strtotime($post['boc_received_date'])),
+                        'cs_close_date' => date("Y-m-d",strtotime($post['cs_closed_ate'])),
+                        'equipment_return_date' => date("Y-m-d",strtotime($post['equipment_return_date'])),
+                        'next_action' => $post['next_step'],
+                        'date_created' => date("Y-m-d H:i:s"),
+                        'date_modified' => date("Y-m-d H:i:s"),
+                    ];                    
+                }elseif($post['status_request'] == 'Collection') {
+                    $data = [
+                        'status_request' => $post['status_request'],
+                        'customer_id' => $customer->prof_id,
+                        'request_date' => !empty($post['date_request_received']) ? date("Y-m-d",strtotime($post['date_request_received'])) : date("Y-m-d"),
+                        'reason' => !empty($post['reason']) ? $post['reason'] : '',
+                        'boc_amount' => 0.00,
+                        'audit_date' => $post['audit_date'],
+                        'collection_status' => $post['collection_status'],
+                        'statement_of_claim' => $post['statement_of_claim'],
+                        'court_date' => $post['court_date'],
+                        'judgement_amount' => $post['judgement_amount'],
+                        'date_created' => date("Y-m-d H:i:s"),
+                        'date_modified' => date("Y-m-d H:i:s"),
+                    ];                     
+                }elseif($post['status_request'] == 'Non Compliance Audit Needed') {
+                    $data = [
+                        'status_request' => $post['status_request'],
+                        'customer_id' => $customer->prof_id,
+                        'request_date' => !empty($post['date_request_received']) ? date("Y-m-d",strtotime($post['date_request_received'])) : date("Y-m-d"),
+                        'reason' => !empty($post['reason']) ? $post['reason'] : '',
+                        'boc_amount' => 0.00,
+                        'audit_date' => $post['audit_date'],
+                        'date_created' => date("Y-m-d H:i:s"),
+                        'date_modified' => date("Y-m-d H:i:s"),
+                    ];
+                }
+
+                if($data) {
+                    $this->AcsCustomerCancellationRequest->create($data);   
+                }
+                 
             }
 
             $attachment = '';
@@ -15539,6 +15594,24 @@ class Customer extends MY_Controller
         ];
         echo json_encode($return);
     }    
+
+    public function ajax_update_customer_status_request()
+    {
+        $is_success = 0;
+        $msg    = 'Cannot find customer data';
+
+        $post = $this->input->post();
+
+        echo '<pre>';
+        print_r($post);
+        echo '</pre>';
+
+        $return = [
+            'is_success' => $is_success,
+            'msg' => $msg
+        ];
+        echo json_encode($return);        
+    }
 
     public function ajax_set_default_monitoring_company()
     {
