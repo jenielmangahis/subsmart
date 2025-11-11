@@ -389,7 +389,7 @@
             <div class="col-md-6"><?= getCustomerFieldValue($companyFormSetting, 'alarm-information', 'pass_thru_cost'); ?></div>
             <div class="col-md-6">
                 <?php 
-                    $passThruCost = ($alarm_info->pass_thru_cost != "" && $alarm_info->pass_thru_cost != 0) ? $alarm_info->pass_thru_cost : $alarmcom_info['package_total_price'];
+                    $passThruCost = ($alarmcom_info['package_total_price'] != "") ? $alarmcom_info['package_total_price'] : $alarm_info->pass_thru_cost;
                 ?>
                 <input type="number" step="any" placeholder="0.00" class="form-control" name="pass_thru_cost" id="pass_thru_cost" value="<?= $passThruCost;  ?>"/>
             </div>
@@ -433,19 +433,19 @@
         <div class="row form_line field-custom-name-container" <?= isCustomerFieldEnabled($companyFormSetting, 'alarm-information', 'alarm_customer_id') == 0 ? 'style="display:none;"' : ''; ?>>
             <div class="col-md-6"><?= getCustomerFieldValue($companyFormSetting, 'alarm-information', 'alarm_customer_id'); ?></div>
             <div class="col-md-6">
-                <input type="text" class="form-control" name="alarm_customer_id" id="alarm_customer_id" value="<?php if(isset($alarm_info)){ echo $alarm_info->alarm_customer_id; } ?>"/>
+                <?php 
+                    $alarmcom_customer_id = ($alarmcom_info['customer_id'] != "") ? $alarmcom_info['customer_id'] : $alarm_info->alarm_customer_id;
+                ?>
+                <input type="text" class="form-control" name="alarm_customer_id" id="alarm_customer_id" value="<?php echo $alarmcom_customer_id; ?>"/>
             </div>
         </div>
         <div class="row form_line field-custom-name-container" <?= isCustomerFieldEnabled($companyFormSetting, 'alarm-information', 'alarm_login') == 0 ? 'style="display:none;"' : ''; ?>>
             <div class="col-md-6"><?= getCustomerFieldValue($companyFormSetting, 'alarm-information', 'alarm_login'); ?></div>
             <div class="col-md-6">
                 <?php 
-                    $alarm_login = $default_login_value;
-                    if( isset($alarm_info) && $alarm_info->alarm_login != '' ){
-                        $alarm_login = $alarm_info->alarm_login;
-                    }
+                    $alarmcom_login = ($alarmcom_info['login_name'] != "") ? $alarmcom_info['login_name'] : $alarm_info->alarm_login;
                 ?>
-                <input type="text" class="form-control" name="alarm_login" id="alarm_login" value="<?= $alarm_login; ?>"/>
+                <input type="text" class="form-control" name="alarm_login" id="alarm_login" value="<?= $alarmcom_login; ?>"/>
             </div>
         </div>        
         <!-- <div class="row form_line field-custom-name-container" <?= isCustomerFieldEnabled($companyFormSetting, 'alarm-information', 'alarm_cs_account') == 0 ? 'style="display:none;"' : ''; ?>>

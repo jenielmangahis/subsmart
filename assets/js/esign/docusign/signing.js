@@ -111,11 +111,11 @@ function Signing(hash) {
 
     const { docusign_envelope_id } = window.__esigndata.auto_populate_data.user_customer_docfile;
 
-    const { alarm_cs_account, monthly_monitoring, otps, passcode, panel_type, site_customer_type, secondary_system_type, radio_serial_number, panel_location, transformer_location } = window.__esigndata.auto_populate_data.acs_alarm;    
+    const { alarm_cs_account, monthly_monitoring, otps, passcode, panel_type, equipment, site_customer_type, secondary_system_type, radio_serial_number, panel_location, transformer_location } = window.__esigndata.auto_populate_data.acs_alarm;    
 
     const { jp_amount, jp_program_setup, jp_monthly_monitoring, jp_tax, jp_intallation_cost, jp_equipment_cost, jp_tax_equipment_cost } = window.__esigndata.auto_populate_data.job_payments;   
 
-    const { bill_method, check_num, bank_name, routing_num, card_fname, card_lname, acct_num, equipment, credit_card_exp, credit_card_exp_mm_yyyy, credit_card_num } = window.__esigndata.auto_populate_data.billing;
+    const { bill_method, check_num, bank_name, routing_num, card_fname, card_lname, acct_num, credit_card_exp, credit_card_exp_mm_yyyy, credit_card_num } = window.__esigndata.auto_populate_data.billing;
 
     const {  total_due, equipment_cost, first_month_monitoring, one_time_activation } = window.__esigndata.auto_populate_data.cost_due;
 
@@ -233,6 +233,55 @@ function Signing(hash) {
         return job_name;
       }          
     }
+
+    if( field_name == "Transformer Location" || field_name == "alarm_transformer_location" ) {   
+      if( fieldValue ){
+        if( fieldValue['value'] === '' || typeof fieldValue['value'] === 'undefined' ){
+          return transformer_location;
+        }else{
+          return fieldValue['value'];
+        }
+      }else{
+        return transformer_location;
+      }          
+    }
+
+    if( field_name == "Panel Location" || field_name == "alarm_panel_location" ) {   
+      if( fieldValue ){
+        if( fieldValue['value'] === '' || typeof fieldValue['value'] === 'undefined' ){
+          return panel_location;
+        }else{
+          return fieldValue['value'];
+        }
+      }else{
+        return panel_location;
+      }          
+    }
+
+    if( field_name == "Radio Serial Number" ) {   
+      if( fieldValue ){
+        if( fieldValue['value'] === '' || typeof fieldValue['value'] === 'undefined' ){
+          return radio_serial_number;
+        }else{
+          return fieldValue['value'];
+        }
+      }else{
+        return radio_serial_number;
+      }          
+    }
+
+    if( field_name == "Site Customer Type" ) {   
+      if( fieldValue ){
+        if( fieldValue['value'] === '' || typeof fieldValue['value'] === 'undefined' ){
+          return site_customer_type;
+        }else{
+          return fieldValue['value'];
+        }
+      }else{
+        return site_customer_type;
+      }          
+    }
+
 
     if( field_name == "State" ) {
       if( fieldValue ){
@@ -1042,6 +1091,14 @@ function Signing(hash) {
       }
       if( specs_field_name.name === "subscriber_name" ) {
         return first_name + " " + last_name;
+      }
+
+      if( specs_field_name.name === "alarm_panel_location" ) {
+        return panel_location;
+      }
+
+      if( specs_field_name.name === "alarm_transformer_location" ) {
+        return transformer_location;
       }
       
       if( specs_field_name.name === "subscriber_fname" ) {

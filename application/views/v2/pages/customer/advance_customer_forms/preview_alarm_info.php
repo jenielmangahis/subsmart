@@ -534,7 +534,7 @@
                     </div>
                     <div class="col-12 col-md-6">
                     <?php 
-                        $passThruCost = ($alarm_info->pass_thru_cost != "" && $alarm_info->pass_thru_cost != 0) ? $alarm_info->pass_thru_cost : $alarmcom_info['package_total_price'];
+                        $passThruCost = ($alarmcom_info['package_total_price'] != "") ? $alarmcom_info['package_total_price'] : $alarm_info->pass_thru_cost;
                         $passThruCostFormatted = '$' . number_format((float)$passThruCost, 2);
                     ?>
                         <label class="content-subtitle"><?php echo $passThruCostFormatted; ?></label>
@@ -592,8 +592,11 @@
                             <field-custom-name readonly default="Customer ID" form="alarm_info"></field-custom-name>
                         </label>
                     </div>
+                    <?php 
+                        $alarmcom_customer_id = ($alarmcom_info['customer_id'] != "") ? $alarmcom_info['customer_id'] : $alarm_info->alarm_customer_id;
+                    ?>
                     <div class="col-12 col-md-6">
-                        <label class="content-subtitle"><?= !empty($alarm_info->alarm_customer_id) ? $alarm_info->alarm_customer_id : '---'; ?></label>
+                        <label class="content-subtitle"><?= $alarmcom_customer_id; ?></label>
                     </div>
                 </div>
 

@@ -195,8 +195,11 @@
             <div class="col-md-4">
                 Customer ID <span class="required"> *</span>
             </div>
+            <?php 
+                $alarmcom_customer_id = ($alarmcom_info['customer_id'] != "") ? $alarmcom_info['customer_id'] : $profile_info->customer_no;
+            ?>
             <div class="col-md-8">
-                <input type="text" class="form-control" name="customer_no" id="customer_no" value="<?= $profile_info->customer_no; ?>" required/>
+                <input type="text" class="form-control" name="customer_no" id="customer_no" value="<?= $alarmcom_customer_id; ?>" required/>
             </div>
         </div>
         <?php } ?>

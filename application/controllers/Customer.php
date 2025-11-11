@@ -2047,7 +2047,9 @@ class Customer extends MY_Controller
             strpos($customer->status, 'Active w/RAR') !== false ||
             strpos($customer->status, 'Active w/RMR') !== false ||
             strpos($customer->status, 'Active w/RQR') !== false ||
-            strpos($customer->status, 'Active w/RYR') !== false
+            strpos($customer->status, 'Active w/RYR') !== false ||
+            strpos($customer->status, 'Inactive w/RMM') !== false ||
+            strpos($customer->status, 'Inactive w/RMR') !== false
         ) {
             $alarmCustomerDetails = $alarmApi->alarmApiRequest("getCustomerById", $customer->prof_id, null, null, null);
         }
@@ -2973,7 +2975,9 @@ class Customer extends MY_Controller
                     strpos($profile_info->status, 'Active w/RAR') !== false ||
                     strpos($profile_info->status, 'Active w/RMR') !== false ||
                     strpos($profile_info->status, 'Active w/RQR') !== false ||
-                    strpos($profile_info->status, 'Active w/RYR') !== false
+                    strpos($profile_info->status, 'Active w/RYR') !== false ||
+                    strpos($profile_info->status, 'Inactive w/RMM') !== false ||
+                    strpos($profile_info->status, 'Inactive w/RMR') !== false
                 ) {
                     $alarmCustomerDetails = $alarmApi->alarmApiRequest("getCustomerById", $profile_info->prof_id, null, null, null);
                 }
@@ -4190,19 +4194,18 @@ class Customer extends MY_Controller
         $defaultReceiverPhoneNumber = $this->AcsAlarmReceiverPhoneNumber_model->getCompanyDefaultValue($company_id);
 
         // search Alarm.com customer
-        $this->load->helper(array('alarm_api_helper'));
-        $alarm_api_helper = new AlarmApi();
+        $this->load->helper(array('alarm_api_helper'));    
+        $alarmApi = new AlarmApi();
         if (
             strpos($customer->status, 'Active w/RAR') !== false ||
             strpos($customer->status, 'Active w/RMR') !== false ||
             strpos($customer->status, 'Active w/RQR') !== false ||
-            strpos($customer->status, 'Active w/RYR') !== false
+            strpos($customer->status, 'Active w/RYR') !== false ||
+            strpos($customer->status, 'Inactive w/RMM') !== false ||
+            strpos($customer->status, 'Inactive w/RMR') !== false
         ) {
-            $nameKeyword = "{$customer->first_name} {$customer->last_name}";
-            $fuzzyKeyword = "{$customer->email} {$customer->phone_h} {$customer->mail_add} {$customer->county} {$customer->state} {$customer->zip_code} {$customer->country} {$customer->subdivision}";
+            $alarmCustomerDetails = $alarmApi->alarmApiRequest("getCustomerById", $customer->prof_id, null, null, null);
         }
-
-        $alarmCustomerDetails = $alarm_api_helper->searchAlarmCustomer($nameKeyword, $fuzzyKeyword);
         $this->page_data['alarmcom_info'] = $alarmCustomerDetails;
 
         $filter['is_active'] = 1;

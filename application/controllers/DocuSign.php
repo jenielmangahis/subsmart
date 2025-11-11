@@ -557,6 +557,11 @@ class DocuSign extends MYF_Controller
             $acs_alarm_accessKeys = [
                 'alarm_cs_account',
                 'monthly_monitoring',
+                'equipment',
+                'secondary_system_type',
+                'radio_serial_number',
+                'panel_location',
+                'transformer_location',
                 'panel_type',
                 'otps',
                 'passcode'
@@ -570,6 +575,11 @@ class DocuSign extends MYF_Controller
                 'alarm_cs_account' => '', 
                 'monthly_monitoring' => '0.00',
                 'panel_type' => '', 
+                'equipment' => '',
+                'secondary_system_type' => '',
+                'radio_serial_number' => '',
+                'transformer_location' => '',
+                'panel_location' => '',
                 'otps' => '0.00',
                 'passcode' => ''
             ];
@@ -890,7 +900,7 @@ class DocuSign extends MYF_Controller
             }
 
             $billingKeys = [
-                'bill_method', 'check_num', 'routing_num', 'bank_name', 'card_fname', 'card_lname', 'acct_num', 'credit_card_type', 'credit_card_num', 'equipment', 'credit_card_exp', 'credit_card_exp_mm_yyyy'
+                'bill_method', 'check_num', 'routing_num', 'bank_name', 'card_fname', 'card_lname', 'acct_num', 'credit_card_type', 'credit_card_num', 'credit_card_exp', 'credit_card_exp_mm_yyyy'
             ];
     
             $filteredBilling = array_filter( (array)$billing , function($v) use ($billingKeys) {
@@ -906,7 +916,6 @@ class DocuSign extends MYF_Controller
                 'card_lname' => '', 
                 'acct_num' => '', 
                 'credit_card_num' => '', 
-                'equipment' => '', 
                 'credit_card_exp' => '', 
                 'credit_card_exp_mm_yyyy' => ''
             ];
@@ -1396,9 +1405,7 @@ class DocuSign extends MYF_Controller
         $payload = json_decode(file_get_contents('php://input'), true);        
         $isCreated = false;
         $customer_id = $payload['customer_id'] ?? 0;
-        if( $payload['customer_id'] ){
-            unset($payload['customer_id']);
-        }        
+        unset($payload['customer_id']); 
 
         //Fetch docfile field and use ip timezone if field type is signature. To limit usage since ipapi.co is only limited to 45 requests per minute
         $this->db->where('id', $payload['field_id']);
