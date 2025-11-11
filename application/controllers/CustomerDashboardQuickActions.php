@@ -699,10 +699,10 @@ class CustomerDashboardQuickActions extends MYF_Controller
         $cid = logged('company_id');
         $post = $this->input->post();
 
-        $filePath = $this->getCustomerDocumentPath($customerId);
-
         $document = $this->AcsCustomerDocument_model->getById($post['cdi']);
         if( $document && $document->company_id == $cid ){
+            $customerId = $document->customer_id;
+            $filePath   = $this->getCustomerDocumentPath($customerId);
             if ($document->file_name && file_exists($filePath . $document->file_name)) {
                 unlink($filePath . $document->file_name);
             }
