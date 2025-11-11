@@ -164,6 +164,16 @@
                                             </div>                                        
                                     <?php } ?>
 
+                                    <div class="row g-1 mb-3">
+                                        <div class="col-12 col-md-4">
+                                            <label class="content-subtitle fw-bold">Status</label>
+                                        </div>
+                                        <div class="col-12 col-md-8">
+                                            <?php $badge_color = $cancel_request_data->status == 'approved' ? 'bg-primary' : 'bg-danger'; ?>
+                                            <label class="content-subtitle"><span class="badge <?php echo $badge_color; ?>"><?php echo $cancel_request_data->status ? ucfirst($cancel_request_data->status) : '---'; ?></span></label>
+                                        </div>
+                                    </div> 
+
                                     <div class="row mt-4">
                                         <div class="col-12 col-md-12">
                                         <button class="nsm-button primary" id="btn-approve-request">Approve Request</button>    
@@ -871,7 +881,8 @@
 
         $('#btn-approve-request').on('click', function(e){
             var status_request = "<?php echo $cancel_request_data->status_request; ?>";
-            var customer_id = "<?php echo $cancel_request_data->customer_id; ?>";
+            var customer_id    = "<?php echo $cancel_request_data->customer_id; ?>";
+            var acs_ccr_id     = "<?php echo $cancel_request_data->id; ?>";
             e.preventDefault();
             Swal.fire({
                 title: 'Customer Approved Request',
@@ -888,14 +899,15 @@
                         dataType: 'json',
                         data: {
                             status_request:status_request,
-                            customer_id: customer_id
+                            customer_id: customer_id,
+                            acs_ccr_id: acs_ccr_id
                         },
                         success: function(data) {    
                             $('#btn-approve-request').html('Approve Request');                   
                             if (data.is_success) {
                                 Swal.fire({
                                     title: 'Customer Approved Request',
-                                    text: "Customer status sucessfully updated to " + status_request + ".",
+                                    text: "Customer status successfully updated to " + status_request + ".",
                                     icon: 'success',
                                     showCancelButton: false,
                                     confirmButtonText: 'Okay'
@@ -920,9 +932,63 @@
                     });
                 }
             });
-        });        
- 
-
+        });  
+        
+        $('#btn-disapprove-request').on('click', function(e){
+            var status_request = "<?php echo $cancel_request_data->status_request; ?>";
+            var customer_id    = "<?php echo $cancel_request_data->customer_id; ?>";
+            var acs_ccr_id     = "<?php echo $cancel_request_data->id; ?>";
+            e.preventDefault();
+            Swal.fire({
+                title: 'Customer Disapproved Request',
+                html: "Are you sure you want to disapproved customer status request?",
+                icon: 'question',
+                confirmButtonText: 'Yes',
+                showCancelButton: true,
+                cancelButtonText: "No"
+            }).then((result) => {
+                if (result.value) {
+                    $.ajax({
+                        type: "POST",
+                        url: base_url + 'customer/_customer_status_request_disapproved',
+                        dataType: 'json',
+                        data: {
+                            status_request:status_request,
+                            customer_id: customer_id,
+                            acs_ccr_id: acs_ccr_id
+                        },
+                        success: function(data) {    
+                            $('#btn-disapprove-request').html('Disapprove Request');                   
+                            if (data.is_success) {
+                                Swal.fire({
+                                    title: 'Customer Disapproved Request',
+                                    text: "Successfully disapproved request",
+                                    icon: 'success',
+                                    showCancelButton: false,
+                                    confirmButtonText: 'Okay'
+                                }).then((result) => {
+                                    window.location.reload();
+                                });
+                            }else{
+                                Swal.fire({
+                                    title: 'Error',
+                                    text: data.msg,
+                                    icon: 'error',
+                                    showCancelButton: false,
+                                    confirmButtonText: 'Okay'
+                                }).then((result) => {
+                                    
+                                });
+                            }
+                        },
+                        beforeSend: function() {
+                            $('#btn-approve-request').html('<span class="bx bx-loader bx-spin"></span>');
+                        }
+                    });
+                }
+            });
+        });   
+        
     });
 </script>
 <?php include viewPath('v2/includes/footer'); ?>

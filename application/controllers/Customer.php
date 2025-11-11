@@ -15409,7 +15409,7 @@ class Customer extends MY_Controller
         $this->load->model('AcsCustomerCancellationRequest');
         $this->load->model('Users_model');
 
-        $is_live_mail_credentials = false;
+        $is_live_mail_credentials = true;
         $is_success = 0;
         $msg    = 'Cannot find customer data';
 
@@ -15600,20 +15600,63 @@ class Customer extends MY_Controller
 
     public function ajax_update_customer_status_request()
     {
+        $this->load->model('Customer_advance_model');
+
         $is_success = 0;
         $msg    = 'Cannot find customer data';
 
         $post = $this->input->post();
 
-        echo '<pre>';
-        print_r($post);
-        echo '</pre>';
+        if($post['customer_id'] && $post['status_request']) {
+                $data = [
+                    'prof_id' => $post['customer_id'],
+                    'status' => $post['status_request'],
+                ];
+                $this->Customer_advance_model->update_data($data, 'acs_profile', 'prof_id');
+
+                
+                $data2 = [
+                    'id' => $post['acs_ccr_id'],
+                    'status' => 'approved',
+                ];
+                $this->Customer_advance_model->update_data($data2, 'acs_customer_cancellation_requests', 'id');
+
+                $is_success = 1;
+                $msg        = '';
+        }
 
         $return = [
             'is_success' => $is_success,
             'msg' => $msg
         ];
         echo json_encode($return);        
+    }
+
+    public function ajax_customer_status_request_disapproved()
+    {
+        $this->load->model('Customer_advance_model');
+
+        $is_success = 0;
+        $msg    = 'Cannot find customer data';
+
+        $post = $this->input->post();
+
+        if($post['customer_id'] && $post['acs_ccr_id']) {                
+                $data = [
+                    'id' => $post['acs_ccr_id'],
+                    'status' => 'disapproved',
+                ];
+                $this->Customer_advance_model->update_data($data, 'acs_customer_cancellation_requests', 'id');
+
+                $is_success = 1;
+                $msg        = '';
+        }
+
+        $return = [
+            'is_success' => $is_success,
+            'msg' => $msg
+        ];
+        echo json_encode($return);   
     }
 
     public function ajax_set_default_monitoring_company()
