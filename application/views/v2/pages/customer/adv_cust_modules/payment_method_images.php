@@ -12,6 +12,42 @@ $(function(){
         $('#modal-admin-upload-image').modal('show');
     });
 
+    $(document).on('click', '.btn-delete-payment-image', function(){
+        let file_id = $(this).attr('data-id');
+        let file_name = $(this).attr('data-name');
+        
+        Swal.fire({
+            title: 'Delete Payment Image',
+            html: `Are you sure you want to delete selected image?`,
+            icon: 'question',
+            confirmButtonText: 'Proceed',
+            showCancelButton: true,
+            cancelButtonText: "Cancel"
+        }).then((result) => {
+            if (result.value) {
+                $.ajax({
+                    type: 'POST',
+                    url: base_url + 'customer/_delete_payment_image',
+                    dataType: 'json',
+                    data: {
+                        cdi: file_id
+                    },
+                    success: function(o) {
+                        if (o.is_success == 1) {
+                            load_customer_payment_method_images();
+                        } else {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Error!',
+                                html: o.msg
+                            });
+                        }
+                    },
+                });
+            }
+        });
+    });
+
     $('#frm-admin-upload-image').on('submit', function(){
         event.preventDefault(); // Prevent default form submission
 
