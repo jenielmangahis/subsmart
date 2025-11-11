@@ -238,8 +238,11 @@ div#controls div#call-controls div#volume-indicators > div {
                                 <span class="content-title"><i class='bx bx-buildings'></i> <?= $business_name; ?> </span>
                                 <?php } ?>
                                 <span class="content-title"><i class='bx bx-user-circle' ></i> <?= $profile_info->first_name . ' ' . $profile_info->last_name; ?></span>
-                                <span class="content-subtitle d-block mt-1" style="font-size:14px;">ID# : <?= formatCustomerId($profile_info->customer_no); ?></span>   
-                                <div class="verificationCheckboxContainer position-absolute" style="top: 40px;">
+                                <?php 
+                                    $customer_id = ($alarmcom_info['customer_id'] != "") ? $alarmcom_info['customer_id'] : $profile_info->customer_no;
+                                ?>
+                                <span class="content-subtitle d-block mt-1" style="font-size:14px;">ID# : <?= $customer_id; ?></span>   
+                                <div class="verificationCheckboxContainer">
                                 <?php $is_verified = ($profile_info->is_verified == 1) ? "checked" : ""; ?>
                                     <input id="verifyActiveCustomer" class="form-check-input verifyActiveCustomer" style="width: 16px; height: 16px;" customer_id="<?php echo $profile_info->prof_id; ?>" type="checkbox" <?php echo $is_verified; ?>>&ensp;<label class="text-muted" for="verifyActiveCustomer">Verify</label>
                                     <script>
@@ -286,9 +289,9 @@ div#controls div#call-controls div#volume-indicators > div {
                                 ?>
                                 <span class="nsm-badge" style="white-space:normal !important;overflow-wrap:break-word;margin-bottom:4px;display:inline-block;text-align:left;width:auto;"><?= $alarm_info && $alarm_info->panel_type != '' ? $alarm_info->panel_type : '---'; ?></span><br />
                                 <span class="nsm-badge <?= $badge ?>"><?= $profile_info->status != '' ? $profile_info->status : 'Pending'; ?></span><br />                         
-                                <?php if( $billing_info->mmr > 0 ){ ?>       
+                                <?php //if( $billing_info->mmr > 0 ){ ?>       
                                     <span class="profile-mmr" style="display:inline-block;margin-top:7px;">MMR : $<?= $billing_info->mmr > 0 ? number_format($billing_info->mmr,2,'.',',') : '0.00'; ?></span>       
-                                <?php } ?>
+                                <?php //} ?>
                             </div>
                         </div>
                     </div>
