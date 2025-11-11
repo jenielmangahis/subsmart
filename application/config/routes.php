@@ -2374,6 +2374,7 @@ $route['customers/_update_receiver_phone_number'] = 'Customer/ajax_update_receiv
 $route['customers/_delete_selected_receiver_numbers'] = 'Customer/ajax_delete_selected_receiver_numbers';
 $route['customers/_delete_receiver_number'] = 'Customer/ajax_delete_receiver_number';
 $route['customer/_set_default_receiver_phone_number'] = 'Customer/ajax_set_default_receiver_phone_number';
+$route['customer/_set_default_customer_status'] = 'Customer/ajax_set_default_customer_status';
 
 //Benchmark for Testing
 $route['benchmark/test_customer_subscription'] = 'Benchmark/test_customer_subscription';
