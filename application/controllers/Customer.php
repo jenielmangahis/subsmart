@@ -3912,6 +3912,7 @@ class Customer extends MY_Controller
         $this->load->model('AcsAccountType_model');
         $this->load->model('AcsAlarmMonitoringCompany_model');
         $this->load->model('AcsAlarmReceiverPhoneNumber_model');
+        $this->load->model('CustomerStatus_model');
 
         $this->hasAccessModule(9);
 
@@ -4192,6 +4193,7 @@ class Customer extends MY_Controller
         $defaultMonitoringCompany = $this->AcsAlarmMonitoringCompany_model->getCompanyDefaultValue($company_id);
         $receiverPhoneNumbers = $this->AcsAlarmReceiverPhoneNumber_model->getAllByCompanyId($company_id);
         $defaultReceiverPhoneNumber = $this->AcsAlarmReceiverPhoneNumber_model->getCompanyDefaultValue($company_id);
+        $defaultCustomerStatus = $this->CustomerStatus_model->getCompanyDefaultValue($company_id);
 
         // search Alarm.com customer
         $this->load->helper(array('alarm_api_helper'));    
@@ -4246,6 +4248,7 @@ class Customer extends MY_Controller
         $this->page_data['defaultMonitoringCompany'] = $defaultMonitoringCompany;
         $this->page_data['receiverPhoneNumbers'] = $receiverPhoneNumbers;
         $this->page_data['defaultReceiverPhoneNumber'] = $defaultReceiverPhoneNumber;
+        $this->page_data['defaultCustomerStatus'] = $defaultCustomerStatus;
         //$this->load->view('v2/pages/customer/add', $this->page_data);
         $this->load->view('v2/pages/customer/add_dynamic_fields', $this->page_data);
     }
@@ -10529,7 +10532,10 @@ class Customer extends MY_Controller
                 $msg = 'Status name ' . $post['name'] . ' already exists.';
             }else{
                 if( $customerStatus ){
-                    $data = ['name' => $post['name']];
+                    $data = [
+                        'name' => $post['name'],
+                        'date_updated' => date("Y-m-d H:i:s")
+                    ];
                     $this->CustomerStatus_model->update($customerStatus->id, $data);
                     
                     //Activity Logs
@@ -15929,5 +15935,36 @@ class Customer extends MY_Controller
         ];
 
         echo json_encode($return);
+    }
+
+    public function ajax_set_default_customer_status()
+    {
+        $this->load->model('CustomerStatus_model');
+
+        $is_success = 0;
+        $msg = 'Cannot find record';
+
+        $company_id = logged('company_id');
+        $post = $this->input->post();
+
+        $customerStatus = $this->CustomerStatus_model->getByIdAndCompanyId($post['id'], $company_id);
+        if ($customerStatus) {
+            $this->CustomerStatus_model->resetDefaultByCompanyId($company_id);
+            $this->CustomerStatus_model->update($customerStatus->id, ['is_default' => 'Yes']);
+
+            //Activity Logs
+            $activity_name = 'Customer Status : Set default value to ' . $customerStatus->name; 
+            createActivityLog($activity_name);
+
+            $is_success = 1;
+            $msg = '';
+        }
+
+        $json_data = [
+            'is_success' => $is_success,
+            'msg' => $msg,
+        ];
+
+        echo json_encode($json_data);
     }
 }
