@@ -211,81 +211,81 @@
             let status = $(this).val();
             let customer_id = "<?= $profile_info ? $profile_info->prof_id : 0; ?>";
             
-            <?php if( isAdiCompany() && $profile_info ){ ?>
-            /*if( status == 'Cancelled' || status == 'Cancel' || status == 'Charge Back' || status == 'Collection' || status == 'Competition Lost' ){
-                $('#office-info-cancel-date').attr('required', 'required');
-                $('#cancel_reason').attr('required', 'required');
-                //$('#collections').attr('required', 'required');
-                //$('#office-use-collection-date').attr('required', 'required');
-                //$('#office-info-collect-amount').attr('required', 'required');
-                $('#cancelled-related-fields-container-a').show();
-                //let previous_status = "<?= $profile_info->status; ?>";
+            <?php if( $profile_info ){ //isAdiCompany() ?>
+                /*if( status == 'Cancelled' || status == 'Cancel' || status == 'Charge Back' || status == 'Collection' || status == 'Competition Lost' ){
+                    $('#office-info-cancel-date').attr('required', 'required');
+                    $('#cancel_reason').attr('required', 'required');
+                    //$('#collections').attr('required', 'required');
+                    //$('#office-use-collection-date').attr('required', 'required');
+                    //$('#office-info-collect-amount').attr('required', 'required');
+                    $('#cancelled-related-fields-container-a').show();
+                    //let previous_status = "<?= $profile_info->status; ?>";
 
-                //$('#status').val(previous_status).trigger("change");
-            }else{
-                $('#office-info-cancel-date').removeAttr('required');
-                $('#cancel_reason').removeAttr('required');
-                //$('#collections').removeAttr('required');
-                //$('#office-use-collection-date').removeAttr('required');
-                //$('#office-info-collect-amount').removeAttr('required');
-                $('#cancelled-related-fields-container-a').hide();
-            }*/
+                    //$('#status').val(previous_status).trigger("change");
+                }else{
+                    $('#office-info-cancel-date').removeAttr('required');
+                    $('#cancel_reason').removeAttr('required');
+                    //$('#collections').removeAttr('required');
+                    //$('#office-use-collection-date').removeAttr('required');
+                    //$('#office-info-collect-amount').removeAttr('required');
+                    $('#cancelled-related-fields-container-a').hide();
+                }*/
 
-            if( status == 'Cancelled' || status == 'Cancel' || status == 'Charge Back' || status == 'Collection' || status == 'Competition Lost' || status == 'Non Compliance Audit Needed' ){                    
-                $('#request-cancellation-customer-id').val(customer_id);
-                $('#request-cancellation-status-request').val(status);
-                $('#send_cancel_status_request_modal').modal('show');
-            }
+                if( status == 'Cancelled' || status == 'Cancel' || status == 'Charge Back' || status == 'Collection' || status == 'Competition Lost' || status == 'Non Compliance Audit Needed' ){                    
+                    $('#request-cancellation-customer-id').val(customer_id);
+                    $('#request-cancellation-status-request').val(status);
+                    $('#send_cancel_status_request_modal').modal('show');
+                }
 
-            if( status == 'Non Compliance Audit Needed' ){
-                $('#cancellation-request-form-group-2').show();
-                $('#cancellation-request-form-group-1').hide();
-                $('#cancellation-request-form-group-3').hide();
+                if( status == 'Non Compliance Audit Needed' ){
+                    $('#cancellation-request-form-group-2').show();
+                    $('#cancellation-request-form-group-1').hide();
+                    $('#cancellation-request-form-group-3').hide();
 
-                $('#cancellation-request-form-group-1').find('input, select, textarea, button').prop('disabled', true);
-                $('#cancellation-request-form-group-2').find('input, select, textarea, button').prop('disabled', false);
-                $('#cancellation-request-form-group-3').find('input, select, textarea, button').prop('disabled', true);
-            }else if( status == 'Collection' ) {
-                $('#cancellation-request-form-group-3').show();
-                $('#cancellation-request-form-group-1').hide();
-                $('#cancellation-request-form-group-2').hide(); 
-                
-                $('#cancellation-request-form-group-1').find('input, select, textarea, button').prop('disabled', true);
-                $('#cancellation-request-form-group-2').find('input, select, textarea, button').prop('disabled', true);
-                $('#cancellation-request-form-group-3').find('input, select, textarea, button').prop('disabled', false);
-            }else{
-                $('#cancellation-request-form-group-1').show();
-                $('#cancellation-request-form-group-2').hide();
-                $('#cancellation-request-form-group-3').hide();
+                    $('#cancellation-request-form-group-1').find('input, select, textarea, button').prop('disabled', true);
+                    $('#cancellation-request-form-group-2').find('input, select, textarea, button').prop('disabled', false);
+                    $('#cancellation-request-form-group-3').find('input, select, textarea, button').prop('disabled', true);
+                }else if( status == 'Collection' ) {
+                    $('#cancellation-request-form-group-3').show();
+                    $('#cancellation-request-form-group-1').hide();
+                    $('#cancellation-request-form-group-2').hide(); 
+                    
+                    $('#cancellation-request-form-group-1').find('input, select, textarea, button').prop('disabled', true);
+                    $('#cancellation-request-form-group-2').find('input, select, textarea, button').prop('disabled', true);
+                    $('#cancellation-request-form-group-3').find('input, select, textarea, button').prop('disabled', false);
+                }else{
+                    $('#cancellation-request-form-group-1').show();
+                    $('#cancellation-request-form-group-2').hide();
+                    $('#cancellation-request-form-group-3').hide();
 
-                $('#cancellation-request-form-group-1').find('input, select, textarea, button').prop('disabled', false);
-                $('#cancellation-request-form-group-2').find('input, select, textarea, button').prop('disabled', true);
-                $('#cancellation-request-form-group-3').find('input, select, textarea, button').prop('disabled', true);
-            }
+                    $('#cancellation-request-form-group-1').find('input, select, textarea, button').prop('disabled', false);
+                    $('#cancellation-request-form-group-2').find('input, select, textarea, button').prop('disabled', true);
+                    $('#cancellation-request-form-group-3').find('input, select, textarea, button').prop('disabled', true);
+                }
 
-            if( status == 'Cancelled' ){
-                let previous_status = "<?= $profile_info->status; ?>";
-                $('#status').val(previous_status).trigger("change");
-            }
+                if( status == 'Cancelled' ){
+                    let previous_status = "<?= $profile_info->status; ?>";
+                    $('#status').val(previous_status).trigger("change");
+                }
 
-            //Hide show sections - only for adi companies            
-            if( status == 'Cancelled' ){
-                $('#add-advance-alarm-section').hide();
-                $('#add-advance-custom-fields').hide();
-                $('#add-advance-billing-info').hide();
-                $('#add-advance-payment-schedule').hide();
-                $('#add-advance-customer-papers').hide();
-                $('#funding-information-container').hide();
-                $('#add-advance-access-info').hide();                
-            }else{
-                $('#add-advance-alarm-section').show();
-                $('#add-advance-custom-fields').show();
-                $('#add-advance-billing-info').show();
-                $('#add-advance-payment-schedule').show();
-                $('#add-advance-customer-papers').show();
-                $('#funding-information-container').show();
-                $('#add-advance-access-info').show();
-            }               
+                //Hide show sections - only for adi companies            
+                if( status == 'Cancelled' ){
+                    $('#add-advance-alarm-section').hide();
+                    $('#add-advance-custom-fields').hide();
+                    $('#add-advance-billing-info').hide();
+                    $('#add-advance-payment-schedule').hide();
+                    $('#add-advance-customer-papers').hide();
+                    $('#funding-information-container').hide();
+                    $('#add-advance-access-info').hide();                
+                }else{
+                    $('#add-advance-alarm-section').show();
+                    $('#add-advance-custom-fields').show();
+                    $('#add-advance-billing-info').show();
+                    $('#add-advance-payment-schedule').show();
+                    $('#add-advance-customer-papers').show();
+                    $('#funding-information-container').show();
+                    $('#add-advance-access-info').show();
+                }               
             <?php } ?>
 
             

@@ -1243,6 +1243,7 @@ $route['customer/_permanently_delete_selected_attachment'] = 'Customer/ajax_perm
 $route['customer/_send_customer_cancellation_request'] = 'Customer/ajax_send_customer_cancellation_request';
 $route['customer/_update_customer_collection_request'] = 'Customer/ajax_update_customer_collection_request';
 $route['customer/_update_customer_status_request'] = 'Customer/ajax_update_customer_status_request';
+$route['customer/_customer_status_request_disapproved'] = 'Customer/ajax_customer_status_request_disapproved';
 
 //$route['customer/cancellation_request'] = 'Customer/cancellation_request';
 $route['customer/cancellation_request/(:num)'] = 'Customer/cancellation_request/$1';
