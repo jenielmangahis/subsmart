@@ -1695,10 +1695,52 @@
             });
         });
 
+        $('#frm-quick-add-receiver-phone-number').on('submit', function(e){
+            e.preventDefault();
+
+            $.ajax({
+                type: "POST",
+                url: base_url + 'customers/_create_receiver_phone_number',
+                dataType: 'json',
+                data: $('#frm-quick-add-receiver-phone-number').serialize(),
+                success: function(data) {    
+                    $('#btn-quick-add-receiver-phone-number').html('Save');                   
+                    if (data.is_success) {
+                        $('#quick_add_receiver_phone_number_modal').modal('hide');
+                        $('#receiver_phone_number').append($('<option>', {
+                            value: data.receiver_number,
+                            text: data.receiver_number,
+                        }));
+                        $('#receiver_phone_number').val(data.receiver_number);
+                    }else{
+                        Swal.fire({
+                            title: 'Error',
+                            text: data.msg,
+                            icon: 'error',
+                            showCancelButton: false,
+                            confirmButtonText: 'Okay'
+                        }).then((result) => {
+                            
+                        });
+                    }
+                },
+                beforeSend: function() {
+                    $('#btn-quick-add-receiver-phone-number').html('<span class="bx bx-loader bx-spin"></span>');
+                }
+            });
+        });
+
         $('#btn-quick-add-proposed-module').on('click', function(){
             $('#frm-quick-add-proposed-module')[0].reset();
             $('#quick_add_proposed_module').modal('show');
         }); 
+
+        $('#btn-manage-proposed-module').on('click', function(){
+            window.open(
+                base_url + 'customer/settings_solar_modules',
+                '_blank' 
+            );
+        });
 
         $('#btn-manage-proposed-module').on('click', function(){
             window.open(
@@ -1750,6 +1792,20 @@
         $('#btn-manage-proposed-inverter').on('click', function(){
             window.open(
                 base_url + 'customer/settings_solar_inverter',
+                '_blank' 
+            );
+        });
+
+        $('#btn-manage-monitoring-company').on('click', function(){
+            window.open(
+                base_url + 'customer/settings_alarm_monitoring_companies',
+                '_blank' 
+            );
+        });
+
+        $('#btn-manage-receiver-phone-number').on('click', function(){
+            window.open(
+                base_url + 'customer/settings_alarm_receiver_phone_numbers',
                 '_blank' 
             );
         });
@@ -1861,6 +1917,11 @@
         $('#btn-quick-communication-type').on('click', function(){
             $('#quick-add-system-package-form')[0].reset();
             $('#quick_add_system_package_modal').modal('show');
+        });
+
+        $('#btn-quick-receiver-phone-number').on('click', function(){
+            $('#frm-quick-add-receiver-phone-number')[0].reset();
+            $('#quick_add_receiver_phone_number_modal').modal('show');
         });
 
         function load_account_cost(){
