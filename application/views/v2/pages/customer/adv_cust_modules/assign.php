@@ -533,35 +533,37 @@
                     data.forEach(element => {
                         switch (element.category) {
                             case 'customer_info':
-                                $('.utilityCustomerInfo').text(`${element.data}`);
+                                $('.utilityCustomerInfo').text(element.data || 0);
                             break;
                             case 'status':
-                                $('.utilityStatusInfo').text(`${element.data}`);
+                                $('.utilityStatusInfo').text(element.data);
                             break;
                             case 'documents':
-                                $('.utilityDocumentsInfo').text(`${element.data}`);
+                                $('.utilityDocumentsInfo').text(element.data);
                             break;
                             case 'gallery':
-                                $('.utilityGalleryInfo').text(`${element.data}`);
+                                $('.utilityGalleryInfo').text(element.data);
                             break;
                             case 'panel_version':
-                                $('.utilityPanelTypeInfo').text(`${element.data}`);
+                                $('.utilityPanelTypeInfo').text(element.data || 'None');
                             break;
                             case 'login_name':
-                                $('.utilityLoginsInfo').text(`${element.data}`);
+                                $('.utilityLoginsInfo').text(element.data || 'None');
                             break;
                             case 'package_description':
-                                $('.utilityPackageInfo').text(`${element.data}`);
+                                $('.utilityPackageInfo').text(element.data || 'None');
                             break;
                             case 'monitoring':
-                                $('.utilityMonitoringInfo').text(`${element.data}`);
+                                $('.utilityMonitoringInfo').text(element.data || 'None');
                             break;
                             case 'ledger_balance':
-                                const balance = (element.data != null) ? element.data : 0.00;
-                                $('.utilityLedgerBalanceInfo').text(parseFloat(balance).toLocaleString('en-US', { style: 'currency', currency: 'USD' }));
+                                const balance = (element.data != null && element.data !== '') ? element.data : 0.00;
+                                $('.utilityLedgerBalanceInfo').text(
+                                    parseFloat(balance).toLocaleString('en-US', { style: 'currency', currency: 'USD' })
+                                );
                             break;
                             case 'notes':
-                                $('.utilityNotesInfo').text(`${element.data}`);
+                                $('.utilityNotesInfo').text(element.data);
                             break;
                         }
                     });
