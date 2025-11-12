@@ -1133,7 +1133,7 @@
                             <div class="row">
                                 <div class="col-12 mt-2">
                                     <label class="bold"><strong>Reason</strong></label>
-                                    <select id="cancellation-request-reason" name="reason" data-customer-source="dropdown" class="form-control mb-2" required>
+                                    <select id="cancellation-request-reason" name="reason" data-customer-source="dropdown" class="form-control mb-2 cancellation-request-reason" required>
                                         <option value="">--Select--</option>
                                         <?php $default_reasons = getCustomerCancelRequestReason(); ?>
                                         <?php foreach($default_reasons as $default_reason) { ?>
@@ -1169,7 +1169,7 @@
                             <div class="row">
                                 <div class="col-12 mt-2">
                                     <label class="bold"><strong>Next Step</strong></label>
-                                    <input type="text" placeholder="" name="next_step" id="cancellation_reason_next_step" class="form-control mb-2" required />
+                                    <input type="text" placeholder="" name="next_step" id="cancellation_reason_next_step" class="form-control mb-2 cancellation_reason_next_step" required />
                                 </div>
                             </div>
                         </div>
@@ -1223,7 +1223,7 @@
                             <div class="row">
                                 <div class="col-12 mt-2">
                                     <label class="bold"><strong>Reason</strong></label>
-                                    <select id="cancellation-request-reason" name="reason" data-customer-source="dropdown" class="form-control mb-2" required>
+                                    <select id="cancellation-request-reason" name="reason" data-customer-source="dropdown" class="form-control mb-2 cancellation-request-reason" required>
                                         <option value="">--Select--</option>
                                         <?php $default_reasons = getCustomerCancelRequestReason(); ?>
                                         <?php foreach($default_reasons as $default_reason) { ?>
@@ -1246,8 +1246,20 @@
                             </div>
                             <div class="row">
                                 <div class="col-12 mt-2">
+                                    <label class="bold"><strong>BOC Received Date</strong></label>
+                                    <input type="date" placeholder="" name="boc_received_date" id="boc_received_date" class="form-control mb-2" required />
+                                </div>
+                            </div>  
+                            <div class="row">
+                                <div class="col-12 mt-2">
+                                    <label class="bold"><strong>Equipment Return Date</strong></label>
+                                    <input type="date" placeholder="" name="equipment_return_date" id="equipment_return_date" class="form-control mb-2" required />
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-12 mt-2">
                                     <label class="bold"><strong>Next Step</strong></label>
-                                    <input type="text" placeholder="" name="next_step" id="cancellation_reason_next_step" class="form-control mb-2" required />
+                                    <input type="text" placeholder="" name="next_step" id="cancellation_reason_next_step" class="form-control mb-2 cancellation_reason_next_step" required />
                                 </div>
                             </div>
                         </div>
@@ -1261,7 +1273,7 @@
                             <div class="row">
                                 <div class="col-12 mt-2">
                                     <label class="bold"><strong>Reason</strong></label>
-                                    <select id="cancellation-request-reason" name="reason" data-customer-source="dropdown" class="form-control mb-2" required>
+                                    <select id="cancellation-request-reason" name="reason" data-customer-source="dropdown" class="form-control mb-2 cancellation-request-reason" required>
                                         <option value="">--Select--</option>
                                         <?php $default_reasons = getCustomerCancelRequestReason(); ?>
                                         <?php foreach($default_reasons as $default_reason) { ?>

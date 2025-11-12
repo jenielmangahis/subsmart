@@ -328,7 +328,7 @@
             
         });
 
-        $('#cancellation-request-reason').on('change', function(){
+        $('.cancellation-request-reason').on('change', function(){
             let reason = $(this).val();
             let next_step = '';
             if( reason == 'Moving' ){
@@ -343,7 +343,7 @@
                 next_step = 'Field Audit';
             }
 
-            $('#cancellation_reason_next_step').val(next_step);
+            $('.cancellation_reason_next_step').val(next_step);
         });
 
         $(".paper-chk").click(function() { 
