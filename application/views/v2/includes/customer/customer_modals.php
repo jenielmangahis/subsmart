@@ -1121,7 +1121,8 @@
                 </div>
                 <div class="modal-body">                    
                     <form method="POST" id="frm-customer-cancellation-request" class="frm-customer-cancellation-request">
-                    <input type="hidden" id="request-cancellation-customer-id" name="customer_id" value="" />                                        
+                    <input type="hidden" id="request-cancellation-customer-id" name="customer_id" value="" />    
+                    <input type="hidden" id="request-cancellation-status-request" name="status_request" value="" />                                      
                     <div id="cancellation-request-form-group-1">
                         <div class="row">
                             <div class="col-12 mt-2">

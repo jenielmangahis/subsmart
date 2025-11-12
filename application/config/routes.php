@@ -1242,6 +1242,8 @@ $route['customer/_convert_lead_to_customer'] = 'Customer/ajax_convert_lead_to_cu
 $route['customer/_permanently_delete_selected_attachment'] = 'Customer/ajax_permanently_delete_selected_attachment';
 $route['customer/_send_customer_cancellation_request'] = 'Customer/ajax_send_customer_cancellation_request';
 $route['customer/_update_customer_collection_request'] = 'Customer/ajax_update_customer_collection_request';
+$route['customer/_update_customer_status_request'] = 'Customer/ajax_update_customer_status_request';
+$route['customer/_customer_status_request_disapproved'] = 'Customer/ajax_customer_status_request_disapproved';
 
 //$route['customer/cancellation_request'] = 'Customer/cancellation_request';
 $route['customer/cancellation_request/(:num)'] = 'Customer/cancellation_request/$1';
@@ -2373,6 +2375,8 @@ $route['customers/_update_receiver_phone_number'] = 'Customer/ajax_update_receiv
 $route['customers/_delete_selected_receiver_numbers'] = 'Customer/ajax_delete_selected_receiver_numbers';
 $route['customers/_delete_receiver_number'] = 'Customer/ajax_delete_receiver_number';
 $route['customer/_set_default_receiver_phone_number'] = 'Customer/ajax_set_default_receiver_phone_number';
+$route['customer/_set_default_customer_status'] = 'Customer/ajax_set_default_customer_status';
+$route['customer/_delete_payment_image'] = 'CustomerDashboardQuickActions/ajaxDeleteCustomerDocument';
 
 //Benchmark for Testing
 $route['benchmark/test_customer_subscription'] = 'Benchmark/test_customer_subscription';

@@ -35,63 +35,145 @@
                                 </div>
 
                                 <div class="row mb-3">
-                                    <div class="col-12">
+
+                                    <?php if($cancel_request_data->status_request == 'Cancelled' || $cancel_request_data->status_request == 'Cancel') { ?>
+                                        <div class="col-12">
+                                            <div class="row g-1 mb-3">
+                                            <div class="col-12 col-md-4">
+                                                <label class="content-subtitle fw-bold">Status Request</label>
+                                            </div>
+                                            <div class="col-12 col-md-8">
+                                                <label class="content-subtitle"><?php echo $cancel_request_data->status_request ? $cancel_request_data->status_request : '---'; ?></label>
+                                            </div>
+                                        </div>
                                         <div class="row g-1 mb-3">
-                                        <div class="col-12 col-md-4">
-                                            <label class="content-subtitle fw-bold">Date Request Received</label>
+                                            <div class="col-12 col-md-4">
+                                                <label class="content-subtitle fw-bold">Date Request Received</label>
+                                            </div>
+                                            <div class="col-12 col-md-8">
+                                                <label class="content-subtitle"><?php echo date('m/d/Y', strtotime($cancel_request_data->request_date)); ?></label>
+                                            </div>
                                         </div>
-                                        <div class="col-12 col-md-8">
-                                            <label class="content-subtitle"><?php echo date('m/d/Y', strtotime($cancel_request_data->request_date)); ?></label>
+                                        <div class="row g-1 mb-3">
+                                            <div class="col-12 col-md-4">
+                                                <label class="content-subtitle fw-bold">Reason</label>
+                                            </div>
+                                            <div class="col-12 col-md-8">
+                                                <label class="content-subtitle"><?php echo $cancel_request_data->reason ? $cancel_request_data->reason : '---'; ?></label>
+                                            </div>
+                                        </div>                       
+                                        <div class="row g-1 mb-3">
+                                            <div class="col-12 col-md-4">
+                                                <label class="content-subtitle fw-bold">Next Step</label>
+                                            </div>
+                                            <div class="col-12 col-md-8">
+                                                <label class="content-subtitle"><?php echo $cancel_request_data->next_action ? $cancel_request_data->next_action : '---'; ?></label>
+                                            </div>
                                         </div>
-                                    </div>  
+                                        <div class="row g-1 mb-3">
+                                            <div class="col-12 col-md-4">
+                                                <label class="content-subtitle fw-bold">BOC Amount</label>
+                                            </div>
+                                            <div class="col-12 col-md-8">
+                                                <label class="content-subtitle">$<?php echo number_format($cancel_request_data->boc_amount,2); ?></label>
+                                            </div>
+                                        </div>
+                                        <div class="row g-1 mb-3">
+                                            <div class="col-12 col-md-4">
+                                                <label class="content-subtitle fw-bold">BOC Received Date</label>
+                                            </div>
+                                            <div class="col-12 col-md-8">
+                                                <label class="content-subtitle"><?php echo $cancel_request_data->boc_received_date ? date('m/d/Y', strtotime($cancel_request_data->boc_received_date)) : '---'; ?></label>
+                                            </div>
+                                        </div>
+                                        <div class="row g-1 mb-3">
+                                            <div class="col-12 col-md-4">
+                                                <label class="content-subtitle fw-bold">CS Closed Date</label>
+                                            </div>
+                                            <div class="col-12 col-md-8">
+                                                <label class="content-subtitle"><?php echo $cancel_request_data->cs_close_date ? date('m/d/Y', strtotime($cancel_request_data->cs_close_date)) : '---'; ?></label>
+                                            </div>
+                                        </div>
+                                        <div class="row g-1 mb-3">
+                                            <div class="col-12 col-md-4">
+                                                <label class="content-subtitle fw-bold">Equipment Return Date</label>
+                                            </div>
+                                            <div class="col-12 col-md-8">
+                                                <label class="content-subtitle"><?php echo $cancel_request_data->equipment_return_date ? date('m/d/Y', strtotime($cancel_request_data->equipment_return_date)) : '---'; ?></label>
+                                            </div>
+                                        </div>
+                                    <?php }elseif($cancel_request_data->status_request == 'Collection') { ?>
+                                        <div class="col-12">
+                                            <div class="row g-1 mb-3">
+                                            <div class="col-12 col-md-4">
+                                                <label class="content-subtitle fw-bold">Status Request</label>
+                                            </div>
+                                            <div class="col-12 col-md-8">
+                                                <label class="content-subtitle"><?php echo $cancel_request_data->status_request ? $cancel_request_data->status_request : '---'; ?></label>
+                                            </div>
+                                        </div> 
+                                        <div class="row g-1 mb-3">
+                                            <div class="col-12 col-md-4">
+                                                <label class="content-subtitle fw-bold">Audit Date</label>
+                                            </div>
+                                            <div class="col-12 col-md-8">
+                                                <label class="content-subtitle"><?php echo date('m/d/Y', strtotime($cancel_request_data->audit_date)); ?></label>
+                                            </div>
+                                        </div>    
+                                        <div class="row g-1 mb-3">
+                                            <div class="col-12 col-md-4">
+                                                <label class="content-subtitle fw-bold">Collection Status</label>
+                                            </div>
+                                            <div class="col-12 col-md-8">
+                                                <label class="content-subtitle"><?php echo $cancel_request_data->collection_status ? $cancel_request_data->collection_status : '---'; ?></label>
+                                            </div>
+                                        </div> 
+                                        <div class="row g-1 mb-3">
+                                            <div class="col-12 col-md-4">
+                                                <label class="content-subtitle fw-bold">Statement of Claim</label>
+                                            </div>
+                                            <div class="col-12 col-md-8">
+                                                <label class="content-subtitle"><?php echo $cancel_request_data->statement_of_claim ? $cancel_request_data->statement_of_claim : '---'; ?></label>
+                                            </div>
+                                        </div> 
+                                        <div class="row g-1 mb-3">
+                                            <div class="col-12 col-md-4">
+                                                <label class="content-subtitle fw-bold">Court Date</label>
+                                            </div>
+                                            <div class="col-12 col-md-8">
+                                                <label class="content-subtitle"><?php echo date('m/d/Y', strtotime($cancel_request_data->court_date)); ?></label>
+                                            </div>
+                                        </div> 
+                                        <div class="row g-1 mb-3">
+                                            <div class="col-12 col-md-4">
+                                                <label class="content-subtitle fw-bold">Judgement Amount</label>
+                                            </div>
+                                            <div class="col-12 col-md-8">
+                                                <label class="content-subtitle">$<?php echo $cancel_request_data->judgement_amount ? number_format($cancel_request_data->judgement_amount,2) : '---'; ?></label>
+                                            </div>
+                                        </div>                      
+                                    <?php }elseif($cancel_request_data->status_request == 'Non Compliance Audit Needed') { ?>
+                                            <div class="col-12">
+                                                <div class="row g-1 mb-3">
+                                                <div class="col-12 col-md-4">
+                                                    <label class="content-subtitle fw-bold">Audit Date</label>
+                                                </div>
+                                                <div class="col-12 col-md-8">
+                                                    <label class="content-subtitle"><?php echo date('m/d/Y', strtotime($cancel_request_data->audit_date)); ?></label>
+                                                </div>
+                                            </div>                                        
+                                    <?php } ?>
+
                                     <div class="row g-1 mb-3">
                                         <div class="col-12 col-md-4">
-                                            <label class="content-subtitle fw-bold">Reason</label>
+                                            <label class="content-subtitle fw-bold">Status</label>
                                         </div>
                                         <div class="col-12 col-md-8">
-                                            <label class="content-subtitle"><?php echo $cancel_request_data->reason; ?></label>
+                                            <?php $badge_color = $cancel_request_data->status == 'approved' ? 'bg-primary' : 'bg-danger'; ?>
+                                            <label class="content-subtitle"><span class="badge <?php echo $badge_color; ?>"><?php echo $cancel_request_data->status ? ucfirst($cancel_request_data->status) : '---'; ?></span></label>
                                         </div>
-                                    </div>                       
-                                    <div class="row g-1 mb-3">
-                                        <div class="col-12 col-md-4">
-                                            <label class="content-subtitle fw-bold">Next Step</label>
-                                        </div>
-                                        <div class="col-12 col-md-8">
-                                            <label class="content-subtitle"><?php echo $cancel_request_data->next_action; ?></label>
-                                        </div>
-                                    </div>
-                                    <div class="row g-1 mb-3">
-                                        <div class="col-12 col-md-4">
-                                            <label class="content-subtitle fw-bold">BOC Amount</label>
-                                        </div>
-                                        <div class="col-12 col-md-8">
-                                            <label class="content-subtitle">$<?php echo number_format($cancel_request_data->boc_amount,2); ?></label>
-                                        </div>
-                                    </div>
-                                    <div class="row g-1 mb-3">
-                                        <div class="col-12 col-md-4">
-                                            <label class="content-subtitle fw-bold">BOC Received Date</label>
-                                        </div>
-                                        <div class="col-12 col-md-8">
-                                            <label class="content-subtitle"><?php echo date('m/d/Y', strtotime($cancel_request_data->boc_received_date)); ?></label>
-                                        </div>
-                                    </div>
-                                    <div class="row g-1 mb-3">
-                                        <div class="col-12 col-md-4">
-                                            <label class="content-subtitle fw-bold">CS Closed Date</label>
-                                        </div>
-                                        <div class="col-12 col-md-8">
-                                            <label class="content-subtitle"><?php echo date('m/d/Y', strtotime($cancel_request_data->cs_close_date)); ?></label>
-                                        </div>
-                                    </div>
-                                    <div class="row g-1 mb-3">
-                                        <div class="col-12 col-md-4">
-                                            <label class="content-subtitle fw-bold">Equipment Return Date</label>
-                                        </div>
-                                        <div class="col-12 col-md-8">
-                                            <label class="content-subtitle"><?php echo date('m/d/Y', strtotime($cancel_request_data->equipment_return_date)); ?></label>
-                                        </div>
-                                    </div>
+                                    </div> 
+
                                     <div class="row mt-4">
                                         <div class="col-12 col-md-12">
                                         <button class="nsm-button primary" id="btn-approve-request">Approve Request</button>    
@@ -796,8 +878,117 @@
                 },
             });
         });
- 
 
+        $('#btn-approve-request').on('click', function(e){
+            var status_request = "<?php echo $cancel_request_data->status_request; ?>";
+            var customer_id    = "<?php echo $cancel_request_data->customer_id; ?>";
+            var acs_ccr_id     = "<?php echo $cancel_request_data->id; ?>";
+            e.preventDefault();
+            Swal.fire({
+                title: 'Customer Approved Request',
+                html: "Are you sure you want to approved customer status request?<br/><br/>This will change customer status to " + status_request + ".",
+                icon: 'question',
+                confirmButtonText: 'Yes',
+                showCancelButton: true,
+                cancelButtonText: "No"
+            }).then((result) => {
+                if (result.value) {
+                    $.ajax({
+                        type: "POST",
+                        url: base_url + 'customer/_update_customer_status_request',
+                        dataType: 'json',
+                        data: {
+                            status_request:status_request,
+                            customer_id: customer_id,
+                            acs_ccr_id: acs_ccr_id
+                        },
+                        success: function(data) {    
+                            $('#btn-approve-request').html('Approve Request');                   
+                            if (data.is_success) {
+                                Swal.fire({
+                                    title: 'Customer Approved Request',
+                                    text: "Customer status successfully updated to " + status_request + ".",
+                                    icon: 'success',
+                                    showCancelButton: false,
+                                    confirmButtonText: 'Okay'
+                                }).then((result) => {
+                                    window.location.reload();
+                                });
+                            }else{
+                                Swal.fire({
+                                    title: 'Error',
+                                    text: data.msg,
+                                    icon: 'error',
+                                    showCancelButton: false,
+                                    confirmButtonText: 'Okay'
+                                }).then((result) => {
+                                    
+                                });
+                            }
+                        },
+                        beforeSend: function() {
+                            $('#btn-approve-request').html('<span class="bx bx-loader bx-spin"></span>');
+                        }
+                    });
+                }
+            });
+        });  
+        
+        $('#btn-disapprove-request').on('click', function(e){
+            var status_request = "<?php echo $cancel_request_data->status_request; ?>";
+            var customer_id    = "<?php echo $cancel_request_data->customer_id; ?>";
+            var acs_ccr_id     = "<?php echo $cancel_request_data->id; ?>";
+            e.preventDefault();
+            Swal.fire({
+                title: 'Customer Disapproved Request',
+                html: "Are you sure you want to disapproved customer status request?",
+                icon: 'question',
+                confirmButtonText: 'Yes',
+                showCancelButton: true,
+                cancelButtonText: "No"
+            }).then((result) => {
+                if (result.value) {
+                    $.ajax({
+                        type: "POST",
+                        url: base_url + 'customer/_customer_status_request_disapproved',
+                        dataType: 'json',
+                        data: {
+                            status_request:status_request,
+                            customer_id: customer_id,
+                            acs_ccr_id: acs_ccr_id
+                        },
+                        success: function(data) {    
+                            $('#btn-disapprove-request').html('Disapprove Request');                   
+                            if (data.is_success) {
+                                Swal.fire({
+                                    title: 'Customer Disapproved Request',
+                                    text: "Successfully disapproved request",
+                                    icon: 'success',
+                                    showCancelButton: false,
+                                    confirmButtonText: 'Okay'
+                                }).then((result) => {
+                                    window.location.reload();
+                                });
+                            }else{
+                                Swal.fire({
+                                    title: 'Error',
+                                    text: data.msg,
+                                    icon: 'error',
+                                    showCancelButton: false,
+                                    confirmButtonText: 'Okay'
+                                }).then((result) => {
+                                    
+                                });
+                            }
+                        },
+                        beforeSend: function() {
+                            $('#btn-approve-request').html('<span class="bx bx-loader bx-spin"></span>');
+                        }
+                    });
+                }
+            });
+        });   
+        
     });
 </script>
 <?php include viewPath('v2/includes/footer'); ?>

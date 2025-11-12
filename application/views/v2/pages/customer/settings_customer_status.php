@@ -45,6 +45,7 @@
                         <tr>
                             <td class="table-icon"></td>
                             <td data-name="Name">Name</td>
+                            <td data-name="Is Default" style="width:5%;">Is Default</td>
                             <td data-name="Date Created" style="width:10%;">Date Created</td>
                             <td data-name="Manage" style="width:1%;"></td>
                         </tr>
@@ -63,6 +64,9 @@
                                         </div>
                                     </td>
                                     <td class="fw-bold nsm-text-primary"><?= $cs->name; ?></td>
+                                    <td>
+                                        <span class="badge <?= $cs->is_default == 'Yes' ? 'badge-primary' : 'badge-secondary'; ?>"><?= $cs->is_default; ?></span>
+                                    </td>
                                     <td><?= date("m/d/Y h:i A", strtotime($cs->date_created)); ?></td>
                                     <td>
                                         <?php if( $cs->company_id > 0 ){ ?>
@@ -75,6 +79,9 @@
                                                 <?php if(checkRoleCanAccessModule('customer-settings', 'write')){ ?>
                                                 <li>
                                                     <a class="dropdown-item edit-item customer-status-item" href="javascript:void(0);" data-id="<?= $cs->id; ?>" data-name="<?= $cs->name; ?>" data-bs-toggle="modal" data-bs-target="#edit_customer_status_modal">Edit</a>
+                                                </li>
+                                                <li>
+                                                    <a class="dropdown-item set-default-item" href="javascript:void(0);" data-id="<?= $cs->id; ?>" data-value="<?= $cs->installer_code; ?>">Set As Default</a>
                                                 </li>
                                                 <?php } ?>
                                                 <?php if(checkRoleCanAccessModule('customer-settings', 'delete')){ ?>
@@ -254,6 +261,65 @@
                                 }); 
                             }
                         },
+                    });
+                }
+            });
+        });
+
+        $(document).on("click", ".set-default-item", function() {
+            let id = $(this).attr("data-id");
+            let value = $(this).attr('data-value');
+
+            Swal.fire({
+                title: 'Set As Default',
+                html: `Are you sure you want to set customer status <b>${value}</b> as default?`,
+                icon: 'question',
+                confirmButtonText: 'Proceed',
+                showCancelButton: true,
+                cancelButtonText: "Cancel"
+            }).then((result) => {
+                if (result.value) {
+                    $.ajax({
+                        type: 'POST',
+                        url: base_url + "customer/_set_default_customer_status",
+                        data: {id: id},
+                        dataType: "JSON",
+                        success: function(result) {
+                            if (result.is_success) {
+                                Swal.fire({
+                                    title: 'Set As Default',
+                                    text: "Data Updated Successfully!",
+                                    icon: 'success',
+                                    showCancelButton: false,
+                                    confirmButtonText: 'Okay'
+                                }).then((result) => {
+                                    //if (result.value) {
+                                        location.reload();
+                                    //}
+                                });
+                            } else {
+                                Swal.fire({
+                                    title: 'Error',
+                                    text: result.msg,
+                                    icon: 'error',
+                                    showCancelButton: false,
+                                    confirmButtonText: 'Okay'
+                                });
+                            }
+                        },
+                        beforeSend: function(){
+                            Swal.fire({
+                                icon: "info",
+                                title: "Processing",
+                                html: "Please wait while the process is running...",
+                                allowOutsideClick: false,
+                                allowEscapeKey: false,
+                                showConfirmButton: false,
+                                didOpen: () => {
+                                    Swal.showLoading();
+                                },
+                            });
+                        }
                     });
                 }
             });

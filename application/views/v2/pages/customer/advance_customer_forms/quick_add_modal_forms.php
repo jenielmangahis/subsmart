@@ -258,7 +258,7 @@
                         <div class="col-sm-12">
                             <label class="mb-2">Name</label>
                             <div class="input-group mb-3">
-                                <input type="text" name="lender_type_name" id="lender_type_name" value="" class="form-control" required="" autocomplete="off" />
+                                <input type="text" name="lender_type_name" id="quick_add_lender_type_name" value="" class="form-control" required="" autocomplete="off" />
                             </div>
                         </div>
                     </div>
@@ -286,7 +286,7 @@
                         <div class="col-sm-12">
                             <label class="mb-2">Name</label>
                             <div class="input-group mb-3">
-                                <input type="text" name="system_size_name" id="system_size_name" value="" class="form-control" required="" autocomplete="off" />
+                                <input type="text" name="system_size_name" id="quick_add_system_size_name" value="" class="form-control" required="" autocomplete="off" />
                             </div>
                         </div>
                     </div>
@@ -314,7 +314,7 @@
                         <div class="col-sm-12">
                             <label class="mb-2">Name</label>
                             <div class="input-group mb-3">
-                                <input type="text" name="proposed_module_name" id="proposed_module_name" value="" class="form-control" required="" autocomplete="off" />
+                                <input type="text" name="proposed_module_name" id="quick_add_proposed_module_name" value="" class="form-control" required="" autocomplete="off" />
                             </div>
                         </div>
                     </div>
@@ -342,7 +342,7 @@
                         <div class="col-sm-12">
                             <label class="mb-2">Name</label>
                             <div class="input-group mb-3">
-                                <input type="text" name="proposed_inverter_name" id="proposed_inverter_name" value="" class="form-control" required="" autocomplete="off" />
+                                <input type="text" name="proposed_inverter_name" id="quick_add_proposed_inverter_name" value="" class="form-control" required="" autocomplete="off" />
                             </div>
                         </div>
                     </div>
@@ -370,7 +370,7 @@
                         <div class="col-sm-12">
                             <label class="mb-2">Installer Code</label>
                             <div class="input-group mb-3">
-                                <input type="text" name="installer_code" id="installer_code" value="" class="form-control" required="" autocomplete="off" />
+                                <input type="text" name="installer_code" id="quick_add_installer_code" value="" class="form-control" required="" autocomplete="off" />
                             </div>
                         </div>
                     </div>
@@ -398,7 +398,7 @@
                         <div class="col-sm-12">
                             <label class="mb-2">Site Type</label>
                             <div class="input-group mb-3">
-                                <input type="text" name="site_type" id="site_type_name" value="" class="form-control" required="" autocomplete="off" />
+                                <input type="text" name="site_type" id="quick_add_site_type_name" value="" class="form-control" required="" autocomplete="off" />
                             </div>
                         </div>
                     </div>
@@ -426,7 +426,7 @@
                         <div class="col-sm-12">
                             <label class="mb-2">Account Type</label>
                             <div class="input-group mb-3">
-                                <input type="text" name="account_type" id="account_type_name" value="" class="form-control" required="" autocomplete="off" />
+                                <input type="text" name="account_type" id="quick_add_account_type_name" value="" class="form-control" required="" autocomplete="off" />
                             </div>
                         </div>
                     </div>
@@ -454,25 +454,25 @@
                         <div class="col-sm-12">
                             <label class="mb-2">Package Name</label>
                             <div class="input-group mb-3">
-                                <input type="text" placeholder="" name="package_name" id="system_name" class="nsm-field form-control mb-2" required />
+                                <input type="text" placeholder="" name="package_name" id="quick_add_system_name" class="nsm-field form-control mb-2" required />
                             </div>
                         </div> 
                         <div class="col-sm-12 col-md-6">
                             <label class="mb-2">Alarm.com</label>
                             <div class="input-group mb-3">
-                                <input type="number" step="any" placeholder="0.00" name="alarmcom_cost" id="alarmcom_cost" class="nsm-field form-control mb-2" />
+                                <input type="number" step="any" placeholder="0.00" name="alarmcom_cost" id="quick_add_alarmcom_cost" class="nsm-field form-control mb-2" />
                             </div>
                         </div>
                         <div class="col-sm-12 col-md-6">
                             <label class="mb-2">AlarmNet</label>
                             <div class="input-group mb-3">
-                                <input type="number" step="any" placeholder="0.00" name="alarmnet_cost" id="alarmnet_cost" class="nsm-field form-control mb-2" />
+                                <input type="number" step="any" placeholder="0.00" name="alarmnet_cost" id="quick_add_alarmnet_cost" class="nsm-field form-control mb-2" />
                             </div>
                         </div> 
                         <div class="col-sm-12 col-md-6">
                             <label class="mb-2">Acct Cost</label>
                             <div class="input-group mb-3">
-                                <input type="number" step="any" placeholder="0.00" name="acct_cost" id="acct_cost" class="nsm-field form-control mb-2" />
+                                <input type="number" step="any" placeholder="0.00" name="acct_cost" id="quick_add_acct_cost" class="nsm-field form-control mb-2" />
                             </div>
                         </div> 
                     </div>
@@ -500,7 +500,7 @@
                     <div class="col-sm-12">
                         <label class="mb-2">Monitoring Company</label>
                         <div class="input-group mb-3">
-                            <input type="text" name="monitoring_company" id="add_monitoring_company" value="" class="form-control" required="" autocomplete="off" />
+                            <input type="text" name="monitoring_company" id="quick_add_monitoring_company" value="" class="form-control" required="" autocomplete="off" />
                         </div>
                     </div>                 
                 </div>
@@ -510,6 +510,35 @@
                 <button type="button" class="nsm-button" data-bs-dismiss="modal">Close</button>
                 <button type="button" class="nsm-button btn-fixed-width" id="btn-manage-monitoring-company">Manage</button>
                 <button type="submit" class="nsm-button primary" id="btn-quick-add-monitoring-company" form="quick-add-monitoring-company">Save</button>
+            </div>
+            </form>                
+        </div>
+    </div>
+</div>
+
+<div class="modal fade nsm-modal fade" id="quick_add_receiver_phone_number_modal" tabindex="-1" aria-labelledby="quick_add_receiver_phone_number_modal_label" aria-hidden="true">
+    <div class="modal-dialog modal-md modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <span class="modal-title content-title">Add Receiver Phone Number</span>
+                <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
+            </div>
+            <div class="modal-body">
+                <form method="POST" id="frm-quick-add-receiver-phone-number">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <label class="mb-2">Receiver Phone Number</label>
+                        <div class="input-group mb-3">
+                            <input type="text" name="receiver_number" id="quick_add_receiver_number" value="" maxlength="12" placeholder="xxx-xxx-xxxx" class="form-control quick_add_phone_number_format" required="" autocomplete="off" />
+                        </div>
+                    </div>                   
+                </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="nsm-button" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="nsm-button btn-fixed-width" id="btn-manage-receiver-phone-number">Manage</button>
+                <button type="submit" class="nsm-button primary" id="btn-quick-add-receiver-phone-number" form="frm-quick-add-receiver-phone-number">Save</button>
             </div>
             </form>                
         </div>

@@ -17,10 +17,20 @@
                 Status
             </div>
             <div class="col-md-8">
+                <?php 
+                    $status = '';
+                    if( $defaultCustomerStatus ){
+                        $status = $defaultCustomerStatus->name;
+                    }
+
+                    if( $profile_info ){
+                        $status = $profile_info->status;
+                    }
+                ?>
                 <select data-type="customer_status" id="status" name="status" data-customer-source="dropdown" class="input_select" >
                     <option  value=""></option>
-                    <?php foreach ($customer_status as $status): ?>
-                        <option <?= isset($profile_info) ? ($profile_info->status == $status->name ? 'selected' : '') : '' ?> value="<?= $status->name ?>"><?= $status->name ?></option>
+                    <?php foreach ($customer_status as $st): ?>
+                        <option <?= $status == $st->name ? 'selected="selected"' : ''; ?> value="<?= $st->name ?>"><?= $st->name ?></option>
                     <?php endforeach; ?>
                 </select>
                 <a href="javascript:void(0);" class="nsm-button btn-small" id="btn-quick-add-customer-status"><span class="fa fa-plus"></span> Add Status</a>

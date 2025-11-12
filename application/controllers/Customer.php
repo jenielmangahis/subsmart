@@ -3912,6 +3912,7 @@ class Customer extends MY_Controller
         $this->load->model('AcsAccountType_model');
         $this->load->model('AcsAlarmMonitoringCompany_model');
         $this->load->model('AcsAlarmReceiverPhoneNumber_model');
+        $this->load->model('CustomerStatus_model');
 
         $this->hasAccessModule(9);
 
@@ -4192,6 +4193,7 @@ class Customer extends MY_Controller
         $defaultMonitoringCompany = $this->AcsAlarmMonitoringCompany_model->getCompanyDefaultValue($company_id);
         $receiverPhoneNumbers = $this->AcsAlarmReceiverPhoneNumber_model->getAllByCompanyId($company_id);
         $defaultReceiverPhoneNumber = $this->AcsAlarmReceiverPhoneNumber_model->getCompanyDefaultValue($company_id);
+        $defaultCustomerStatus = $this->CustomerStatus_model->getCompanyDefaultValue($company_id);
 
         // search Alarm.com customer
         $this->load->helper(array('alarm_api_helper'));    
@@ -4246,6 +4248,7 @@ class Customer extends MY_Controller
         $this->page_data['defaultMonitoringCompany'] = $defaultMonitoringCompany;
         $this->page_data['receiverPhoneNumbers'] = $receiverPhoneNumbers;
         $this->page_data['defaultReceiverPhoneNumber'] = $defaultReceiverPhoneNumber;
+        $this->page_data['defaultCustomerStatus'] = $defaultCustomerStatus;
         //$this->load->view('v2/pages/customer/add', $this->page_data);
         $this->load->view('v2/pages/customer/add_dynamic_fields', $this->page_data);
     }
@@ -10529,7 +10532,10 @@ class Customer extends MY_Controller
                 $msg = 'Status name ' . $post['name'] . ' already exists.';
             }else{
                 if( $customerStatus ){
-                    $data = ['name' => $post['name']];
+                    $data = [
+                        'name' => $post['name'],
+                        'date_updated' => date("Y-m-d H:i:s")
+                    ];
                     $this->CustomerStatus_model->update($customerStatus->id, $data);
                     
                     //Activity Logs
@@ -15409,49 +15415,108 @@ class Customer extends MY_Controller
         $this->load->model('AcsCustomerCancellationRequest');
         $this->load->model('Users_model');
 
-        $is_live_mail_credentials = false;
+        $is_live_mail_credentials = true;
         $is_success = 0;
         $msg    = 'Cannot find customer data';
 
         $post = $this->input->post();
         $company_id = logged('company_id');
+        $data = [];
 
         $cancellationRequest = $this->AcsCustomerCancellationRequest->getByCustomerId($post['customer_id']);
         $customer = $this->AcsProfile_model->getByProfId($post['customer_id']);
         if( $customer && $customer->company_id == $company_id ){
             if( $cancellationRequest ){
-                $data = [
-                    'request_date' => date("Y-m-d",strtotime($post['date_request_received'])),
-                    'reason' => $post['reason'],
-                    'boc_amount' => $post['boc_amount'],
-                    'boc_received_date' => date("Y-m-d",strtotime($post['boc_received_date'])),
-                    'cs_close_date' => date("Y-m-d",strtotime($post['cs_closed_ate'])),
-                    'equipment_return_date' => date("Y-m-d",strtotime($post['equipment_return_date'])),
-                    'next_action' => $post['next_step'],
-                    'date_modified' => date("Y-m-d H:i:s"),
-                ];
-                $this->AcsCustomerCancellationRequest->update($cancellationRequest->id, $data);      
-            }else{
-                $data = [
-                    'customer_id' => $customer->prof_id,
-                    'request_date' => date("Y-m-d",strtotime($post['date_request_received'])),
-                    'reason' => $post['reason'],
-                    'boc_amount' => $post['boc_amount'],
-                    'boc_received_date' => date("Y-m-d",strtotime($post['boc_received_date'])),
-                    'cs_close_date' => date("Y-m-d",strtotime($post['cs_closed_ate'])),
-                    'equipment_return_date' => date("Y-m-d",strtotime($post['equipment_return_date'])),
-                    'next_action' => $post['next_step'],
-                    'date_created' => date("Y-m-d H:i:s"),
-                    'date_modified' => date("Y-m-d H:i:s"),
-                ];
+                if($post['status_request'] == 'Cancelled') {
+                    $data = [
+                        'status_request' => $post['status_request'],
+                        'request_date' => date("Y-m-d",strtotime($post['date_request_received'])),
+                        'reason' => $post['reason'],
+                        'boc_amount' => $post['boc_amount'],
+                        'boc_received_date' => date("Y-m-d",strtotime($post['boc_received_date'])),
+                        'cs_close_date' => date("Y-m-d",strtotime($post['cs_closed_ate'])),
+                        'equipment_return_date' => date("Y-m-d",strtotime($post['equipment_return_date'])),
+                        'next_action' => $post['next_step'],
+                        'date_modified' => date("Y-m-d H:i:s"),
+                        'status' => 'pending'
+                    ];
+                }elseif($post['status_request'] == 'Collection') {
+                    $data = [
+                        'status_request' => $post['status_request'],
+                        'audit_date' => $post['audit_date'],
+                        'collection_status' => $post['collection_status'],
+                        'statement_of_claim' => $post['statement_of_claim'],
+                        'court_date' => $post['court_date'],
+                        'judgement_amount' => $post['judgement_amount'],
+                        'date_modified' => date("Y-m-d H:i:s"),
+                        'status' => 'pending'
+                    ];                    
+                }elseif($post['status_request'] == 'Non Compliance Audit Needed') {
+                    $data = [
+                        'status_request' => $post['status_request'],
+                        'audit_date' => $post['audit_date'],
+                        'date_modified' => date("Y-m-d H:i:s"),
+                        'status' => 'pending'
+                    ];
+                }
 
-                $this->AcsCustomerCancellationRequest->create($data);    
+                if($data) {
+                    $this->AcsCustomerCancellationRequest->update($cancellationRequest->id, $data);  
+                }
+            }else{
+                if($post['status_request'] == 'Cancelled') {
+                    $data = [
+                        'status_request' => $post['status_request'],
+                        'customer_id' => $customer->prof_id,
+                        'request_date' => !empty($post['date_request_received']) ? date("Y-m-d",strtotime($post['date_request_received'])) : date("Y-m-d"),
+                        'reason' => !empty($post['reason']) ? $post['reason'] : '',
+                        'boc_amount' => $post['boc_amount'],
+                        'boc_received_date' => date("Y-m-d",strtotime($post['boc_received_date'])),
+                        'cs_close_date' => date("Y-m-d",strtotime($post['cs_closed_ate'])),
+                        'equipment_return_date' => date("Y-m-d",strtotime($post['equipment_return_date'])),
+                        'next_action' => $post['next_step'],
+                        'date_created' => date("Y-m-d H:i:s"),
+                        'date_modified' => date("Y-m-d H:i:s"),
+                    ];                    
+                }elseif($post['status_request'] == 'Collection') {
+                    $data = [
+                        'status_request' => $post['status_request'],
+                        'customer_id' => $customer->prof_id,
+                        'request_date' => !empty($post['date_request_received']) ? date("Y-m-d",strtotime($post['date_request_received'])) : date("Y-m-d"),
+                        'reason' => !empty($post['reason']) ? $post['reason'] : '',
+                        'boc_amount' => 0.00,
+                        'audit_date' => $post['audit_date'],
+                        'collection_status' => $post['collection_status'],
+                        'statement_of_claim' => $post['statement_of_claim'],
+                        'court_date' => $post['court_date'],
+                        'judgement_amount' => $post['judgement_amount'],
+                        'date_created' => date("Y-m-d H:i:s"),
+                        'date_modified' => date("Y-m-d H:i:s"),
+                    ];                     
+                }elseif($post['status_request'] == 'Non Compliance Audit Needed') {
+                    $data = [
+                        'status_request' => $post['status_request'],
+                        'customer_id' => $customer->prof_id,
+                        'request_date' => !empty($post['date_request_received']) ? date("Y-m-d",strtotime($post['date_request_received'])) : date("Y-m-d"),
+                        'reason' => !empty($post['reason']) ? $post['reason'] : '',
+                        'boc_amount' => 0.00,
+                        'audit_date' => $post['audit_date'],
+                        'date_created' => date("Y-m-d H:i:s"),
+                        'date_modified' => date("Y-m-d H:i:s"),
+                    ];
+                }
+
+                if($data) {
+                    $this->AcsCustomerCancellationRequest->create($data);   
+                }
+                 
             }
 
             $attachment = '';
 
             //Send email
             $companyAdmin = $this->Users_model->getCompanyAdmin($company_id);
+            $ownerAdmin   = $this->Users_model->getOwnerAdmin($company_id);
             if( $companyAdmin && $companyAdmin->email != '' ){
                 $email_data['name'] = $companyAdmin->FName;
                 $email_data['customer_name'] = $customer->first_name . ' ' . $customer->last_name;
@@ -15459,13 +15524,18 @@ class Customer extends MY_Controller
                 $email_data['cancellation_url'] = $cancellation_url;
                 $body = $this->load->view('v2/emails/customer_cancellation_request', $email_data, true);
 
-                $to_send = 'bryann.revina03@gmail.com'; //$companyAdmin->email;
+                //$toAdminEmail = 'bryann.revina03@gmail.com';
+                $toAdminEmail = $companyAdmin->email;
+                $toOwnerEmail = $ownerAdmin->email;
 
                 if($is_live_mail_credentials) {
                     $mail = email__getInstance();
                     $mail->FromName = 'nSmarTrac';
                     $recipient_name = $companyAdmin->FName . ' ' . $companyAdmin->LName;
-                    $mail->addAddress($to_send, $recipient_name);
+                    $mail->addAddress($toAdminEmail, $recipient_name);
+                    if($toOwnerEmail) {
+                        $mail->addCC($toOwnerEmail, $toOwnerEmail);
+                    }  
                     $mail->isHTML(true);
                     $mail->Subject = "Customer Request for Cancellation";
                     $mail->Body = $body;
@@ -15542,6 +15612,67 @@ class Customer extends MY_Controller
         ];
         echo json_encode($return);
     }    
+
+    public function ajax_update_customer_status_request()
+    {
+        $this->load->model('Customer_advance_model');
+
+        $is_success = 0;
+        $msg    = 'Cannot find customer data';
+
+        $post = $this->input->post();
+
+        if($post['customer_id'] && $post['status_request']) {
+                $data = [
+                    'prof_id' => $post['customer_id'],
+                    'status' => $post['status_request'],
+                ];
+                $this->Customer_advance_model->update_data($data, 'acs_profile', 'prof_id');
+
+                
+                $data2 = [
+                    'id' => $post['acs_ccr_id'],
+                    'status' => 'approved',
+                ];
+                $this->Customer_advance_model->update_data($data2, 'acs_customer_cancellation_requests', 'id');
+
+                $is_success = 1;
+                $msg        = '';
+        }
+
+        $return = [
+            'is_success' => $is_success,
+            'msg' => $msg
+        ];
+        echo json_encode($return);        
+    }
+
+    public function ajax_customer_status_request_disapproved()
+    {
+        $this->load->model('Customer_advance_model');
+
+        $is_success = 0;
+        $msg    = 'Cannot find customer data';
+
+        $post = $this->input->post();
+
+        if($post['customer_id'] && $post['acs_ccr_id']) {                
+                $data = [
+                    'id' => $post['acs_ccr_id'],
+                    'status' => 'disapproved',
+                ];
+                $this->Customer_advance_model->update_data($data, 'acs_customer_cancellation_requests', 'id');
+
+                $is_success = 1;
+                $msg        = '';
+        }
+
+        $return = [
+            'is_success' => $is_success,
+            'msg' => $msg
+        ];
+        echo json_encode($return);   
+    }
 
     public function ajax_set_default_monitoring_company()
     {
@@ -15856,5 +15987,36 @@ class Customer extends MY_Controller
         ];
 
         echo json_encode($return);
+    }
+
+    public function ajax_set_default_customer_status()
+    {
+        $this->load->model('CustomerStatus_model');
+
+        $is_success = 0;
+        $msg = 'Cannot find record';
+
+        $company_id = logged('company_id');
+        $post = $this->input->post();
+
+        $customerStatus = $this->CustomerStatus_model->getByIdAndCompanyId($post['id'], $company_id);
+        if ($customerStatus) {
+            $this->CustomerStatus_model->resetDefaultByCompanyId($company_id);
+            $this->CustomerStatus_model->update($customerStatus->id, ['is_default' => 'Yes']);
+
+            //Activity Logs
+            $activity_name = 'Customer Status : Set default value to ' . $customerStatus->name; 
+            createActivityLog($activity_name);
+
+            $is_success = 1;
+            $msg = '';
+        }
+
+        $json_data = [
+            'is_success' => $is_success,
+            'msg' => $msg,
+        ];
+
+        echo json_encode($json_data);
     }
 }

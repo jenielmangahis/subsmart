@@ -211,68 +211,81 @@
             let status = $(this).val();
             let customer_id = "<?= $profile_info ? $profile_info->prof_id : 0; ?>";
             
-            <?php if( isAdiCompany() && $profile_info ){ ?>
-            /*if( status == 'Cancelled' || status == 'Cancel' || status == 'Charge Back' || status == 'Collection' || status == 'Competition Lost' ){
-                $('#office-info-cancel-date').attr('required', 'required');
-                $('#cancel_reason').attr('required', 'required');
-                //$('#collections').attr('required', 'required');
-                //$('#office-use-collection-date').attr('required', 'required');
-                //$('#office-info-collect-amount').attr('required', 'required');
-                $('#cancelled-related-fields-container-a').show();
-                //let previous_status = "<?= $profile_info->status; ?>";
+            <?php if( $profile_info ){ //isAdiCompany() ?>
+                /*if( status == 'Cancelled' || status == 'Cancel' || status == 'Charge Back' || status == 'Collection' || status == 'Competition Lost' ){
+                    $('#office-info-cancel-date').attr('required', 'required');
+                    $('#cancel_reason').attr('required', 'required');
+                    //$('#collections').attr('required', 'required');
+                    //$('#office-use-collection-date').attr('required', 'required');
+                    //$('#office-info-collect-amount').attr('required', 'required');
+                    $('#cancelled-related-fields-container-a').show();
+                    //let previous_status = "<?= $profile_info->status; ?>";
 
-                //$('#status').val(previous_status).trigger("change");
-            }else{
-                $('#office-info-cancel-date').removeAttr('required');
-                $('#cancel_reason').removeAttr('required');
-                //$('#collections').removeAttr('required');
-                //$('#office-use-collection-date').removeAttr('required');
-                //$('#office-info-collect-amount').removeAttr('required');
-                $('#cancelled-related-fields-container-a').hide();
-            }*/
+                    //$('#status').val(previous_status).trigger("change");
+                }else{
+                    $('#office-info-cancel-date').removeAttr('required');
+                    $('#cancel_reason').removeAttr('required');
+                    //$('#collections').removeAttr('required');
+                    //$('#office-use-collection-date').removeAttr('required');
+                    //$('#office-info-collect-amount').removeAttr('required');
+                    $('#cancelled-related-fields-container-a').hide();
+                }*/
 
-            if( status == 'Cancelled' || status == 'Cancel' || status == 'Charge Back' || status == 'Collection' || status == 'Competition Lost' || status == 'Non Compliance Audit Needed' ){                    
-                $('#request-cancellation-customer-id').val(customer_id);
-                $('#send_cancel_status_request_modal').modal('show');
-            }
+                if( status == 'Cancelled' || status == 'Cancel' || status == 'Charge Back' || status == 'Collection' || status == 'Competition Lost' || status == 'Non Compliance Audit Needed' ){                    
+                    $('#request-cancellation-customer-id').val(customer_id);
+                    $('#request-cancellation-status-request').val(status);
+                    $('#send_cancel_status_request_modal').modal('show');
+                }
 
-            if( status == 'Non Compliance Audit Needed' ){
-                $('#cancellation-request-form-group-2').show();
-                $('#cancellation-request-form-group-1').hide();
-                $('#cancellation-request-form-group-3').hide();
-            }else if( status == 'Collection' ) {
-                $('#cancellation-request-form-group-3').show();
-                $('#cancellation-request-form-group-1').hide();
-                $('#cancellation-request-form-group-2').hide();                
-            }else{
-                $('#cancellation-request-form-group-1').show();
-                $('#cancellation-request-form-group-2').hide();
-                $('#cancellation-request-form-group-3').hide();
-            }
+                if( status == 'Non Compliance Audit Needed' ){
+                    $('#cancellation-request-form-group-2').show();
+                    $('#cancellation-request-form-group-1').hide();
+                    $('#cancellation-request-form-group-3').hide();
 
-            if( status == 'Cancelled' ){
-                let previous_status = "<?= $profile_info->status; ?>";
-                $('#status').val(previous_status).trigger("change");
-            }
+                    $('#cancellation-request-form-group-1').find('input, select, textarea, button').prop('disabled', true);
+                    $('#cancellation-request-form-group-2').find('input, select, textarea, button').prop('disabled', false);
+                    $('#cancellation-request-form-group-3').find('input, select, textarea, button').prop('disabled', true);
+                }else if( status == 'Collection' ) {
+                    $('#cancellation-request-form-group-3').show();
+                    $('#cancellation-request-form-group-1').hide();
+                    $('#cancellation-request-form-group-2').hide(); 
+                    
+                    $('#cancellation-request-form-group-1').find('input, select, textarea, button').prop('disabled', true);
+                    $('#cancellation-request-form-group-2').find('input, select, textarea, button').prop('disabled', true);
+                    $('#cancellation-request-form-group-3').find('input, select, textarea, button').prop('disabled', false);
+                }else{
+                    $('#cancellation-request-form-group-1').show();
+                    $('#cancellation-request-form-group-2').hide();
+                    $('#cancellation-request-form-group-3').hide();
 
-            //Hide show sections - only for adi companies            
-            if( status == 'Cancelled' ){
-                $('#add-advance-alarm-section').hide();
-                $('#add-advance-custom-fields').hide();
-                $('#add-advance-billing-info').hide();
-                $('#add-advance-payment-schedule').hide();
-                $('#add-advance-customer-papers').hide();
-                $('#funding-information-container').hide();
-                $('#add-advance-access-info').hide();                
-            }else{
-                $('#add-advance-alarm-section').show();
-                $('#add-advance-custom-fields').show();
-                $('#add-advance-billing-info').show();
-                $('#add-advance-payment-schedule').show();
-                $('#add-advance-customer-papers').show();
-                $('#funding-information-container').show();
-                $('#add-advance-access-info').show();
-            }               
+                    $('#cancellation-request-form-group-1').find('input, select, textarea, button').prop('disabled', false);
+                    $('#cancellation-request-form-group-2').find('input, select, textarea, button').prop('disabled', true);
+                    $('#cancellation-request-form-group-3').find('input, select, textarea, button').prop('disabled', true);
+                }
+
+                if( status == 'Cancelled' ){
+                    let previous_status = "<?= $profile_info->status; ?>";
+                    $('#status').val(previous_status).trigger("change");
+                }
+
+                //Hide show sections - only for adi companies            
+                if( status == 'Cancelled' ){
+                    $('#add-advance-alarm-section').hide();
+                    $('#add-advance-custom-fields').hide();
+                    $('#add-advance-billing-info').hide();
+                    $('#add-advance-payment-schedule').hide();
+                    $('#add-advance-customer-papers').hide();
+                    $('#funding-information-container').hide();
+                    $('#add-advance-access-info').hide();                
+                }else{
+                    $('#add-advance-alarm-section').show();
+                    $('#add-advance-custom-fields').show();
+                    $('#add-advance-billing-info').show();
+                    $('#add-advance-payment-schedule').show();
+                    $('#add-advance-customer-papers').show();
+                    $('#funding-information-container').show();
+                    $('#add-advance-access-info').show();
+                }               
             <?php } ?>
 
             
@@ -1682,10 +1695,52 @@
             });
         });
 
+        $('#frm-quick-add-receiver-phone-number').on('submit', function(e){
+            e.preventDefault();
+
+            $.ajax({
+                type: "POST",
+                url: base_url + 'customers/_create_receiver_phone_number',
+                dataType: 'json',
+                data: $('#frm-quick-add-receiver-phone-number').serialize(),
+                success: function(data) {    
+                    $('#btn-quick-add-receiver-phone-number').html('Save');                   
+                    if (data.is_success) {
+                        $('#quick_add_receiver_phone_number_modal').modal('hide');
+                        $('#receiver_phone_number').append($('<option>', {
+                            value: data.receiver_number,
+                            text: data.receiver_number,
+                        }));
+                        $('#receiver_phone_number').val(data.receiver_number);
+                    }else{
+                        Swal.fire({
+                            title: 'Error',
+                            text: data.msg,
+                            icon: 'error',
+                            showCancelButton: false,
+                            confirmButtonText: 'Okay'
+                        }).then((result) => {
+                            
+                        });
+                    }
+                },
+                beforeSend: function() {
+                    $('#btn-quick-add-receiver-phone-number').html('<span class="bx bx-loader bx-spin"></span>');
+                }
+            });
+        });
+
         $('#btn-quick-add-proposed-module').on('click', function(){
             $('#frm-quick-add-proposed-module')[0].reset();
             $('#quick_add_proposed_module').modal('show');
         }); 
+
+        $('#btn-manage-proposed-module').on('click', function(){
+            window.open(
+                base_url + 'customer/settings_solar_modules',
+                '_blank' 
+            );
+        });
 
         $('#btn-manage-proposed-module').on('click', function(){
             window.open(
@@ -1737,6 +1792,20 @@
         $('#btn-manage-proposed-inverter').on('click', function(){
             window.open(
                 base_url + 'customer/settings_solar_inverter',
+                '_blank' 
+            );
+        });
+
+        $('#btn-manage-monitoring-company').on('click', function(){
+            window.open(
+                base_url + 'customer/settings_alarm_monitoring_companies',
+                '_blank' 
+            );
+        });
+
+        $('#btn-manage-receiver-phone-number').on('click', function(){
+            window.open(
+                base_url + 'customer/settings_alarm_receiver_phone_numbers',
                 '_blank' 
             );
         });
@@ -1848,6 +1917,11 @@
         $('#btn-quick-communication-type').on('click', function(){
             $('#quick-add-system-package-form')[0].reset();
             $('#quick_add_system_package_modal').modal('show');
+        });
+
+        $('#btn-quick-receiver-phone-number').on('click', function(){
+            $('#frm-quick-add-receiver-phone-number')[0].reset();
+            $('#quick_add_receiver_phone_number_modal').modal('show');
         });
 
         function load_account_cost(){

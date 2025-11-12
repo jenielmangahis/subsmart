@@ -267,56 +267,58 @@
         }
 
         if (employeeID != "") {
-            $.ajax({
-                url: `${window.origin}/dashboard/thumbnailWidgetRequest`,
-                type: "POST",
-                data: {
-                    category: "scorecard_lookup",
-                    dateFrom: dateTo,
-                    dateTo: dateFrom,
-                    filter3: employeeID
-                },
-                beforeSend: function() {
-                    $('.<?php echo "textDataContainer_$id"; ?>').hide();
-                    $('.<?php echo "tableDataContainer_$id"; ?>').hide();
-                    $('.<?php echo "graphLoaderContainer_$id"; ?>').show();
-                    $('.<?php echo "noRecordFoundContainer_$id"; ?>').hide();
-                    $('.<?php echo "networkErrorContainer_$id"; ?>').hide();
-                },
-                success: function (response) {
-                    const data = JSON.parse(response);
-                    const points = (data[0].total_points) ? data[0].total_points : 0;
-                    const date_created = new Date(data[0].date_created).getFullYear();
-                    // const profileImg = data[0].profile_img ? `${window.origin}/uploads/users/${data[0].profile_img}` : "https://cdn-icons-png.flaticon.com/512/3541/3541871.png";
+            try {
+                $.ajax({
+                    url: `${window.origin}/dashboard/thumbnailWidgetRequest`,
+                    type: "POST",
+                    data: {
+                        category: "scorecard_lookup",
+                        dateFrom: dateTo,
+                        dateTo: dateFrom,
+                        filter3: employeeID
+                    },
+                    beforeSend: function() {
+                        $('.<?php echo "textDataContainer_$id"; ?>').hide();
+                        $('.<?php echo "tableDataContainer_$id"; ?>').hide();
+                        $('.<?php echo "graphLoaderContainer_$id"; ?>').show();
+                        $('.<?php echo "noRecordFoundContainer_$id"; ?>').hide();
+                        $('.<?php echo "networkErrorContainer_$id"; ?>').hide();
+                    },
+                    success: function (response) {
+                        const data = JSON.parse(response);
+                        const points = (data[0].total_points) ? data[0].total_points : 0;
+                        const date_created = new Date(data[0].date_created).getFullYear();
+                        // const profileImg = data[0].profile_img ? `${window.origin}/uploads/users/${data[0].profile_img}` : "https://cdn-icons-png.flaticon.com/512/3541/3541871.png";
 
-                    // Temporary img
-                    const profileImg = `${window.origin}/uploads/users/default.png`;
-                    $('.scorecard_profile_img').attr('src', profileImg);
-                    $('.scorecard_name').text(data[0].employee_name);
-                    $('.scorecard_others').text(`Rep #${data[0].employee_id} • Since ${date_created}`);
-                    $('.scorecard_points').text(points);
-                    $('.scorecard_points').parent().parent().attr(`onclick`, `window.open('${window.origin}/users/view/${data[0].employee_id}', '_blank')`);
-                    // $('.scorecard_jobcount').text(data[0].job_count);
-                    // $('.scorecard_servicecount').text(data[0].ticket_count);
-                    $('.scorecard_attendance').text(`${data[0].attendance_percentage}%`);
-                    $('.scorecard_attendance').parent().parent().attr(`onclick`, `window.open('${window.origin}/users/view/${data[0].employee_id}', '_blank')`);
-                    $('.scorecard_overall_performance').css('width', `${data[0].overall_performance}%`);
-                    $('.scorecard_overall_performance > strong').text(`${data[0].overall_performance}%`);
-                    $('.scorecard_ticket_column').text(data[0].job_count);
-                    $('.scorecard_job_column').text(data[0].ticket_count);
+                        // Temporary img
+                        const profileImg = `${window.origin}/uploads/users/default.png`;
+                        $('.scorecard_profile_img').attr('src', profileImg);
+                        $('.scorecard_name').text(data[0].employee_name);
+                        $('.scorecard_others').text(`Rep #${data[0].employee_id} • Since ${date_created}`);
+                        $('.scorecard_points').text(points);
+                        $('.scorecard_points').parent().parent().attr(`onclick`, `window.open('${window.origin}/users/view/${data[0].employee_id}', '_blank')`);
+                        // $('.scorecard_jobcount').text(data[0].job_count);
+                        // $('.scorecard_servicecount').text(data[0].ticket_count);
+                        $('.scorecard_attendance').text(`${data[0].attendance_percentage}%`);
+                        $('.scorecard_attendance').parent().parent().attr(`onclick`, `window.open('${window.origin}/users/view/${data[0].employee_id}', '_blank')`);
+                        $('.scorecard_overall_performance').css('width', `${data[0].overall_performance}%`);
+                        $('.scorecard_overall_performance > strong').text(`${data[0].overall_performance}%`);
+                        $('.scorecard_ticket_column').text(data[0].job_count);
+                        $('.scorecard_job_column').text(data[0].ticket_count);
 
-                    $('.<?php echo "textDataContainer_$id"; ?>').show();
-                    $('.<?php echo "tableDataContainer_$id"; ?>').show();
-                    $('.<?php echo "graphLoaderContainer_$id"; ?>').hide();
-                    $('.<?php echo "noRecordFoundContainer_$id"; ?>').hide();
-                    $('.<?php echo "networkErrorContainer_$id"; ?>').hide();
-                    widgetMasonry = new Masonry(document.getElementById('widgetMasonry'), { percentPosition: true, horizontalOrder: true, });
-                },
-                error: function () {
-                    widgetMasonry = new Masonry(document.getElementById('widgetMasonry'), { percentPosition: true, horizontalOrder: true, });
-                    console.error("Failed to fetch user data.");
-                }
-            });
+                        $('.<?php echo "textDataContainer_$id"; ?>').show();
+                        $('.<?php echo "tableDataContainer_$id"; ?>').show();
+                        $('.<?php echo "graphLoaderContainer_$id"; ?>').hide();
+                        $('.<?php echo "noRecordFoundContainer_$id"; ?>').hide();
+                        $('.<?php echo "networkErrorContainer_$id"; ?>').hide();
+                        widgetMasonry = new Masonry(document.getElementById('widgetMasonry'), { percentPosition: true, horizontalOrder: true, });
+                    },
+                    error: function () {
+                        widgetMasonry = new Masonry(document.getElementById('widgetMasonry'), { percentPosition: true, horizontalOrder: true, });
+                        console.error("Failed to fetch user data.");
+                    }
+                });
+            } catch (e) {}
         }
     });
 
