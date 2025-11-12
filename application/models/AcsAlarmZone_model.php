@@ -44,12 +44,14 @@ class AcsAlarmZone_model extends MY_Model
 
     public function getAllByCustomerId($customer_id)
     {
-        $this->db->select('acs_alarm_zones.*, acs_profile.first_name, acs_profile.last_name');
-        $this->db->join('acs_profile', 'acs_alarm_zones.customer_id = acs_profile.prof_id', 'left');
-        $this->db->from($this->table);
-        $this->db->where('acs_alarm_zones.customer_id', $customer_id);
-
-        $query = $this->db->get();
+        $sql = "
+            SELECT acs_alarm_zones.*, acs_profile.first_name, acs_profile.last_name 
+            FROM `acs_alarm_zones` 
+            LEFT JOIN acs_profile ON acs_alarm_zones.customer_id = acs_profile.prof_id
+            WHERE acs_alarm_zones.customer_id=".$customer_id."
+            ORDER BY LENGTH(zone_id), zone_id;
+        ";
+        $query = $this->db->query($sql);
         return $query->result();
     }
 
