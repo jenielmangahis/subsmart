@@ -3412,8 +3412,8 @@ class Debug extends MY_Controller {
         $this->load->model('SystemPackageType_model');
 
         $company_id = 31;
-        $group_id   = 5;
-        $customers = $this->AcsProfile_model->getAllByCompanyIdAndCustomerGroupId($company_id, $group_id);
+        $group_id   = 4;
+        $customers  = $this->AcsProfile_model->getAllByCompanyIdAndCustomerGroupId($company_id, $group_id);
 
         $total_updated = 0;
         foreach($customers as $c){
@@ -3425,27 +3425,33 @@ class Debug extends MY_Controller {
                     $service_provider  = $alarm->service_provider; 
                     $pass_thru_cost    = $alarm->pass_thru_cost;
                     $systemPackage     = $this->SystemPackageType_model->getByNameAndCompanyId($comm_type, $company_id);
-                    $account_cost      = 0;
+                    $account_cost      = 3;
 
-                    if( $alarm->account_cost > 3 ){
-                        $account_cost = 3;
-                    }
+                    // if( $alarm->account_cost > 3 ){
+                    //     $account_cost = 3;
+                    // }
 
-                    if( $systemPackage ){                  
-                        if( $service_provider == 'Alarm.com' || $customer_group_id == 4  ){
-                            $pass_thru_cost = $systemPackage->alarmcom_cost;
-                        }elseif( $service_provider == 'AlarmNet' || $customer_group_id == 5 ){
-                            $pass_thru_cost = $systemPackage->alarmnet_cost;
-                        }
+                    // if( $systemPackage ){                  
+                    //     if( $service_provider == 'Alarm.com' || $customer_group_id == 4  ){
+                    //         $pass_thru_cost = $systemPackage->alarmcom_cost;
+                    //     }elseif( $service_provider == 'AlarmNet' || $customer_group_id == 5 ){
+                    //         $pass_thru_cost = $systemPackage->alarmnet_cost;
+                    //     }
                         
-                        $account_cost = $systemPackage->acct_cost;
-                    } 
+                    //     $account_cost = $systemPackage->acct_cost;
+                    // } 
+
+                    // $data = [
+                    //     //'id' => $alarm->alarm_id,
+                    //     'pass_thru_cost' => $pass_thru_cost,
+                    //     'account_cost' => $account_cost
+                    // ]; 
 
                     $data = [
                         //'id' => $alarm->alarm_id,
-                        'pass_thru_cost' => $pass_thru_cost,
                         'account_cost' => $account_cost
-                    ]; 
+                    ];
+
                     $is_updated = $this->AcsAlarm_model->updateByAlarmId($alarm->alarm_id, $data);
                     if( $is_updated > 0 ){
                         $data = ['is_checked' => 1];
