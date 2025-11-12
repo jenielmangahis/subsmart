@@ -1405,7 +1405,7 @@ class Jobs_model extends MY_Model
         $this->db->where('is_archived', 0);
         
         if( $status != '' ){
-            $this->db->where('status', $staus);
+            $this->db->where('status', $status);
         }                
 
         $this->db->order_by('id', 'DESC');

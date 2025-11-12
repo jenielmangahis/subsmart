@@ -45,6 +45,25 @@ class CustomerStatus_model extends MY_Model
         return $query->result();
     }
 
+    public function getCompanyDefaultValue($company_id)
+    {
+
+        $this->db->select('*');
+        $this->db->from($this->table);
+        $this->db->where('company_id', $company_id);
+        $this->db->where('is_default', 'Yes');
+
+        $query = $this->db->get();
+        return $query->row();
+    }
+
+    public function resetDefaultByCompanyId($company_id)
+    {
+        $this->db->where('company_id', $company_id);
+        $this->db->update($this->table, ['is_default' => 'No']);
+        return $this->db->affected_rows();
+    }
+
     public function getAllByCompanyId($cid, $conditions = [])
     {
         $this->db->select('*');

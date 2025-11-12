@@ -16019,4 +16019,74 @@ class Customer extends MY_Controller
 
         echo json_encode($json_data);
     }
+
+    public function ajax_send_alarm_information_to_users()
+	{   
+        $this->load->model('AcsProfile_model');
+
+        $is_success = 0;
+        $msg = 'Cannot find record';
+
+        $company_id = logged('company_id');
+        $post = $this->input->post();
+
+        $customer = $this->AcsProfile_model->getByProfId($post['customer_id']);
+        $alarm_info = $this->customer_ad_model->get_data_by_id('fk_prof_id', $post['customer_id'], 'acs_alarm');
+        
+        $email_data['customer']   =  $customer;
+        $email_data['alarm_info'] = $alarm_info;
+        $body = $this->load->view('v2/emails/share_customer_alarm_information', $email_data, true);
+        $subject = "Customer Alarm Information";
+
+        $is_live_mail_credentials = false;
+		if($is_live_mail_credentials) {
+            $mail = email__getInstance();
+            $mail->FromName = 'nSmarTrac';
+            $recipient_name = $companyAdmin->FName . ' ' . $companyAdmin->LName;
+            $mail->addAddress($toAdminEmail, $recipient_name);
+            if($toOwnerEmail) {
+                $mail->addCC($toOwnerEmail, $toOwnerEmail);
+            }  
+            $mail->isHTML(true);
+            $mail->Subject = "Customer Request for Cancellation";
+            $mail->Body = $body;            
+            $mail->Send();                    
+        } else {
+            $host     = 'smtp.mailtrap.io';
+            $port     = 2525;
+            $username = '21b22b8b45fd1a';
+            $password = '6cf743259c16e4';
+            $from     = 'noreply@nsmartrac.com';       
+            
+            $mail = new PHPMailer;
+            $mail->isSMTP();
+            $mail->Host = $host;
+            $mail->SMTPAuth = true;
+            $mail->Username = $username;
+            $mail->Password = $password;
+            $mail->SMTPSecure = 'tls';
+            $mail->Port = $port;            
+                                                                                    
+            $mail->FromName  = 'nSmarTrac';  
+            $recipient_name  = 'Bryann Revina';
+            $recipient_email = 'bryann.revina03@gmail.com';
+            $mail->setFrom('noreply@nsmartrac.com', 'nSmartrac');
+            $mail->addAddress($recipient_email, $recipient_name);
+            $mail->isHTML(true);
+            $mail->Subject = $subject;
+            $mail->Body = $body;
+            $mail->Send();   
+
+            $is_success = 1;
+            $msg = '';
+
+        } 
+
+        $json_data = [
+            'is_success' => $is_success,
+            'msg' => $msg,
+        ];
+
+        echo json_encode($json_data);
+	}
 }
