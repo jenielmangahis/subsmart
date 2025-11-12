@@ -1048,15 +1048,17 @@
                         success: function(data) {    
                             $('#btn-customer-cancel-status-request').html('Save');                   
                             if (data.is_success) {
+                                $('#send_cancel_status_request_modal').modal('hide');
+                                $('#status').val(data.new_status).trigger("change");
                                 Swal.fire({
                                     title: 'Customer Cancellation Request',
-                                    text: "Email was successfully sent to admin. Customer status will be updated once admin approved the request.",
+                                    html: "Request was successfully sent to admin email.<br/> Customer status was changed to audit. Customer record will be updated once the request is approved.",
                                     icon: 'success',
                                     showCancelButton: false,
                                     confirmButtonText: 'Okay'
                                 }).then((result) => {
                                     //if (result.value) {
-                                        $('#send_cancel_status_request_modal').modal('hide');
+                                        
                                     //}
                                 });
                             }else{
