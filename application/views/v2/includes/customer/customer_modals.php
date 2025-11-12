@@ -1121,98 +1121,192 @@
                 </div>
                 <div class="modal-body">                    
                     <form method="POST" id="frm-customer-cancellation-request" class="frm-customer-cancellation-request">
-                    <input type="hidden" id="request-cancellation-customer-id" name="customer_id" value="" />    
-                    <input type="hidden" id="request-cancellation-status-request" name="status_request" value="" />                                      
-                    <div id="cancellation-request-form-group-1">
-                        <div class="row">
-                            <div class="col-12 mt-2">
-                                <label class="bold"><strong>Date Request Received</strong></label>
-                                <input type="date" placeholder="" name="date_request_received" id="date_request_received" class="form-control mb-2" required />
+                        <input type="hidden" id="request-cancellation-customer-id" name="customer_id" value="" />    
+                        <input type="hidden" id="request-cancellation-status-request" name="status_request" value="" />                                      
+                        <div id="cancellation-request-form-group-1">
+                            <div class="row">
+                                <div class="col-12 mt-2">
+                                    <label class="bold"><strong>Date Request Received</strong></label>
+                                    <input type="date" placeholder="" name="date_request_received" id="date_request_received" class="form-control mb-2" required />
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-12 mt-2">
+                                    <label class="bold"><strong>Reason</strong></label>
+                                    <select id="cancellation-request-reason" name="reason" data-customer-source="dropdown" class="form-control mb-2" required>
+                                        <option value="">--Select--</option>
+                                        <?php $default_reasons = getCustomerCancelRequestReason(); ?>
+                                        <?php foreach($default_reasons as $default_reason) { ?>
+                                            <option value="<?php echo $default_reason; ?>"><?php echo $default_reason; ?></option>
+                                        <?php } ?>
+                                    </select>
+                                </div>
+                            </div>                      
+                            <div class="row">
+                                <div class="col-12 mt-2">
+                                    <label class="bold"><strong>BOC Amount</strong></label>
+                                    <input type="text" placeholder="" name="boc_amount" id="boc_amount" class="form-control mb-2" required />
+                                </div>
+                            </div>                                          
+                            <div class="row">
+                                <div class="col-12 mt-2">
+                                    <label class="bold"><strong>CS Closed Date</strong></label>
+                                    <input type="date" placeholder="" name="cs_closed_ate" id="cs_closed_ate" class="form-control mb-2" required />
+                                </div>
+                            </div>                  
+                            <div class="row">
+                                <div class="col-12 mt-2">
+                                    <label class="bold"><strong>BOC Received Date</strong></label>
+                                    <input type="date" placeholder="" name="boc_received_date" id="boc_received_date" class="form-control mb-2" required />
+                                </div>
+                            </div>  
+                            <div class="row">
+                                <div class="col-12 mt-2">
+                                    <label class="bold"><strong>Equipment Return Date</strong></label>
+                                    <input type="date" placeholder="" name="equipment_return_date" id="equipment_return_date" class="form-control mb-2" required />
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-12 mt-2">
+                                    <label class="bold"><strong>Next Step</strong></label>
+                                    <input type="text" placeholder="" name="next_step" id="cancellation_reason_next_step" class="form-control mb-2" required />
+                                </div>
                             </div>
                         </div>
-                        <div class="row">
-                            <div class="col-12 mt-2">
-                                <label class="bold"><strong>Reason</strong></label>
-                                <select id="cancellation-request-reason" name="reason" data-customer-source="dropdown" class="form-control mb-2" required>
-                                    <option value="">--Select--</option>
-                                    <?php $default_reasons = getCustomerCancelRequestReason(); ?>
-                                    <?php foreach($default_reasons as $default_reason) { ?>
-                                        <option value="<?php echo $default_reason; ?>"><?php echo $default_reason; ?></option>
-                                    <?php } ?>
-                                </select>
-                            </div>
-                        </div>  
-                        <div class="row">
-                            <div class="col-12 mt-2">
-                                <label class="bold"><strong>Next Step</strong></label>
-                                <input type="text" placeholder="" name="next_step" id="cancellation_reason_next_step" class="form-control mb-2" required />
-                            </div>
-                        </div>                    
-                        <div class="row">
-                            <div class="col-12 mt-2">
-                                <label class="bold"><strong>BOC Amount</strong></label>
-                                <input type="text" placeholder="" name="boc_amount" id="boc_amount" class="form-control mb-2" required />
-                            </div>
-                        </div>                                          
-                        <div class="row">
-                            <div class="col-12 mt-2">
-                                <label class="bold"><strong>CS Closed Date</strong></label>
-                                <input type="date" placeholder="" name="cs_closed_ate" id="cs_closed_ate" class="form-control mb-2" required />
-                            </div>
-                        </div>                  
-                        <div class="row">
-                            <div class="col-12 mt-2">
-                                <label class="bold"><strong>BOC Received Date</strong></label>
-                                <input type="date" placeholder="" name="boc_received_date" id="boc_received_date" class="form-control mb-2" required />
-                            </div>
-                        </div>  
-                        <div class="row">
-                            <div class="col-12 mt-2">
-                                <label class="bold"><strong>Equipment Return Date</strong></label>
-                                <input type="date" placeholder="" name="equipment_return_date" id="equipment_return_date" class="form-control mb-2" required />
+                        <div id="cancellation-request-form-group-2">
+                            <div class="row">
+                                <div class="col-12 mt-2">
+                                    <label class="bold"><strong>Audit Date</strong></label>
+                                    <input type="date" placeholder="" name="audit_date" id="audit_date" class="form-control mb-2" required />
+                                </div>
                             </div>
                         </div>
-                    </div>
-                    <div id="cancellation-request-form-group-2">
-                        <div class="row">
-                            <div class="col-12 mt-2">
-                                <label class="bold"><strong>Audit Date</strong></label>
-                                <input type="date" placeholder="" name="audit_date" id="audit_date" class="form-control mb-2" required />
+                        <div id="cancellation-request-form-group-3">
+                            <div class="row">
+                                <div class="col-12 mt-2">
+                                    <label class="bold"><strong>Audit Date</strong></label>
+                                    <input type="date" placeholder="" name="audit_date" id="audit_date" class="form-control mb-2" required />
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-12 mt-2">
+                                    <label class="bold"><strong>Collection Status</strong></label>
+                                    <input type="text" placeholder="" name="collection_status" id="collection_status" class="form-control mb-2" required />
+                                </div>
+                            </div>   
+                            <div class="row">
+                                <div class="col-12 mt-2">
+                                    <label class="bold"><strong>Statement of Claim</strong></label>
+                                    <input type="text" placeholder="" name="statement_of_claim" id="statement_of_claim" class="form-control mb-2" required />
+                                </div>
+                            </div>     
+                            <div class="row">
+                                <div class="col-12 mt-2">
+                                    <label class="bold"><strong>Court Date</strong></label>
+                                    <input type="date" placeholder="" name="court_date" id="court_date" class="form-control mb-2" required />
+                                </div>
+                            </div>   
+                            <div class="row">
+                                <div class="col-12 mt-2">
+                                    <label class="bold"><strong>Judgement Amount</strong></label>
+                                    <input type="text" placeholder="" name="judgement_amount" id="judgement_amount" class="form-control mb-2" required />
+                                </div>
+                            </div>              
+                        </div>
+                        <div id="cancellation-request-form-group-4">
+                            <div class="row">
+                                <div class="col-12 mt-2">
+                                    <label class="bold"><strong>Date Request Received</strong></label>
+                                    <input type="date" placeholder="" name="date_request_received" id="date_request_received" class="form-control mb-2" required />
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-12 mt-2">
+                                    <label class="bold"><strong>Reason</strong></label>
+                                    <select id="cancellation-request-reason" name="reason" data-customer-source="dropdown" class="form-control mb-2" required>
+                                        <option value="">--Select--</option>
+                                        <?php $default_reasons = getCustomerCancelRequestReason(); ?>
+                                        <?php foreach($default_reasons as $default_reason) { ?>
+                                            <option value="<?php echo $default_reason; ?>"><?php echo $default_reason; ?></option>
+                                        <?php } ?>
+                                    </select>
+                                </div>
+                            </div>                      
+                            <div class="row">
+                                <div class="col-12 mt-2">
+                                    <label class="bold"><strong>BOC Amount</strong></label>
+                                    <input type="text" placeholder="" name="boc_amount" id="boc_amount" class="form-control mb-2" required />
+                                </div>
+                            </div>                                          
+                            <div class="row">
+                                <div class="col-12 mt-2">
+                                    <label class="bold"><strong>CS Closed Date</strong></label>
+                                    <input type="date" placeholder="" name="cs_closed_ate" id="cs_closed_ate" class="form-control mb-2" required />
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-12 mt-2">
+                                    <label class="bold"><strong>Next Step</strong></label>
+                                    <input type="text" placeholder="" name="next_step" id="cancellation_reason_next_step" class="form-control mb-2" required />
+                                </div>
                             </div>
                         </div>
-                    </div>
-                    <div id="cancellation-request-form-group-3">
-                        <div class="row">
-                            <div class="col-12 mt-2">
-                                <label class="bold"><strong>Audit Date</strong></label>
-                                <input type="date" placeholder="" name="audit_date" id="audit_date" class="form-control mb-2" required />
+                        <div id="cancellation-request-form-group-5">
+                            <div class="row">
+                                <div class="col-12 mt-2">
+                                    <label class="bold"><strong>Date Request Received</strong></label>
+                                    <input type="date" placeholder="" name="date_request_received" id="date_request_received" class="form-control mb-2" required />
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-12 mt-2">
+                                    <label class="bold"><strong>Reason</strong></label>
+                                    <select id="cancellation-request-reason" name="reason" data-customer-source="dropdown" class="form-control mb-2" required>
+                                        <option value="">--Select--</option>
+                                        <?php $default_reasons = getCustomerCancelRequestReason(); ?>
+                                        <?php foreach($default_reasons as $default_reason) { ?>
+                                            <option value="<?php echo $default_reason; ?>"><?php echo $default_reason; ?></option>
+                                        <?php } ?>
+                                    </select>
+                                </div>
+                            </div>                      
+                            <div class="row">
+                                <div class="col-12 mt-2">
+                                    <label class="bold"><strong>BOC Amount</strong></label>
+                                    <input type="text" placeholder="" name="boc_amount" id="boc_amount" class="form-control mb-2" required />
+                                </div>
+                            </div>                                          
+                            <div class="row">
+                                <div class="col-12 mt-2">
+                                    <label class="bold"><strong>CS Closed Date</strong></label>
+                                    <input type="date" placeholder="" name="cs_closed_ate" id="cs_closed_ate" class="form-control mb-2" required />
+                                </div>
+                            </div>                  
+                            <div class="row">
+                                <div class="col-12 mt-2">
+                                    <label class="bold"><strong>BOC Received Date</strong></label>
+                                    <input type="date" placeholder="" name="boc_received_date" id="boc_received_date" class="form-control mb-2" required />
+                                </div>
+                            </div>  
+                            <div class="row">
+                                <div class="col-12 mt-2">
+                                    <label class="bold"><strong>Equipment Return Date</strong></label>
+                                    <input type="date" placeholder="" name="equipment_return_date" id="equipment_return_date" class="form-control mb-2" required />
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-12 mt-2">
+                                    <label class="bold"><strong>Next Step</strong></label>
+                                    <select id="next_step" name="next_step" data-customer-source="dropdown" class="form-control mb-2" required>
+                                        <option value="">--Select--</option>
+                                        <?php $default_next_steps = getCustomerCancelRequestNextStep(); ?>
+                                        <?php foreach($default_next_steps as $default_next_step) { ?>
+                                            <option value="<?php echo $default_next_step; ?>"><?php echo $default_next_step; ?></option>
+                                        <?php } ?>
+                                    </select>                                    
+                                </div>
                             </div>
                         </div>
-                        <div class="row">
-                            <div class="col-12 mt-2">
-                                <label class="bold"><strong>Collection Status</strong></label>
-                                <input type="text" placeholder="" name="collection_status" id="collection_status" class="form-control mb-2" required />
-                            </div>
-                        </div>   
-                        <div class="row">
-                            <div class="col-12 mt-2">
-                                <label class="bold"><strong>Statement of Claim</strong></label>
-                                <input type="text" placeholder="" name="statement_of_claim" id="statement_of_claim" class="form-control mb-2" required />
-                            </div>
-                        </div>     
-                        <div class="row">
-                            <div class="col-12 mt-2">
-                                <label class="bold"><strong>Court Date</strong></label>
-                                <input type="date" placeholder="" name="court_date" id="court_date" class="form-control mb-2" required />
-                            </div>
-                        </div>   
-                        <div class="row">
-                            <div class="col-12 mt-2">
-                                <label class="bold"><strong>Judgement Amount</strong></label>
-                                <input type="text" placeholder="" name="judgement_amount" id="judgement_amount" class="form-control mb-2" required />
-                            </div>
-                        </div>              
-                    </div>
                     </form>
                 </div>
                 <div class="modal-footer">
