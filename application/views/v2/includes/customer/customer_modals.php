@@ -1153,19 +1153,19 @@
                                 <label class="bold"><strong>BOC Amount</strong></label>
                                 <input type="text" placeholder="" name="boc_amount" id="boc_amount" class="form-control mb-2" required />
                             </div>
+                        </div>                                          
+                        <div class="row">
+                            <div class="col-12 mt-2">
+                                <label class="bold"><strong>CS Closed Date</strong></label>
+                                <input type="date" placeholder="" name="cs_closed_ate" id="cs_closed_ate" class="form-control mb-2" required />
+                            </div>
                         </div>                  
                         <div class="row">
                             <div class="col-12 mt-2">
                                 <label class="bold"><strong>BOC Received Date</strong></label>
                                 <input type="date" placeholder="" name="boc_received_date" id="boc_received_date" class="form-control mb-2" required />
                             </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-12 mt-2">
-                                <label class="bold"><strong>CS Closed Date</strong></label>
-                                <input type="date" placeholder="" name="cs_closed_ate" id="cs_closed_ate" class="form-control mb-2" required />
-                            </div>
-                        </div>                    
+                        </div>  
                         <div class="row">
                             <div class="col-12 mt-2">
                                 <label class="bold"><strong>Equipment Return Date</strong></label>
