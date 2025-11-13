@@ -36,7 +36,7 @@
 
                                 <div class="row mb-3">
                                     <div class="col-12">
-                                        <?php if($cancel_request_data->status_request == 'Cancelled' || $cancel_request_data->status_request == 'Cancel') { ?>                                            
+                                        <?php if($cancel_request_data->status_request == 'Cancelled' || $cancel_request_data->status_request == 'Cancel' || $cancel_request_data->status_request == 'Pending' || $cancel_request_data->status_request == 'Audit' || $cancel_request_data->status_request == 'Need Audit') { ?>                                            
                                             <div class="row g-1 mb-3">
                                                 <div class="col-12 col-md-4">
                                                     <label class="content-subtitle fw-bold">Date Request Received</label>
@@ -50,7 +50,8 @@
                                                     <label class="content-subtitle fw-bold">Change Status Requested</label>
                                                 </div>
                                                 <div class="col-12 col-md-8">
-                                                    <label class="content-subtitle"><?php echo $cancel_request_data->status_request ? $cancel_request_data->status_request : '---'; ?></label>
+                                                    
+                                                    <label class="content-subtitle"><span class="badge bg-primary"><?php echo $cancel_request_data->status_request ? $cancel_request_data->status_request : '---'; ?></span></label>
                                                 </div>
                                             </div>
                                             <div class="row g-1 mb-3">

@@ -15419,6 +15419,8 @@ class Customer extends MY_Controller
         $is_success = 0;
         $msg    = 'Cannot find customer data';
 
+        $is_request_saved = false;
+
         $post = $this->input->post();
         $company_id = logged('company_id');
         $data = [];
@@ -15461,10 +15463,37 @@ class Customer extends MY_Controller
                         'date_modified' => date("Y-m-d H:i:s"),
                         'status' => 'pending'
                     ];
+                }elseif($post['status_request'] == 'Pending') {
+                    $data = [
+                        'status_request' => $post['status_request'],
+                        'request_date' => date("Y-m-d",strtotime($post['date_request_received'])),
+                        'reason' => $post['reason'],
+                        'boc_amount' => $post['boc_amount'],
+                        'boc_received_date' => date("Y-m-d",strtotime($post['boc_received_date'])),
+                        'cs_close_date' => date("Y-m-d",strtotime($post['cs_closed_ate'])),
+                        'equipment_return_date' => date("Y-m-d",strtotime($post['equipment_return_date'])),
+                        'next_action' => $post['next_step'],
+                        'date_modified' => date("Y-m-d H:i:s"),
+                        'status' => 'pending'
+                    ];
+                }elseif($post['status_request'] == 'Audit' || $post['status_request'] == 'Need Audit') {
+                    $data = [
+                        'status_request' => $post['status_request'],
+                        'request_date' => date("Y-m-d",strtotime($post['date_request_received'])),
+                        'reason' => $post['reason'],
+                        'boc_amount' => $post['boc_amount'],
+                        'boc_received_date' => date("Y-m-d",strtotime($post['boc_received_date'])),
+                        'cs_close_date' => date("Y-m-d",strtotime($post['cs_closed_ate'])),
+                        'equipment_return_date' => date("Y-m-d",strtotime($post['equipment_return_date'])),
+                        'next_action' => $post['next_step'],
+                        'date_modified' => date("Y-m-d H:i:s"),
+                        'status' => 'pending'
+                    ];
                 }
 
                 if($data) {
                     $this->AcsCustomerCancellationRequest->update($cancellationRequest->id, $data);  
+                    $is_request_saved = true;
                 }
             }else{
                 if($post['status_request'] == 'Cancelled') {
@@ -15513,13 +15542,41 @@ class Customer extends MY_Controller
                         'date_created' => date("Y-m-d H:i:s"),
                         'date_modified' => date("Y-m-d H:i:s"),
                     ];
+                }elseif($post['status_request'] == 'Pending') {
+                    $data = [
+                        'status_request' => $post['status_request'],
+                        'customer_id' => $customer->prof_id,
+                        'request_date' => !empty($post['date_request_received']) ? date("Y-m-d",strtotime($post['date_request_received'])) : date("Y-m-d"),
+                        'reason' => !empty($post['reason']) ? $post['reason'] : '',
+                        'boc_amount' => $post['boc_amount'],
+                        'boc_received_date' => date("Y-m-d",strtotime($post['boc_received_date'])),
+                        'cs_close_date' => date("Y-m-d",strtotime($post['cs_closed_ate'])),
+                        'equipment_return_date' => date("Y-m-d",strtotime($post['equipment_return_date'])),
+                        'next_action' => $post['next_step'],
+                        'date_created' => date("Y-m-d H:i:s"),
+                        'date_modified' => date("Y-m-d H:i:s"),
+                    ]; 
+                }elseif($post['status_request'] == 'Audit' || $post['status_request'] == 'Need Audit') {
+                    $data = [
+                        'status_request' => $post['status_request'],
+                        'customer_id' => $customer->prof_id,
+                        'request_date' => !empty($post['date_request_received']) ? date("Y-m-d",strtotime($post['date_request_received'])) : date("Y-m-d"),
+                        'reason' => !empty($post['reason']) ? $post['reason'] : '',
+                        'boc_amount' => $post['boc_amount'],
+                        'boc_received_date' => date("Y-m-d",strtotime($post['boc_received_date'])),
+                        'cs_close_date' => date("Y-m-d",strtotime($post['cs_closed_ate'])),
+                        'equipment_return_date' => date("Y-m-d",strtotime($post['equipment_return_date'])),
+                        'next_action' => $post['next_step'],
+                        'date_created' => date("Y-m-d H:i:s"),
+                        'date_modified' => date("Y-m-d H:i:s"),
+                    ]; 
                 }
 
                 if($data) {
+                    $new_status = 'Audit';
                     $this->AcsProfile_model->updateCustomerByProfId($customer->prof_id, ['status' => 'Audit']);
                     $this->AcsCustomerCancellationRequest->create($data);   
-
-                    $new_status = 'Audit';
+                    $is_request_saved = true;   
                 }
                  
             }
@@ -15527,64 +15584,70 @@ class Customer extends MY_Controller
             $attachment = '';
 
             //Send email
-            $companyAdmin = $this->Users_model->getCompanyAdmin($company_id);
-            $ownerAdmin   = $this->Users_model->getOwnerAdmin($company_id);
-            if( $companyAdmin && $companyAdmin->email != '' ){
-                $email_data['name'] = $companyAdmin->FName;
-                $email_data['customer_name'] = $customer->first_name . ' ' . $customer->last_name;
-                $cancellation_url = base_url('customer/cancellation_request/'.$customer->prof_id);
-                $email_data['cancellation_url'] = $cancellation_url;
-                $body = $this->load->view('v2/emails/customer_cancellation_request', $email_data, true);
+            if($is_request_saved) {
+                $companyAdmin = $this->Users_model->getCompanyAdmin($company_id);
+                $ownerAdmin   = $this->Users_model->getOwnerAdmin($company_id);
+                if( $companyAdmin && $companyAdmin->email != '' ){
+                    $email_data['name'] = $companyAdmin->FName;
+                    $email_data['customer_name'] = $customer->first_name . ' ' . $customer->last_name;
+                    $cancellation_url = base_url('customer/cancellation_request/'.$customer->prof_id);
+                    $email_data['cancellation_url'] = $cancellation_url;
+                    $body = $this->load->view('v2/emails/customer_cancellation_request', $email_data, true);
 
-                //$toAdminEmail = 'bryann.revina03@gmail.com';
-                $toAdminEmail = $companyAdmin->email;
-                $toOwnerEmail = $ownerAdmin->email;
+                    //$toAdminEmail = 'bryann.revina03@gmail.com';
+                    $toAdminEmail = $companyAdmin->email;
+                    $toOwnerEmail = $ownerAdmin->email;
 
-                if($is_live_mail_credentials) {
-                    $mail = email__getInstance();
-                    $mail->FromName = 'nSmarTrac';
-                    $recipient_name = $companyAdmin->FName . ' ' . $companyAdmin->LName;
-                    $mail->addAddress($toAdminEmail, $recipient_name);
-                    if($toOwnerEmail) {
-                        $mail->addCC($toOwnerEmail, $toOwnerEmail);
-                    }  
-                    $mail->isHTML(true);
-                    $mail->Subject = "Customer Request for Cancellation";
-                    $mail->Body = $body;
-                    if($attachment) {
+                    if($is_live_mail_credentials) {
+                        $mail = email__getInstance();
+                        $mail->FromName = 'nSmarTrac';
+                        $recipient_name = $companyAdmin->FName . ' ' . $companyAdmin->LName;
+                        $mail->addAddress($toAdminEmail, $recipient_name);
+                        if($toOwnerEmail) {
+                            $mail->addCC($toOwnerEmail, $toOwnerEmail);
+                        }  
+                        $mail->isHTML(true);
+                        $mail->Subject = "Customer Request for Cancellation";
+                        $mail->Body = $body;
+                        if($attachment) {
+                            $mail->addAttachment($attachment);
+                        }
+                        $mail->Send();                    
+                    } else {
+                        $host     = 'smtp.mailtrap.io';
+                        $port     = 2525;
+                        $username = 'd7c92e3b5e901d';
+                        $password = '203aafda110ab7';
+                        $from     = 'noreply@nsmartrac.com';       
+                        
+                        $mail = new PHPMailer;
+                        $mail->isSMTP();
+                        $mail->Host = $host;
+                        $mail->SMTPAuth = true;
+                        $mail->Username = $username;
+                        $mail->Password = $password;
+                        $mail->SMTPSecure = 'tls';
+                        $mail->Port = $port;            
+                                                                                            
+                        $mail->FromName = 'nSmarTrac';  
+                        $recipient_name = $companyAdmin->FName . ' ' . $companyAdmin->LName;
+                        $mail->setFrom('noreply@nsmartrac.com', 'nSmartrac');
+                        $mail->addAddress($companyAdmin->email, $recipient_name);
+                        $mail->isHTML(true);
+                        $mail->Subject = "Customer Request for Cancellation";
+                        $mail->Body = $body;
                         $mail->addAttachment($attachment);
-                    }
-                    $mail->Send();                    
-                } else {
-                    $host     = 'smtp.mailtrap.io';
-                    $port     = 2525;
-                    $username = 'd7c92e3b5e901d';
-                    $password = '203aafda110ab7';
-                    $from     = 'noreply@nsmartrac.com';       
-                    
-                    $mail = new PHPMailer;
-                    $mail->isSMTP();
-                    $mail->Host = $host;
-                    $mail->SMTPAuth = true;
-                    $mail->Username = $username;
-                    $mail->Password = $password;
-                    $mail->SMTPSecure = 'tls';
-                    $mail->Port = $port;            
-                                                                                          
-                    $mail->FromName = 'nSmarTrac';  
-                    $recipient_name = $companyAdmin->FName . ' ' . $companyAdmin->LName;
-                    $mail->setFrom('noreply@nsmartrac.com', 'nSmartrac');
-                    $mail->addAddress($companyAdmin->email, $recipient_name);
-                    $mail->isHTML(true);
-                    $mail->Subject = "Customer Request for Cancellation";
-                    $mail->Body = $body;
-                    $mail->addAttachment($attachment);
-                    $mail->Send();   
-                } 
+                        $mail->Send();   
+                    } 
+                }
+
+                $is_success = 1;
+                $msg = '';                
+            } else {
+                $is_success = 0;
+                $msg    = 'Cannot save customer request';
             }
 
-            $is_success = 1;
-            $msg = '';
         }
         
         $return = [
