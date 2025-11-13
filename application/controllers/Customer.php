@@ -15425,8 +15425,10 @@ class Customer extends MY_Controller
         $company_id = logged('company_id');
         $data = [];
         $new_status = '';
-        
-        $cancellationRequest = $this->AcsCustomerCancellationRequest->getByCustomerId($post['customer_id']);
+
+        $condition[0]['field'] = 'status';
+        $condition[0]['value'] = 'pending';
+        $cancellationRequest = $this->AcsCustomerCancellationRequest->getByCustomerId($post['customer_id'], $condition);
         $customer = $this->AcsProfile_model->getByProfId($post['customer_id']);
         if( $customer && $customer->company_id == $company_id ){
             $current_customer_status = $customer->status;
@@ -15438,9 +15440,9 @@ class Customer extends MY_Controller
                         'request_date' => date("Y-m-d",strtotime($post['date_request_received'])),
                         'reason' => $post['reason'],
                         'boc_amount' => $post['boc_amount'],
-                        'boc_received_date' => date("Y-m-d",strtotime($post['boc_received_date'])),
                         'cs_close_date' => date("Y-m-d",strtotime($post['cs_closed_ate'])),
-                        'equipment_return_date' => date("Y-m-d",strtotime($post['equipment_return_date'])),
+                        'boc_received_date' => $post['boc_received_date'] ? date("Y-m-d",strtotime($post['boc_received_date'])) : null,
+                        'equipment_return_date' => $post['equipment_return_date'] ? date("Y-m-d",strtotime($post['equipment_return_date'])) : null,
                         'next_action' => $post['next_step'],
                         'date_modified' => date("Y-m-d H:i:s"),
                         'status' => 'pending'
@@ -15457,21 +15459,28 @@ class Customer extends MY_Controller
                         'status' => 'pending'
                     ];                    
                 }elseif($post['status_request'] == 'Non Compliance Audit Needed') {
-                    $data = [
+                    $data = [                        
                         'status_request' => $post['status_request'],
-                        'audit_date' => $post['audit_date'],
+                        'audit_date' => $post['audit_date'] ? date("Y-m-d",strtotime($post['audit_date'])) : null,
+                        'request_date' => date("Y-m-d",strtotime($post['date_request_received'])),
+                        'reason' => $post['reason'],
+                        'boc_amount' => $post['boc_amount'],
+                        'cs_close_date' => date("Y-m-d",strtotime($post['cs_closed_ate'])),
+                        'boc_received_date' => $post['boc_received_date'] ? date("Y-m-d",strtotime($post['boc_received_date'])) : null,
+                        'equipment_return_date' => $post['equipment_return_date'] ? date("Y-m-d",strtotime($post['equipment_return_date'])) : null,
+                        'next_action' => $post['next_step'],
                         'date_modified' => date("Y-m-d H:i:s"),
                         'status' => 'pending'
-                    ];
+                    ];                    
                 }elseif($post['status_request'] == 'Pending') {
                     $data = [
                         'status_request' => $post['status_request'],
                         'request_date' => date("Y-m-d",strtotime($post['date_request_received'])),
                         'reason' => $post['reason'],
                         'boc_amount' => $post['boc_amount'],
-                        'boc_received_date' => date("Y-m-d",strtotime($post['boc_received_date'])),
                         'cs_close_date' => date("Y-m-d",strtotime($post['cs_closed_ate'])),
-                        'equipment_return_date' => date("Y-m-d",strtotime($post['equipment_return_date'])),
+                        'boc_received_date' => $post['boc_received_date'] ? date("Y-m-d",strtotime($post['boc_received_date'])) : null,
+                        'equipment_return_date' => $post['equipment_return_date'] ? date("Y-m-d",strtotime($post['equipment_return_date'])) : null,
                         'next_action' => $post['next_step'],
                         'date_modified' => date("Y-m-d H:i:s"),
                         'status' => 'pending'
@@ -15482,9 +15491,9 @@ class Customer extends MY_Controller
                         'request_date' => date("Y-m-d",strtotime($post['date_request_received'])),
                         'reason' => $post['reason'],
                         'boc_amount' => $post['boc_amount'],
-                        'boc_received_date' => date("Y-m-d",strtotime($post['boc_received_date'])),
                         'cs_close_date' => date("Y-m-d",strtotime($post['cs_closed_ate'])),
-                        'equipment_return_date' => date("Y-m-d",strtotime($post['equipment_return_date'])),
+                        'boc_received_date' => $post['boc_received_date'] ? date("Y-m-d",strtotime($post['boc_received_date'])) : null,
+                        'equipment_return_date' => $post['equipment_return_date'] ? date("Y-m-d",strtotime($post['equipment_return_date'])) : null,
                         'next_action' => $post['next_step'],
                         'date_modified' => date("Y-m-d H:i:s"),
                         'status' => 'pending'
@@ -15505,9 +15514,9 @@ class Customer extends MY_Controller
                         'request_date' => !empty($post['date_request_received']) ? date("Y-m-d",strtotime($post['date_request_received'])) : date("Y-m-d"),
                         'reason' => !empty($post['reason']) ? $post['reason'] : '',
                         'boc_amount' => $post['boc_amount'],
-                        'boc_received_date' => date("Y-m-d",strtotime($post['boc_received_date'])),
                         'cs_close_date' => date("Y-m-d",strtotime($post['cs_closed_ate'])),
-                        'equipment_return_date' => date("Y-m-d",strtotime($post['equipment_return_date'])),
+                        'boc_received_date' => $post['boc_received_date'] ? date("Y-m-d",strtotime($post['boc_received_date'])) : null,
+                        'equipment_return_date' => $post['equipment_return_date'] ? date("Y-m-d",strtotime($post['equipment_return_date'])) : null,
                         'next_action' => $post['next_step'],
                         'date_created' => date("Y-m-d H:i:s"),
                         'date_modified' => date("Y-m-d H:i:s"),
@@ -15537,11 +15546,14 @@ class Customer extends MY_Controller
                         'customer_id' => $customer->prof_id,
                         'request_date' => !empty($post['date_request_received']) ? date("Y-m-d",strtotime($post['date_request_received'])) : date("Y-m-d"),
                         'reason' => !empty($post['reason']) ? $post['reason'] : '',
-                        'boc_amount' => 0.00,
-                        'audit_date' => $post['audit_date'],
+                        'boc_amount' => $post['boc_amount'],
+                        'cs_close_date' => date("Y-m-d",strtotime($post['cs_closed_ate'])),
+                        'boc_received_date' => $post['boc_received_date'] ? date("Y-m-d",strtotime($post['boc_received_date'])) : null,
+                        'equipment_return_date' => $post['equipment_return_date'] ? date("Y-m-d",strtotime($post['equipment_return_date'])) : null,
+                        'next_action' => $post['next_step'],
                         'date_created' => date("Y-m-d H:i:s"),
                         'date_modified' => date("Y-m-d H:i:s"),
-                    ];
+                    ];                        
                 }elseif($post['status_request'] == 'Pending') {
                     $data = [
                         'status_request' => $post['status_request'],
@@ -15549,9 +15561,9 @@ class Customer extends MY_Controller
                         'request_date' => !empty($post['date_request_received']) ? date("Y-m-d",strtotime($post['date_request_received'])) : date("Y-m-d"),
                         'reason' => !empty($post['reason']) ? $post['reason'] : '',
                         'boc_amount' => $post['boc_amount'],
-                        'boc_received_date' => date("Y-m-d",strtotime($post['boc_received_date'])),
                         'cs_close_date' => date("Y-m-d",strtotime($post['cs_closed_ate'])),
-                        'equipment_return_date' => date("Y-m-d",strtotime($post['equipment_return_date'])),
+                        'boc_received_date' => $post['boc_received_date'] ? date("Y-m-d",strtotime($post['boc_received_date'])) : null,
+                        'equipment_return_date' => $post['equipment_return_date'] ? date("Y-m-d",strtotime($post['equipment_return_date'])) : null,
                         'next_action' => $post['next_step'],
                         'date_created' => date("Y-m-d H:i:s"),
                         'date_modified' => date("Y-m-d H:i:s"),
@@ -15563,9 +15575,9 @@ class Customer extends MY_Controller
                         'request_date' => !empty($post['date_request_received']) ? date("Y-m-d",strtotime($post['date_request_received'])) : date("Y-m-d"),
                         'reason' => !empty($post['reason']) ? $post['reason'] : '',
                         'boc_amount' => $post['boc_amount'],
-                        'boc_received_date' => date("Y-m-d",strtotime($post['boc_received_date'])),
                         'cs_close_date' => date("Y-m-d",strtotime($post['cs_closed_ate'])),
-                        'equipment_return_date' => date("Y-m-d",strtotime($post['equipment_return_date'])),
+                        'boc_received_date' => $post['boc_received_date'] ? date("Y-m-d",strtotime($post['boc_received_date'])) : null,
+                        'equipment_return_date' => $post['equipment_return_date'] ? date("Y-m-d",strtotime($post['equipment_return_date'])) : null,
                         'next_action' => $post['next_step'],
                         'date_created' => date("Y-m-d H:i:s"),
                         'date_modified' => date("Y-m-d H:i:s"),
@@ -15578,7 +15590,6 @@ class Customer extends MY_Controller
                     $this->AcsCustomerCancellationRequest->create($data);   
                     $is_request_saved = true;   
                 }
-                 
             }
 
             $attachment = '';
