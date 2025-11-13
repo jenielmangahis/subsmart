@@ -305,7 +305,7 @@
                     $('#cancellation-request-form-group-3').find('input, select, textarea, button').prop('disabled', true);
                     $('#cancellation-request-form-group-4').find('input, select, textarea, button').prop('disabled', true);
                     $('#cancellation-request-form-group-5').find('input, select, textarea, button').prop('disabled', true);
-                    
+
                 }
 
                 if( status == 'Cancelled' ){
@@ -315,14 +315,17 @@
 
                 //Hide show sections - only for adi companies            
                 if( status == 'Cancelled' ){
+
                     $('#add-advance-alarm-section').hide();
                     $('#add-advance-custom-fields').hide();
                     $('#add-advance-billing-info').hide();
                     $('#add-advance-payment-schedule').hide();
                     $('#add-advance-customer-papers').hide();
                     $('#funding-information-container').hide();
-                    $('#add-advance-access-info').hide();                
+                    $('#add-advance-access-info').hide();        
+
                 }else{
+                    
                     $('#add-advance-alarm-section').show();
                     $('#add-advance-custom-fields').show();
                     $('#add-advance-billing-info').show();
@@ -330,6 +333,7 @@
                     $('#add-advance-customer-papers').show();
                     $('#funding-information-container').show();
                     $('#add-advance-access-info').show();
+
                 }               
             <?php } ?>
 
