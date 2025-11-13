@@ -38,6 +38,7 @@ class Notifications extends MY_Controller
         $user_id      = logged('id');
         $company_id   = logged('company_id');        
         $notif_status = 1; //1=unread,0=read
+        $count_listed_notif = 0;
 
         $notification = $this->User_notification_model->get_notifications($company_id, $user_id, $notif_status);
         $html = '';
@@ -70,6 +71,7 @@ class Notifications extends MY_Controller
                                     </div>
                                 </div>
                             </div>';
+                    $count_listed_notif++;
                 } elseif ($notify->title == 'New Invoice') {
                     $redirect_url = site_url("invoice");
                     if( $notify->entity_id > 0) {
@@ -83,6 +85,7 @@ class Notifications extends MY_Controller
                                     </div>
                                 </div>
                             </div>';
+                    $count_listed_notif++;
                 } elseif ($notify->title == 'New Estimates') {
                     $html .= '<div class="list-item" onclick="location.href=\'' . site_url("estimate") . '\'" data-id="' . $notify->id . '">
                                 <div class="nsm-notification-item">';
@@ -98,6 +101,7 @@ class Notifications extends MY_Controller
                                     </div>
                                 </div>
                             </div>';
+                    $count_listed_notif++;
                 } elseif (strtolower($notify->title) == 'clock in' || strtolower($notify->title) == 'clock out') {
 
                     $redirect_url = site_url("timesheet/attendance");
@@ -119,6 +123,7 @@ class Notifications extends MY_Controller
                                     </div>
                                 </div>
                             </div>';
+                    $count_listed_notif++;
                 } elseif ($notify->title == 'Invoice Overdue') {
                     $redirect_url = site_url("invoice/tab/overdue");
                     if($notify->entity_id != null && $notify->entity_id > 0) {
@@ -139,25 +144,31 @@ class Notifications extends MY_Controller
                                     </div>
                                 </div>
                             </div>';
+                    $count_listed_notif++;
                 } elseif ($notify->title == 'Invoice Late Fee') {
-                    $redirect_url = site_url("invoice");
-                    if( $notify->entity_id > 0) {
-                        $redirect_url = site_url("invoice/genview/") . $notify->entity_id . '?notif_id=' . $notify->id;
-                    }
-                    $html .= '<div class="list-item notification-item" data-type="late-fee" data-entity-id="'.$notify->entity_id.'" data-id="' . $notify->id . '">
-                                <div class="nsm-notification-item">';
 
-                    /*if (is_null($image)) :
-                        $html .= '<div class="nsm-profile"><span>' . ucwords($notify->FName[0]) . ucwords($notify->LName[0]) . '</span></div>';
-                    else :
-                        $html .= '<div class="nsm-profile" style="background-image: url(' . $image . ');"></div>';
-                    endif;*/
+                    if($notify->user_id == $user_id || $notify->notify_user_id == $user_id) {
+                        $redirect_url = site_url("invoice");
+                        if( $notify->entity_id > 0) {
+                            $redirect_url = site_url("invoice/genview/") . $notify->entity_id . '?notif_id=' . $notify->id;
+                        }
+                        $html .= '<div class="list-item notification-item" data-type="late-fee" data-entity-id="'.$notify->entity_id.'" data-id="' . $notify->id . '">
+                                    <div class="nsm-notification-item">';
 
-                    $html .= '<div class="nsm-notification-content ' . $seen . '">
-                                        <span class="content-subtitle '. $is_bold .'">' . $notify->content . '</span>
+                        /*if (is_null($image)) :
+                            $html .= '<div class="nsm-profile"><span>' . ucwords($notify->FName[0]) . ucwords($notify->LName[0]) . '</span></div>';
+                        else :
+                            $html .= '<div class="nsm-profile" style="background-image: url(' . $image . ');"></div>';
+                        endif;*/
+
+                        $html .= '<div class="nsm-notification-content ' . $seen . '">
+                                            <span class="content-subtitle '. $is_bold .'">' . $notify->content . '</span>
+                                        </div>
                                     </div>
-                                </div>
-                            </div>';
+                                </div>';
+                        $count_listed_notif++;
+                    }
+
                 } elseif($notify->title == 'Job Status') {
                     $redirect_url = site_url("job");
                     if($notify->entity_id != null && $notify->entity_id > 0) {
@@ -171,7 +182,8 @@ class Notifications extends MY_Controller
                                         <span class="content-subtitle '. $is_bold .'">' . $notify->content . '</span>
                                     </div>
                                 </div>
-                            </div>';                    
+                            </div>'; 
+                    $count_listed_notif++;                   
                 } elseif ($notify->title == 'Job Updated') {
                     $redirect_url = site_url("job");
                     if($notify->entity_id != null && $notify->entity_id > 0) {
@@ -185,7 +197,8 @@ class Notifications extends MY_Controller
                                         <span class="content-subtitle '. $is_bold .'">' . $notify->content . '</span>
                                     </div>
                                 </div>
-                            </div>';   
+                            </div>'; 
+                    $count_listed_notif++;  
                 } else {
 
                     $redirect_url = site_url("timesheet/attendance");
@@ -207,12 +220,13 @@ class Notifications extends MY_Controller
                                     </div>
                                 </div>
                             </div>';
+                    $count_listed_notif++;
                 }
             }
         }
 
         $notificationListArray = array(
-            'notifyCount' => $notifyCount,
+            'notifyCount' => $count_listed_notif > 0 ? $count_listed_notif : $notifyCount,
             'autoNotifications' => $html,
         );
 

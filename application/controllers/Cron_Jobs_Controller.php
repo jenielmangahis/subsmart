@@ -3817,21 +3817,23 @@ class Cron_Jobs_Controller extends CI_Controller
                  */
                     if($late_fee > 0 && $enable_late_fee_notification == true) {
                         if($invdata && $inv_data->invoice_number != 'undefined') {
+
                             $company_users = $this->users_model->getAllUsersByCompanyID($inv_data->company_id);
                             $content_notification = 'Invoice #' . $inv_data->invoice_number . ': late fee $' . number_format($late_fee,2);
                             foreach($company_users as $cuser) {
                                 $invoice_lf_notify = array(
                                     'user_id' => $cuser->id,
+                                    'notify_user_id' => $cuser->id,
                                     'title' => 'Invoice Late Fee',
                                     'content' => $content_notification,
                                     'status' => 1,
                                     'date_created' => date("Y-m-d H:i:s"),
                                     'company_id' => $inv_data->company_id,
                                     'entity_id' => $inv_data->id
-
                                 );                       
                                 $this->db->insert('user_notification', $invoice_lf_notify);                    
-                            }                            
+                            }    
+
                         }
                     }
                 /**

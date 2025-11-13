@@ -39,6 +39,7 @@ class User_notification_model extends MY_Model
         $date_2days_ago = date_format($date, "Y-m-d H:i:s");
 
         $and_query = "";
+        
         // $query = $this->db->query(
         //     "SELECT * from users as u JOIN user_notification ON u.id = user_notification.user_id 
         //     where user_notification.company_id = " . $company_id . " AND user_notification.status = " . $status . " 
