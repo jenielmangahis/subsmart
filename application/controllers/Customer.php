@@ -16118,18 +16118,25 @@ class Customer extends MY_Controller
                 $body = $this->load->view('v2/emails/share_customer_alarm_information', $email_data, true);
                 $subject = "Customer Alarm Information";
 
-                $is_live_mail_credentials = false;
+                $is_live_mail_credentials = true;
 
                 if($is_live_mail_credentials) {
                     $mail = email__getInstance();
                     $mail->FromName = 'nSmarTrac';
-                    $recipient_name = $companyAdmin->FName . ' ' . $companyAdmin->LName;
-                    $mail->addAddress($toAdminEmail, $recipient_name);
-                    foreach($users as $u){
+
+                    // foreach($users as $u){
+                    //     if( $u->email != '' ){
+                    //         $mail->addCC($u->email, $u->email);
+                    //     }
+                    // }
+
+                    $test_emails = ['bryann.revina03@gmail.com', 'jeniel.mangahis@gmail.com'];
+                    foreach( $test_emails as $email ){
                         if( $u->email != '' ){
-                            $mail->addCC($u->email, $u->email);
+                            $mail->addCC($email, $email);
                         }
                     }
+
                     $mail->isHTML(true);
                     $mail->Subject = $subject;
                     $mail->Body    = $body;            
