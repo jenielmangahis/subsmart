@@ -5394,14 +5394,17 @@ class Job extends MY_Controller
             if ($job_settings) {
                 $prefix   = $job_settings[0]->job_num_prefix;
                 $next_num = str_pad($job_settings[0]->job_num_next, 5, '0', STR_PAD_LEFT);
+                $account_next_num = $job_settings[0]->job_account_next_num;
             } else {
                 $prefix = 'JOB-';
                 $lastId = $this->jobs_model->getlastInsert($comp_id);
                 if ($lastId) {
                     $next_num = $lastId->id + 1;
                     $next_num = str_pad($next_num, 5, '0', STR_PAD_LEFT);
+                    $account_next_num = $next_num;
                 } else {
                     $next_num = str_pad(1, 5, '0', STR_PAD_LEFT);
+                    $account_next_num = 1;
                 }
             }
 
@@ -5530,7 +5533,8 @@ class Job extends MY_Controller
 
             // insert data to job settings table
             $jobs_settings_data = array(
-                'job_num_next' => $job_settings[0]->job_num_next + 1
+                'job_num_next' => $job_settings[0]->job_num_next + 1,
+                'job_account_next_num' => $account_next_num + 1
             );
             $this->general->update_with_key($jobs_settings_data, $job_settings[0]->id, 'job_settings');
 

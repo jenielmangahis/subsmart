@@ -2842,6 +2842,7 @@ class Customer extends MY_Controller
         $this->load->model('AcsAlarmSiteType_model');
         $this->load->model('AcsAlarmInstallerCode_model');
         $this->load->model('Customer_model');
+        $this->load->model('CompanyOnlinePaymentAccount_model');
         $this->load->library('wizardlib');                        
 
         if(!checkRoleCanAccessModule('customer-dashboard', 'read')){
@@ -3056,6 +3057,8 @@ class Customer extends MY_Controller
             $customer_id  = $customer->prof_id;
             $default_dealer_number = $this->Customer_model->createDealerNumber($customer_id, $business->business_name);
 
+            $companyOnlinePaymentAccounts = $this->CompanyOnlinePaymentAccount_model->getByCompanyId($cid);
+
             $this->page_data['companyInfo']   = $companyInfo;
             $this->page_data['twilioAccount'] = $twilioAccount;
             $this->page_data['ringCentralAccount'] = $ringCentralAccount;
@@ -3074,6 +3077,7 @@ class Customer extends MY_Controller
             $this->page_data['alarm_customer_info'] = $alarm_customer_info;
             $this->page_data['statementClaim'] = $statementClaim;
             $this->page_data['customerSignature'] = $customerSignature;
+            $this->page_data['companyOnlinePaymentAccounts'] = $companyOnlinePaymentAccounts;
             $this->page_data['woLatest'] = $woLatest;
             $this->page_data['wo_created_by'] = $wo_created_by;
             $this->page_data['defaultAlarmSiteType'] = $defaultAlarmSiteType;
@@ -14139,26 +14143,54 @@ class Customer extends MY_Controller
 
     public function ajax_capture_payment_form()
     {        
+        $this->load->model('CompanyOnlinePaymentAccount_model');
+
         // Stripe SDK
         include APPPATH . 'libraries/stripe/init.php';  
 
         $post = $this->input->post();
-        $total_cost = $post['processing_fee'] + $post['payment_amount'];
-        $stripe_amount  = number_format(($total_cost*100) , 0, '', '');
+        $company_id = logged('company_id');
+        $num_valid_account = 0;
 
-        $stripe = new Stripe\StripeClient(STRIPE_SECRET_KEY);
-        $result = $stripe->paymentIntents->create([
-            'amount' => $stripe_amount,
-            'currency' => 'usd',
-            'automatic_payment_methods' => ['enabled' => true],
-        ]);
+        $companyOnlinePaymentAccounts = $this->CompanyOnlinePaymentAccount_model->getByCompanyId($company_id);
+        if( $companyOnlinePaymentAccounts ){
+            if( $companyOnlinePaymentAccounts->paypal_client_id != '' ){
+                $num_valid_account++;
+            } 
 
-        $stripe_client_secret = $result->client_secret;
-        $this->page_data['total_cost'] = $total_cost;
-        $this->page_data['processing_fee'] = $post['processing_fee'];
-        $this->page_data['payment_amount'] = $post['payment_amount'];
-        $this->page_data['stripe_client_secret']    = $stripe_client_secret;
-        $this->load->view('v2/pages/customer/ajax_capture_payment_form', $this->page_data);
+            if( $companyOnlinePaymentAccounts->stripe_publish_key != '' ){
+                $num_valid_account++;
+            } 
+            
+        }
+        
+        if( $num_valid_account > 0 ){
+            $total_cost = $post['processing_fee'] + $post['payment_amount'];
+            $stripe_amount  = number_format(($total_cost*100) , 0, '', '');
+
+            $stripe_client_secret = '';
+
+            if( $companyOnlinePaymentAccounts && $companyOnlinePaymentAccounts->stripe_secret_key != '' ){
+                $stripe = new Stripe\StripeClient(STRIPE_SECRET_KEY);
+                $result = $stripe->paymentIntents->create([
+                    'amount' => $stripe_amount,
+                    'currency' => 'usd',
+                    'automatic_payment_methods' => ['enabled' => true],
+                ]);
+
+                $stripe_client_secret = $result->client_secret;
+            }
+            
+            $this->page_data['total_cost'] = $total_cost;
+            $this->page_data['processing_fee'] = $post['processing_fee'];
+            $this->page_data['payment_amount'] = $post['payment_amount'];
+            $this->page_data['stripe_client_secret']    = $stripe_client_secret;
+            $this->page_data['companyOnlinePaymentAccounts'] = $companyOnlinePaymentAccounts;
+            $this->load->view('v2/pages/customer/ajax_capture_payment_form', $this->page_data);
+        }else{
+            echo '<div class="alert alert-danger" role="alert">You have no valid payment api tool set. To set your payment tools click <a href="'.base_url('tools/api_connectors').'" target="_new">Business Tools</a></div>';
+        }
+        
     }
 
     public function ajax_financing_equipment_details()
