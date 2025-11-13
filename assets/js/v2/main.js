@@ -14,17 +14,17 @@ $(document).ready(function () {
 		toggleSidebar();
 	});
 
-	$(window).on("resize", function () {
-		let newWindowWidth = $(window).innerWidth();
-		let windowIsLarge = windowWidth > 768 ? true : false;
+	// $(window).on("resize", function () {
+	// 	let newWindowWidth = $(window).innerWidth();
+	// 	let windowIsLarge = windowWidth > 768 ? true : false;
 
-		if (windowIsLarge && newWindowWidth <= 768) {
-			location.reload();
-		}
-		else if (!windowIsLarge && newWindowWidth > 768) {
-			location.reload();
-		}
-	});
+	// 	if (windowIsLarge && newWindowWidth <= 768) {
+	// 		location.reload();
+	// 	}
+	// 	else if (!windowIsLarge && newWindowWidth > 768) {
+	// 		location.reload();
+	// 	}
+	// });
 
 	$(".nsm-fab").on("click", function () {
 		let _this = $(this);
