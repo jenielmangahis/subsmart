@@ -2377,6 +2377,7 @@ $route['customers/_delete_receiver_number'] = 'Customer/ajax_delete_receiver_num
 $route['customer/_set_default_receiver_phone_number'] = 'Customer/ajax_set_default_receiver_phone_number';
 $route['customer/_set_default_customer_status'] = 'Customer/ajax_set_default_customer_status';
 $route['customer/_delete_payment_image'] = 'CustomerDashboardQuickActions/ajaxDeleteCustomerDocument';
+$route['customer/_send_alarm_information_to_users'] = 'Customer/ajax_send_alarm_information_to_users';
 
 //Benchmark for Testing
 $route['benchmark/test_customer_subscription'] = 'Benchmark/test_customer_subscription';

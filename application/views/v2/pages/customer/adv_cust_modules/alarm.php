@@ -589,8 +589,8 @@ $(function(){
                     success: function(o) {
                         if (o.is_success == 1) {
                             Swal.fire({
-                                title: 'Email Sent!',
-                                text: "An email was sent to customer of their login details!",
+                                title: 'Share Alarm Information to Employees',
+                                text: "Customer alarm information was successfully sent to selected users email.",
                                 icon: 'success',
                                 showCancelButton: false,
                                 confirmButtonText: 'Okay'

@@ -15422,13 +15422,16 @@ class Customer extends MY_Controller
         $post = $this->input->post();
         $company_id = logged('company_id');
         $data = [];
-
+        $new_status = '';
+        
         $cancellationRequest = $this->AcsCustomerCancellationRequest->getByCustomerId($post['customer_id']);
         $customer = $this->AcsProfile_model->getByProfId($post['customer_id']);
         if( $customer && $customer->company_id == $company_id ){
+            $current_customer_status = $customer->status;
+            
             if( $cancellationRequest ){
                 if($post['status_request'] == 'Cancelled') {
-                    $data = [
+                    $data = [                        
                         'status_request' => $post['status_request'],
                         'request_date' => date("Y-m-d",strtotime($post['date_request_received'])),
                         'reason' => $post['reason'],
@@ -15466,7 +15469,9 @@ class Customer extends MY_Controller
             }else{
                 if($post['status_request'] == 'Cancelled') {
                     $data = [
+                        'current_customer_status' => $current_customer_status,
                         'status_request' => $post['status_request'],
+                        'company_id' => $company_id,
                         'customer_id' => $customer->prof_id,
                         'request_date' => !empty($post['date_request_received']) ? date("Y-m-d",strtotime($post['date_request_received'])) : date("Y-m-d"),
                         'reason' => !empty($post['reason']) ? $post['reason'] : '',
@@ -15480,7 +15485,9 @@ class Customer extends MY_Controller
                     ];                    
                 }elseif($post['status_request'] == 'Collection') {
                     $data = [
+                        'current_customer_status' => $current_customer_status,
                         'status_request' => $post['status_request'],
+                        'company_id' => $company_id,
                         'customer_id' => $customer->prof_id,
                         'request_date' => !empty($post['date_request_received']) ? date("Y-m-d",strtotime($post['date_request_received'])) : date("Y-m-d"),
                         'reason' => !empty($post['reason']) ? $post['reason'] : '',
@@ -15495,7 +15502,9 @@ class Customer extends MY_Controller
                     ];                     
                 }elseif($post['status_request'] == 'Non Compliance Audit Needed') {
                     $data = [
+                        'current_customer_status' => $current_customer_status,
                         'status_request' => $post['status_request'],
+                        'company_id' => $company_id,
                         'customer_id' => $customer->prof_id,
                         'request_date' => !empty($post['date_request_received']) ? date("Y-m-d",strtotime($post['date_request_received'])) : date("Y-m-d"),
                         'reason' => !empty($post['reason']) ? $post['reason'] : '',
@@ -15507,7 +15516,10 @@ class Customer extends MY_Controller
                 }
 
                 if($data) {
+                    $this->AcsProfile_model->updateCustomerByProfId($customer->prof_id, ['status' => 'Audit']);
                     $this->AcsCustomerCancellationRequest->create($data);   
+
+                    $new_status = 'Audit';
                 }
                  
             }
@@ -15577,7 +15589,8 @@ class Customer extends MY_Controller
         
         $return = [
             'is_success' => $is_success,
-            'msg' => $msg
+            'msg' => $msg,
+            'new_status' => $new_status
         ];
         echo json_encode($return);
     }
@@ -16023,64 +16036,74 @@ class Customer extends MY_Controller
     public function ajax_send_alarm_information_to_users()
 	{   
         $this->load->model('AcsProfile_model');
+        $this->load->model('Users_model');
 
         $is_success = 0;
-        $msg = 'Cannot find record';
+        $msg = 'Cannot send email';
 
         $company_id = logged('company_id');
         $post = $this->input->post();
 
-        $customer = $this->AcsProfile_model->getByProfId($post['customer_id']);
-        $alarm_info = $this->customer_ad_model->get_data_by_id('fk_prof_id', $post['customer_id'], 'acs_alarm');
-        
-        $email_data['customer']   =  $customer;
-        $email_data['alarm_info'] = $alarm_info;
-        $body = $this->load->view('v2/emails/share_customer_alarm_information', $email_data, true);
-        $subject = "Customer Alarm Information";
+        if( $post['users'] && $post['customer_id'] > 0 ){
+            $customer   = $this->AcsProfile_model->getByProfId($post['customer_id']);
+            if( $customer && $customer->company_id == $company_id ){
+                $users      = $this->Users_model->getActiveEmployeeByIds($post['users']);
+                $alarm_info = $this->customer_ad_model->get_data_by_id('fk_prof_id', $post['customer_id'], 'acs_alarm');
 
-        $is_live_mail_credentials = false;
-		if($is_live_mail_credentials) {
-            $mail = email__getInstance();
-            $mail->FromName = 'nSmarTrac';
-            $recipient_name = $companyAdmin->FName . ' ' . $companyAdmin->LName;
-            $mail->addAddress($toAdminEmail, $recipient_name);
-            if($toOwnerEmail) {
-                $mail->addCC($toOwnerEmail, $toOwnerEmail);
-            }  
-            $mail->isHTML(true);
-            $mail->Subject = "Customer Request for Cancellation";
-            $mail->Body = $body;            
-            $mail->Send();                    
-        } else {
-            $host     = 'smtp.mailtrap.io';
-            $port     = 2525;
-            $username = '21b22b8b45fd1a';
-            $password = '6cf743259c16e4';
-            $from     = 'noreply@nsmartrac.com';       
-            
-            $mail = new PHPMailer;
-            $mail->isSMTP();
-            $mail->Host = $host;
-            $mail->SMTPAuth = true;
-            $mail->Username = $username;
-            $mail->Password = $password;
-            $mail->SMTPSecure = 'tls';
-            $mail->Port = $port;            
-                                                                                    
-            $mail->FromName  = 'nSmarTrac';  
-            $recipient_name  = 'Bryann Revina';
-            $recipient_email = 'bryann.revina03@gmail.com';
-            $mail->setFrom('noreply@nsmartrac.com', 'nSmartrac');
-            $mail->addAddress($recipient_email, $recipient_name);
-            $mail->isHTML(true);
-            $mail->Subject = $subject;
-            $mail->Body = $body;
-            $mail->Send();   
+                $email_data['customer']   =  $customer;
+                $email_data['alarm_info'] = $alarm_info;
+                $body = $this->load->view('v2/emails/share_customer_alarm_information', $email_data, true);
+                $subject = "Customer Alarm Information";
 
-            $is_success = 1;
-            $msg = '';
+                $is_live_mail_credentials = false;
 
-        } 
+                if($is_live_mail_credentials) {
+                    $mail = email__getInstance();
+                    $mail->FromName = 'nSmarTrac';
+                    $recipient_name = $companyAdmin->FName . ' ' . $companyAdmin->LName;
+                    $mail->addAddress($toAdminEmail, $recipient_name);
+                    foreach($users as $u){
+                        if( $u->email != '' ){
+                            $mail->addCC($u->email, $u->email);
+                        }
+                    }
+                    $mail->isHTML(true);
+                    $mail->Subject = $subject;
+                    $mail->Body    = $body;            
+                    $mail->Send();                    
+                } else {
+                    $host     = 'smtp.mailtrap.io';
+                    $port     = 2525;
+                    $username = '21b22b8b45fd1a';
+                    $password = '6cf743259c16e4';
+                    $from     = 'noreply@nsmartrac.com';       
+                    
+                    $mail = new PHPMailer;
+                    $mail->isSMTP();
+                    $mail->Host = $host;
+                    $mail->SMTPAuth = true;
+                    $mail->Username = $username;
+                    $mail->Password = $password;
+                    $mail->SMTPSecure = 'tls';
+                    $mail->Port = $port;            
+                                                                                            
+                    $mail->FromName  = 'nSmarTrac';  
+                    $recipient_name  = 'Bryann Revina';
+                    $recipient_email = 'bryann.revina03@gmail.com';
+                    $mail->setFrom('noreply@nsmartrac.com', 'nSmartrac');
+                    $mail->addAddress($recipient_email, $recipient_name);
+                    $mail->isHTML(true);
+                    $mail->Subject = $subject;
+                    $mail->Body = $body;
+                    $mail->Send();   
+
+                    $is_success = 1;
+                    $msg = '';
+                } 
+            }else{
+                $msg = 'Cannot find customer data';
+            }
+        }
 
         $json_data = [
             'is_success' => $is_success,
