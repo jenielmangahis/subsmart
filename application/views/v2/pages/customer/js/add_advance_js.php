@@ -207,6 +207,25 @@
             }
         });
 
+        $(document).on('change', '.ncan-next-step', function(){
+            let nextstep = $(this).val();
+
+            if(nextstep == 'Collection Protocol') {
+                $("#next-step-collection-protocol-container").show();
+            } else {
+                $("#next-step-collection-protocol-container").hide();
+            }
+        });
+
+        $(document).on('change', '.judge-result', function(){
+            let judge_result = $(this).val();
+            if(judge_result == 'win') {
+                $("#judgement-amount-container").show();
+            } else {
+                $("#judgement-amount-container").hide();
+            }
+        });
+
         $(document).on('change', '#status', function(){
             let status = $(this).val();
             let customer_id = "<?= $profile_info ? $profile_info->prof_id : 0; ?>";            
@@ -325,7 +344,7 @@
                     $('#add-advance-access-info').hide();        
 
                 }else{
-                    
+
                     $('#add-advance-alarm-section').show();
                     $('#add-advance-custom-fields').show();
                     $('#add-advance-billing-info').show();

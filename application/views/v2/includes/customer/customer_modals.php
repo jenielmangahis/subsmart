@@ -1220,7 +1220,7 @@
                             <div class="row">
                                 <div class="col-12 mt-2">
                                     <label class="bold"><strong>Next Step</strong></label>
-                                    <select id="next_step" name="next_step" data-customer-source="dropdown" class="form-control mb-2" required>
+                                    <select id="next_step" name="next_step" data-customer-source="dropdown" class="form-control mb-2 ncan-next-step" required>
                                         <option value="">--Select--</option>
                                         <?php $default_next_steps = getCustomerCancelRequestNextStep(); ?>
                                         <?php foreach($default_next_steps as $default_next_step) { ?>
@@ -1229,6 +1229,55 @@
                                     </select>                                    
                                 </div>
                             </div>
+
+                            <div id="next-step-collection-protocol-container" class="next-step-collection-protocol-container" style="display:none;">
+                                <div class="row">
+                                    <div class="col-12 mt-2">
+                                        <label class="bold"><strong>Collection Company Worksheet</strong></label>
+                                        <input type="text" placeholder="" name="collection_comp_worksheet" id="collection_comp_worksheet" class="form-control mb-2" />
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-12 mt-2">
+                                        <label class="bold"><strong>Email Sent</strong></label>
+                                        <input type="text" placeholder="" name="email_sent" id="email_sent" class="form-control mb-2" />
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-12 mt-2">
+                                        <label class="bold"><strong>Certified Mail (Date)</strong></label>
+                                        <input type="date" placeholder="" name="certified_mail_sent" id="certified_mail_sent" class="form-control mb-2" />
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-12 mt-2">
+                                        <label class="bold"><strong>Statement of Claim (Date)</strong></label>
+                                        <input type="date" placeholder="" name="statement_of_claim_date" id="statement_of_claim_date" class="form-control mb-2" />
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-12 mt-2">
+                                        <label class="bold"><strong>Court Date</strong></label>
+                                        <input type="date" placeholder="" name="court_date" id="court_date" class="form-control mb-2" />
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-12 mt-2">
+                                        <label class="bold"><strong>Judge Result</strong></label>
+                                        <select id="judge-result" name="judge_result" class="judge-result form-control mb-2">
+                                            <option value="win">Win</option>
+                                            <option value="lose">Lose</option>
+                                        </select>                                       
+                                    </div>
+                                </div>
+                                <div class="row judgement-amount-container" id="judgement-amount-container">
+                                    <div class="col-12 mt-2">
+                                        <label class="bold"><strong>Judgement Amount</strong></label>
+                                        <input type="text" placeholder="" name="judgement_amount" id="judgement-amount" value="" class="form-control mb-2 judgement-amount-ncan" />
+                                    </div>
+                                </div>
+                            </div>
+
                         </div>
 
                         <div id="cancellation-request-form-group-3">
