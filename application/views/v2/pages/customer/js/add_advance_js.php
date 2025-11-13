@@ -209,9 +209,8 @@
 
         $(document).on('change', '#status', function(){
             let status = $(this).val();
-            let customer_id = "<?= $profile_info ? $profile_info->prof_id : 0; ?>";
-            
-            <?php if( $profile_info ){ //isAdiCompany() ?>
+            let customer_id = "<?= $profile_info ? $profile_info->prof_id : 0; ?>";            
+            <?php if( $profile_info && $profile_info->prof_id > 0 ){ //isAdiCompany() ?>
                 /*if( status == 'Cancelled' || status == 'Cancel' || status == 'Charge Back' || status == 'Collection' || status == 'Competition Lost' ){
                     $('#office-info-cancel-date').attr('required', 'required');
                     $('#cancel_reason').attr('required', 'required');
@@ -231,36 +230,82 @@
                     $('#cancelled-related-fields-container-a').hide();
                 }*/
 
-                if( status == 'Cancelled' || status == 'Cancel' || status == 'Charge Back' || status == 'Collection' || status == 'Competition Lost' || status == 'Non Compliance Audit Needed' ){                    
+                if( status == 'Cancelled' || status == 'Cancel' || status == 'Collection' || status == 'Non Compliance Audit Needed' || status == 'Pending' || status == 'Audit' || status == 'Need Audit'){  
                     $('#request-cancellation-customer-id').val(customer_id);
                     $('#request-cancellation-status-request').val(status);
                     $('#send_cancel_status_request_modal').modal('show');
                 }
 
                 if( status == 'Non Compliance Audit Needed' ){
+
                     $('#cancellation-request-form-group-2').show();
                     $('#cancellation-request-form-group-1').hide();
                     $('#cancellation-request-form-group-3').hide();
+                    $('#cancellation-request-form-group-4').hide();
+                    $('#cancellation-request-form-group-5').hide();
 
                     $('#cancellation-request-form-group-1').find('input, select, textarea, button').prop('disabled', true);
                     $('#cancellation-request-form-group-2').find('input, select, textarea, button').prop('disabled', false);
                     $('#cancellation-request-form-group-3').find('input, select, textarea, button').prop('disabled', true);
+                    $('#cancellation-request-form-group-4').find('input, select, textarea, button').prop('disabled', true);
+                    $('#cancellation-request-form-group-5').find('input, select, textarea, button').prop('disabled', true);
+
                 }else if( status == 'Collection' ) {
+
                     $('#cancellation-request-form-group-3').show();
                     $('#cancellation-request-form-group-1').hide();
                     $('#cancellation-request-form-group-2').hide(); 
+                    $('#cancellation-request-form-group-4').hide(); 
+                    $('#cancellation-request-form-group-5').hide(); 
                     
                     $('#cancellation-request-form-group-1').find('input, select, textarea, button').prop('disabled', true);
                     $('#cancellation-request-form-group-2').find('input, select, textarea, button').prop('disabled', true);
                     $('#cancellation-request-form-group-3').find('input, select, textarea, button').prop('disabled', false);
+                    $('#cancellation-request-form-group-4').find('input, select, textarea, button').prop('disabled', true);
+                    $('#cancellation-request-form-group-5').find('input, select, textarea, button').prop('disabled', true);
+
+                }else if( status == 'Pending' ) {
+
+                    $('#cancellation-request-form-group-3').hide();
+                    $('#cancellation-request-form-group-1').hide();
+                    $('#cancellation-request-form-group-2').hide(); 
+                    $('#cancellation-request-form-group-4').show(); 
+                    $('#cancellation-request-form-group-5').hide(); 
+                    
+                    $('#cancellation-request-form-group-1').find('input, select, textarea, button').prop('disabled', true);
+                    $('#cancellation-request-form-group-2').find('input, select, textarea, button').prop('disabled', true);
+                    $('#cancellation-request-form-group-3').find('input, select, textarea, button').prop('disabled', true);
+                    $('#cancellation-request-form-group-4').find('input, select, textarea, button').prop('disabled', false);
+                    $('#cancellation-request-form-group-5').find('input, select, textarea, button').prop('disabled', true);
+
+                }else if( status == 'Audit' || status == 'Need Audit' ) {
+
+                    $('#cancellation-request-form-group-3').hide();
+                    $('#cancellation-request-form-group-1').hide();
+                    $('#cancellation-request-form-group-2').hide(); 
+                    $('#cancellation-request-form-group-4').hide(); 
+                    $('#cancellation-request-form-group-5').show(); 
+                    
+                    $('#cancellation-request-form-group-1').find('input, select, textarea, button').prop('disabled', true);
+                    $('#cancellation-request-form-group-2').find('input, select, textarea, button').prop('disabled', true);
+                    $('#cancellation-request-form-group-3').find('input, select, textarea, button').prop('disabled', true);
+                    $('#cancellation-request-form-group-4').find('input, select, textarea, button').prop('disabled', true);
+                    $('#cancellation-request-form-group-5').find('input, select, textarea, button').prop('disabled', false);
+
                 }else{
+
                     $('#cancellation-request-form-group-1').show();
                     $('#cancellation-request-form-group-2').hide();
                     $('#cancellation-request-form-group-3').hide();
+                    $('#cancellation-request-form-group-4').hide();
+                    $('#cancellation-request-form-group-5').hide();
 
                     $('#cancellation-request-form-group-1').find('input, select, textarea, button').prop('disabled', false);
                     $('#cancellation-request-form-group-2').find('input, select, textarea, button').prop('disabled', true);
                     $('#cancellation-request-form-group-3').find('input, select, textarea, button').prop('disabled', true);
+                    $('#cancellation-request-form-group-4').find('input, select, textarea, button').prop('disabled', true);
+                    $('#cancellation-request-form-group-5').find('input, select, textarea, button').prop('disabled', true);
+                    
                 }
 
                 if( status == 'Cancelled' ){
@@ -291,7 +336,7 @@
             
         });
 
-        $('#cancellation-request-reason').on('change', function(){
+        $('.cancellation-request-reason').on('change', function(){
             let reason = $(this).val();
             let next_step = '';
             if( reason == 'Moving' ){
@@ -306,7 +351,7 @@
                 next_step = 'Field Audit';
             }
 
-            $('#cancellation_reason_next_step').val(next_step);
+            $('.cancellation_reason_next_step').val(next_step);
         });
 
         $(".paper-chk").click(function() { 
@@ -1048,15 +1093,17 @@
                         success: function(data) {    
                             $('#btn-customer-cancel-status-request').html('Save');                   
                             if (data.is_success) {
+                                $('#send_cancel_status_request_modal').modal('hide');
+                                $('#status').val(data.new_status).trigger("change");
                                 Swal.fire({
                                     title: 'Customer Cancellation Request',
-                                    text: "Email was successfully sent to admin. Customer status will be updated once admin approved the request.",
+                                    html: "Request was successfully sent to admin email.<br/> Customer status was changed to audit. Customer record will be updated once the request is approved.",
                                     icon: 'success',
                                     showCancelButton: false,
                                     confirmButtonText: 'Okay'
                                 }).then((result) => {
                                     //if (result.value) {
-                                        $('#send_cancel_status_request_modal').modal('hide');
+                                        
                                     //}
                                 });
                             }else{

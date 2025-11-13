@@ -134,6 +134,13 @@ var notification_html_holder_ctr = 0;
 
 $(document).ready(function() {
 
+    /*const mobileAddNewModalName = $('.nsm-fab-container .nsm-fab-icon').data('bs-target');
+    const mobileAddNewModal = document.getElementById(`${mobileAddNewModalName.replace('#', '')}`);
+    mobileAddNewModal.addEventListener('hidden.bs.modal', event => {
+        $('.nsm-fab-container .nsm-fab-icon').find('i').removeClass('bx bx-x');
+        $('.nsm-fab-container .nsm-fab-icon').find('i').addClass('bx bx-plus');
+    });*/
+
     $("#clear-user-notifications").click(function() {
         //$('#all_notifications_container').html('<i class="fa fa-spin fa-spinner"></i> Loading...');   
         var url = base_url + "notifications/_clear_all_notifications";

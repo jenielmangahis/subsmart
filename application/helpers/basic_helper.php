@@ -5982,4 +5982,13 @@ function getCustomerCancelRequestReason() {
 
     return $items_arr;
 }
+
+function getCustomerCancelRequestNextStep() {
+    $items_arr = [
+        'Collection Protocol' => 'Collection Protocol',
+        'Non Collectable' => 'Non Collectable',
+    ];
+
+    return $items_arr;
+}
 ?>
