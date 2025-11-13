@@ -15419,7 +15419,7 @@ class Customer extends MY_Controller
         $is_success = 0;
         $msg    = 'Cannot find customer data';
 
-        $is_request_saved = false;
+        $is_request_saved = true;
 
         $post = $this->input->post();
         $company_id = logged('company_id');
@@ -15469,6 +15469,17 @@ class Customer extends MY_Controller
                         'boc_received_date' => $post['boc_received_date'] ? date("Y-m-d",strtotime($post['boc_received_date'])) : null,
                         'equipment_return_date' => $post['equipment_return_date'] ? date("Y-m-d",strtotime($post['equipment_return_date'])) : null,
                         'next_action' => $post['next_step'],
+
+                        'collection_company_worksheet' => $post['collection_comp_worksheet'] ? $post['collection_comp_worksheet'] : null,
+                        'collection_company_worksheet_call_customer_date' => $post['collection_comp_worksheet_date'] ? $post['collection_comp_worksheet_date'] : null,
+                        'email_sent' => $post['email_sent'] ? $post['email_sent'] : null,
+                        'email_sent_call_customer_date' => $post['email_sent_call_customer_date'] ? $post['email_sent_call_customer_date'] : null,
+                        'certified_mail' => $post['certified_mail'] ? $post['certified_mail'] : null,
+                        'certified_mail_call_customer_date' => $post['certified_mail_call_customer_date'] ? $post['certified_mail_call_customer_date'] : null,
+                        'judge_result' => $post['judge_result'] ? $post['judge_result'] : null,
+                        'statement_of_claim' => $post['statement_of_claim_date'],
+                        'judgement_amount' => $post['judgement_amount'],
+
                         'date_modified' => date("Y-m-d H:i:s"),
                         'status' => 'pending'
                     ];                    
@@ -15551,6 +15562,17 @@ class Customer extends MY_Controller
                         'boc_received_date' => $post['boc_received_date'] ? date("Y-m-d",strtotime($post['boc_received_date'])) : null,
                         'equipment_return_date' => $post['equipment_return_date'] ? date("Y-m-d",strtotime($post['equipment_return_date'])) : null,
                         'next_action' => $post['next_step'],
+
+                        'collection_company_worksheet' => $post['collection_comp_worksheet'] ? $post['collection_comp_worksheet'] : null,
+                        'collection_company_worksheet_call_customer_date' => $post['collection_comp_worksheet_date'] ? $post['collection_comp_worksheet_date'] : null,
+                        'email_sent' => $post['email_sent'] ? $post['email_sent'] : null,
+                        'email_sent_call_customer_date' => $post['email_sent_call_customer_date'] ? $post['email_sent_call_customer_date'] : null,
+                        'certified_mail' => $post['certified_mail'] ? $post['certified_mail'] : null,
+                        'certified_mail_call_customer_date' => $post['certified_mail_call_customer_date'] ? $post['certified_mail_call_customer_date'] : null,
+                        'judge_result' => $post['judge_result'] ? $post['judge_result'] : null,
+                        'statement_of_claim' => $post['statement_of_claim_date'],
+                        'judgement_amount' => $post['judgement_amount'],
+
                         'date_created' => date("Y-m-d H:i:s"),
                         'date_modified' => date("Y-m-d H:i:s"),
                     ];                        

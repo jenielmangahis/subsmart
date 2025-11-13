@@ -1231,22 +1231,35 @@
                             </div>
 
                             <div id="next-step-collection-protocol-container" class="next-step-collection-protocol-container" style="display:none;">
+                                <hr />
                                 <div class="row">
-                                    <div class="col-12 mt-2">
+                                    <div class="col-6 mt-2">
                                         <label class="bold"><strong>Collection Company Worksheet</strong></label>
                                         <input type="text" placeholder="" name="collection_comp_worksheet" id="collection_comp_worksheet" class="form-control mb-2" />
                                     </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-12 mt-2">
-                                        <label class="bold"><strong>Email Sent</strong></label>
-                                        <input type="text" placeholder="" name="email_sent" id="email_sent" class="form-control mb-2" />
+                                    <div class="col-6 mt-2">
+                                        <label class="bold"><strong>Call Customer</strong></label>
+                                        <input type="date" placeholder="" name="collection_comp_worksheet_date" id="collection_comp_worksheet_date" class="form-control mb-2" />
                                     </div>
                                 </div>
                                 <div class="row">
-                                    <div class="col-12 mt-2">
+                                    <div class="col-6 mt-2">
+                                        <label class="bold"><strong>Email Sent</strong></label>
+                                        <input type="text" placeholder="" name="email_sent" id="email_sent" class="form-control mb-2" />
+                                    </div>
+                                    <div class="col-6 mt-2">
+                                        <label class="bold"><strong>Call Customer</strong></label>
+                                        <input type="date" placeholder="" name="email_sent_call_customer_date" id="email_sent_call_customer_date" class="form-control mb-2" />
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-6 mt-2">
                                         <label class="bold"><strong>Certified Mail (Date)</strong></label>
-                                        <input type="date" placeholder="" name="certified_mail_sent" id="certified_mail_sent" class="form-control mb-2" />
+                                        <input type="date" placeholder="" name="certified_mail" id="certified_mail" class="form-control mb-2" />
+                                    </div>
+                                    <div class="col-6 mt-2">
+                                        <label class="bold"><strong>Call Customer</strong></label>
+                                        <input type="date" placeholder="" name="certified_mail_call_customer_date" id="certified_mail_call_customer_date" class="form-control mb-2" />
                                     </div>
                                 </div>
                                 <div class="row">
