@@ -423,13 +423,6 @@ $(document).on('click', '#btn-remove-row-edit-attachment', function(){
             
 });    
 
-$('.status-select').on('change', function(){   
-    var status = $('.status-select').val(); 
-    if(status == 'Cancelled' || status == 'Cancel') {
-        $('#send_cancel_status_request_modal').modal('show');
-    }
-});
-
 $('.quick_add_phone_number_format').keydown(function(e) {
     var key = e.charCode || e.keyCode || 0;
     $text = $(this);

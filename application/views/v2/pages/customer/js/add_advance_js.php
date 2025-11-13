@@ -209,10 +209,8 @@
 
         $(document).on('change', '#status', function(){
             let status = $(this).val();
-            let customer_id = "<?= $profile_info ? $profile_info->prof_id : 0; ?>";
-            
-            <?php if( $profile_info ){ //isAdiCompany() ?>
-
+            let customer_id = "<?= $profile_info ? $profile_info->prof_id : 0; ?>";            
+            <?php if( $profile_info && $profile_info->prof_id > 0 ){ //isAdiCompany() ?>
                 /*if( status == 'Cancelled' || status == 'Cancel' || status == 'Charge Back' || status == 'Collection' || status == 'Competition Lost' ){
                     $('#office-info-cancel-date').attr('required', 'required');
                     $('#cancel_reason').attr('required', 'required');
@@ -232,8 +230,7 @@
                     $('#cancelled-related-fields-container-a').hide();
                 }*/
 
-                if( status == 'Cancelled' || status == 'Cancel' || status == 'Collection' || status == 'Non Compliance Audit Needed' || status == 'Pending' || status == 'Audit' || status == 'Need Audit'){                   
-                    
+                if( status == 'Cancelled' || status == 'Cancel' || status == 'Collection' || status == 'Non Compliance Audit Needed' || status == 'Pending' || status == 'Audit' || status == 'Need Audit'){  
                     $('#request-cancellation-customer-id').val(customer_id);
                     $('#request-cancellation-status-request').val(status);
                     $('#send_cancel_status_request_modal').modal('show');
