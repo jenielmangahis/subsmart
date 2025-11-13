@@ -233,12 +233,14 @@
                 }*/
 
                 if( status == 'Cancelled' || status == 'Cancel' || status == 'Collection' || status == 'Non Compliance Audit Needed' || status == 'Pending' || status == 'Audit' || status == 'Need Audit'){                   
+                    
                     $('#request-cancellation-customer-id').val(customer_id);
                     $('#request-cancellation-status-request').val(status);
                     $('#send_cancel_status_request_modal').modal('show');
                 }
 
                 if( status == 'Non Compliance Audit Needed' ){
+
                     $('#cancellation-request-form-group-2').show();
                     $('#cancellation-request-form-group-1').hide();
                     $('#cancellation-request-form-group-3').hide();
@@ -250,7 +252,9 @@
                     $('#cancellation-request-form-group-3').find('input, select, textarea, button').prop('disabled', true);
                     $('#cancellation-request-form-group-4').find('input, select, textarea, button').prop('disabled', true);
                     $('#cancellation-request-form-group-5').find('input, select, textarea, button').prop('disabled', true);
+
                 }else if( status == 'Collection' ) {
+
                     $('#cancellation-request-form-group-3').show();
                     $('#cancellation-request-form-group-1').hide();
                     $('#cancellation-request-form-group-2').hide(); 
@@ -262,7 +266,9 @@
                     $('#cancellation-request-form-group-3').find('input, select, textarea, button').prop('disabled', false);
                     $('#cancellation-request-form-group-4').find('input, select, textarea, button').prop('disabled', true);
                     $('#cancellation-request-form-group-5').find('input, select, textarea, button').prop('disabled', true);
+
                 }else if( status == 'Pending' ) {
+
                     $('#cancellation-request-form-group-3').hide();
                     $('#cancellation-request-form-group-1').hide();
                     $('#cancellation-request-form-group-2').hide(); 
@@ -274,7 +280,9 @@
                     $('#cancellation-request-form-group-3').find('input, select, textarea, button').prop('disabled', true);
                     $('#cancellation-request-form-group-4').find('input, select, textarea, button').prop('disabled', false);
                     $('#cancellation-request-form-group-5').find('input, select, textarea, button').prop('disabled', true);
+
                 }else if( status == 'Audit' || status == 'Need Audit' ) {
+
                     $('#cancellation-request-form-group-3').hide();
                     $('#cancellation-request-form-group-1').hide();
                     $('#cancellation-request-form-group-2').hide(); 
@@ -286,7 +294,9 @@
                     $('#cancellation-request-form-group-3').find('input, select, textarea, button').prop('disabled', true);
                     $('#cancellation-request-form-group-4').find('input, select, textarea, button').prop('disabled', true);
                     $('#cancellation-request-form-group-5').find('input, select, textarea, button').prop('disabled', false);
+
                 }else{
+
                     $('#cancellation-request-form-group-1').show();
                     $('#cancellation-request-form-group-2').hide();
                     $('#cancellation-request-form-group-3').hide();
@@ -298,6 +308,7 @@
                     $('#cancellation-request-form-group-3').find('input, select, textarea, button').prop('disabled', true);
                     $('#cancellation-request-form-group-4').find('input, select, textarea, button').prop('disabled', true);
                     $('#cancellation-request-form-group-5').find('input, select, textarea, button').prop('disabled', true);
+                    
                 }
 
                 if( status == 'Cancelled' ){

@@ -35,7 +35,7 @@
                                 </div>
 
                                 <div class="row mb-3">
-                                    <div class="col-12">
+                                    <div class="col-12" id="">
                                         <?php if($cancel_request_data->status_request == 'Cancelled' || $cancel_request_data->status_request == 'Cancel' || $cancel_request_data->status_request == 'Pending' || $cancel_request_data->status_request == 'Audit' || $cancel_request_data->status_request == 'Need Audit') { ?>                                            
                                             <div class="row g-1 mb-3">
                                                 <div class="col-12 col-md-4">
@@ -192,7 +192,7 @@
                                                     <label class="content-subtitle"><?php echo date('m/d/Y', strtotime($cancel_request_data->audit_date)); ?></label>
                                                 </div>
                                             </div>                                  
-                                        <?php } ?>
+                                        <?php } ?>  
 
                                         <div class="row g-1 mb-3">
                                             <div class="col-12 col-md-4">

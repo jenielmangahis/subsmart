@@ -1173,6 +1173,7 @@
                                 </div>
                             </div>
                         </div>
+
                         <div id="cancellation-request-form-group-2">
                             <div class="row">
                                 <div class="col-12 mt-2">
@@ -1181,6 +1182,7 @@
                                 </div>
                             </div>
                         </div>
+
                         <div id="cancellation-request-form-group-3">
                             <div class="row">
                                 <div class="col-12 mt-2">
@@ -1213,6 +1215,7 @@
                                 </div>
                             </div>              
                         </div>
+
                         <div id="cancellation-request-form-group-4">
                             <div class="row">
                                 <div class="col-12 mt-2">
@@ -1263,6 +1266,7 @@
                                 </div>
                             </div>
                         </div>
+                        
                         <div id="cancellation-request-form-group-5">
                             <div class="row">
                                 <div class="col-12 mt-2">
