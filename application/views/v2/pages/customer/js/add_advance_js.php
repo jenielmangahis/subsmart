@@ -344,7 +344,7 @@
                     $('#add-advance-access-info').hide();        
 
                 }else{
-
+                    
                     $('#add-advance-alarm-section').show();
                     $('#add-advance-custom-fields').show();
                     $('#add-advance-billing-info').show();

@@ -9035,6 +9035,33 @@ class Customer extends MY_Controller
         echo json_encode($data);
     }
 
+    public function getRecurringStatusDetail()
+    {
+        $company_id = logged('company_id');
+
+        $customer_id = $this->input->post('customer_id');
+
+        $query = $this->db->query("
+            SELECT 
+                billing_bill_method AS `payment_method`,
+                billing_credit_card_num AS `cc_no`,
+                billing_credit_card_exp AS `cc_expiration`,
+                billing_credit_card_cvv AS `cc_cvv`,
+                billing_mmr AS `mmr`,
+                billing_bill_freq AS `billing_frequency`,
+                billing_bill_day AS `billing_day`,
+                billing_contract_term AS `contract_term`,
+                billing_bill_start_date AS `billing_start`,
+                billing_bill_end_date AS `billing_end`
+            FROM customer_list_view
+            WHERE customer_list_view.prof_id = {$customer_id}
+        ");
+
+        $data = $query->result();
+
+        echo json_encode($data);
+    }
+
     public function ajax_load_active_subscriptions()
     {
         $this->load->model('Customer_advance_model');
@@ -15451,7 +15478,7 @@ class Customer extends MY_Controller
         $is_success = 0;
         $msg    = 'Cannot find customer data';
 
-        $is_request_saved = false;
+        $is_request_saved = true;
 
         $post = $this->input->post();
         $company_id = logged('company_id');
@@ -15501,6 +15528,17 @@ class Customer extends MY_Controller
                         'boc_received_date' => $post['boc_received_date'] ? date("Y-m-d",strtotime($post['boc_received_date'])) : null,
                         'equipment_return_date' => $post['equipment_return_date'] ? date("Y-m-d",strtotime($post['equipment_return_date'])) : null,
                         'next_action' => $post['next_step'],
+
+                        'collection_company_worksheet' => $post['collection_comp_worksheet'] ? $post['collection_comp_worksheet'] : null,
+                        'collection_company_worksheet_call_customer_date' => $post['collection_comp_worksheet_date'] ? $post['collection_comp_worksheet_date'] : null,
+                        'email_sent' => $post['email_sent'] ? $post['email_sent'] : null,
+                        'email_sent_call_customer_date' => $post['email_sent_call_customer_date'] ? $post['email_sent_call_customer_date'] : null,
+                        'certified_mail' => $post['certified_mail'] ? $post['certified_mail'] : null,
+                        'certified_mail_call_customer_date' => $post['certified_mail_call_customer_date'] ? $post['certified_mail_call_customer_date'] : null,
+                        'judge_result' => $post['judge_result'] ? $post['judge_result'] : null,
+                        'statement_of_claim' => $post['statement_of_claim_date'],
+                        'judgement_amount' => $post['judgement_amount'],
+
                         'date_modified' => date("Y-m-d H:i:s"),
                         'status' => 'pending'
                     ];                    
@@ -15583,6 +15621,17 @@ class Customer extends MY_Controller
                         'boc_received_date' => $post['boc_received_date'] ? date("Y-m-d",strtotime($post['boc_received_date'])) : null,
                         'equipment_return_date' => $post['equipment_return_date'] ? date("Y-m-d",strtotime($post['equipment_return_date'])) : null,
                         'next_action' => $post['next_step'],
+
+                        'collection_company_worksheet' => $post['collection_comp_worksheet'] ? $post['collection_comp_worksheet'] : null,
+                        'collection_company_worksheet_call_customer_date' => $post['collection_comp_worksheet_date'] ? $post['collection_comp_worksheet_date'] : null,
+                        'email_sent' => $post['email_sent'] ? $post['email_sent'] : null,
+                        'email_sent_call_customer_date' => $post['email_sent_call_customer_date'] ? $post['email_sent_call_customer_date'] : null,
+                        'certified_mail' => $post['certified_mail'] ? $post['certified_mail'] : null,
+                        'certified_mail_call_customer_date' => $post['certified_mail_call_customer_date'] ? $post['certified_mail_call_customer_date'] : null,
+                        'judge_result' => $post['judge_result'] ? $post['judge_result'] : null,
+                        'statement_of_claim' => $post['statement_of_claim_date'],
+                        'judgement_amount' => $post['judgement_amount'],
+
                         'date_created' => date("Y-m-d H:i:s"),
                         'date_modified' => date("Y-m-d H:i:s"),
                     ];                        

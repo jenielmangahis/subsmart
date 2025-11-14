@@ -71,8 +71,8 @@
         transition: none !important;
     }
 
-    .activeCustomerFilters {
-        width: 450px;
+    .activeCustomerFilters > div {
+        width: 400px;
     }
 
     .activeCustomerManageMode {
@@ -422,6 +422,10 @@
     .nsm-callout {
         margin-bottom: unset;
     }
+
+    .recurringStatusContent {
+        visibility: hidden;
+    }
 </style>
 
 
@@ -468,43 +472,6 @@
                             <button class="btn btn-danger fw-bold activeCustomerExitManageMode display_none"><i class="fas fa-sign-out-alt"></i>&ensp;Exit Manage Mode</button>
                         </div>
                     </div>
-
-                    <script>
-                        // $(document).on('click', '.activeCustomerManageMode', function () {
-                        //     $('.activeCustomerManageMode').hide();
-                        //     $('.activeCustomerExitManageMode').show();
-                        // });
-
-                        $(document).on('click', '.activeCustomerManageMode', function() {
-                            const content = $('.activeCustomerBatchUpdaterContent').find('.batchUpdaterContent').length;
-
-                            $('.activeCustomerManageMode, .activeCustomerListContent, .activeCustomerFilters').hide();
-                            $('.activeCustomerListContent').html("");
-                            $('.activeCustomerExitManageMode, .activeCustomerBatchUpdaterContent').show();
-
-                            if (content == 0) {
-                                $.ajax({
-                                    type: "POST",
-                                    data: { statusFilter: 'active_only' }, 
-                                    url: `${window.origin}/Customer/toolContent/batchUpdater`,
-                                    success: function(response) {
-                                        $('.activeCustomerBatchUpdaterContent').append(response);
-                                        $('.customerUpdaterContentLoader, .batchUpdaterTitleContainer, .modalExitButton').remove();
-                                    },
-                                });
-                            }
-                        });
-
-                        $(document).on('click', '.activeCustomerExitManageMode', function () {
-                            $('.activeCustomerManageMode, .activeCustomerListContent, .activeCustomerFilters').show();
-                            $('.activeCustomerExitManageMode, .activeCustomerBatchUpdaterContent').hide();
-                            getActiveCustomers();
-                        });
-                    </script>
-
-
-
-
                     <div class="col-lg-12">
                         <div class="col mt-3 activeCustomerLoader">
                             <div class="text-center">
@@ -546,9 +513,7 @@
                         </div>
                         <div class="col-lg-4 mb-3">
                             <label class="form-label fw-xnormal">Panel Type</label>
-                            <select class="form-select" name="" required>
-
-                            </select>
+                            <select class="form-select" name="" required></select>
                         </div>
                         <div class="col-lg-3 mb-3">
                             <label class="form-label fw-xnormal">MMR</label>
@@ -576,22 +541,81 @@
     </div>
 </div>
 
-<!-- <th class="text-nowrap">Bill End</th> -->
-<!-- <th class="text-nowrap">Security Package</th> -->
-<!-- <th class="text-nowrap">Panel Type</th> -->
-<!-- <th class="text-nowrap">MMR</th> -->
-<!-- <th class="text-nowrap">GMR</th> -->
-<!-- <th class="text-nowrap">Pass Thru Cost</th> -->
-<!-- <th class="text-nowrap">Account Cost</th> -->
-
-
-
-
-
-
-
-
-
+<div class="modal fade recurringStatusModal" role="dialog" data-bs-backdrop="static" data-bs-keyboard="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <span class="modal-title content-title" style="font-size: 17px;">Recurring Status</span>
+                <button class="border-0 rounded mx-1" data-bs-dismiss="modal" style="cursor: pointer;"><i class="fas fa-times m-0 text-muted"></i></button>
+            </div>
+            <div class="modal-body">
+                <span class="recurringStatusLoader">Please wait while fetching the Recurring Details...</span>
+                <div class="row recurringStatusContent">
+                    <div class="col-3 mb-3">
+                        <label class="form-label fw-xnormal text-nowrap mb-1">Payment Method</label><br>
+                        <div class="text-muted">
+                            <span class="paymentMethodLabel">Not Specified</span>
+                        </div>
+                    </div>
+                    <div class="col-3 mb-3">
+                        <label class="form-label fw-xnormal text-nowrap mb-1">CC No.</label><br>
+                        <div class="text-muted">
+                            <span class="CCNumberLabel">Not Specified</span>
+                        </div>
+                    </div>
+                    <div class="col-3 mb-3">
+                        <label class="form-label fw-xnormal text-nowrap mb-1">CC Expiration</label><br>
+                        <div class="text-muted">
+                            <span class="CCExpirationLabel">Not Specified</span>
+                        </div>
+                    </div>
+                    <div class="col-3 mb-3">
+                        <label class="form-label fw-xnormal text-nowrap mb-1">CVV</label><br>
+                        <div class="text-muted">
+                            <span class="CVVLabel">Not Specified</span>
+                        </div>
+                    </div>
+                    <div class="col-3 mb-3">
+                        <label class="form-label fw-xnormal text-nowrap mb-1">MMR</label><br>
+                        <div class="text-muted">
+                            <span class="MMRLabel">Not Specified</span>
+                        </div>
+                    </div>
+                    <div class="col-3 mb-3">
+                        <label class="form-label fw-xnormal text-nowrap mb-1">Billing Frequency</label><br>
+                        <div class="text-muted">
+                            <span class="billingFrequencyLabel">Not Specified</span>
+                        </div>
+                    </div>
+                    <div class="col-3 mb-3">
+                        <label class="form-label fw-xnormal text-nowrap mb-1">Billing Day</label><br>
+                        <div class="text-muted">
+                            <span class="billingDayLabel">Not Specified</span>
+                        </div>
+                    </div>
+                    <div class="col-3 mb-3">
+                        <label class="form-label fw-xnormal text-nowrap mb-1">Contract Term</label><br>
+                        <div class="text-muted">
+                            <span class="contractTermLabel">Not Specified</span>
+                        </div>
+                    </div>
+                    <div class="col-3">
+                        <label class="form-label fw-xnormal text-nowrap mb-1">Start Date</label><br>
+                        <div class="text-muted">
+                            <span class="startDateLabel">Not Specified</span>
+                        </div>
+                    </div>
+                    <div class="col-3">
+                        <label class="form-label fw-xnormal text-nowrap mb-1">End Date</label><br>
+                        <div class="text-muted">
+                            <span class="endDateLabel">Not Specified</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
 <!-- <div class="row g-3 mb-3">
     <div class="col-12 col-md-12">
@@ -723,7 +747,7 @@
                             const email = cust.email ? cust.email : "no@email.com";
                             const bill_start = cust.bill_start ? new Date(cust.bill_start).toLocaleDateString("en-US", { month: "2-digit", day: "2-digit", year: "numeric" }) : "Not Specified";
                             const bill_end = cust.bill_end ? new Date(cust.bill_end).toLocaleDateString("en-US", { month: "2-digit", day: "2-digit", year: "numeric" }) : "Not Specified";
-                            const bill_mmr = cust.bill_mmr ? Number(cust.bill_mmr).toLocaleString("en-US", { style: "currency", currency: "USD" }) : Number(cust.alarm_bill_mmr).toLocaleString("en-US", { style: "currency", currency: "USD" });
+                            const bill_mmr = cust.bill_mmr ? Number(cust.bill_mmr).toLocaleString("en-US", { style: "currency", currency: "USD" }) : "$0.00";
                             const monitor_id = cust.monitor_id ? cust.monitor_id : "—";
                             const payment_method = cust.payment_method ? cust.payment_method : "—";
                             const service_package = cust.service_package ? cust.service_package : "—";
@@ -736,6 +760,21 @@
                                              - (parseFloat(cust.pass_thru_cost) || 0);
                             const net_profit_formatted = Number(net_profit).toLocaleString("en-US", { style: "currency", currency: "USD" });
 
+                            let recurringStatusBadge1 = "";
+                            let recurringStatusBadge2 = "";
+                            if (cust.bill_end && new Date(cust.bill_end) > new Date()) {
+                                recurringStatusBadge1 = "<span class='badge bg-success small fw-normal opacity-75 mt-0 align-text-top'>AutoPay</span>";
+                                recurringStatusBadge2 = "<i class='fas fa-circle text-success opacity-75 small'></i>";
+                            } else {
+                                recurringStatusBadge1 = "";
+                                recurringStatusBadge2 = "<i class='fas fa-circle text-muted opacity-75 small'></i>";
+                            }
+
+                            if (cust.payment_method) {
+                                recurringStatusBadge1 += `<span class='badge bg-primary small fw-normal opacity-75 mt-0 align-text-top'>${payment_method}</span>`;
+                            } else {
+                                recurringStatusBadge1 += `<span class='badge bg-secondary small fw-normal opacity-75 mt-0 align-text-top'>Payment Unspecified</span>`;
+                            }
 
                             return `
                                 <tr>
@@ -746,9 +785,9 @@
                                             <span>${initials}</span>
                                         </div>
                                         <div>
-                                            <span class="mx-2">${name}&ensp;<small class="customerNoLabel">${customer_no}</small></span>
+                                            <span class="mx-2">${name}</span>${recurringStatusBadge1}
                                             <br>
-                                            <small class="mx-2 text-muted">${email}</small>
+                                            <small class="mx-2 text-muted">${email}</small><small class="customerNoLabel">${customer_no}</small>
                                         </div>
                                         </div>
                                     </td>
@@ -756,7 +795,6 @@
                                     <td class="text-nowrap">${type}</td>
                                     <td class="text-nowrap">${status}</td>
                                     <td class="text-nowrap">${address}</td>
-                                    <td class="text-nowrap">${payment_method}</td>
                                     <td class="text-nowrap">${bill_start}</td>
                                     <td class="text-nowrap">${bill_end}</td>
                                     <td class="text-nowrap">${service_package}</td>
@@ -772,7 +810,7 @@
                                             <ul class='dropdown-menu' aria-labelledby='activeCustomerButtonDropdown'>
                                                 <li><a class="dropdown-item" href="${window.origin}/customer/subscription/${cust.id}">View</a></li>
                                                 <li><a class="dropdown-item" href="${window.origin}/customer/add_advance/${cust.id}">Edit</a></li>
-                                                <li class="d-none"><a class="dropdown-item activeCustomerManage" href="javascript:void(0);" customer_id="${cust.id}">Manage</a></li>
+                                                <li class=""><a class="dropdown-item activeCustomerRecurringStatus" href="javascript:void(0);" customer_id="${cust.id}">Recurring Status&ensp;${recurringStatusBadge2}</a></li>
                                                 <li><a class="dropdown-item" href="${window.origin}/customer/module/${cust.id}">Dashboard</a></li>
                                                 <li><a class="dropdown-item view-payment-item" href="javascript:void(0);" data-customer-id="${cust.id}" data-billing-id="">Payment History</a></li>
                                             </ul>
@@ -801,7 +839,6 @@
                                                         <th class="text-nowrap">Type</th>
                                                         <th class="text-nowrap">Status</th>
                                                         <th class="text-nowrap">Address</th>
-                                                        <th class="text-nowrap">Payment Method</th>
                                                         <th class="text-nowrap">Bill Start</th>
                                                         <th class="text-nowrap">Bill End</th>
                                                         <th class="text-nowrap">Security Package</th>
@@ -1087,6 +1124,140 @@
     $(document).on('click', '.activeCustomerManage', function () {
         $('.activeCustomerManageModal').modal('show');
     });
+
+    $(document).on('click', '.activeCustomerManageMode', function() {
+        const content = $('.activeCustomerBatchUpdaterContent').find('.batchUpdaterContent').length;
+
+        $('.activeCustomerManageMode, .activeCustomerListContent, .activeCustomerFilters').hide();
+        $('.activeCustomerListContent').html("");
+        $('.activeCustomerExitManageMode, .activeCustomerBatchUpdaterContent').show();
+
+        if (content == 0) {
+            $.ajax({
+                type: "POST",
+                data: {
+                    statusFilter: 'active_only'
+                },
+                url: `${window.origin}/Customer/toolContent/batchUpdater`,
+                success: function(response) {
+                    $('.activeCustomerBatchUpdaterContent').append(response);
+                    $('.customerUpdaterContentLoader, .batchUpdaterTitleContainer, .modalExitButton').remove();
+                },
+            });
+        }
+    });
+
+    $(document).on('click', '.activeCustomerExitManageMode', function() {
+        $('.activeCustomerManageMode, .activeCustomerListContent, .activeCustomerFilters').show();
+        $('.activeCustomerExitManageMode, .activeCustomerBatchUpdaterContent').hide();
+        getActiveCustomers();
+    });
+
+    $(document).on('click', '.activeCustomerRecurringStatus', function () {
+        const customer_id = $(this).attr('customer_id');
+        $('.recurringStatusModal').modal('show');
+
+        $.ajax({
+            type: "POST",
+            data: { customer_id: customer_id },
+            url: `${window.origin}/Customer/getRecurringStatusDetail`,
+            beforeSend: function () {
+                $('.recurringStatusLoader').show();
+                $('.recurringStatusContent').css('visibility', 'hidden');
+            },
+            success: function (response) {
+                const data = JSON.parse(response)[0];
+
+                if (data) {
+                    const validate = (val) => val && val.trim() !== "" ? val : "Not Specified";
+
+                    const formatDate = (dateStr) => {
+                        if (!dateStr || dateStr.trim() === "") return "Not Specified";
+                        const d = new Date(dateStr);
+                        return !isNaN(d)
+                            ? d.toLocaleDateString("en-US", { month: "2-digit", day: "2-digit", year: "numeric" })
+                            : "Not Specified";
+                    };
+
+                    const formatCurrency = (val) => {
+                        if (!val || isNaN(val)) return "$0.00";
+                        return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(val);
+                    };
+
+                    const formatCreditCard = (num) => {
+                        if (!num || num.trim() === "") return "Not Specified";
+                        const clean = num.replace(/\D/g, '');
+                        if (clean.length < 4) return "Not Specified";
+                        return `**** **** **** ${clean.slice(-4)}`;
+                    };
+
+                    const formatContractTerm = (val) => {
+                        if (!val || val.trim() === "") return "Not Specified";
+                        return `${val} months`;
+                    };
+
+                    $('.paymentMethodLabel').text(validate(data.payment_method));
+
+                    const ccFormatted = formatCreditCard(data.cc_no);
+                    const cvvValidated = validate(data.cc_cvv);
+                    const ccHasValue = ccFormatted !== "Not Specified";
+                    const cvvHasValue = cvvValidated !== "Not Specified";
+
+                    if (ccHasValue) {
+                        $('.CCNumberLabel').html(`${ccFormatted} <button class="btn text-muted btn-sm p-0 ms-2 toggleCCNumber">Show</button>`);
+                    } else {
+                        $('.CCNumberLabel').text("Not Specified");
+                    }
+
+                    if (cvvHasValue) {
+                        $('.CVVLabel').html(`*** <button class="btn text-muted btn-sm p-0 ms-2 toggleCVV">Show</button>`);
+                    } else {
+                        $('.CVVLabel').text("Not Specified");
+                    }
+
+                    $('.CCExpirationLabel').text(validate(data.cc_expiration));
+                    $('.MMRLabel').text(formatCurrency(data.mmr));
+                    $('.billingFrequencyLabel').text(validate(data.billing_frequency));
+                    $('.billingDayLabel').text(validate(data.billing_day));
+                    $('.contractTermLabel').text(formatContractTerm(data.contract_term));
+                    $('.startDateLabel').text(formatDate(data.billing_start));
+                    $('.endDateLabel').text(formatDate(data.billing_end));
+                    $('.CCNumberLabel').attr('data-full', validate(data.cc_no));
+                    $('.CVVLabel').attr('data-full', validate(data.cc_cvv));
+                } else {
+                    $('.paymentMethodLabel, .CCNumberLabel, .CCExpirationLabel, .CVVLabel, .MMRLabel, .billingFrequencyLabel, .billingDayLabel, .contractTermLabel, .startDateLabel, .endDateLabel')
+                        .text("Not Specified");
+                }
+
+                $('.recurringStatusLoader').hide();
+                $('.recurringStatusContent').css('visibility', 'unset');
+            },
+            error: function () {
+                $('.recurringStatusLoader').hide();
+                $('.recurringStatusContent').css('visibility', 'unset');
+                $('.paymentMethodLabel, .CCNumberLabel, .CCExpirationLabel, .CVVLabel, .MMRLabel, .billingFrequencyLabel, .billingDayLabel, .contractTermLabel, .startDateLabel, .endDateLabel').text("Not Specified");
+            }
+        });
+    });
+
+    $(document).on('click', '.toggleCCNumber', function () {
+        const $label = $('.CCNumberLabel');
+        const full = $label.attr('data-full');
+        const masked = `**** **** **** ${full.slice(-4)}`;
+        const isShown = $(this).text() === 'Hide';
+
+        $label.html(`${isShown ? masked : full} <button class="btn text-muted btn-sm p-0 ms-2 toggleCCNumber">${isShown ? 'Show' : 'Hide'}</button>`);
+    });
+
+    $(document).on('click', '.toggleCVV', function () {
+        const $label = $('.CVVLabel');
+        const full = $label.attr('data-full');
+        const isShown = $(this).text() === 'Hide';
+
+        $label.html(`${isShown ? '***' : full} <button class="btn text-muted btn-sm p-0 ms-2 toggleCVV">${isShown ? 'Show' : 'Hide'}</button>`);
+    });
+
+
 
     // $(document).on('click', '.dropdown-menu', function (e) {
     //     e.stopPropagation();
