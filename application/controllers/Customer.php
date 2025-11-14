@@ -9035,6 +9035,33 @@ class Customer extends MY_Controller
         echo json_encode($data);
     }
 
+    public function getRecurringStatusDetail()
+    {
+        $company_id = logged('company_id');
+
+        $customer_id = $this->input->post('customer_id');
+
+        $query = $this->db->query("
+            SELECT 
+                billing_bill_method AS `payment_method`,
+                billing_credit_card_num AS `cc_no`,
+                billing_credit_card_exp AS `cc_expiration`,
+                billing_credit_card_cvv AS `cc_cvv`,
+                billing_mmr AS `mmr`,
+                billing_bill_freq AS `billing_frequency`,
+                billing_bill_day AS `billing_day`,
+                billing_contract_term AS `contract_term`,
+                billing_bill_start_date AS `billing_start`,
+                billing_bill_end_date AS `billing_end`
+            FROM customer_list_view
+            WHERE customer_list_view.prof_id = {$customer_id}
+        ");
+
+        $data = $query->result();
+
+        echo json_encode($data);
+    }
+
     public function ajax_load_active_subscriptions()
     {
         $this->load->model('Customer_advance_model');
