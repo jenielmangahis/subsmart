@@ -413,6 +413,13 @@
                             <select class="form-control nsm-field form-select" name="users[]" id="alarm-share-to-users" multiple="multiple" required>
                             </select>
                         </div>  
+                        <div class="col-md-4 form-group">
+                            <label for="ticket-appointment-user" class="block-label"><b>Include Zones</b></label>
+                            <select class="form-control nsm-field form-select" name="include_zones" id="include-zones">
+                                <option value="No" selected="">No</option>
+                                <option value="Yes">Yes</option>
+                            </select>
+                        </div>  
                     </div>
                 </form>
             </div>
@@ -558,7 +565,7 @@ $(function(){
         //     '<div><div class="autocomplete-left"><img class="autocomplete-img" src="' + repo.user_image + '" /></div><div class="autocomplete-right">' + repo.FName + ' ' + repo.LName + '<br /><small>' + repo.email + '</small></div></div>'
         // );
         var $container = $(
-            '<div>' + repo.FName + ' ' + repo.LName + '<br /><small>' + repo.email + '</small></div></div>'
+            '<div class="select-user-info">' + repo.FName + ' ' + repo.LName + '<br /><small>' + repo.email + '</small></div></div>'
         );
 
         return $container;
