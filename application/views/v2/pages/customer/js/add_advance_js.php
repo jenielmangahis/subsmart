@@ -207,6 +207,25 @@
             }
         });
 
+        $(document).on('change', '.ncan-next-step', function(){
+            let nextstep = $(this).val();
+
+            if(nextstep == 'Collection Protocol') {
+                $("#next-step-collection-protocol-container").show();
+            } else {
+                $("#next-step-collection-protocol-container").hide();
+            }
+        });
+
+        $(document).on('change', '.judge-result', function(){
+            let judge_result = $(this).val();
+            if(judge_result == 'win') {
+                $("#judgement-amount-container").show();
+            } else {
+                $("#judgement-amount-container").hide();
+            }
+        });
+
         $(document).on('change', '#status', function(){
             let status = $(this).val();
             let customer_id = "<?= $profile_info ? $profile_info->prof_id : 0; ?>";            
@@ -305,7 +324,7 @@
                     $('#cancellation-request-form-group-3').find('input, select, textarea, button').prop('disabled', true);
                     $('#cancellation-request-form-group-4').find('input, select, textarea, button').prop('disabled', true);
                     $('#cancellation-request-form-group-5').find('input, select, textarea, button').prop('disabled', true);
-                    
+
                 }
 
                 if( status == 'Cancelled' ){
@@ -315,14 +334,17 @@
 
                 //Hide show sections - only for adi companies            
                 if( status == 'Cancelled' ){
+
                     $('#add-advance-alarm-section').hide();
                     $('#add-advance-custom-fields').hide();
                     $('#add-advance-billing-info').hide();
                     $('#add-advance-payment-schedule').hide();
                     $('#add-advance-customer-papers').hide();
                     $('#funding-information-container').hide();
-                    $('#add-advance-access-info').hide();                
+                    $('#add-advance-access-info').hide();        
+
                 }else{
+                    
                     $('#add-advance-alarm-section').show();
                     $('#add-advance-custom-fields').show();
                     $('#add-advance-billing-info').show();
@@ -330,6 +352,7 @@
                     $('#add-advance-customer-papers').show();
                     $('#funding-information-container').show();
                     $('#add-advance-access-info').show();
+
                 }               
             <?php } ?>
 

@@ -1804,6 +1804,7 @@ $route['customer/export_customer_ledger'] = 'Customer/export_customer_ledger';
 $route['customer/_create_sales_area'] = 'Customer/ajax_create_sales_area';
 $route['customer/_load_item_details'] = 'Customer/ajax_load_item_details';
 $route['customer/_financing_equipment_details'] = 'Customer/ajax_financing_equipment_details';
+$route['customer/_capture_payment_details'] = 'Customer/ajax_capture_payment_details';
 
 // Trac360
 $route['on-my-way-to-job'] = 'Job/update_jobs_status';

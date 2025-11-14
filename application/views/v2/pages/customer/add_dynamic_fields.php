@@ -437,7 +437,6 @@ $('.quick_add_phone_number_format').keydown(function(e) {
     return (key == 8 || key == 9 || key == 46 || (key >= 48 && key <= 57) || (key >= 96 && key <= 105));
 });
 
-
 $(document).on('submit', '#customer_cancel_status_request_form', function(e) {
     e.preventDefault();
 
