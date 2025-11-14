@@ -16213,7 +16213,7 @@ class Customer extends MY_Controller
                 $body = $this->load->view('v2/emails/share_customer_alarm_information', $email_data, true);
                 $subject = "Customer Alarm Information";
 
-                $is_live_mail_credentials = false;
+                $is_live_mail_credentials = true;
 
                 if($is_live_mail_credentials) {
                     $mail = email__getInstance();
