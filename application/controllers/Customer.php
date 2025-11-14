@@ -16191,6 +16191,7 @@ class Customer extends MY_Controller
     public function ajax_send_alarm_information_to_users()
 	{   
         $this->load->model('AcsProfile_model');
+        $this->load->model('AcsAlarmZone_model');
         $this->load->model('Users_model');
 
         $is_success = 0;
@@ -16202,15 +16203,17 @@ class Customer extends MY_Controller
         if( $post['users'] && $post['customer_id'] > 0 ){
             $customer   = $this->AcsProfile_model->getByProfId($post['customer_id']);
             if( $customer && $customer->company_id == $company_id ){
-                $users      = $this->Users_model->getActiveEmployeeByIds($post['users']);
-                $alarm_info = $this->customer_ad_model->get_data_by_id('fk_prof_id', $post['customer_id'], 'acs_alarm');
-
-                $email_data['customer']   =  $customer;
-                $email_data['alarm_info'] = $alarm_info;
+                $users       = $this->Users_model->getActiveEmployeeByIds($post['users']);
+                $alarm_info  = $this->customer_ad_model->get_data_by_id('fk_prof_id', $post['customer_id'], 'acs_alarm');
+                $alarm_zones = $this->AcsAlarmZone_model->getAllByCustomerId($post['customer_id']);
+                $email_data['customer']      =  $customer;
+                $email_data['alarm_info']    = $alarm_info;
+                $email_data['alarm_zones']   = $alarm_zones;
+                $email_data['include_zones'] = $post['include_zones'];
                 $body = $this->load->view('v2/emails/share_customer_alarm_information', $email_data, true);
                 $subject = "Customer Alarm Information";
 
-                $is_live_mail_credentials = true;
+                $is_live_mail_credentials = false;
 
                 if($is_live_mail_credentials) {
                     $mail = email__getInstance();
@@ -16364,7 +16367,6 @@ class Customer extends MY_Controller
         $invoice_id = $this->Invoice_model->createInvoice($new_data);
         $hash_id    = $this->Invoice_model->generateHashId($invoice_id);
         $this->Invoice_model->update($invoice_id, ['hash_id' => $hash_id]);
-
         $this->Payment_records_model->create([
             'invoice_id' => $invoice_id,
             'user_id' => $user_id,
@@ -16377,7 +16379,7 @@ class Customer extends MY_Controller
             'payment_method' => 'Credit Card',
             'invoice_number' => $invoice_number,
             'reference_number' => $post['payment_intent_id'],
-            'notes' => ''
+            'notes' => 'Capture Payment : Paid via ' . $post['payment_method']
         ]);
 
         $is_success = 1;
