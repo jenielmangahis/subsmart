@@ -337,14 +337,14 @@
             }
         }
         .tbl-header {
-            background-color: #6a4a86;
-            padding: 8px;
+            background-color: #6a4a86 !important;
+            padding: 8px !important;
             text-align: center;
-            color: #ffffff;
-            font-size: 20px;
-            font-weight: bold;
+            color: #ffffff !important;
+            font-size: 20px !important;
+            font-weight: bold !important;
             margin-bottom: 13px;
-            text-align: left;
+            text-align: left !important;
             
         }
         .detail-row { margin-bottom: 10px; }
@@ -502,6 +502,38 @@
                                             </div>
                                         </td>
                                     </tr>
+                                    <?php if( $include_zones == 'Yes' ){ ?>
+                                    <tr>
+                                        <td class="content">
+                                            <table class="table" width="100%" cellpadding="10" cellspacing="0" border="0">
+                                                <thead>
+                                                    <tr>
+                                                        <td style="background-color: #6a4a86;color:#ffffff;padding:8px;"><b>Zone ID</b></td>
+                                                        <td style="background-color: #6a4a86;color:#ffffff;padding:8px;"><b>Type</b></td>
+                                                        <td style="background-color: #6a4a86;color:#ffffff;padding:8px;"><b>Event Code</b></td>
+                                                        <td style="background-color: #6a4a86;color:#ffffff;width:50%;padding:8px;"><b>Location</b></td>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <?php if( $alarm_zones ){ ?>
+                                                        <?php foreach($alarm_zones as $z){ ?>
+                                                            <tr>
+                                                                <td style="padding:8px;"><?= $z->zone_id; ?></td>
+                                                                <td style="padding:8px;"><?= $z->type; ?></td>
+                                                                <td style="padding:8px;"><?= $z->event_code; ?></td>
+                                                                <td style="padding:8px;"><?= $z->location; ?></td>
+                                                            </tr>
+                                                        <?php } ?>
+                                                    <?php }else{ ?>
+                                                        <tr>
+                                                            <td colspan="4" style="padding:8px;">No records found</td>
+                                                        </tr>
+                                                    <?php } ?>
+                                                </tbody>
+                                            </table>
+                                        </td>
+                                    </tr>
+                                    <?php } ?>
                                 </table>
                             </td>
                         </tr>
