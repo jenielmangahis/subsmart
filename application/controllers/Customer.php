@@ -15687,9 +15687,10 @@ class Customer extends MY_Controller
                     $email_data['cancellation_url'] = $cancellation_url;
                     $body = $this->load->view('v2/emails/customer_cancellation_request', $email_data, true);
 
-                    //$toAdminEmail = 'bryann.revina03@gmail.com';
                     $toAdminEmail = $companyAdmin->email;
                     $toOwnerEmail = $ownerAdmin->email;
+                    //$toAdminEmail = 'bryann.revina03@gmail.com';
+                    //$toOwnerEmail = 'jeniel.mangahis@nsmartrac.com';
 
                     if($is_live_mail_credentials) {
                         $mail = email__getInstance();

@@ -619,24 +619,31 @@ defined('BASEPATH') or exit('No direct script access allowed');
                     </div>
 
                   <div class="col-md-12">
-                    <h6 class="title-border">SALES REPRESENTATIVES :</h6>
-                    <span class="workorder-box"><?= $agreements->sales_re_name ?? "None"; ?></span> 
+                    <h6 class="title-border">AGREEMENT :</h6>
                   </div>
-                  <div class="col-md-6 mt-5" style="text-align: center; min-height: 150px;">
-                      <?php if($workorder->company_representative_signature != "") { ?>
-                        <img src="<?php echo base_url('uploads/workorders/signatures/'.$workorder->company_id.'/'.$workorder->company_representative_signature); ?>" />
+                  <div class="row">
+                    <div class="col-md-4 mt-5" style="text-align: center; min-height: 150px;">
+                        <?php if($workorder->company_representative_signature != "") { ?>
+                          <img src="<?php echo base_url('uploads/workorders/signatures/'.$workorder->company_id.'/'.$workorder->company_representative_signature); ?>" />
+                          <br />
+                          <?php } ?>
+                        <div><?= $agreements->sales_re_name ? $agreements->sales_re_name : $company->company_representative_name; ?></div>
+                    </div>
+                    <div class="col-md-4 mt-5" style="text-align: center; min-height: 150px;">
+                      <?php if($workorder->primary_account_holder_signature != "") { ?>
+                        <img src="<?php echo base_url('uploads/workorders/signatures/'.$workorder->company_id.'/'.$workorder->primary_account_holder_signature); ?>" />
+                        <br />
                       <?php } ?>
-                      <br /><?= $company->first_name . ' ' . $company->last_name; ?>
+                      <div><?= $customer->first_name . ' ' . $customer->last_name; ?></div>
+                    </div>
+                    <div class="col-md-4 mt-5" style="text-align: center; min-height: 150px;">
+                        <?php if($workorder->secondary_account_holder_signature != "") { ?>
+                          <img src="<?php echo base_url('uploads/workorders/signatures/'.$workorder->company_id.'/'.$workorder->secondary_account_holder_signature); ?>" />
+                          <br />
+                          <?php } ?>
+                        <div><?= $company->first_name . ' ' . $company->last_name; ?></div>
+                    </div>
                   </div>
-
-                  <div class="col-md-6 mt-5" style="text-align: center; min-height: 150px;">
-                    <?php if($workorder->primary_account_holder_signature != "") { ?>
-                      <img src="<?php echo base_url('uploads/workorders/signatures/'.$workorder->company_id.'/'.$workorder->primary_account_holder_signature); ?>" />
-                    <?php } ?>
-                    <br /><?= $customer->first_name . ' ' . $customer->last_name; ?>
-                  </div>
-
-
                 </div>                                    
               </div>     
             </div>

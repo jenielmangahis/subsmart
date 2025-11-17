@@ -2157,7 +2157,6 @@ class Workorder extends MY_Controller
             'primary_account_holder_name'       => $workData->primary_account_holder_name,
             'secondary_account_holder_signature'=> $workData->secondary_account_holder_signature,
             'secondary_account_holder_name'     => $workData->secondary_account_holder_name,
-
             'company'                           => $cliets->business_name,
             'business_address'                  => $cliets->business_address,
             'phone_number'                      => $cliets->phone_number,
@@ -2184,10 +2183,8 @@ class Workorder extends MY_Controller
             'secondary_account_holder_signature'=> $workData->secondary_account_holder_signature,
             'secondary_account_holder_name'     => $workData->secondary_account_holder_name,
             'business_name'                     => $customerData->business_name,
-
             'customs'                           => $customs,
             'items'                             => $items,
-
             'total'                             => $workData->grand_total,
             'subtotal'                          => $workData->subtotal,
             'taxes'                             => $workData->taxes,
@@ -2196,7 +2193,6 @@ class Workorder extends MY_Controller
             'voucher_value'                     => $workData->voucher_value,
             'otp_setup'                         => $workData->otp_setup,
             'monthly_monitoring'                => $workData->monthly_monitoring,
-
             'payment_method'                    => $payment->payment_method,
             'amount'                            => $payment->amount > 0 ? $payment->amount : '0.00', //
             'check_number'                      => $payment->check_number,
@@ -2215,36 +2211,28 @@ class Workorder extends MY_Controller
             'mail_cross_street'                 => $payment->mail_cross_street,
             'billing_date'                      => $payment->billing_date,
             'billing_frequency'                 => $payment->billing_frequency,
-
             'template'                          => '1',
             'business'                          => $business,
-
             'business_logo'                     => $business_logo,
-
             'first'                             => $first,
             'second'                            => $second,
             'third'                             => $third,
             'company_id'                        => $company_id,
-
             'header'                            => $workData->header,
-            
-            // 'source' => $source
+            'job_description'                   => $workData->job_description,
         );
 
-
-    // $message2 = $this->load->view('workorder/send_email_acs_alarm', $data, true);
-    // $filename = $workData->company_representative_signature;
+        //$message2 = $this->load->view('workorder/send_email_acs_alarm', $data, true);
+        //$filename = $workData->company_representative_signature;
             
         $filename = "nSmarTrac_work_order_".$wo_id."_standard";
         // $this->load->library('pdf');
         // $this->pdf->load_view('workorder/send_email_acs_alarm', $data, $filename, "portrait");
+
         $this->load->library('pdf');
-
-
         $this->pdf->load_view('workorder/work_order_pdf_template', $data, $filename, "portrait");
-        // $this->pdf->render();
 
-
+        //$this->pdf->render();
         // $this->pdf->stream($filename);
     }
 

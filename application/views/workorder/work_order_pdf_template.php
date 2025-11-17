@@ -16,11 +16,11 @@
 </head>
 <body style="font-family: Gill Sans, sans-serif; font-size: 11px;">
     <div style="width: 95%;margin: 0 auto; padding:1%;">
-        <div style="margin-bottom:150px;">
+        <div style="margin-bottom:50px;">
             <?php echo $header; ?>
         </div>
         <br />
-        <table style="margin-top:10%;">
+        <table style="">
             <tr>
                 <td><img src="<?= getCompanyBusinessProfileImage(); ?>"  style="width: 150px;margin-right:40%;" /></td>
                 <td style="width:250px;"><div style="width:300px;display:block;"></div></td>
@@ -148,15 +148,22 @@
             <br /><br />
             <b>TERMS & CONDITIONS:</b>
             <hr>
-            <?php echo strip_tags($terms_and_conditions); ?>
+            <?php echo strip_tags($terms_and_conditions ?? "None"); ?>
             <br /><br />
             <b>TERMS OF USE:</b>
             <hr>
-            <?php echo strip_tags($terms_of_use); ?>
-            <br /><br />            
+            <?php echo strip_tags($terms_of_use ?? "None"); ?>
+            <br /><br />  
+            <b>JOB DESCRIPTIONS:</b>
+            <hr>          
+            <?= strip_tags($job_description ?? "None"); ?><br><br>  
             <b>INSTRUCTIONS:</b>
             <hr>
-            <?php echo strip_tags($instructions); ?><br><br>            
+            <?php echo strip_tags($instructions ?? "None"); ?><br><br>            
+            <br /><br />
+            <b>ACCEPTED PAYMENT METHOD:</b>
+            <hr>
+            Credit Card, Check, Cash, Direct Deposit <br />Accepting Mobile Payments
             <br /><br />
             <b>PAYMENT DETAILS:</b>
             <hr>
@@ -263,21 +270,21 @@
                 <tr>
                     <td align="center" style="padding:10px;">
                         <?php if( trim($company_representative_signature) != '' ){ ?>
-                            <img src="<?php echo base_url($company_representative_signature); ?>" style="width:100px;"><br>
+                            <img src="<?php echo base_url('uploads/workorders/signatures/'.$company_id.'/'.$company_representative_signature); ?>" style="width:100px;"/><br>
                             <?php echo $first->FName.' '.$first->LName; ?>
                         <?php } ?>
                     </td>
                     
                     <td align="center" style="padding:10px;">
                         <?php if( trim($primary_account_holder_signature) != '' ){ ?>
-                            <img src="<?php echo base_url($primary_account_holder_signature); ?>" style="width:100px;"><br>
+                            <img src="<?php echo base_url('uploads/workorders/signatures/'.$company_id.'/'.$primary_account_holder_signature); ?>" style="width:100px;"/><br>
                             <?php echo $primary_account_holder_name; ?>
                         <?php } ?>
                     </td>
                     
                     <td align="center" style="padding:10px;">
                         <?php if( trim($secondary_account_holder_signature) != '' ){ ?>
-                            <img src="<?php echo base_url($secondary_account_holder_signature); ?>" style="width:100px;"><br>
+                            <img src="<?php echo base_url('uploads/workorders/signatures/'.$company_id.'/'.$secondary_account_holder_signature); ?>" style="width:100px;"/><br>
                             <?php echo $secondary_account_holder_name; ?>
                         <?php } ?>
                     </td>
