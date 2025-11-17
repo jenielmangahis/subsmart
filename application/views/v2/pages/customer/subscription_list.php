@@ -551,61 +551,61 @@
             <div class="modal-body">
                 <span class="recurringStatusLoader">Please wait while fetching the Recurring Details...</span>
                 <div class="row recurringStatusContent">
-                    <div class="col-3 mb-3">
+                    <div class="col-6 col-md-4 col-lg-3 mb-3">
                         <label class="form-label fw-xnormal text-nowrap mb-1">Payment Method</label><br>
                         <div class="text-muted">
                             <span class="paymentMethodLabel">Not Specified</span>
                         </div>
                     </div>
-                    <div class="col-3 mb-3">
+                    <div class="col-6 col-md-4 col-lg-3 mb-3">
                         <label class="form-label fw-xnormal text-nowrap mb-1">CC No.</label><br>
                         <div class="text-muted">
                             <span class="CCNumberLabel">Not Specified</span>
                         </div>
                     </div>
-                    <div class="col-3 mb-3">
+                    <div class="col-6 col-md-4 col-lg-3 mb-3">
                         <label class="form-label fw-xnormal text-nowrap mb-1">CC Expiration</label><br>
                         <div class="text-muted">
                             <span class="CCExpirationLabel">Not Specified</span>
                         </div>
                     </div>
-                    <div class="col-3 mb-3">
+                    <div class="col-6 col-md-4 col-lg-3 mb-3">
                         <label class="form-label fw-xnormal text-nowrap mb-1">CVV</label><br>
                         <div class="text-muted">
                             <span class="CVVLabel">Not Specified</span>
                         </div>
                     </div>
-                    <div class="col-3 mb-3">
+                    <div class="col-6 col-md-4 col-lg-3 mb-3">
                         <label class="form-label fw-xnormal text-nowrap mb-1">MMR</label><br>
                         <div class="text-muted">
                             <span class="MMRLabel">Not Specified</span>
                         </div>
                     </div>
-                    <div class="col-3 mb-3">
+                    <div class="col-6 col-md-4 col-lg-3 mb-3">
                         <label class="form-label fw-xnormal text-nowrap mb-1">Billing Frequency</label><br>
                         <div class="text-muted">
                             <span class="billingFrequencyLabel">Not Specified</span>
                         </div>
                     </div>
-                    <div class="col-3 mb-3">
+                    <div class="col-6 col-md-4 col-lg-3 mb-3">
                         <label class="form-label fw-xnormal text-nowrap mb-1">Billing Day</label><br>
                         <div class="text-muted">
                             <span class="billingDayLabel">Not Specified</span>
                         </div>
                     </div>
-                    <div class="col-3 mb-3">
+                    <div class="col-6 col-md-4 col-lg-3 mb-3">
                         <label class="form-label fw-xnormal text-nowrap mb-1">Contract Term</label><br>
                         <div class="text-muted">
                             <span class="contractTermLabel">Not Specified</span>
                         </div>
                     </div>
-                    <div class="col-3">
+                    <div class="col-6 col-md-4 col-lg-3 mb-3">
                         <label class="form-label fw-xnormal text-nowrap mb-1">Start Date</label><br>
                         <div class="text-muted">
                             <span class="startDateLabel">Not Specified</span>
                         </div>
                     </div>
-                    <div class="col-3">
+                    <div class="col-6 col-md-4 col-lg-3 mb-3">
                         <label class="form-label fw-xnormal text-nowrap mb-1">End Date</label><br>
                         <div class="text-muted">
                             <span class="endDateLabel">Not Specified</span>
