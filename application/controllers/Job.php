@@ -7196,6 +7196,83 @@ class Job extends MY_Controller
         echo json_encode($return);
     }
 
+    public function ajax_with_selected_update_status()
+    {
+        $this->load->model('AcsOffice_model');
+        
+        $is_success = 0;
+        $msg    = 'Please select data';
+
+        $company_id  = logged('company_id');
+        $post = $this->input->post();
+
+        if( count($post['jobs']) > 0 ){
+            $filter[] = ['field' => 'company_id', 'value' => $cid];
+            $data['status'] = $post['change_status'];
+            $data['date_updated']    = date("Y-m-d H:i:s");
+            $data_acs_office = [];
+
+            if( $post['change_status'] == 'Arrived' ){
+                $data['status']   = 'Arrival';
+                $data['omw_date'] = $post['omw_date'];
+                $data['omw_time'] = $post['omw_time'];
+                $data_acs_office = [
+                    'tech_arrive_time' => date("h:i A",strtotime($post['omw_time']))
+                ];
+            }elseif( $post['change_status'] == 'Started' ){
+                $data['job_start_date'] = $post['started_date'];
+                $data['job_start_time'] = $post['started_time'];
+                $data_acs_office = [
+                    'install_date' => date("m/d/Y",strtotime($post['job_start_date']))
+                ];
+            }elseif( $post['change_status'] == 'Finished' ){
+                $data['finished_date'] = $post['finished_date'];
+                $data['finished_time'] = $post['finished_time'];
+                $data_acs_office = [
+                    'tech_depart_time' => date("h:i A",strtotime($post['finished_time']))
+                ];
+            }
+
+            $total_updated = $this->jobs_model->bulkUpdate($post['jobs'], $data, $filter);
+
+            foreach( $post['jobs'] as $jid ){
+                $job = $this->jobs_model->getByIdAndCompanyId($jid, $company_id);
+                if( $job ){
+                    $this->payscale_model->updateCommissionStatus($jid, $post['change_status']);
+
+                    if( $data_acs_office ){
+                        $customer = $this->AcsOffice_model->getByProfId($job->customer_id);
+                        if( $customer ){
+                            $this->AcsOffice_model->updateByProfId($customer->fk_prof_id, $data_acs_office);
+                        }
+                    }
+
+                    $activity_name = 'Jobs : Changed job number ' . $job->job_number . ' status to ' . $post['change_status']; 
+                    createActivityLog($activity_name);
+                }
+            }
+
+            //Activity Logs
+            if( $total_updated > 1 ){
+                $activity_name = 'Jobs : ' . $total_updated . ' jobs was changed status to ' . $post['change_status']; 
+            }else{
+                $activity_name = 'Jobs : ' . $total_updated . ' job was changed status to ' . $post['change_status']; 
+            }
+			
+			createActivityLog($activity_name);
+
+            $is_success = 1;
+            $msg = '';
+        }
+
+        $return = [
+            'is_success' => $is_success,
+            'msg' => $msg
+        ];
+
+        echo json_encode($return);
+    }
+
     public function export_list()
     {
 		$role_id = logged('role');

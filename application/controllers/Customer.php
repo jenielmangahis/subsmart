@@ -3497,7 +3497,8 @@ class Customer extends MY_Controller
         $this->page_data['internalNotes'] = $internalNotes;
         $this->page_data['customer'] = $customer;
 
-        $this->load->view('customer/internal_notes', $this->page_data);
+        //$this->load->view('customer/internal_notes', $this->page_data);
+        $this->load->view('v2/pages/customer/internal_notes', $this->page_data);
     }
 
     public function credit_industry($cid)
@@ -15696,7 +15697,7 @@ class Customer extends MY_Controller
                         $recipient_name = $companyAdmin->FName . ' ' . $companyAdmin->LName;
                         $mail->addAddress($toAdminEmail, $recipient_name);
                         if($toOwnerEmail) {
-                            $mail->addCC($toOwnerEmail, $toOwnerEmail);
+                            $mail->addAddress($toOwnerEmail, $toOwnerEmail);
                         }  
                         $mail->isHTML(true);
                         $mail->Subject = "Customer Request for Cancellation";
