@@ -17878,6 +17878,50 @@ class Workorder extends MY_Controller
         echo json_encode($return);
 
     }
+
+    public function export_list()
+	{
+		$role_id = logged('role');
+		$cid     = logged('company_id');
+
+        $filter['status'] = 'all';
+        $sort = ['field' => 'id', 'order' => 'desc'];
+        $workorders = $this->workorder_model->getworkorderList($filter, $sort);  
+
+		$delimiter = ",";
+		$time      = time();
+		$filename  = "service_ticket_list_" . $time . ".csv";
+
+		$f = fopen('php://memory', 'w');
+
+		$fields = array('Customer Name', 'Work Order Number', 'Date', 'Priority', 'Status', 'Amount');
+		fputcsv($f, $fields, $delimiter);
+
+		if (!empty($workorders)) {
+			foreach ($workorders as $w) {
+                $customer = $w->first_name . ' ' . $w->last_name;
+				$csvData = array(
+					$customer,
+					$w->work_order_number,                    
+					date("m/d/Y", strtotime($w->date_issued)),
+                    $w->priority,
+					$w->w_status,
+                    number_format($w->grand_total,2),
+				);
+				fputcsv($f, $csvData, $delimiter);
+			}
+		} else {
+			$csvData = array('');
+			fputcsv($f, $csvData, $delimiter);
+		}
+
+		fseek($f, 0);
+
+		header('Content-Type: text/csv');
+		header('Content-Disposition: attachment; filename="' . $filename . '";');
+
+		fpassthru($f);
+	}
 }
 /* End of file Workorder.php */
 

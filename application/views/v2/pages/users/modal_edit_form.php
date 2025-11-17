@@ -32,16 +32,16 @@
             <div class="col-12 col-md-6">
                 <label class="content-subtitle fw-bold d-block mb-2">User Type</label>
                 <select class="nsm-field form-select" name="user_type" id="employee_role" required>
-                    <option value="">Select Job Title</option>
+                    <option value="">Select User Type</option>
                     <?php foreach( $userTypes as $key => $value ){ ?>
                         <option value="<?= $key; ?>" <?= $user->user_type == $key ? 'selected="selected"' : ''; ?>><?= $value['name']; ?></option>
                     <?php } ?>
                 </select>
             </div>
             <div class="col-12 col-md-6">
-                <label class="content-subtitle fw-bold d-block mb-2">Role</label>
+                <label class="content-subtitle fw-bold d-block mb-2">Job Title</label>
                 <select class="nsm-field form-select" name="role" id="role" required>
-                    <option value="" selected="selected" disabled>Select Role</option>
+                    <option value="" selected="selected" disabled>Select Job Title</option>
                     <?php foreach($roles as $role){ ?>
                         <option value="<?= $role->id; ?>" <?= $role->id == $user->role ? 'selected="selected"' : ''; ?>><?= $role->title; ?></option>
                     <?php } ?>

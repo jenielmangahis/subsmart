@@ -45,7 +45,7 @@ class Roles_model extends MY_Model {
         $this->db->where("title", $title);
         $this->db->group_start();
             $this->db->or_where("company_id", $company_id);
-            $this->db->or_where("company_id", 0);
+            //$this->db->or_where("company_id", 0);
         $this->db->group_end();
         $query = $this->db->get();
 
@@ -60,7 +60,19 @@ class Roles_model extends MY_Model {
         $this->db->select('*');
         $this->db->from($this->table);
         $this->db->where('company_id', $company_id);
-        $this->db->or_where('company_id', 0);
+
+        $query = $this->db->get();
+        return $query->result();
+	}
+
+    /**
+     * @return mixed
+     */
+    public function getAllByCompanyId($company_id)
+    {
+        $this->db->select('*');
+        $this->db->from($this->table);
+        $this->db->where('company_id', $company_id);
 
         $query = $this->db->get();
         return $query->result();

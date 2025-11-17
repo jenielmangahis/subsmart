@@ -61,6 +61,18 @@ function workordermodule__formatWorkOrderNumber($number) {
             </div>
             <span class="nsm-fab-label">New Work Order</span>
         </li>
+        <li class="btn-export-list">
+            <div class="nsm-fab-icon">
+                <i class="bx bx-export"></i>
+            </div>
+            <span class="nsm-fab-label">Export List</span>
+        </li>
+        <li id="btn-mobile-archived">
+            <div class="nsm-fab-icon">
+                <i class='bx bx-archive'></i>
+            </div>
+            <span class="nsm-fab-label">Archived</span>
+        </li> 
         <li onclick="location.href='<?php echo base_url('workorder/settings'); ?>'">
             <div class="nsm-fab-icon">
                 <i class="bx bx-cog"></i>
@@ -197,7 +209,8 @@ function workordermodule__formatWorkOrderNumber($number) {
                                 </button>
                                 <ul class="dropdown-menu">                                                                    
                                     <li><a class="dropdown-item" href="<?= base_url('invoice'); ?>">Invoices</a></li>  
-                                    <li><a class="dropdown-item" id="btn-archived" href="javascript:void(0);">Archived</a></li>                  
+                                    <li><a class="dropdown-item" id="btn-archived" href="javascript:void(0);">Archived</a></li>     
+                                    <li><a class="dropdown-item" id="btn-export-list" href="javascript:void(0);">Export</a></li>               
                                 </ul>
                             </div>
                             <?php } ?>
@@ -364,6 +377,18 @@ function workordermodule__formatWorkOrderNumber($number) {
         </div>
     </div>
 
+    <div class="modal fade nsm-modal fade" id="modal-archived-workorder" aria-labelledby="modal-archived-workorder-label" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered">        
+            <div class="modal-content">
+                <div class="modal-header">
+                    <span class="modal-title content-title">Archived Work Orders</span>
+                    <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
+                </div>
+                <div class="modal-body" id="workorder-archived-list-container" style="max-height: 800px; overflow: auto;"></div>
+            </div>
+        </div>
+    </div>
+
     <div class="modal fade nsm-modal fade" id="new_workorder_modal" tabindex="-1" aria-labelledby="new_workorder_modal_label" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
@@ -453,7 +478,9 @@ function workordermodule__formatWorkOrderNumber($number) {
             location.href = base_url + 'workorder/new';
         });
 
-        
+        $("#btn-export-list, .btn-export-list").on("click", function() {
+            location.href = "<?php echo base_url('workorders/export'); ?>";
+        });
 
         $("#select-all").on("change", function() {
             let isChecked = $(this).is(":checked");
@@ -717,7 +744,7 @@ function workordermodule__formatWorkOrderNumber($number) {
             });
         });
 
-        $('#btn-archived').on('click', function(){
+        $('#btn-archived, #btn-mobile-archived').on('click', function(){
             $('#modal-archived-workorder').modal('show');
             $.ajax({
                 type: "POST",
