@@ -2741,11 +2741,13 @@ class Workorder_model extends MY_Model
 
     public function getAllIsArchiveByCompanyId($cid)
     {
-        $this->db->where('company_id', $cid);
-        $this->db->where('view_flag', 1);
-        $this->db->order_by('date_updated', 'DESC');
-        $query = $this->db->get($this->table);
-        
+        $this->db->select('work_orders.*, acs_profile.first_name, acs_profile.last_name');
+        $this->db->from($this->table);
+        $this->db->join('acs_profile', 'work_orders.customer_id  = acs_profile.prof_id');
+        $this->db->where('work_orders.company_id', $cid);
+        $this->db->where('work_orders.view_flag', 1);
+
+        $query = $this->db->get();
         return $query->result();
     }
 

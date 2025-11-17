@@ -977,7 +977,26 @@ class Users_model extends MY_Model
         return $query->row();
     }
 
+    //Deprecated - use userTypes
     public function userRolesList()
+    {
+        $roles = [
+            7 => ['name' => 'Admin', 'description' => 'All Access'],
+            8 => ['name' => 'Owner', 'description' => 'All Access'],
+            1 => ['name' => 'Office Manager', 'description' => 'All except high security file vault'],
+            2 => ['name' => 'Partner', 'description' => 'ALL base on plan type'],
+            3 => ['name' => 'Team Leader', 'description' => 'No accounting or any changes to company profile or deletion'],
+            4 => ['name' => 'Standard User', 'description' => 'Can not add or delete employees, can not manage subscriptions'],
+            5 => ['name' => 'Field Sales', 'description' => 'View only no input'],
+            6 => ['name' => 'Field Tech', 'description' => 'App access only, no Web access '],
+            9 => ['name' => 'Affiliate', 'description' => 'Limited web access and mobile access'],
+        ];
+
+        return $roles;
+    }
+
+    //
+    public function userTypes()
     {
         $roles = [
             7 => ['name' => 'Admin', 'description' => 'All Access'],
