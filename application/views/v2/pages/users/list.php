@@ -115,9 +115,9 @@
                             <td data-name="Mobile">Mobile</td>
                             <?php if ($show_pass == 1) : ?>
                                 <td data-name="Password">Password</td>
-                            <?php endif; ?>
-                            <td data-name="Title">Job Title</td>
-                            <td data-name="Rights">Role</td>
+                            <?php endif; ?>                            
+                            <td data-name="User Type">User Type</td>
+                            <td data-name="Role">Role</td>
                             <td data-name="Last Login">Last Login</td>
                             <td data-name="Status" style="width:5%;">Status</td>
                             <td data-name="App Access" style="width:6%;">App Access</td>
@@ -166,9 +166,9 @@
                                     <td><?php echo $row->mobile != '' ? formatPhoneNumber($row->mobile) : '---'; ?></td>
                                     <?php if ($show_pass == 1) : ?>
                                         <td><?php echo $row->password_plain ?></td>
-                                    <?php endif; ?>
-                                    <td><?php echo ($row->role) ? ucfirst($this->roles_model->getById($row->role)->title) : '' ?></td>
+                                    <?php endif; ?>                                    
                                     <td><?php echo getUserType($row->user_type); ?></td>
+                                    <td><?php echo ($row->role) ? ucfirst($this->roles_model->getById($row->role)->title) : '' ?></td>
                                     <td><?php echo date('m/d/Y', strtotime($row->last_login)); ?></td>
                                     <td>
                                         <?php

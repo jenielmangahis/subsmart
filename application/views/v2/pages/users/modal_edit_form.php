@@ -30,11 +30,11 @@
                 <input type="text" class="form-control edit_phone_number" maxlength="12" value="<?= $user->phone; ?>" placeholder="xxx-xxx-xxxx" name="phone" id="phone" />
             </div>   
             <div class="col-12 col-md-6">
-                <label class="content-subtitle fw-bold d-block mb-2">Job Title</label>
+                <label class="content-subtitle fw-bold d-block mb-2">User Type</label>
                 <select class="nsm-field form-select" name="user_type" id="employee_role" required>
                     <option value="">Select Job Title</option>
-                    <?php foreach ($userTypes as $t) { ?>
-                        <option value="<?= $t->id; ?>" <?= $t->id == $user->user_type ? 'selected="selected"' : ''; ?>><?= $t->title; ?></option>
+                    <?php foreach( $userTypes as $key => $value ){ ?>
+                        <option value="<?= $key; ?>" <?= $user->user_type == $key ? 'selected="selected"' : ''; ?>><?= $value['name']; ?></option>
                     <?php } ?>
                 </select>
             </div>
@@ -42,8 +42,8 @@
                 <label class="content-subtitle fw-bold d-block mb-2">Role</label>
                 <select class="nsm-field form-select" name="role" id="role" required>
                     <option value="" selected="selected" disabled>Select Role</option>
-                    <?php foreach($roles as $key => $value){ ?>
-                    <option value="<?= $key; ?>" <?= $user->role == $key ? 'selected="selected"' : ''; ?>><?= $value['name']; ?></option>
+                    <?php foreach($roles as $role){ ?>
+                        <option value="<?= $role->id; ?>" <?= $role->id == $user->role ? 'selected="selected"' : ''; ?>><?= $role->title; ?></option>
                     <?php } ?>
                 </select>
             </div>  
