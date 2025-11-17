@@ -15475,11 +15475,11 @@ class Customer extends MY_Controller
         $this->load->model('AcsCustomerCancellationRequest');
         $this->load->model('Users_model');
 
-        $is_live_mail_credentials = true;
+        $is_live_mail_credentials = false;
         $is_success = 0;
         $msg    = 'Cannot find customer data';
 
-        $is_request_saved = true;
+        $is_request_saved = false;
 
         $post = $this->input->post();
         $company_id = logged('company_id');
