@@ -1312,7 +1312,7 @@ class Users extends MY_Controller
 		$get_role = $this->db->get_where('roles', array('id' => $get_user->role));		
 
 		$cid   = logged('company_id');
-		$userTypes = $this->users_model->getRoles($cid);
+		$userTypes = $this->users_model->userTypes();
 
 		$payscale = $this->PayScale_model->getById($get_user->payscale_id);
 		$salary_rate = 0;
@@ -1337,7 +1337,7 @@ class Users extends MY_Controller
 			$salary_type_label = 'Commission Only';
 		}
 
-		$this->page_data['roles']  = $this->users_model->userRolesList();
+		$this->page_data['roles']  = $this->users_model->getRoles($cid);
 		$this->page_data['payscale'] = $this->PayScale_model->getAllByCompanyId($cid);
 		$this->page_data['salary_rate'] = $salary_rate;
 		$this->page_data['salary_type_label'] = $salary_type_label;
