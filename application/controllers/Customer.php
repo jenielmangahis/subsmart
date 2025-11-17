@@ -3497,7 +3497,8 @@ class Customer extends MY_Controller
         $this->page_data['internalNotes'] = $internalNotes;
         $this->page_data['customer'] = $customer;
 
-        $this->load->view('customer/internal_notes', $this->page_data);
+        //$this->load->view('customer/internal_notes', $this->page_data);
+        $this->load->view('v2/pages/customer/internal_notes', $this->page_data);
     }
 
     public function credit_industry($cid)
@@ -15677,27 +15678,39 @@ class Customer extends MY_Controller
 
             //Send email
             if($is_request_saved) {
-                $companyAdmin = $this->Users_model->getCompanyAdmin($company_id);
-                $ownerAdmin   = $this->Users_model->getOwnerAdmin($company_id);
-                if( $companyAdmin && $companyAdmin->email != '' ){
-                    $email_data['name'] = $companyAdmin->FName;
+                $companyAdmins = $this->Users_model->getCompanyAdmin($company_id);
+                $ownerAdmins   = $this->Users_model->getOwnerAdmin($company_id);
+
+                if( $companyAdmins || $ownerAdmins ){
                     $email_data['customer_name'] = $customer->first_name . ' ' . $customer->last_name;
                     $cancellation_url = base_url('customer/cancellation_request/'.$customer->prof_id);
                     $email_data['cancellation_url'] = $cancellation_url;
                     $body = $this->load->view('v2/emails/customer_cancellation_request', $email_data, true);
 
-                    //$toAdminEmail = 'bryann.revina03@gmail.com';
-                    $toAdminEmail = $companyAdmin->email;
-                    $toOwnerEmail = $ownerAdmin->email;
-
+                    //$toAdminEmails = $companyAdmin->email;
+                    //$toOwnerEmails = $ownerAdmin->email;
+       
                     if($is_live_mail_credentials) {
                         $mail = email__getInstance();
                         $mail->FromName = 'nSmarTrac';
                         $recipient_name = $companyAdmin->FName . ' ' . $companyAdmin->LName;
-                        $mail->addAddress($toAdminEmail, $recipient_name);
-                        if($toOwnerEmail) {
-                            $mail->addCC($toOwnerEmail, $toOwnerEmail);
-                        }  
+
+                        //$mail->addAddress('bryann.revina03@gmail.com', 'bryann.revina03@gmail.com');
+            
+                        $email_data['name'] = "";
+                        if($companyAdmins) {
+                            foreach($companyAdmins as $companyAdmin) {
+                                $email_data['name'] = $companyAdmin->FName;
+                                $mail->addAddress($companyAdmin->email, $companyAdmin->email);
+                            }
+                        }
+                        
+                        if($ownerAdmins) {
+                            foreach($ownerAdmins as $ownerAdmin) {
+                                $mail->addAddress($ownerAdmin->email, $ownerAdmin->email);
+                            }                            
+                        }
+
                         $mail->isHTML(true);
                         $mail->Subject = "Customer Request for Cancellation";
                         $mail->Body = $body;
@@ -16219,18 +16232,16 @@ class Customer extends MY_Controller
                     $mail = email__getInstance();
                     $mail->FromName = 'nSmarTrac';
 
-                    // foreach($users as $u){
-                    //     if( $u->email != '' ){
-                    //         $mail->addCC($u->email, $u->email);
-                    //     }
-                    // }
-
-                    $test_emails = ['bryann.revina03@gmail.com', 'jeniel.mangahis@gmail.com'];
-                    foreach( $test_emails as $email ){
+                    foreach($users as $u){
                         if( $u->email != '' ){
-                            $mail->addCC($email, $email);
+                            $mail->addAddress($u->email, $u->email);
                         }
                     }
+
+                    // $test_emails = ['bryann.revina03@gmail.com', 'bryannrevina@nsmartrac.com'];
+                    // foreach( $test_emails as $email ){
+                    //     $mail->addAddress($email, $email);                        
+                    // }
 
                     $mail->isHTML(true);
                     $mail->Subject = $subject;
@@ -16261,10 +16272,10 @@ class Customer extends MY_Controller
                     $mail->Subject = $subject;
                     $mail->Body = $body;
                     $mail->Send();   
-
-                    $is_success = 1;
-                    $msg = '';
                 } 
+
+                $is_success = 1;
+                $msg = '';
             }else{
                 $msg = 'Cannot find customer data';
             }
