@@ -111,7 +111,7 @@
                             <?php } ?>
                             <td class="table-icon"></td>
                             <td data-name="User">User</td>
-                            <td data-name="Email">Employee Number</td>
+                            <td data-name="Employee Number">Employee Number</td>
                             <td data-name="Mobile">Mobile</td>
                             <?php if ($show_pass == 1) : ?>
                                 <td data-name="Password">Password</td>
