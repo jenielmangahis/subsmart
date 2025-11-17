@@ -166,7 +166,7 @@ class Workorder extends MY_Controller
             if($company_id == 58 || $company_id == 31)
             {
                 $workorder = $this->workorder_model->getworkorderListMultiple($org_id, $filter, $sort); 
-            }else{
+            }else{                
                 $workorder = $this->workorder_model->getworkorderList($filter, $sort);  
             }
         }
