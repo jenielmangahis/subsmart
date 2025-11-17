@@ -186,11 +186,10 @@
                                 </td>
                                 <td class="table-icon"></td>
                                 <td class="show" data-name="Work Order Number">Service Ticket Number</td>
-                                <td data-name="AssignedTech">Assigned Tech</td>
+                                <td data-name="Assigned Tech">Assigned Tech</td>
                                 <td data-name="Customer">Customer</td>                                
-                                <td data-name="Date Issued">
-                                    Date</td>                                
-                                <td data-name="Time From">Time</td>                            
+                                <td data-name="Date">Date</td>                                
+                                <td data-name="Time">Time</td>                            
                                 <td data-name="Status">Status</td>
                                 <td data-name="Amount" style="width:8%; !important;text-align:right;">Amount</td>
                                 <td data-name="Manage" style="width:3%;"></td>
