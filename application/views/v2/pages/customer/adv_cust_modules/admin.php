@@ -201,6 +201,9 @@
                     </div>
                     <div class="modal-body">
                         <form id="frm-admin-capture-payment" method="POST">
+                            <input type="hidden" id="payment-method" name="payment_method" />
+                            <input type="hidden" id="payment-intent-id" name="payment_intent_id" />
+                            <input type="hidden" id="customer-id" name="customer_id" value="<?= $profile_info->prof_id; ?>" />
                             <div class="row g-3" id="admin-capture-payment-step1">
                                 <div class="col-md-12 form-group">
                                     <label for="processing-fee" class="block-label"><b>Processing Fee</b></label>
@@ -240,7 +243,9 @@
 <?php if( isAdmin() ){ ?>
 <script src="https://js.stripe.com/v3/"></script>
 <script src="https://checkout.stripe.com/checkout.js"></script>
-<script src="https://www.paypal.com/sdk/js?client-id=<?= paypal_credential('client_id'); ?>&currency=USD"></script>
+    <?php if( $companyOnlinePaymentAccounts && $companyOnlinePaymentAccounts->paypal_client_id != '' ){ ?>
+        <script src="https://www.paypal.com/sdk/js?client-id=<?= $companyOnlinePaymentAccounts->paypal_client_id; ?>&currency=USD"></script>
+    <?php } ?>
 <?php } ?>
 <script>
 $(function(){
@@ -252,25 +257,36 @@ $(function(){
 
     $('#btn-admin-capture-payment-next').on('click', function(){      
         let url = base_url + 'customer/_capture_payment_form'  
-        let processing_fee = $('#processing-fee').val();
-        let payment_amount = $('#payment-amount').val();
+        let processing_fee = parseFloat($('#processing-fee').val());
+        let payment_amount = parseFloat($('#payment-amount').val());
+        let total_amount   = processing_fee + payment_amount;
         let customer_id = "<?= $customer_id; ?>";
-		$.ajax({
-			type: "POST",
-			url: url,
-			data: {processing_fee:processing_fee, payment_amount:payment_amount, customer_id:customer_id},
-			success: function(o)
-			{	
-				$('#admin-capture-payment-step2').html(o);
-			},
-			beforeSend:function(){
-                $('#admin-capture-payment-step1').hide();
-                $('#btn-admin-capture-payment-next').hide();
-                $('#admin-capture-payment-step2').show();
-                $('#btn-admin-capture-payment-back').show();
-				$('#admin-capture-payment-step2').html('<span class="bx bx-loader bx-spin"></span> loading payment form...');
-			}
-		});
+        
+        if( total_amount > 0 ){
+            $.ajax({
+                type: "POST",
+                url: url,
+                data: {processing_fee:processing_fee, payment_amount:payment_amount, customer_id:customer_id},
+                success: function(o)
+                {	
+                    $('#admin-capture-payment-step2').html(o);
+                },
+                beforeSend:function(){
+                    $('#admin-capture-payment-step1').hide();
+                    $('#btn-admin-capture-payment-next').hide();
+                    $('#admin-capture-payment-step2').show();
+                    $('#btn-admin-capture-payment-back').show();
+                    $('#admin-capture-payment-step2').html('<span class="bx bx-loader bx-spin"></span> loading payment form...');
+                }
+            });
+        }else{
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'Cannot proceed having 0 total amount',
+            });
+        }
+		
     });
 
     $('#chk-show-financing-equipment').on('change', function(){

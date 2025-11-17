@@ -32,7 +32,8 @@ class Autocomplete extends MY_Controller
                 'id' => $u->id,
                 'FName' => mb_strimwidth(strtolower($u->FName), 0, 8),
                 'LName' => mb_strimwidth(strtolower($u->LName), 0, 8),
-                'email' => mb_strimwidth($u->email, 0, 20, ".."),
+                //'email' => mb_strimwidth($u->email, 0, 20, ".."),
+                'email' => $u->email,
                 'user_image' => $default_imp_img
             ];            
         }

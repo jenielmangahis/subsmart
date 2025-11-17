@@ -16191,6 +16191,7 @@ class Customer extends MY_Controller
     public function ajax_send_alarm_information_to_users()
 	{   
         $this->load->model('AcsProfile_model');
+        $this->load->model('AcsAlarmZone_model');
         $this->load->model('Users_model');
 
         $is_success = 0;
@@ -16202,11 +16203,13 @@ class Customer extends MY_Controller
         if( $post['users'] && $post['customer_id'] > 0 ){
             $customer   = $this->AcsProfile_model->getByProfId($post['customer_id']);
             if( $customer && $customer->company_id == $company_id ){
-                $users      = $this->Users_model->getActiveEmployeeByIds($post['users']);
-                $alarm_info = $this->customer_ad_model->get_data_by_id('fk_prof_id', $post['customer_id'], 'acs_alarm');
-
-                $email_data['customer']   =  $customer;
-                $email_data['alarm_info'] = $alarm_info;
+                $users       = $this->Users_model->getActiveEmployeeByIds($post['users']);
+                $alarm_info  = $this->customer_ad_model->get_data_by_id('fk_prof_id', $post['customer_id'], 'acs_alarm');
+                $alarm_zones = $this->AcsAlarmZone_model->getAllByCustomerId($post['customer_id']);
+                $email_data['customer']      =  $customer;
+                $email_data['alarm_info']    = $alarm_info;
+                $email_data['alarm_zones']   = $alarm_zones;
+                $email_data['include_zones'] = $post['include_zones'];
                 $body = $this->load->view('v2/emails/share_customer_alarm_information', $email_data, true);
                 $subject = "Customer Alarm Information";
 
@@ -16274,4 +16277,119 @@ class Customer extends MY_Controller
 
         echo json_encode($json_data);
 	}
+
+    public function ajax_capture_payment_details()
+    {
+        $this->load->model('AcsProfile_model');
+        $this->load->model('Invoice_model');
+        $this->load->model('Invoice_settings_model');
+        $this->load->model('Payment_records_model');
+
+        $is_success = 0;
+        $msg = 'Cannot send email';
+
+        $user_id    = logged('id');
+        $company_id = logged('company_id');
+        $post = $this->input->post();
+
+        $customer = $this->AcsProfile_model->getByProfId($post['customer_id']);
+        $job_location = $customer->mail_add . ' ' . $customer->city . ', ' . $customer->state . ' ' . $customer->zip_code;
+
+        $invoiceSettings =  $this->Invoice_settings_model->getByCompanyId($company_id);
+        if( $invoiceSettings ){            
+            $next_number = (int) $invoiceSettings->invoice_num_next;     
+            $prefix      = $invoiceSettings->invoice_num_prefix;        
+        }else{
+            $lastInsert = $this->Invoice_model->getLastInsertByCompanyId($cid);
+            $prefix     = 'INV-';
+            if( $lastInsert ){
+                $next_number   = $lastInsert->id + 1;
+            }else{
+                $next_number   = 1;
+            }
+        }
+
+        $invoice_number = formatInvoiceNumberV2($prefix, $next_number);
+        $total_amount   = $post['processing_fee'] + $post['payment_amount'];
+
+        $new_data = array(
+            'customer_id'               => $post['customer_id'],
+            'job_location'              => $job_location,
+            'job_address'               => $customer->mail_add,
+            'job_city'                  => $customer->city,
+            'job_state'                 => $customer->state,
+            'job_zip'                   => $customer->zip_code,
+            'job_name'                  => '',
+            'job_id'                    => 0,
+            'job_number'                => '',
+            'business_name'             => $customer->business_name,
+            'tags'                      => '',
+            'invoice_type'              => '',
+            'work_order_number'         => '',
+            'purchase_order'            => '',
+            'invoice_number'            => $invoice_number,
+            'date_issued'               => date("Y-m-d"),
+            'due_date'                  => date("Y-m-d"),
+            'customer_email'            => $customer->email,
+            'online_payments'           => '',
+            'billing_address'           => $job_location,
+            'shipping_to_address'       => $job_location,
+            'ship_via'                  => '',
+            'shipping_date'             => '',
+            'tracking_number'           => '',
+            'terms'                     => 0,     
+            'tip'                       => 0,     
+            'location_scale'            => '',
+            'message_to_customer'       => '',
+            'terms_and_conditions'      => '',            
+            'attachments'               => '',
+            'status'                    => 'Paid',
+            'company_id'                => $company_id,
+            'deposit_request_type'      => '',
+            'deposit_request'           => '',
+            'monthly_monitoring'        => 0,
+            'program_setup'             => 0,
+            'installation_cost'         => 0,
+            'payment_methods'           => 'Credit Card',
+            'sub_total'                 => $total_amount,
+            'balance'                   => 0,
+            'taxes'                     => 0,
+            'no_tax'                    => 0,
+            'adjustment_name'           => 'Capture Payment',
+            'adjustment_value'          => $total_amount,
+            'grand_total'               => $total_amount,
+            'total_due'                 => $total_amount,    
+            'user_id'                   => $user_id,
+            'date_created'              => date("Y-m-d H:i:s"),
+            'date_updated'              => date("Y-m-d H:i:s")
+        );
+
+        $invoice_id = $this->Invoice_model->createInvoice($new_data);
+        $hash_id    = $this->Invoice_model->generateHashId($invoice_id);
+        $this->Invoice_model->update($invoice_id, ['hash_id' => $hash_id]);
+        $this->Payment_records_model->create([
+            'invoice_id' => $invoice_id,
+            'user_id' => $user_id,
+            'company_id' => $company_id,
+            'customer_id' => $customer->prof_id,
+            'invoice_amount' => $total_amount,
+            'invoice_tip' => 0,
+            'balance' => 0,
+            'payment_date' => date('Y-m-d'),            
+            'payment_method' => 'Credit Card',
+            'invoice_number' => $invoice_number,
+            'reference_number' => $post['payment_intent_id'],
+            'notes' => 'Capture Payment : Paid via ' . $post['payment_method']
+        ]);
+
+        $is_success = 1;
+        $msg = '';
+
+        $json_data = [
+            'is_success' => $is_success,
+            'msg' => $msg,
+        ];
+
+        echo json_encode($json_data);
+    }
 }
