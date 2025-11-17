@@ -44,7 +44,7 @@
                 </ul>
             </div>
         </li>        
-        <li class="<?php if ($page->title == 'My Schedule' || $page->title == 'Notification' || $page->title == 'Attendance Logs' || $page->title == 'Time Schedule' || $page->title == 'Role Access Modules' || $page->title == 'Shift Schedule' || $page->title == 'Timesheet Settings'): echo 'active';
+        <li class="<?php if ($page->title == 'My Schedule' || $page->title == 'Notification' || $page->title == 'Attendance Logs' || $page->title == 'Time Schedule' || $page->title == 'Role Access Modules' || $page->title == 'Roles' || $page->title == 'Shift Schedule' || $page->title == 'Timesheet Settings'): echo 'active';
                     endif; ?>">
             <div class="dropdown" id="test_dropdown">
                 <a class="nsm-page-link dropdown-toggle" role="button" href="javascript:void(0);">
@@ -58,7 +58,7 @@
                     <li><a class="dropdown-item" href="<?php echo base_url('notifications') ?>">Notification</a></li>
                     <?php if( isAdmin() ){ //Owner Admin only ?>
                         <li><a class="dropdown-item" href="<?php echo base_url('timesheet/schedule') ?>">Schedules</a></li>
-                        <li><a class="dropdown-item" href="<?php echo base_url('users/roles') ?>">Roles</a></li>
+                        <li><a class="dropdown-item" href="<?php echo base_url('users/job_titles') ?>">Job Titles</a></li>
                         <li><a class="dropdown-item" href="<?php echo base_url('users/role_access_modules') ?>">Roles Access Modules</a></li>
                         <li><a class="dropdown-item" href="<?php echo base_url('timesheet/settings') ?>">Timesheet</a></li>
                         <li><a class="dropdown-item" href="<?php echo base_url('leave_types') ?>">Leave Types</a></li>
