@@ -1,5 +1,5 @@
 <?php include viewPath('v2/includes/header'); ?>
-<?php include viewPath('v2/includes/workorder/workorder_modals'); ?>
+<?php //include viewPath('v2/includes/workorder/workorder_modals'); ?>
 
 <?php
 
@@ -47,7 +47,7 @@ function workordermodule__formatWorkOrderNumber($number) {
     text-align:center;
 }
 #workorder-list th:first-child, td:first-child {
-  text-align:center;
+  /* text-align:center; */
 }
 </style>
 <div class="nsm-fab-container">
@@ -217,7 +217,7 @@ function workordermodule__formatWorkOrderNumber($number) {
                             <td data-name="Work Order Number">Work Order Number</td>                            
                             <td data-name="Customer" style="width:20%;">Customer</td>
                             <td data-name="Date" style="width:10%;">Date</td>                            
-                            <td data-name="CreatdBy" style="width:10%;">Created By</td>                            
+                            <td data-name="Created By" style="width:10%;">Created By</td>                            
                             <td data-name="Priority" style="width:8%;">Priority</td>
                             <td data-name="Status" style="width:8%;">Status</td>
                             <td data-name="Total" style="text-align:right;width:10%;">Amount</td>                            
@@ -269,15 +269,10 @@ function workordermodule__formatWorkOrderNumber($number) {
                                     <td>
                                         <div class="table-row-icon"><i class='bx bx-briefcase'></i></div>
                                     </td>
-                                    <td class="fw-bold nsm-text-primary show" style="width:10%;"><?= $workorder->work_order_number; ?></td>                                    
+                                    <td class="fw-bold show nsm-text-primary"><?= $workorder->work_order_number; ?></td>                                    
                                     <td class="nsm-text-primary">
                                         <?php                                             
-                                            if(empty($workorder->first_name)){
-                                                $customer = trim($workorder->contact_name);
-                                            }else{
-                                                $customer = trim($workorder->first_name) . ' ' . trim($workorder->last_name);
-                                            }
-
+                                            $customer = trim($workorder->first_name) . ' ' . trim($workorder->last_name);
                                             echo $customer;
                                         ?>
                                     </td>
@@ -368,6 +363,57 @@ function workordermodule__formatWorkOrderNumber($number) {
             </div>
         </div>
     </div>
+
+    <div class="modal fade nsm-modal fade" id="new_workorder_modal" tabindex="-1" aria-labelledby="new_workorder_modal_label" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <span class="modal-title content-title" id="new_workorder_modal_label">New Work Order</span>
+                    <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
+                </div>
+                <div class="modal-body">
+                    <div class="row text-center gy-3">
+                        <div class="col-12">
+                            <label class="content-title">What type of work order you want to create</label>
+                        </div>
+                        <div class="col-12">
+                            <label class="content-subtitle d-block mb-2">Create new work order</label>
+                            <?php if (empty($company_work_order_used->work_order_template_id)) : ?>
+                                <button type="button" class="nsm-button w-50 primary" onclick="location.href='<?php echo base_url('workorder/new') ?>'">New Work Order</button>
+                            <?php elseif ($company_work_order_used->work_order_template_id == '0') : ?>
+                                <button type="button" class="nsm-button w-50 primary" onclick="location.href='<?php echo base_url('workorder/new') ?>'">New Work Order</button>
+                            <?php elseif ($company_work_order_used->work_order_template_id == '1') : ?>
+                                <button type="button" class="nsm-button w-50 primary" onclick="location.href='<?php echo base_url('workorder/workorderInstallation') ?>'">New Work Order</button>
+                            <?php elseif ($company_work_order_used->work_order_template_id == '2') : ?>
+                                <button type="button" class="nsm-button w-50 primary" onclick="location.href='<?php echo base_url('workorder/addSolarWorkorder') ?>'">New Work Order</button>
+                            <?php else : ?>
+                                <button type="button" class="nsm-button w-50 primary" onclick="location.href='<?php echo base_url('workorder/workorderInstallation') ?>'">New Work Order</button>
+                            <?php endif; ?>
+                        </div>
+                        <?php $company_id = logged('company_id');
+                        if ($company_id == '58' || $company_id == 1) : ?>
+                            <div class="col-12">
+                                <label class="content-subtitle d-block mb-2">Create new System Agreement work order</label>
+                                <button type="button" class="nsm-button w-50 primary" onclick="location.href='<?php echo base_url('workorder/workorderInstallation') ?>'">New Alternate Workorder</button>
+                            </div>
+                        <?php elseif ($company_id == '31' || $company_id == 1) : ?>
+                            <div class="col-12">
+                                <label class="content-subtitle d-block mb-2">Create new Solar work order</label>
+                                <button type="button" class="nsm-button w-50 primary" onclick="location.href='<?php echo base_url('workorder/addSolarWorkorder') ?>'">Alternate Solar Form Here</button>
+                            </div>
+                        <?php endif; ?>
+                        <div class="col-12" style="display:none;">
+                            <label class="content-subtitle d-block mb-2">Existing work order</label>
+                            <button type="button" class="nsm-button w-50 primary" onclick="location.href='<?php echo base_url('workorder/new?type=2') ?>'">Existing</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                </div>
+            </div>
+        </div>
+    </div>
+
 </div>
 
 <script type="text/javascript">
