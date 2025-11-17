@@ -23,30 +23,44 @@
                 <span>Track Location</span>
             </a>
         </li>
-        <li class="<?php if ($page->title == 'Attendance' || $page->title == 'Overtime Requests' || $page->title == 'Leave Requests' || $page->title == 'My Schedule' || $page->title == 'Notification' || $page->title == 'Attendance Logs' || $page->title == 'Time Schedule' || $page->title == 'Requests' || $page->title == 'Role Access Modules' || $page->title == 'Shift Schedule' || $page->title == 'Timesheet Settings'): echo 'active';
+        <li class="<?php if ($page->title == 'Attendance'): echo 'active';
+                    endif; ?>">
+            <a class="nsm-page-link" href="<?php echo base_url('users/tracklocation') ?>">
+                <i class='bx bx-fw bx-calendar'></i>
+                <span>Attendance</span>
+            </a>
+        </li>
+        <li class="<?php if ($page->title == 'Overtime Requests' || $page->title == 'Leave Requests' || $page->title == 'Requests'): echo 'active';
+                    endif; ?>">
+            <div class="dropdown" id="test_dropdown">
+                <a class="nsm-page-link dropdown-toggle" role="button" href="javascript:void(0);">
+                    <i class='bx bx-fw bx-list-ul' ></i>
+                    <span>Requests</span>
+                    <i class='bx bx-fw bx-chevron-down dropdown-icon'></i>
+                </a>
+                <ul class="dropdown-menu">
+                    <li><a class="dropdown-item" href="<?php echo base_url('timesheet/leave_requests') ?>">Leave Requests</a></li>
+                    <li><a class="dropdown-item" href="<?php echo base_url('timesheet/overtime_requests') ?>">Overtime Requests</a></li>
+                </ul>
+            </div>
+        </li>        
+        <li class="<?php if ($page->title == 'My Schedule' || $page->title == 'Notification' || $page->title == 'Attendance Logs' || $page->title == 'Time Schedule' || $page->title == 'Role Access Modules' || $page->title == 'Shift Schedule' || $page->title == 'Timesheet Settings'): echo 'active';
                     endif; ?>">
             <div class="dropdown" id="test_dropdown">
                 <a class="nsm-page-link dropdown-toggle" role="button" href="javascript:void(0);">
                     <i class='bx bx-fw bx-cog'></i>
-                    <span>Users Settings</span>
+                    <span>Settings</span>
                     <!-- <span><?= $page->title ?></span> -->
                     <i class='bx bx-fw bx-chevron-down dropdown-icon'></i>
                 </a>
                 <ul class="dropdown-menu">
-                    <li><a class="dropdown-item" href="<?php echo base_url('timesheet/attendance') ?>">Attendance</a></li>    
                     <li><a class="dropdown-item" href="<?php echo base_url('timesheet/attendance_logs') ?>">Time Logs</a></li>
                     <li><a class="dropdown-item" href="<?php echo base_url('notifications') ?>">Notification</a></li>
-                    <!-- <li><a class="dropdown-item" href="<?php //echo base_url('timesheet/notification') ?>">Activity Logs</a></li> -->
-                    <?php if (logged("user_type") == 7): ?>
-                        <li><a class="dropdown-item" href="<?php echo base_url('timesheet/schedule') ?>">Schedule</a></li>
-                    <?php endif; ?>
-
-                    <li><a class="dropdown-item" href="<?php echo base_url('timesheet/leave_requests') ?>">Leave Requests</a></li>
-                    <li><a class="dropdown-item" href="<?php echo base_url('timesheet/overtime_requests') ?>">Overtime Requests</a></li>
-                    <li><a class="dropdown-item" href="<?php echo base_url('timesheet/my_schedule') ?>">My Schedule</a></li>
-                    <?php if( logged('user_type') == 7 ){ //Admin only ?>
+                    <?php if( isAdmin() ){ //Owner Admin only ?>
+                        <li><a class="dropdown-item" href="<?php echo base_url('timesheet/schedule') ?>">Schedules</a></li>
+                        <li><a class="dropdown-item" href="<?php echo base_url('users/roles') ?>">Roles</a></li>
                         <li><a class="dropdown-item" href="<?php echo base_url('users/role_access_modules') ?>">Roles Access Modules</a></li>
-                        <li><a class="dropdown-item" href="<?php echo base_url('timesheet/settings') ?>">Timesheet Settings</a></li>
+                        <li><a class="dropdown-item" href="<?php echo base_url('timesheet/settings') ?>">Timesheet</a></li>
                         <li><a class="dropdown-item" href="<?php echo base_url('leave_types') ?>">Leave Types</a></li>
                     <?php } ?>
                 </ul>
