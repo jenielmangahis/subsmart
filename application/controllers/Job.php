@@ -100,9 +100,8 @@ class Job extends MY_Controller
             return $job->id;
         }, $jobs);
 
-        if (!empty($jobIds)) {
+        if (!empty($jobIds)) {            
             // Calculate job amount based on saved job's items.
-
             $this->db->select('job_items.job_id,items.id,items.title,items.price,job_items.total,job_items.cost,job_items.qty,job_items.tax');
             $this->db->from('job_items');
             $this->db->join('items', 'items.id = job_items.items_id', 'left');
@@ -6925,6 +6924,10 @@ class Job extends MY_Controller
     {
         $cid  = logged('company_id');
         $jobs = $this->jobs_model->getAllIsArchiveByCompanyId($cid);
+        foreach($jobs as $job){
+            $jobItems = $this->jobs_model->getJobTotalAmountByJobId($job->id);
+            $job->total_amount = number_format($jobItems->total_amount,2,".","");
+        }
 
         $this->page_data['jobs'] = $jobs;
         $this->load->view("v2/pages/job/ajax_archived_list", $this->page_data);
