@@ -7,7 +7,7 @@ class Roles extends MY_Controller {
 	{
 		parent::__construct();
 		$this->checkLogin();
-		$this->page_data['page']->title = 'Job Titles';
+		$this->page_data['page']->title = 'Roles';
 		$this->page_data['page']->menu = 'job title';
 	}
 
@@ -17,7 +17,7 @@ class Roles extends MY_Controller {
 
 		$company_id = logged('company_id');
 
-		$roles = $this->Roles_model->getRolesByCompanyId($company_id);
+		$roles = $this->Roles_model->getAllByCompanyId($company_id);
 
 		$this->page_data['roles'] = $roles;
 		$this->load->view('v2/pages/roles/list', $this->page_data);
