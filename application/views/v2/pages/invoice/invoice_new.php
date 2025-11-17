@@ -434,18 +434,20 @@
             </div>
 
             <!-- Modal View Payments -->
-            <div class="modal fade nsm-modal fade" id="modalViewPaymentForm" tabindex="-1" aria-labelledby="modalViewPaymentForm_label" aria-hidden="true">
-                <div class="modal-dialog modal-md modal-dialog-centered">
-                    <form id="frm-record-payment" method="POST">
-                        <input type="hidden" name="invoice_id" id="void_payment_invoice_id" value="" />
-                        <div class="modal-content" style="width:560px;">
-                            <div class="modal-header">
-                                <span class="modal-title content-title">Invoice Payments</span>
-                                <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
-                            </div>
-                            <div class="modal-body"></div>
+            <div class="modal fade" id="modalViewPaymentForm" data-bs-backdrop="static" role="dialog">
+                <div class="modal-dialog modal-lg modal-dialog-centered">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <span class="modal-title content-title" style="font-size: 17px;">Invoice Payments</span>
+                            <button class="border-0 rounded mx-1" data-bs-dismiss="modal" style="cursor: pointer;"><i class="fas fa-times m-0 text-muted"></i></button>
                         </div>
-                    </form>
+                        <div class="modal-body">
+                            <form id="frm-record-payment" method="POST">       
+                                <input type="hidden" name="invoice_id" id="void_payment_invoice_id" value="" />          
+                                <div id="view-payments-container"></div>
+                            </form>
+                        </div>
+                    </div>
                 </div>
             </div>
 
@@ -1098,7 +1100,7 @@
             var invoice_id = $(this).attr('data-id');
 
             $('#modalViewPaymentForm').modal('show');
-            showLoader($("#modalViewPaymentForm .modal-body")); 
+            showLoader($("#view-payments-container")); 
             $('#void_payment_invoice_id').val(invoice_id);
 
             $.ajax({
@@ -1108,7 +1110,7 @@
                     invoice_id: invoice_id
                 },
                 success: function (response) {
-                    $("#modalViewPaymentForm .modal-body").html(response);
+                    $("#view-payments-container").html(response);
                 },
             });
 

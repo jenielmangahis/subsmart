@@ -13,8 +13,9 @@
                     <tr>
                         <td data-name="Payment Date"><strong>Payment Date</strong></td>
                         <td data-name="Amount"><strong>Amount</strong></td>
-                        <td data-name="Status"><strong>Payment Method</strong></td>
+                        <td data-name="Payment Method"><strong>Payment Method</strong></td>
                         <td data-name="Status"><strong>Status</strong></td>
+                        <td data-name="Notes"><strong>Notes</strong></td>
                         <td data-name="Manage"></td>
                     </tr>
                 </thead>
@@ -26,6 +27,7 @@
                                 <td><?= number_format($payment_record->invoice_amount,2) ?></td>
                                 <td><?= $payment_record->payment_method == 'cc' ? 'Credit Card' : ucwords($payment_record->payment_method); ?></td>
                                 <td><?= $payment_record->is_void == 0 ? 'Paid' : 'Void'; ?></td>
+                                <td><?= $payment_record->notes != '' ? $payment_record->notes : '---'; ?></td>
                                 <td style="text-align: right">
                                     <div class="dropdown table-management">
                                         <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown">
@@ -55,7 +57,7 @@
                         <?php } ?>     
                     <?php }else{ ?>
                             <tr>
-                                <td colspan="4">No records available.</td>
+                                <td colspan="6">No records available.</td>
                             </tr>                     
                     <?php } ?>        
                 </tbody>
