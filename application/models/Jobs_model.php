@@ -635,6 +635,16 @@ class Jobs_model extends MY_Model
         return $query->row();
     }
 
+    public function getJobTotalAmountByJobId($job_id)
+    {
+        $this->db->select('COALESCE(SUM(job_items.total),0)AS total_amount');
+        $this->db->from($this->table_items);
+        $this->db->where('job_items.job_id', $job_id);
+        $query = $this->db->get();
+
+        return $query->row();
+    }
+
     /**
      * @return mixed
      */

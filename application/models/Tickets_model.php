@@ -823,11 +823,12 @@ class Tickets_model extends MY_Model
 
     public function getAllIsArchivedByCompanyId($cid)
     {
-        $this->db->select('*');
+        $this->db->select('tickets.*, acs_profile.first_name,acs_profile.last_name,acs_profile.mail_add,acs_profile.city as cust_city,acs_profile.state as cust_state, acs_profile.zip_code as cust_zipcode');
         $this->db->from($this->table);   
-        $this->db->where('company_id', $cid);
-        $this->db->where('is_archived', 1);
-        $this->db->order_by('archived_date', 'DESC');
+        $this->db->join('acs_profile', 'tickets.customer_id = acs_profile.prof_id', 'left');
+        $this->db->where('tickets.company_id', $cid);
+        $this->db->where('tickets.is_archived', 1);
+        $this->db->order_by('tickets.archived_date', 'DESC');
         
         $query = $this->db->get();
 
