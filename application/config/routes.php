@@ -120,6 +120,7 @@ $route['customer/_ledger_invoice'] = 'Customer/ajax_customer_ledger_invoice';
 $route['customer/_ledger_invoice'] = 'Customer/ajax_customer_ledger_invoice';
 $route['customer/_create_internal_notes'] = 'Customer/ajax_create_internal_notes_v2';
 $route['customers/_edit_internal_notes'] = 'Customer/ajax_edit_internal_notes';
+$route['customers/_delete_internal_notes'] = 'Customer/ajax_delete_internal_notes';
 
 // Credit Bureau
 $route['credit_bureau/list'] = 'Credit_Bureau/index';
@@ -2382,6 +2383,7 @@ $route['customer/_set_default_receiver_phone_number'] = 'Customer/ajax_set_defau
 $route['customer/_set_default_customer_status'] = 'Customer/ajax_set_default_customer_status';
 $route['customer/_delete_payment_image'] = 'CustomerDashboardQuickActions/ajaxDeleteCustomerDocument';
 $route['customer/_send_alarm_information_to_users'] = 'Customer/ajax_send_alarm_information_to_users';
+$route['customers/_delete_selected_internal_notes'] = 'Customer/ajax_delete_selected_internal_notes';
 
 //Benchmark for Testing
 $route['benchmark/test_customer_subscription'] = 'Benchmark/test_customer_subscription';
