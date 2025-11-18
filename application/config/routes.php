@@ -116,10 +116,10 @@ $route['customer/_delete_lead_type'] = 'Customer/ajax_delete_lead_type';
 $route['customer/_archive_selected_leads'] = 'Customer/ajax_archive_selected_leads';
 $route['customer/_archive_lead'] = 'Customer/ajax_archive_lead';
 $route['customer/_payment_method_images'] = 'Customer/ajax_payment_method_images';
-
 $route['customer/_ledger_invoice'] = 'Customer/ajax_customer_ledger_invoice';
-
 $route['customer/_ledger_invoice'] = 'Customer/ajax_customer_ledger_invoice';
+$route['customer/_create_internal_notes'] = 'Customer/ajax_create_internal_notes_v2';
+$route['customers/_edit_internal_notes'] = 'Customer/ajax_edit_internal_notes';
 
 // Credit Bureau
 $route['credit_bureau/list'] = 'Credit_Bureau/index';
@@ -1334,6 +1334,7 @@ $route['users/_delete_all_archived_users'] = 'Users/ajax_delete_all_archived_use
 $route['users/_restore_user'] = 'Users/ajax_restore_user';
 $route['users/_delete_archived_user'] = 'Users/ajax_delete_archived_user';
 $route['users/_get_roles_by_default_company'] = 'Users/ajax_get_roles_by_default_company';
+$route['users/job_titles'] = 'Roles/index';
 
 //Job Titles
 $route['users/job_titles'] = 'Roles/index';
