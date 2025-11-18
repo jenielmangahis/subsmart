@@ -15475,7 +15475,7 @@ class Customer extends MY_Controller
         $this->load->model('AcsCustomerCancellationRequest');
         $this->load->model('Users_model');
 
-        $is_live_mail_credentials = false;
+        $is_live_mail_credentials = true;
         $is_success = 0;
         $msg    = 'Cannot find customer data';
 
@@ -15707,6 +15707,7 @@ class Customer extends MY_Controller
                         
                         if($ownerAdmins) {
                             foreach($ownerAdmins as $ownerAdmin) {
+                                $email_data['name'] = $ownerAdmin->FName;
                                 $mail->addAddress($ownerAdmin->email, $ownerAdmin->email);
                             }                            
                         }
