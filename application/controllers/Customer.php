@@ -16521,4 +16521,22 @@ class Customer extends MY_Controller
 
         echo json_encode($return);
 	}
+
+    public function settings_alarm_service_providers()
+    {
+        $this->load->model('AcsAlarmServiceProvider_model');
+
+        if(!checkRoleCanAccessModule('customer-settings', 'read')){
+			show403Error();
+			return false;
+		}
+
+        $company_id = logged('company_id');
+        $serviceProviders = $this->AcsAlarmServiceProvider_model->getAllByCompanyId($company_id);
+
+        $this->page_data['serviceProviders'] = $serviceProviders;
+        $this->page_data['page']->title = 'Alarm Service Providers';
+        $this->page_data['page']->parent = 'Customers';
+        $this->load->view('v2/pages/customer/settings_alarm_service_providers', $this->page_data);
+    }
 }

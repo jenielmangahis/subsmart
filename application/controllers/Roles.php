@@ -7,7 +7,7 @@ class Roles extends MY_Controller {
 	{
 		parent::__construct();
 		$this->checkLogin();
-		$this->page_data['page']->title = 'Roles';
+		$this->page_data['page']->title = 'Job Titles';
 		$this->page_data['page']->menu = 'job title';
 	}
 
