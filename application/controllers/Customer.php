@@ -16237,7 +16237,11 @@ class Customer extends MY_Controller
                     $mail->isHTML(true);
                     $mail->Subject = $subject;
                     $mail->Body    = $body;            
-                    $mail->Send();                    
+                    $mail->Send();     
+                    
+                    $is_success = 1;
+                    $msg = '';
+                    
                 } else {
                     $host     = 'smtp.mailtrap.io';
                     $port     = 2525;
