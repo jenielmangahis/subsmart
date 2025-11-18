@@ -503,7 +503,7 @@ $(document).ready(function() {
     $('#add_employee_modal').modal({backdrop: 'static', keyboard: false});
     $('#edit_employee_modal').modal({backdrop: 'static', keyboard: false});
 
-    populateEmployeeRoles();
+    //populateEmployeeRoles();
     $(".nsm-table").nsmPagination();
 
     $("#search_field").on("input", debounce(function() {

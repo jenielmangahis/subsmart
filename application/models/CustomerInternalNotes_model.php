@@ -18,7 +18,7 @@ class CustomerInternalNotes_model extends MY_Model
 
     public function getById($id)
     {
-        $this->db->select('customer_internal_notes.*, CONCAT(users.FName, " ", users.LNAme) AS user_name, acs_profile.company_id');
+        $this->db->select('customer_internal_notes.*, CONCAT(users.FName, " ", users.LNAme) AS user_name, CONCAT(acs_profile.first_name, " ", acs_profile.last_name) AS customer_name, acs_profile.company_id');
         $this->db->from($this->table);
         $this->db->join('users', 'customer_internal_notes.user_id  = users.id');
         $this->db->join('acs_profile', 'customer_internal_notes.prof_id  = acs_profile.prof_id');                
@@ -28,10 +28,11 @@ class CustomerInternalNotes_model extends MY_Model
 
     public function getAllByProfId($prof_id)
     {        
-        $this->db->select('customer_internal_notes.*, CONCAT(users.FName, " ", users.LNAme) AS user_name');
+        $this->db->select('customer_internal_notes.*, CONCAT(users.FName, " ", users.LNAme) AS user_name, CONCAT(acs_profile.first_name, " ", acs_profile.last_name) AS customer_name, acs_profile.company_id');
         $this->db->from($this->table);
         $this->db->join('users', 'customer_internal_notes.user_id  = users.id');        
-        $this->db->where('prof_id', $prof_id);
+        $this->db->join('acs_profile', 'customer_internal_notes.prof_id  = acs_profile.prof_id');                
+        $this->db->where('customer_internal_notes.prof_id', $prof_id);
 
         $query = $this->db->get();
         return $query->result();

@@ -887,6 +887,8 @@ class Users extends MY_Controller
 			return false;
 		}
 
+		$this->load->model('Roles_model');
+
 		$this->page_data['page']->title = 'Employees';
         $this->page_data['page']->parent = 'Company';
 
@@ -898,24 +900,28 @@ class Users extends MY_Controller
 		$eid = hashids_encrypt($cid, '', 15);
 		$company = $this->Clients_model->getById($cid);
 		$num_license = $company->number_of_license;
+		if( isAdiCompany() ){
+			$num_license = 9999;
+		}
 
 		$show_pass = 0;
 		if( in_array($cid, exempted_company_ids()) ){
 			$show_pass = 1;
 		}		
+
+		$users     = $this->users_model->getCompanyUsers($cid,['is_archived' => 'No']);
+		$userTypes = $this->users_model->userTypes();
+		$roles     = $this->Roles_model->getAllByCompanyId($cid);
+		$payscales = $this->PayScale_model->getAllByCompanyId($cid);
 		
 		$this->page_data['eid'] = $eid;
 		$this->page_data['num_license'] = $num_license;
 		$this->page_data['users1'] = $this->users_model->getById(getLoggedUserID());
-		$this->page_data['roles']  = $this->users_model->userRolesList();
+		$this->page_data['roles']  = $roles;
 		$this->page_data['show_pass'] = $show_pass;
-		$this->page_data['users'] = $this->users_model->getCompanyUsers($cid,['is_archived' => 'No']);
-		$this->page_data['payscale'] = $this->PayScale_model->getAllByCompanyId($cid);
-
-
-		// echo '<pre>';print_r($this->page_data);die;
-
-		// $this->load->view('users/list', $this->page_data);
+		$this->page_data['users']     = $users;
+		$this->page_data['payscale']  = $payscales;
+		$this->page_data['userTypes'] = $userTypes;
 		$this->load->view('v2/pages/users/list', $this->page_data);
 	}
 
@@ -1306,13 +1312,14 @@ class Users extends MY_Controller
 	{
 		$this->load->model('CommissionSetting_model');
 		$this->load->model('EmployeeCommissionSetting_model');
+		$this->load->model('Roles_model');
 
 		$user_id = $this->input->post('user_id');
 		$get_user = $this->Users_model->getUser($user_id);
 		$get_role = $this->db->get_where('roles', array('id' => $get_user->role));		
 
 		$cid   = logged('company_id');
-		$userTypes = $this->users_model->getRoles($cid);
+		$userTypes = $this->users_model->userTypes();
 
 		$payscale = $this->PayScale_model->getById($get_user->payscale_id);
 		$salary_rate = 0;
@@ -1337,7 +1344,7 @@ class Users extends MY_Controller
 			$salary_type_label = 'Commission Only';
 		}
 
-		$this->page_data['roles']  = $this->users_model->userRolesList();
+		$this->page_data['roles']  = $this->Roles_model->getAllByCompanyId($cid);
 		$this->page_data['payscale'] = $this->PayScale_model->getAllByCompanyId($cid);
 		$this->page_data['salary_rate'] = $salary_rate;
 		$this->page_data['salary_type_label'] = $salary_type_label;
@@ -3910,6 +3917,24 @@ class Users extends MY_Controller
 
         echo json_encode($return);
 	}
+
+	public function settings_roles()
+    {
+        $this->load->model('AcsAlarmReceiverPhoneNumber_model');
+
+        if(!checkRoleCanAccessModule('customer-settings', 'read')){
+			show403Error();
+			return false;
+		}
+
+        $company_id = logged('company_id');
+        $receiverPhoneNumbers = $this->AcsAlarmReceiverPhoneNumber_model->getAllByCompanyId($company_id);
+
+        $this->page_data['receiverPhoneNumbers'] = $receiverPhoneNumbers;
+        $this->page_data['page']->title = 'Alarm Receiver Phone Numbers';
+        $this->page_data['page']->parent = 'Customers';
+        $this->load->view('v2/pages/customer/settings_alarm_receiver_phone_numbers', $this->page_data);
+    }
 }
 /* End of file Users.php */
 /* Location: ./application/controllers/Users.php */

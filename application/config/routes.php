@@ -1225,6 +1225,7 @@ $route['workorders/_delete_all_archived_workorders'] = 'Workorder/ajax_delete_al
 $route['workorders/_delete_archived_workorder'] = 'Workorder/ajax_delete_archived_workorder';
 $route['workorder/_delete_archived_workorder'] = 'Workorder/ajax_delete_archived_workorder';
 $route['workorder/view/(:num)'] = 'Workorder/view/$1';
+$route['workorders/export'] = 'Workorder/export_list';
 
 $route['workorder/estimate_convert_to_workorder/(:num)'] = 'Workorder/estimateConversionWorkorderV2/$1';
 $route['workorder/_save_estimate_convert_to_workorder'] = 'Workorder/ajax_save_estimate_convert_to_workorder';
@@ -1374,6 +1375,7 @@ $route['jobs/_restore_selected_jobs'] = 'Job/ajax_restore_selected_jobs';
 $route['jobs/_permanently_delete_selected_jobs'] = 'Job/ajax_permanently_delete_selected_jobs';
 $route['jobs/_delete_archived_job'] = 'Job/ajax_delete_archived_job';
 $route['jobs/export_list'] = 'Job/export_list';
+$route['jobs/_with_selected_update_status'] = 'Job/ajax_with_selected_update_status';
 
 // Trac360
 $route['job/bird_eye_view'] = 'JobMap/index';

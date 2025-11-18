@@ -15479,7 +15479,7 @@ class Customer extends MY_Controller
         $is_success = 0;
         $msg    = 'Cannot find customer data';
 
-        $is_request_saved = true;
+        $is_request_saved = false;
 
         $post = $this->input->post();
         $company_id = logged('company_id');
@@ -15707,6 +15707,7 @@ class Customer extends MY_Controller
                         
                         if($ownerAdmins) {
                             foreach($ownerAdmins as $ownerAdmin) {
+                                $email_data['name'] = $ownerAdmin->FName;
                                 $mail->addAddress($ownerAdmin->email, $ownerAdmin->email);
                             }                            
                         }

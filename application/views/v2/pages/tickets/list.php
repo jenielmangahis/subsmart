@@ -80,7 +80,7 @@
                                     <i class='bx bx-dollar'></i>
                                 </div>
                                 <div class="col-12 col-md-8 text-center text-md-start d-flex flex-column justify-content-center">
-                                    <h2 id="">$<?= number_format($ticketTotalAmount->total_amount, 2, '.', ''); ?></h2>
+                                    <h2 id="">$<?= $ticketTotalAmount ? number_format($ticketTotalAmount->total_amount, 2, '.', '') : '0.00'; ?></h2>
                                     <span>Income</span>
                                 </div>
                             </div>
@@ -93,7 +93,7 @@
                                     <i class='bx bx-receipt'></i>
                                 </div>
                                 <div class="col-12 col-md-8 text-center text-md-start d-flex flex-column justify-content-center">
-                                    <h2 id=""><?= count($totalTickets); ?></h2>
+                                    <h2 id=""><?= $totalTickets ?  count($totalTickets) : 0; ?></h2>
                                     <span>Total Service Tickets</span>
                                 </div>
                             </div>
@@ -106,7 +106,7 @@
                                     <i class='bx bx-receipt'></i>
                                 </div>
                                 <div class="col-12 col-md-8 text-center text-md-start d-flex flex-column justify-content-center">
-                                    <h2 id=""><?= count($openTickets); ?></h2>
+                                    <h2 id=""><?= $openTickets ?  count($openTickets) : 0; ?></h2>
                                     <span>Total Open Service Tickets</span>
                                 </div>
                             </div>
@@ -186,11 +186,10 @@
                                 </td>
                                 <td class="table-icon"></td>
                                 <td class="show" data-name="Work Order Number">Service Ticket Number</td>
-                                <td data-name="AssignedTech">Assigned Tech</td>
+                                <td data-name="Assigned Tech">Assigned Tech</td>
                                 <td data-name="Customer">Customer</td>                                
-                                <td data-name="Date Issued">
-                                    Date</td>                                
-                                <td data-name="Time From">Time</td>                            
+                                <td data-name="Date">Date</td>                                
+                                <td data-name="Time">Time</td>                            
                                 <td data-name="Status">Status</td>
                                 <td data-name="Amount" style="width:8%; !important;text-align:right;">Amount</td>
                                 <td data-name="Manage" style="width:3%;"></td>

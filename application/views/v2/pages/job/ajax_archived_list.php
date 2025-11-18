@@ -29,6 +29,9 @@
     <tbody>
         <?php if ($jobs) { ?>
             <?php foreach($jobs as $job){ ?>
+                <?php 
+                    $total_job = $job->amount + $job->adjustment_value + $job->program_setup + $job->monthly_monitorign + $job->installation_cost + $job->tax_rate;
+                ?>
                 <tr>
                     <td class="text-center show">
                         <input class="form-check-input jobs-archive-row-select table-select" name="jobs[]" type="checkbox" value="<?= $job->id; ?>">
@@ -36,7 +39,8 @@
                     <td class="show"><div class="table-row-icon"><i class="bx bx-receipt"></i></div></td>
                     <td class="fw-bold nsm-text-primary show">                        
                         <?= $job->job_number; ?><br />
-                        <small class="text-muted"><i class='bx bx-user-circle'></i> <?= trim($job->first_name) . ' ' . trim($job->last_name); ?></small>
+                        <small class="text-muted"><i class='bx bx-user-circle'></i> <?= trim($job->first_name) . ' ' . trim($job->last_name); ?></small><br />
+                        <small class="text-muted"><i class='bx bx-dollar-circle'></i> <?= $job->total_amount; ?></small>
                     </td>
                     <td class="show" style="width:5%;">
                         <div class="dropdown table-management">

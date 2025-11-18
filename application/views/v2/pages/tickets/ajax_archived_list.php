@@ -34,7 +34,11 @@
                         <input class="form-check-input ticket-archive-row-select table-select" name="tickets[]" type="checkbox" value="<?= $ticket->id; ?>">
                     </td>
                     <td class="table-icon show"><div class="table-row-icon"><i class="bx bx-receipt"></i></div></td>
-                    <td class="nsm-text-primary show"><?= $ticket->ticket_no; ?></td>
+                    <td class="fw-bold nsm-text-primary show">              
+                        <?= $ticket->ticket_no; ?><br />
+                        <small class="text-muted"><i class='bx bx-user-circle'></i> <?= trim($ticket->first_name) . ' ' . trim($ticket->last_name); ?></small><br />
+                        <small class="text-muted"><i class='bx bx-dollar-circle'></i> <?= number_format($ticket->grandtotal,2,".",""); ?></small>
+                    </td>
                     <td class="show" style="width:5%;">
                         <div class="dropdown table-management">
                             <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown"><i class='bx bx-fw bx-dots-vertical-rounded'></i></a>

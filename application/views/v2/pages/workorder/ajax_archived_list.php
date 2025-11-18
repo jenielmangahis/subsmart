@@ -34,7 +34,11 @@
                         <input class="form-check-input workorders-archive-row-select table-select" name="workorders[]" type="checkbox" value="<?= $wo->id; ?>">
                     </td>
                     <td class="show"><div class="table-row-icon"><i class="bx bx-receipt"></i></div></td>
-                    <td class="fw-bold nsm-text-primary show"><?= $wo->work_order_number; ?></td>
+                    <td class="fw-bold nsm-text-primary show">
+                        <?= $wo->work_order_number; ?><br />
+                        <small class="text-muted"><i class='bx bx-user-circle'></i> <?= trim($wo->first_name) . ' ' . trim($wo->last_name); ?></small><br />
+                        <small class="text-muted"><i class='bx bx-dollar-circle'></i> <?= number_format($wo->grand_total,2,".",""); ?></small>
+                    </td>
                     <td class="show" style="width:5%;">
                         <div class="dropdown table-management">
                             <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown"><i class='bx bx-fw bx-dots-vertical-rounded'></i></a>

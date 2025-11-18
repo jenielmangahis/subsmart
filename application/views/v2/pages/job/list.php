@@ -84,6 +84,12 @@ table.dataTable.no-footer {
 .select-filter-card{
     cursor: pointer;
 }
+.swal2-html-container{
+    overflow:hidden;
+}
+.job-change-status{
+    text-align:left;
+}
 </style>
 
 <?php
@@ -250,6 +256,7 @@ foreach ($jobs as $job) {
                                 <span id="num-checked"></span> With Selected  <i class='bx bx-fw bx-chevron-down'></i>
                             </button>
                             <ul class="dropdown-menu dropdown-menu-end">
+                                <li><a class="dropdown-item btn-with-selected" id="with-selected-change-status" href="javascript:void(0);" data-action="pause">Change Status</a></li>                          
                                 <li><a class="dropdown-item btn-with-selected" id="with-selected-delete" href="javascript:void(0);" data-action="delete">Delete</a></li>                                
                             </ul>
                         </div>
@@ -628,6 +635,167 @@ $(document).ready(function() {
 
     $("#btn-export-jobs, .btn-export-list").on("click", function() {
         location.href = "<?php echo base_url('jobs/export_list'); ?>";
+    });
+
+    $(document).on('change', '#with-selected-status', function(){
+        let value = $(this).val();
+        
+        if( value == 'Arrived' ){
+            $('.omw-group').show();
+            $('.started-group').hide();
+            $('.finished-group').hide();
+        }else if( value == 'Started' ){
+            $('.omw-group').hide();
+            $('.started-group').show();
+            $('.finished-group').hide();
+        }else if( value == 'Finished' ){
+            $('.omw-group').hide();
+            $('.started-group').hide();
+            $('.finished-group').show();
+        }else{
+            $('.omw-group').hide();
+            $('.started-group').hide();
+            $('.finished-group').hide();
+        }
+    });
+
+    $(document).on('click', '#with-selected-change-status', function(){
+        let total = $('#JOB_LIST_TABLE input[name="jobs[]"]:checked').length;
+        var currentDate = moment().format('YYYY-MM-DD');
+        let currentTime = moment().utc().format('HH:mm:ss');
+        if( total <= 0 ){
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'Please select rows',
+            });
+        }else{
+            let html_content = `
+                <div class="row job-change-status">
+                    <div class="col-sm-12 col-md-12">
+                        <label class="mb-2">Status</label>
+                        <div class="input-group mb-3">
+                            <select class="form-select" id="with-selected-status">
+                                <option value="New" selected="">New</option>
+                                <option value="Scheduled">Scheduled</option>
+                                <option value="Arrived">Arrived</option>
+                                <option value="Started">Started</option>
+                                <option value="Approved">Approved</option>
+                                <option value="Finished">Finished</option>
+                                <option value="Invoiced">Invoiced</option>
+                                <option value="Completed">Completed</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-sm-12 col-md-6 omw-group" style="display:none;">
+                        <label class="mb-2">Date Arrived</label>
+                        <div class="input-group mb-3">
+                            <input type="date" id="with-selected-omw-date" value="${currentDate}" class="form-control" value="" />
+                        </div>
+                    </div>
+                    <div class="col-sm-12 col-md-6 omw-group" style="display:none;">
+                        <label class="mb-2">Time Arrived</label>
+                        <div class="input-group mb-3">
+                            <input type="time" id="with-selected-omw-time" value="${currentTime}" class="form-control" value="" />
+                        </div>
+                    </div>
+
+                    <div class="col-sm-12 col-md-6 started-group" style="display:none;">
+                        <label class="mb-2">Date Started</label>
+                        <div class="input-group mb-3">
+                            <input type="date" id="with-selected-started-date" value="${currentDate}" class="form-control" value="" />
+                        </div>
+                    </div>
+                    <div class="col-sm-12 col-md-6 started-group" style="display:none;">
+                        <label class="mb-2">Time Started</label>
+                        <div class="input-group mb-3">
+                            <input type="time" id="with-selected-started-time" value="${currentTime}" class="form-control" value="" />
+                        </div>
+                    </div>
+
+                    <div class="col-sm-12 col-md-6 finished-group" style="display:none;">
+                        <label class="mb-2">Date Finished</label>
+                        <div class="input-group mb-3">
+                            <input type="date" id="with-selected-finished-date" value="${currentDate}" class="form-control" value="" />
+                        </div>
+                    </div>
+                    <div class="col-sm-12 col-md-6 finished-group" style="display:none;">
+                        <label class="mb-2">Time Finished</label>
+                        <div class="input-group mb-3">
+                            <input type="time" id="with-selected-finished-time" value="${currentTime}" class="form-control" value="" />
+                        </div>
+                    </div>
+                </div>
+            `; 
+
+            Swal.fire({
+                title: 'Change Status',
+                html: html_content,
+                icon: false,
+                confirmButtonColor: '#3085d6',
+                showCancelButton: true,
+                confirmButtonText: 'Save',                    
+                cancelButtonText: 'Cancel',
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    let status   = $('#with-selected-status').val();
+                    let omw_date = $('#with-selected-omw-date').val(); 
+                    let omw_time = $('#with-selected-omw-time').val();
+                    let started_date = $('#with-selected-started-date').val(); 
+                    let started_time = $('#with-selected-started-time').val();
+                    let finished_date = $('#with-selected-finished-date').val(); 
+                    let finished_time = $('#with-selected-finished-time').val();
+
+                    const form = document.getElementById('frm-with-selected');
+                    const formData = new FormData(form);
+                    formData.append('change_status', status); 
+                    formData.append('omw_date', omw_date); 
+                    formData.append('omw_time', omw_time); 
+                    formData.append('started_date', started_date); 
+                    formData.append('started_time', started_time); 
+                    formData.append('finished_date', finished_date); 
+                    formData.append('finished_time', finished_time); 
+
+                    $.ajax({
+                        type: "POST",
+                        url: base_url + 'jobs/_with_selected_update_status',
+                        data:formData,
+                        processData: false,
+                        contentType: false,
+                        dataType:'json',
+                        success: function(result) {                            
+                            if( result.is_success == 1 ) {
+                                Swal.fire({
+                                icon: 'success',
+                                title: 'Change Status',
+                                text: 'Data was updated successfully.',
+                                }).then((result) => {
+                                    location.reload();
+                                });
+                            } else {
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Error',
+                                    text: result.msg,
+                                });
+                            }
+                        },
+                        beforeSend: function(){
+                            Swal.fire({
+                                icon: "info",
+                                title: "Processing",
+                                html: "Please wait while the process is running...",
+                                allowOutsideClick: false,
+                                allowEscapeKey: false,
+                                didOpen: () => {
+                                    Swal.showLoading();
+                                },
+                            });
+                        }
+                    });
+                }
+            });
+        }  
     });
 
     $(document).on('click', '#with-selected-delete', function(){
