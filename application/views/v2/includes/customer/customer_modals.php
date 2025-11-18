@@ -1549,3 +1549,65 @@
         </div>
     </div>
 </div>
+
+<div class="modal fade nsm-modal fade" id="modal-add-customer-internal-notes" tabindex="-1" aria-labelledby="modal-add-customer-internal-notes_label" aria-hidden="true">
+    <div class="modal-dialog modal-md modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <span class="modal-title content-title">Add Customer Internal Notes</span>
+                <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
+            </div>
+            <div class="modal-body">
+                <form id="frm-save-customer-internal-notes">
+                    <input type="hidden" name="filterd_customer_id" id="filtered_customer_id" value="<?= $filteredCustomer ? $filteredCustomer->prof_id : 0; ?>" class="form-control" />
+                <div class="row">
+                    <div class="col-sm-12">
+                        <label class="mb-2">Customer</label>
+                        <div class="input-group mb-3">
+                            <?php if( $filteredCustomer ){ ?>
+                                <?php $customer_name = $filteredCustomer->first_name . ' ' . $filteredCustomer->last_name; ?>
+                                <input type="text" name="filtered_customer_name" class="form-control" value="<?= $customer_name; ?>" readonly="" disabled="" />
+                            <?php }else{ ?>
+                                <select class="select-customer form-select form-control" name="customer_id" required=""></select>
+                            <?php } ?>
+                        </div>
+                    </div>    
+                    <div class="col-sm-12">
+                        <label class="mb-2">Notes</label>
+                        <div class="input-group mb-3">
+                            <textarea class="form-control" name="customer_notes" required=""></textarea>                            
+                        </div>
+                    </div>                 
+                </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="nsm-button" data-bs-dismiss="modal">Close</button>
+                <button type="submit" class="nsm-button primary" id="btn-save-customer-internal-notes" form="frm-save-customer-internal-notes">Save</button>
+            </div>
+            </form>                
+        </div>
+    </div>
+</div>
+
+<div class="modal fade nsm-modal fade" id="modal-edit-customer-internal-notes" tabindex="-1" aria-labelledby="modal-edit-customer-internal-notes_label" aria-hidden="true">
+    <div class="modal-dialog modal-md modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <span class="modal-title content-title">Edit Customer Internal Notes</span>
+                <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
+            </div>
+            <div class="modal-body">
+                <form id="frm-update-customer-internal-notes">
+                    <input type="hidden" name="nid" id="nid" value="" />                    
+                    <div id="edit-customer-internal-notes-container"></div>                
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="nsm-button" data-bs-dismiss="modal">Close</button>
+                <button type="submit" class="nsm-button primary" id="btn-update-customer-internal-notes" form="frm-update-customer-internal-notes">Save</button>
+            </div>
+            </form>                
+        </div>
+    </div>
+</div>
