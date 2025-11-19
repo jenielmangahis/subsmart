@@ -3405,6 +3405,60 @@ class Debug extends MY_Controller {
 
     }
 
+    public function fixAdiCustomerServiceProvider()
+    {
+        $this->load->model('AcsProfile_model');
+        $this->load->model('AcsAlarm_model');
+        $this->load->model('SystemPackageType_model');
+
+        $company_id      = 31;
+        $customer_groups = ['4','5'];
+        $customers  = $this->AcsProfile_model->getAllByCompanyIdAndCustomerGroupId($company_id, $customer_groups);
+
+        $total_updated = 0;
+        foreach($customers as $c){
+            $alarm = $this->AcsAlarm_model->getByCustmerId($c->prof_id);
+            if($alarm){                
+                //if( $c->prof_id == 31100 ){
+                    $panel_type = $alarm->panel_type;
+                    if (str_contains($panel_type, 'Honeywell')) {
+                        $comm_type        = $alarm->comm_type;
+                        $service_provider = 'AlarmNet';
+                        $dealer           = 'AlarmNet';
+                        $account_cost     = $alarm->account_cost;
+
+                        $systemPackage = $this->SystemPackageType_model->getByNameAndCompanyId($comm_type, $company_id);
+                        if( $systemPackage ){
+                            if( $service_provider == 'Alarm.com' ){
+                                $pass_thru_cost = $systemPackage->alarmcom_cost;
+                            }elseif( $service_provider == 'AlarmNet' ){
+                                $pass_thru_cost = $systemPackage->alarmnet_cost;
+                            }
+
+                            $account_cost = $systemPackage->acct_cost;
+                        }
+
+                        $data = [
+                            'dealer' => $dealer,
+                            'service_provider' => $service_provider
+                        ];
+
+                        $is_updated = $this->AcsAlarm_model->updateByAlarmId($alarm->alarm_id, $data);
+                        if( $is_updated > 0 ){
+                            $data = ['is_checked' => 1];
+                            $this->AcsProfile_model->updateCustomerByProfId($c->prof_id, $data);
+                            $total_updated++;
+                        }
+
+                    }
+                //}
+                
+            }
+        }
+
+        echo "Total Updated : " . $total_updated;
+    }
+
     public function fixAdiCustomerAccountCostV2()
     {
         $this->load->model('AcsProfile_model');
@@ -3412,8 +3466,8 @@ class Debug extends MY_Controller {
         $this->load->model('SystemPackageType_model');
 
         $company_id = 31;
-        $group_id   = 4;
-        $customers  = $this->AcsProfile_model->getAllByCompanyIdAndCustomerGroupId($company_id, $group_id);
+        $customer_groups = ['4'];
+        $customers  = $this->AcsProfile_model->getAllByCompanyIdAndCustomerGroupId($company_id, $customer_groups);
 
         $total_updated = 0;
         foreach($customers as $c){
@@ -3431,26 +3485,26 @@ class Debug extends MY_Controller {
                     //     $account_cost = 3;
                     // }
 
-                    // if( $systemPackage ){                  
-                    //     if( $service_provider == 'Alarm.com' || $customer_group_id == 4  ){
-                    //         $pass_thru_cost = $systemPackage->alarmcom_cost;
-                    //     }elseif( $service_provider == 'AlarmNet' || $customer_group_id == 5 ){
-                    //         $pass_thru_cost = $systemPackage->alarmnet_cost;
-                    //     }
+                    if( $systemPackage ){                  
+                        if( $service_provider == 'Alarm.com' || $customer_group_id == 4  ){
+                            $pass_thru_cost = $systemPackage->alarmcom_cost;
+                        }elseif( $service_provider == 'AlarmNet' || $customer_group_id == 5 ){
+                            $pass_thru_cost = $systemPackage->alarmnet_cost;
+                        }
                         
-                    //     $account_cost = $systemPackage->acct_cost;
-                    // } 
-
-                    // $data = [
-                    //     //'id' => $alarm->alarm_id,
-                    //     'pass_thru_cost' => $pass_thru_cost,
-                    //     'account_cost' => $account_cost
-                    // ]; 
+                        $account_cost = $systemPackage->acct_cost;
+                    } 
 
                     $data = [
                         //'id' => $alarm->alarm_id,
+                        'pass_thru_cost' => $pass_thru_cost,
                         'account_cost' => $account_cost
-                    ];
+                    ]; 
+
+                    // $data = [
+                    //     'id' => $alarm->alarm_id,
+                    //     'account_cost' => $account_cost
+                    // ];
 
                     $is_updated = $this->AcsAlarm_model->updateByAlarmId($alarm->alarm_id, $data);
                     if( $is_updated > 0 ){
