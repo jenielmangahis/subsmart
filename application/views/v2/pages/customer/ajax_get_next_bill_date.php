@@ -1,1 +1,1 @@
-<input type="text" id="next-bill-date" class="form-control next-bill-date" value="<?php echo $next_billing_date; ?>" disabled="disabled" />
+<input type="text" id="next-bill-date" class="form-control next-bill-date" value="<?php echo $next_billing_date_format; ?>" disabled="disabled" />

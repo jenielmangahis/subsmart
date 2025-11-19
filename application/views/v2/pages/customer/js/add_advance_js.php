@@ -2025,10 +2025,10 @@
     });
 
     function autoComputeNextBillDate() {
-        var bill_freq = $("#bill_freq").val();
+        var bill_freq = $(".bill_frequency").val();
         var bill_day = $("#bill_day").val();    
         var bill_start_date = $("#bill_start_date").val();
-
+        
         $.ajax({
             type: 'POST',
             url: base_url + 'customer/_get_next_bill_date',

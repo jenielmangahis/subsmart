@@ -16548,7 +16548,7 @@ class Customer extends MY_Controller
         $input_billing = [];
         switch ($post['bill_freq']) {
             case 'One Time Only':
-                $billing_frequency = 1;
+                $billing_frequency = 0;
                 break;
             case 'Every 1 Month':
                 $billing_frequency = 1;
@@ -16569,10 +16569,10 @@ class Customer extends MY_Controller
 
         if($post['bill_start_date']) {
             $next_billing_date  = date('m/'.$post['bill_day'].'/Y', strtotime('+'.$billing_frequency.' months', strtotime($post['bill_start_date'])));
-            $next_billing_date  = date('m/d/Y', strtotime($next_billing_date));
+            $next_billing_date_format = date('m/d/Y', strtotime($next_billing_date));
         }
 
-        $this->page_data['next_billing_date'] = $next_billing_date;
+        $this->page_data['next_billing_date_format'] = $next_billing_date_format;
         $this->load->view('v2/pages/customer/ajax_get_next_bill_date', $this->page_data);
     }
 }
