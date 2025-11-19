@@ -3413,6 +3413,7 @@ class Debug extends MY_Controller {
 
         $company_id      = 31;
         $customer_groups = ['4','5'];
+        echo 7;exit;
         $customers  = $this->AcsProfile_model->getAllByCompanyIdAndCustomerGroupId($company_id, $customer_groups);
 
         $total_updated = 0;
