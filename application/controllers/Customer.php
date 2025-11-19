@@ -16548,7 +16548,7 @@ class Customer extends MY_Controller
         $input_billing = [];
         switch ($post['bill_freq']) {
             case 'One Time Only':
-                $billing_frequency = 0;
+                $billing_frequency = 1;
                 break;
             case 'Every 1 Month':
                 $billing_frequency = 1;

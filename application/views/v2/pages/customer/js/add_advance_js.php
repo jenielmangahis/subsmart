@@ -2017,7 +2017,9 @@
         }
 
         $('#contract_term, #bill_freq, #bill_start_date, #bill_end_date, #bill_day').on('change', function(){
-            autoComputeNextBillDate();
+            setTimeout(function() {
+                autoComputeNextBillDate();
+            }, 500);             
         });
 
     });
