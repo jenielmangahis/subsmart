@@ -1028,12 +1028,12 @@ class AcsProfile_model extends MY_Model
 
     //For fixing data only
     //This method needs is_checked field
-    public function getAllByCompanyIdAndCustomerGroupId($company_id, $customer_group_id)
+    public function getAllByCompanyIdAndCustomerGroupId($company_id, $customer_groups)
     {
         $this->db->select('*');
         $this->db->from($this->table);
         $this->db->where('company_id', $company_id);
-        $this->db->where('customer_group_id', $customer_group_id);
+        $this->db->where_in('customer_group_id', $customer_groups);
         $this->db->where('is_checked', 0);
         $this->db->order_by('prof_id', 'ASC');
         //$this->db->limit(10);
