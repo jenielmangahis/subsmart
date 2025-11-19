@@ -3481,22 +3481,26 @@ class Customer extends MY_Controller
         $this->load->view('customer/workorders_list', $this->page_data);
     }
 
-    public function internal_notes($cid)
+    public function internal_notes($customer_id = 0)
     {
-        $this->page_data['page']->title = 'Customer Internal Notes';
-        $this->page_data['page']->parent = 'Customers';
-
         $this->load->model('CustomerInternalNotes_model');
         $this->load->model('AcsProfile_model');
 
-        $internalNotes = $this->CustomerInternalNotes_model->getAllByProfId($cid);
-        $customer = $this->AcsProfile_model->getByProfId($cid);
+        $company_id = logged('company_id');
+        $filteredCustomer = [];
 
+        if( $customer_id > 0 ){
+            $internalNotes = $this->CustomerInternalNotes_model->getAllByProfId($customer_id);
+            $filteredCustomer = $this->AcsProfile_model->getByProfId($customer_id);
+        }else{
+            $internalNotes = $this->CustomerInternalNotes_model->getAllByCompanyId($company_id);
+        }
+
+        $this->page_data['page']->title = 'Customer Internal Notes';
+        $this->page_data['page']->parent = 'Customers';
         $this->page_data['cust_active_tab'] = 'internal_notes';
-        $this->page_data['cus_id'] = $cid;
         $this->page_data['internalNotes'] = $internalNotes;
-        $this->page_data['customer'] = $customer;
-
+        $this->page_data['filteredCustomer'] = $filteredCustomer;
         //$this->load->view('customer/internal_notes', $this->page_data);
         $this->load->view('v2/pages/customer/internal_notes', $this->page_data);
     }
@@ -3828,6 +3832,7 @@ class Customer extends MY_Controller
 
         $is_success = false;
         $msg = '';
+        $msg = 'Cannot find data';
 
         $user_id = logged('id');
         $post = $this->input->post();
@@ -3842,8 +3847,13 @@ class Customer extends MY_Controller
             $this->CustomerInternalNotes_model->update($internalNote->id, $data);
 
             $is_success = 1;
-        } else {
-            $msg = 'Cannot find data';
+            $msg = '';
+
+            //Activity Logs
+            $customer = $this->AcsProfile_model->getByProfId($internalNote->customer_id);
+            $customer_name = $customer->first_name . ' ' . $customer->last_name;
+            $activity_name = 'Customer Internal Notes : Updated customer note ' . $post['interal_notes'] . ' for customer ' . $customer_name; 
+            createActivityLog($activity_name);
         }
 
         $json_data = ['is_success' => $is_success, 'msg' => $msg];
@@ -3853,23 +3863,28 @@ class Customer extends MY_Controller
     public function ajax_delete_internal_notes()
     {
         $this->load->model('CustomerInternalNotes_model');
+        $this->load->model('AcsProfile_model');
 
         $is_success = 0;
-        $msg = '';
+        $msg = 'Cannot find data';
 
         $company_id = logged('company_id');
         $post = $this->input->post();
         $internalNote = $this->CustomerInternalNotes_model->getById($post['nid']);
         if ($internalNote) {
             if ($internalNote->company_id == $company_id) {
-                $this->CustomerInternalNotes_model->deleteById($internalNote->id);
+                $this->CustomerInternalNotes_model->delete($internalNote->id);
+
                 $is_success = 1;
-                $msg = 'Record deleted';
-            } else {
-                $msg = 'Cannot find record';
+                $msg = '';
+
+                //Activity Logs
+                $customer = $this->AcsProfile_model->getByProfId($internalNote->customer_id);
+                $customer_name = $customer->first_name . ' ' . $customer->last_name;
+                $activity_name = 'Customer Internal Notes : Deleted customer note ' . $internalNote->notes . ' for customer ' . $customer_name; 
+                createActivityLog($activity_name);
+
             }
-        } else {
-            $msg = 'Cannot find record';
         }
 
         $json_data = [
@@ -16247,7 +16262,11 @@ class Customer extends MY_Controller
                     $mail->isHTML(true);
                     $mail->Subject = $subject;
                     $mail->Body    = $body;            
-                    $mail->Send();                    
+                    $mail->Send();     
+                    
+                    $is_success = 1;
+                    $msg = '';
+                    
                 } else {
                     $host     = 'smtp.mailtrap.io';
                     $port     = 2525;
@@ -16403,5 +16422,121 @@ class Customer extends MY_Controller
         ];
 
         echo json_encode($json_data);
+    }
+
+    public function ajax_create_internal_notes_v2()
+    {
+        $this->load->model('CustomerInternalNotes_model');
+        $this->load->model('AcsProfile_model');
+
+        $is_success = 0;
+        $msg = 'Cannot save data';
+
+        $company_id = logged('company_id');
+        $user_id    = logged('id');
+        $post = $this->input->post();
+
+        if( $post['filterd_customer_id'] > 0 ){
+            $customer_id = $post['filterd_customer_id'];
+        }else{
+            $customer_id = $post['customer_id'];
+        }
+
+        $customer = $this->AcsProfile_model->getByProfId($customer_id);
+        if( $customer && $customer->company_id == $company_id ){
+            $data = [
+                'prof_id' => $customer->prof_id,
+                'user_id' => $user_id,
+                'note_date' => date("Y-m-d"),
+                'notes' => $post['customer_notes'],
+                'date_created' => date("Y-m-d H:i:s"),
+                'date_modified' => date("Y-m-d H:i:s")
+            ];
+
+            $this->CustomerInternalNotes_model->create($data);
+
+            //Activity Logs
+            $customer_name = $customer->first_name . ' ' . $customer->last_name;
+            $activity_name = 'Customer Internal Notes : Created customer note ' . $post['customer_notes'] . ' for customer ' . $customer_name; 
+            createActivityLog($activity_name);
+
+            $is_success = 1;
+            $msg = '';
+        }  
+
+        $return = ['is_success' => $is_success, 'msg' => $msg];
+        echo json_encode($return);
+    }
+
+    public function ajax_edit_internal_notes($customer_id = 0)
+    {
+        $this->load->model('CustomerInternalNotes_model');
+        $this->load->model('AcsProfile_model');
+
+        $company_id = logged('company_id');
+        $post = $this->input->post();
+
+        $internalNote = $this->CustomerInternalNotes_model->getById($post['note_id']);
+        if( $internalNote && $internalNote->company_id == $company_id ){
+            $customer = $this->AcsProfile_model->getByProfId($internalNote->prof_id);
+
+            $this->page_data['customer'] = $customer;
+            $this->page_data['internalNote'] = $internalNote;
+            $this->load->view('v2/pages/customer/ajax_edit_internal_notes', $this->page_data);
+        }
+    }
+
+    public function ajax_delete_selected_internal_notes()
+	{
+		$this->load->model('CustomerInternalNotes_model');
+
+		$is_success = 0;
+        $msg    = 'Please select data';
+
+        $company_id  = logged('company_id');
+        $post = $this->input->post();
+
+        if( $post['customerNotes'] ){
+
+            $filters[] = ['field' => 'company_id', 'value' => $company_id];
+            $total_deleted = $this->CustomerInternalNotes_model->bulkDelete($post['customerNotes'], $filters);
+
+			//Activity Logs
+            if( $total_deleted > 1 ){
+                $activity_name = 'Customer Internal Notes : Deleted ' .$total_deleted. ' internal notes'; 
+            }else{
+                $activity_name = 'Customer Internal Notes : Deleted ' .$total_deleted. ' internal note'; 
+            }
+			
+			createActivityLog($activity_name);
+
+            $is_success = 1;
+            $msg    = '';
+        }
+
+        $return = [
+            'is_success' => $is_success,
+            'msg' => $msg
+        ];
+
+        echo json_encode($return);
+	}
+
+    public function settings_alarm_service_providers()
+    {
+        $this->load->model('AcsAlarmServiceProvider_model');
+
+        if(!checkRoleCanAccessModule('customer-settings', 'read')){
+			show403Error();
+			return false;
+		}
+
+        $company_id = logged('company_id');
+        $serviceProviders = $this->AcsAlarmServiceProvider_model->getAllByCompanyId($company_id);
+
+        $this->page_data['serviceProviders'] = $serviceProviders;
+        $this->page_data['page']->title = 'Alarm Service Providers';
+        $this->page_data['page']->parent = 'Customers';
+        $this->load->view('v2/pages/customer/settings_alarm_service_providers', $this->page_data);
     }
 }

@@ -1411,19 +1411,20 @@
                                                         </div>
                                                         <div class="col-sm-4 mb-2">
                                                             <strong>Equipment Margin:</strong>&nbsp;&nbsp;<span id="totalEquipmentMargin">$0</span>
-                                                            <input class="d-none" type="number" step="any" name="input_totalEquipmentMargin" value="<?php echo ($jobs_data) ? $jobs_data->margin : "0.0"; ?>">
+                                                            <input type="hidden" step="any" name="input_totalEquipmentMargin" value="<?php echo ($jobs_data) ? $jobs_data->margin : "0.0"; ?>">
                                                         </div>
                                                         <div class="col-sm-4 mb-2">
                                                             <strong>Amount Collected:</strong>&nbsp;&nbsp;<span id="totalAmountCollected">$0</span>
-                                                            <input class="d-none" type="number" step="any" name="input_totalAmountCollected" value="<?php echo ($jobs_data) ? $jobs_data->amount_collected : "0.0"; ?>">
+                                                            <input type="hidden" step="any" name="input_totalAmountCollected" value="<?php echo ($jobs_data) ? $jobs_data->amount_collected : "0.0"; ?>">
                                                         </div>
                                                         <div class="col-sm-4 mb-2">
                                                             <strong>Job Gross Profit:</strong>&nbsp;&nbsp;<span id="totalJobGrossProfit">$0</span>
-                                                            <input class="d-none" type="number" step="any" name="input_totalJobGrossProfit" value="<?php echo ($jobs_data) ? $jobs_data->gross_profit : "0.0"; ?>">
+                                                            <input class="" type="hidden" step="any" name="input_totalJobGrossProfit" value="<?php echo ($jobs_data) ? $jobs_data->gross_profit : "0.0"; ?>">
+                                                            <input id="CUSTOMER_PASS_THROUGH" type="hidden" type="any" value="0">
                                                         </div>
                                                         <div class="col-lg-12 d-none">
                                                             Customer Funded Amount/Purchase Price: <input id="CUSTOMER_FUNDED_AMOUNT" type="number" type="any" value="0"><br>
-                                                            Customer Pass Through Cost: <input id="CUSTOMER_PASS_THROUGH" type="number" type="any" value="0"><br>
+                                                            <!-- Customer Pass Through Cost: <input id="CUSTOMER_PASS_THROUGH" type="number" type="any" value="0"><br> -->
                                                             Sales Rep BS: <input id="SRBS_1" type="number" type="any" value="0"><br>
                                                             Tech Rep 1 BS: <input id="TRBS_1" type="number" type="any" value="0"><br>
                                                             Tech Rep 2 BS: <input id="TRBS_2" type="number" type="any" value="0"><br>
