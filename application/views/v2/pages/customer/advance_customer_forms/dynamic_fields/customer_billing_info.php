@@ -125,11 +125,11 @@
                 </div>
             </div>
         </div>
+
         <div class="row form_line" <?= isCustomerFieldEnabled($companyFormSetting, 'billing-information', 'bill_freq') == 0 ? 'style="display:none;"' : ''; ?>>
             <div class="col-md-6"><?= getCustomerFieldValue($companyFormSetting, 'billing-information', 'bill_freq'); ?></div>
             <div class="col-md-6">
-                <select data-type="billing_frequency" id="bill_freq" name="bill_freq" data-customer-source="dropdown" class="input_select searchable-dropdown">
-                    <option <?php if(isset($billing_info)){ if($billing_info->bill_freq == ""){echo "selected";} } ?> value="">- Select -</option>
+                <select data-type="bill_frequency" id="bill_freq" name="bill_freq" data-customer-source="dropdown" class="input_select searchable-dropdown">
                     <option <?php if(isset($billing_info)){ if($billing_info->bill_freq == "One Time Only"){echo "selected";} } ?> value="One Time Only">One Time Only</option>
                     <option <?php if(isset($billing_info)){ if($billing_info->bill_freq == "Every 1 Month"){echo "selected";} } ?> value="Every 1 Month">Every 1 Month</option>
                     <option <?php if(isset($billing_info)){ if($billing_info->bill_freq == "Every 3 Months"){echo "selected";} } ?> value="Every 3 Months">Every 3 Months</option>
@@ -142,7 +142,7 @@
         <div class="row form_line" <?= isCustomerFieldEnabled($companyFormSetting, 'billing-information', 'contract_term') == 0 ? 'style="display:none;"' : ''; ?>>
             <div class="col-md-6"><?= getCustomerFieldValue($companyFormSetting, 'billing-information', 'contract_term'); ?></div>
             <div class="col-md-6">
-                <select data-type="billing_contract_term" id="contract_term" name="contract_term" data-customer-source="dropdown" class="input_select searchable-dropdown" >
+                <select data-type="billing_contract_term" id="contract_term" name="contract_term" data-customer-source="dropdown" class="input_select searchable-dropdown">
                     <option <?php if(isset($billing_info)){ if($billing_info->contract_term == 0){echo "selected";} } ?> value="0">None</option>
                     <option <?php if(isset($billing_info)){ if($billing_info->contract_term == 1){echo "selected";} } ?> value="1">1 month</option>
                     <option <?php if(isset($billing_info)){ if($billing_info->contract_term == 6){echo "selected";} } ?> value="6">6 months</option>
@@ -208,7 +208,7 @@
                 </select>
             </div>
         </div>   
-        <?php if( $billing_info && $billing_info->next_billing_date != '' ){ ?>
+        <?php //if( $billing_info && $billing_info->next_billing_date != '' ){ ?>
         <div class="row form_line">
             <div class="col-md-6">
                 Next Billing Date
@@ -220,10 +220,12 @@
                         $next_billing_date = date("m/d/Y", strtotime($billing_info->next_billing_date));
                     }
                 ?>
-                <input type="text" class="form-control" value="<?= $next_billing_date; ?>" disabled="" />
+                <div id="next-bill-date-container" class="next-bill-date-container">
+                    <input type="text" id="next-bill-date" class="form-control next-bill-date" value="<?= $next_billing_date; ?>" disabled="disabled" />
+                </div>
             </div>
         </div> 
-        <?php } ?>
+        <?php //} ?>
         <div class="row form_line" <?= isCustomerFieldEnabled($companyFormSetting, 'billing-information', 'late_fee') == 0 ? 'style="display:none;"' : ''; ?>>
             <div class="col-md-6"><?= getCustomerFieldValue($companyFormSetting, 'billing-information', 'late_fee'); ?></div>
             <div class="col-md-6">

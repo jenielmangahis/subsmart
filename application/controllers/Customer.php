@@ -15698,6 +15698,8 @@ class Customer extends MY_Controller
 
                 if( $companyAdmins || $ownerAdmins ){
                     $email_data['customer_name'] = $customer->first_name . ' ' . $customer->last_name;
+                    $email_data['name'] = 'Sir/Madam';
+
                     $cancellation_url = base_url('customer/cancellation_request/'.$customer->prof_id);
                     $email_data['cancellation_url'] = $cancellation_url;
                     $body = $this->load->view('v2/emails/customer_cancellation_request', $email_data, true);
@@ -15712,17 +15714,14 @@ class Customer extends MY_Controller
 
                         //$mail->addAddress('bryann.revina03@gmail.com', 'bryann.revina03@gmail.com');
             
-                        $email_data['name'] = "";
                         if($companyAdmins) {
                             foreach($companyAdmins as $companyAdmin) {
-                                $email_data['name'] = $companyAdmin->FName;
                                 $mail->addAddress($companyAdmin->email, $companyAdmin->email);
                             }
                         }
                         
                         if($ownerAdmins) {
                             foreach($ownerAdmins as $ownerAdmin) {
-                                $email_data['name'] = $ownerAdmin->FName;
                                 $mail->addAddress($ownerAdmin->email, $ownerAdmin->email);
                             }                            
                         }
@@ -15752,8 +15751,9 @@ class Customer extends MY_Controller
                                                                                             
                         $mail->FromName = 'nSmarTrac';  
                         $recipient_name = $companyAdmin->FName . ' ' . $companyAdmin->LName;
+                                   
                         $mail->setFrom('noreply@nsmartrac.com', 'nSmartrac');
-                        $mail->addAddress($companyAdmin->email, $recipient_name);
+                        $mail->addAddress('bryann.revina03@gmail.com', 'Bryann Revina');
                         $mail->isHTML(true);
                         $mail->Subject = "Customer Request for Cancellation";
                         $mail->Body = $body;
@@ -16538,5 +16538,41 @@ class Customer extends MY_Controller
         $this->page_data['page']->title = 'Alarm Service Providers';
         $this->page_data['page']->parent = 'Customers';
         $this->load->view('v2/pages/customer/settings_alarm_service_providers', $this->page_data);
+    }
+
+    public function ajax_get_next_bill_date()
+    {
+        $next_billing_date = "";
+        $post = $this->input->post();
+
+        $input_billing = [];
+        switch ($post['bill_freq']) {
+            case 'One Time Only':
+                $billing_frequency = 0;
+                break;
+            case 'Every 1 Month':
+                $billing_frequency = 1;
+                break;
+            case 'Every 3 Months':
+                $billing_frequency = 3;
+                break;
+            case 'Every 6 Months':
+                $billing_frequency = 6;
+                break;
+            case 'Every 1 Year':
+                $billing_frequency = 12;
+                break;
+            default:
+                $billing_frequency = 1;
+                break;
+        }
+
+        if($post['bill_start_date']) {
+            $next_billing_date  = date('m/'.$post['bill_day'].'/Y', strtotime('+'.$billing_frequency.' months', strtotime($post['bill_start_date'])));
+            $next_billing_date  = date('m/d/Y', strtotime($next_billing_date));
+        }
+
+        $this->page_data['next_billing_date'] = $next_billing_date;
+        $this->load->view('v2/pages/customer/ajax_get_next_bill_date', $this->page_data);
     }
 }
