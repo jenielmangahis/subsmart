@@ -566,7 +566,7 @@ class Customer_advance_model extends MY_Model
         $this->db->where("(acs_profile.first_name != '')");
         $this->db->where("(acs_profile.last_name != '')");
     
-    
+        $this->db->group_by('prof_id');
         $this->db->order_by('prof_id', 'desc');
 
         $query = $this->db->get();

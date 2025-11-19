@@ -356,7 +356,7 @@
                             const status = cust.status ? cust.status : "Not Specified";
 
                             return `
-                                <tr>
+                                <tr class="customer_${cust.id}">
                                     <td class="text-nowrap">
                                         <div class="d-flex cursor-pointer" onclick="window.location.href = '${window.origin}/customer/module/${cust.id}' ">
                                             <div class="nsm-profile">
@@ -386,7 +386,7 @@
                                                 <li><a class="dropdown-item" href="${window.origin}/customer/add_advance/${cust.id}">Edit</a></li>
                                                 <li><a class="dropdown-item" href="${window.origin}/job/new_job1?cus_id=${cust.id}">Schedule</a></li>
                                                 <li><a class="dropdown-item favorite-customer" href="javascript:void(0);" data-favorite="0" data-name="${name}" data-id="${cust.id}">Add to Favorites</a></li>
-                                                <li><a class="dropdown-item delete-customer" href="javascript:void(0);" data-name="${name}" data-id="${cust.id}" >Delete</a></li>
+                                                <li><a class="dropdown-item customerGroupDeleteCustomer" href="javascript:void(0);" customer_name="${name}" customer_id="${cust.id}">Delete</a></li>
                                             </ul>
                                         </div>
                                     </td>
@@ -466,6 +466,51 @@
             },
         });
     }
+
+    $(document).on('click', '.customerGroupDeleteCustomer', function () {
+        const customer_name = $(this).attr('customer_name');
+        const customer_id = $(this).attr('customer_id');
+
+        Swal.fire({
+            icon: "warning",
+            title: "Delete Customer",
+            html: `Are you sure you want to delete this check?<br><strong class='text-muted'>${customer_name}</strong>`,
+            showCancelButton: true,
+            confirmButtonText: "Proceed",
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $.ajax({
+                    type: "POST",
+                    url: `${window.origin}/customer/_delete_customer`,
+                    data: {
+                        cid: customer_id
+                    },
+                    dataType: "JSON",
+                    beforeSend: function() {
+                        Swal.fire({
+                            icon: "info",
+                            title: "Removing Customer!",
+                            html: "Please wait while the remove process is running...",
+                            allowOutsideClick: false,
+                            allowEscapeKey: false,
+                            didOpen: () => {
+                                Swal.showLoading();
+                            },
+                        });
+                    },
+                    success: function(response) {
+                        $(`.customer_${customer_id}`).remove();
+                        Swal.fire({
+                            icon: "success",
+                            title: "Entry Removed!",
+                            html: "Customer has been removed successfully.",
+                            showConfirmButton: false,
+                        });
+                    }
+                });
+            }
+        });
+    });
 
     
     // function getCustomerGroupBadge() {

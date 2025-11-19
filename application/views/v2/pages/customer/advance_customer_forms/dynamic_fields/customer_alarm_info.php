@@ -359,6 +359,7 @@
                     <option value="" selected=""></option>
                     <option <?= $service_provider == 'Alarm.com' ? 'selected="selected"' : ''; ?> value="Alarm.com">Alarm.com</option>
                     <option <?= $service_provider == 'AlarmNet' ? 'selected="selected"' : ''; ?> value="AlarmNet">AlarmNet</option>
+                    <option <?= $service_provider == 'None' ? 'selected="selected"' : ''; ?> value="None">None</option>
                 </select>
             </div>
         </div>

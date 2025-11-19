@@ -777,10 +777,10 @@
                             }
 
                             return `
-                                <tr>
+                                <tr class="customer_${cust.id}">
                                     <td class="text-nowrap"><input class="form-check-input verifyActiveCustomer" style="width: 16px; height: 16px;" customer_id="${cust.id}" type="checkbox" ${is_verified}></td>
                                     <td class="text-nowrap">
-                                        <div class="d-flex cursor-pointer" onclick="window.location.href = '${window.origin}/customer/module/${cust.id}'">
+                                        <div class="d-flex cursor-pointer" onclick="window.open('${window.origin}/customer/module/${cust.id}', 'popup', 'width=1200,height=800')">
                                             <div class="nsm-profile">
                                             <span>${initials}</span>
                                         </div>
@@ -808,10 +808,11 @@
                                         <div class='dropdown'>
                                             <button class='btn dropdown-toggle text-muted' type='button' id='activeCustomerButtonDropdown' data-bs-toggle='dropdown' aria-expanded='false'><i class='fas fa-ellipsis-v'></i></button>
                                             <ul class='dropdown-menu' aria-labelledby='activeCustomerButtonDropdown'>
-                                                <li><a class="dropdown-item" href="${window.origin}/customer/subscription/${cust.id}">View</a></li>
-                                                <li><a class="dropdown-item" href="${window.origin}/customer/add_advance/${cust.id}">Edit</a></li>
+                                                <li><a class="dropdown-item" href="javascript:void(0)" onclick="window.open('${window.origin}/customer/subscription/${cust.id}', 'popup', 'width=1200,height=800')">View</a></li>
+                                                <li><a class="dropdown-item" href="javascript:void(0)" onclick="window.open('${window.origin}/customer/add_advance/${cust.id}', 'popup', 'width=1200,height=800')">Edit</a></li>
+                                                <li><a class="dropdown-item" href="javascript:void(0)" onclick="window.open('${window.origin}/customer/module/${cust.id}', 'popup', 'width=1200,height=800')">Dashboard</a></li>
+                                                <li><a class="dropdown-item activeCustomerDelete" href="javascript:void(0);" customer_name="${name}" customer_id="${cust.id}" >Delete</a></li>
                                                 <li class=""><a class="dropdown-item activeCustomerRecurringStatus" href="javascript:void(0);" customer_id="${cust.id}">Recurring Status&ensp;${recurringStatusBadge2}</a></li>
-                                                <li><a class="dropdown-item" href="${window.origin}/customer/module/${cust.id}">Dashboard</a></li>
                                                 <li><a class="dropdown-item view-payment-item" href="javascript:void(0);" data-customer-id="${cust.id}" data-billing-id="">Payment History</a></li>
                                             </ul>
                                         </div>
@@ -1096,12 +1097,6 @@
         $('.activeCustomerCategoryFilter').val(value).change();
     });
 
-    $(function () {
-        getActiveCustomers();
-        getStatusBadge();
-        getCustomerGroupBadge()
-    });
-
     $(document).on('change', '.verifyActiveCustomer', function () {
         const state = $(this).prop('checked');
         const customer_id = $(this).attr('customer_id');
@@ -1256,7 +1251,57 @@
 
         $label.html(`${isShown ? '***' : full} <button class="btn text-muted btn-sm p-0 ms-2 toggleCVV">${isShown ? 'Show' : 'Hide'}</button>`);
     });
+    
+    $(document).on('click', '.activeCustomerDelete', function () {
+        const customer_name = $(this).attr('customer_name');
+        const customer_id = $(this).attr('customer_id');
 
+        Swal.fire({
+            icon: "warning",
+            title: "Delete Customer",
+            html: `Are you sure you want to delete this check?<br><strong class='text-muted'>${customer_name}</strong>`,
+            showCancelButton: true,
+            confirmButtonText: "Proceed",
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $.ajax({
+                    type: "POST",
+                    url: `${window.origin}/customer/_delete_customer`,
+                    data: {
+                        cid: customer_id
+                    },
+                    dataType: "JSON",
+                    beforeSend: function() {
+                        Swal.fire({
+                            icon: "info",
+                            title: "Removing Customer!",
+                            html: "Please wait while the remove process is running...",
+                            allowOutsideClick: false,
+                            allowEscapeKey: false,
+                            didOpen: () => {
+                                Swal.showLoading();
+                            },
+                        });
+                    },
+                    success: function(response) {
+                        $(`.customer_${customer_id}`).remove();
+                        Swal.fire({
+                            icon: "success",
+                            title: "Entry Removed!",
+                            html: "Customer has been removed successfully.",
+                            showConfirmButton: false,
+                        });
+                    }
+                });
+            }
+        });
+    });
+
+    $(function () {
+        getActiveCustomers();
+        getStatusBadge();
+        getCustomerGroupBadge()
+    });
 
 
     // $(document).on('click', '.dropdown-menu', function (e) {
