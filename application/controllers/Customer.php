@@ -5320,8 +5320,8 @@ class Customer extends MY_Controller
                         }                          
 
                     } else {
-                        $input_billing['next_billing_date'] = $exist->next_billing_date;
-                        $input_billing['next_subscription_billing_date'] = $exist->next_subscription_billing_date;
+                        $input_billing['next_billing_date'] = $next_billing_date; //$exist->next_billing_date;
+                        $input_billing['next_subscription_billing_date'] = $next_billing_date; //$exist->next_subscription_billing_date;
                     }                  
                 }
                 return $this->general->update_with_key_field($input_billing, $input['customer_id'], 'acs_billing', 'fk_prof_id');
