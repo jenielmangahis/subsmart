@@ -2389,6 +2389,7 @@ $route['customers/_update_service_provider'] = 'Customer/ajax_update_service_pro
 $route['customers/_delete_service_provider'] = 'Customer/ajax_delete_service_provider';
 $route['customer/_set_default_service_provider'] = 'Customer/ajax_set_default_service_provider';
 $route['customers/_delete_selected_service_providers'] = 'Customer/ajax_delete_selected_service_providers';
+$route['customer/_get_next_bill_date'] = 'Customer/ajax_get_next_bill_date';
 
 //Benchmark for Testing
 $route['benchmark/test_customer_subscription'] = 'Benchmark/test_customer_subscription';

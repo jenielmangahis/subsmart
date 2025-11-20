@@ -18,12 +18,13 @@
             placeholder: "Select Month Rate"
         });
         $("#bill_freq").select2({
-            placeholder: "Select"
+            placeholder: "Select Frequency"
         });
         $("#bill_day").select2({
             placeholder: "Select Billing Day"
         });
-        $("#contract_term").select2({
+        $("#contract_term").select2();
+        $("#bill_frequency").select2({
             placeholder: "Select Contract Term"
         });
         $("#bill_method").select2({
@@ -2060,5 +2061,35 @@
                 },
             });
         }
+
+        $('#contract_term, #bill_freq, #bill_start_date, #bill_end_date, #bill_day').on('change', function(){
+            setTimeout(function() {
+                autoComputeNextBillDate();
+            }, 500);             
+        });
+
     });
+
+    function autoComputeNextBillDate() {
+        var bill_freq = $(".bill_frequency").val();
+        var bill_day = $("#bill_day").val();    
+        var bill_start_date = $("#bill_start_date").val();
+        
+        $.ajax({
+            type: 'POST',
+            url: base_url + 'customer/_get_next_bill_date',
+            data: {
+                bill_freq:bill_freq,
+                bill_day:bill_day,
+                bill_start_date: bill_start_date
+            },
+            success: function(o) {
+                $('#next-bill-date-container').html(o);
+            },
+            beforeSend: function() {
+                $('#next-bill-date-container').html('<span class="bx bx-loader bx-spin"></span>');
+            }
+        });        
+
+    }
 </script>
