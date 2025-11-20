@@ -746,11 +746,18 @@ class Dashboard_model extends MY_Model
                             ELSE CONCAT(acs_profile.first_name, ' ', acs_profile.last_name) 
                         END AS customer,
                         CONCAT(acs_profile.city, ', ', acs_profile.state, ' ', acs_profile.zip_code) AS address,
-                        acs_profile.phone_h AS phone,
+                        CASE 
+                            WHEN acs_profile.phone_m IS NOT NULL 
+                                AND acs_profile.phone_m != '' 
+                            THEN acs_profile.phone_m
+                            ELSE acs_profile.phone_h
+                        END AS phone,
                         acs_profile.email AS email,
+                        acs_alarm.monitor_id AS monitor_id,
                         COUNT(invoices.id) AS invoice_records
                     FROM acs_profile
                     LEFT JOIN invoices ON invoices.customer_id = acs_profile.prof_id
+                    LEFT JOIN acs_alarm ON acs_alarm.fk_prof_id = acs_profile.prof_id
                     WHERE acs_profile.company_id = '{$company_id}'
                     GROUP BY acs_profile.prof_id, invoices.customer_id
                     ORDER BY acs_profile.prof_id DESC

@@ -3422,11 +3422,12 @@ class Debug extends MY_Controller {
             if($alarm){                
                 //if( $c->prof_id == 31100 ){
                     $panel_type = $alarm->panel_type;
-                    if (str_contains($panel_type, 'Honeywell')) {
+                    if (strpos($panel_type, 'Honeywell') !== false) {                    
                         $comm_type        = $alarm->comm_type;
                         $service_provider = 'AlarmNet';
                         $dealer           = 'AlarmNet';
-                        $account_cost     = $alarm->account_cost;
+                        $account_cost     = $alarm->account_cost > 3 ? 3 : $alarm->account_cost;
+                        $pass_thru_cost   = $alarm->pass_thru_cost;
 
                         $systemPackage = $this->SystemPackageType_model->getByNameAndCompanyId($comm_type, $company_id);
                         if( $systemPackage ){
@@ -3440,20 +3441,20 @@ class Debug extends MY_Controller {
                         }
 
                         $data = [
+                            'account_cost' => $account_cost,
+                            'pass_thru_cost' => $pass_thru_cost,
                             'dealer' => $dealer,
                             'service_provider' => $service_provider
                         ];
 
-                        $is_updated = $this->AcsAlarm_model->updateByAlarmId($alarm->alarm_id, $data);
+                        $is_updated = $this->AcsAlarm_model->updateByAlarmId($alarm->alarm_id, $data);                        
                         if( $is_updated > 0 ){
                             $data = ['is_checked' => 1];
                             $this->AcsProfile_model->updateCustomerByProfId($c->prof_id, $data);
                             $total_updated++;
                         }
-
                     }
                 //}
-                
             }
         }
 
