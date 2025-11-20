@@ -268,7 +268,7 @@
                         placeholder: "Search and select customer...",
                         valueField: 'id',
                         labelField: 'customer',
-                        searchField: ['customer', 'email', 'phone'],
+                        searchField: ['customer', 'email', 'phone', 'monitor_id'],
                         render: {
                             option: function(item, escape) {
                                 const name = item.customer.trim();

@@ -2384,6 +2384,12 @@ $route['customer/_set_default_customer_status'] = 'Customer/ajax_set_default_cus
 $route['customer/_delete_payment_image'] = 'CustomerDashboardQuickActions/ajaxDeleteCustomerDocument';
 $route['customer/_send_alarm_information_to_users'] = 'Customer/ajax_send_alarm_information_to_users';
 $route['customers/_delete_selected_internal_notes'] = 'Customer/ajax_delete_selected_internal_notes';
+$route['customers/_create_service_provider'] = 'Customer/ajax_create_service_provider';
+$route['customers/_update_service_provider'] = 'Customer/ajax_update_service_provider';
+$route['customers/_delete_service_provider'] = 'Customer/ajax_delete_service_provider';
+$route['customer/_set_default_service_provider'] = 'Customer/ajax_set_default_service_provider';
+$route['customers/_delete_selected_service_providers'] = 'Customer/ajax_delete_selected_service_providers';
+$route['customer/_get_next_bill_date'] = 'Customer/ajax_get_next_bill_date';
 
 //Benchmark for Testing
 $route['benchmark/test_customer_subscription'] = 'Benchmark/test_customer_subscription';
