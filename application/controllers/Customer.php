@@ -3933,6 +3933,7 @@ class Customer extends MY_Controller
         $this->load->model('AcsAlarmMonitoringCompany_model');
         $this->load->model('AcsAlarmReceiverPhoneNumber_model');
         $this->load->model('CustomerStatus_model');
+        $this->load->model('AcsAlarmServiceProvider_model');
 
         $this->hasAccessModule(9);
 
@@ -4215,6 +4216,9 @@ class Customer extends MY_Controller
         $defaultReceiverPhoneNumber = $this->AcsAlarmReceiverPhoneNumber_model->getCompanyDefaultValue($company_id);
         $defaultCustomerStatus = $this->CustomerStatus_model->getCompanyDefaultValue($company_id);
 
+        $serviceProviders = $this->AcsAlarmServiceProvider_model->getAllByCompanyId($company_id);
+        $defaultServiceProvider = $this->AcsAlarmServiceProvider_model->getCompanyDefaultValue($company_id);
+
         // search Alarm.com customer
         $this->load->helper(array('alarm_api_helper'));    
         $alarmApi = new AlarmApi();
@@ -4269,6 +4273,8 @@ class Customer extends MY_Controller
         $this->page_data['receiverPhoneNumbers'] = $receiverPhoneNumbers;
         $this->page_data['defaultReceiverPhoneNumber'] = $defaultReceiverPhoneNumber;
         $this->page_data['defaultCustomerStatus'] = $defaultCustomerStatus;
+        $this->page_data['serviceProviders'] = $serviceProviders;
+        $this->page_data['defaultServiceProvider'] = $defaultServiceProvider;
         //$this->load->view('v2/pages/customer/add', $this->page_data);
         $this->load->view('v2/pages/customer/add_dynamic_fields', $this->page_data);
     }
@@ -16724,7 +16730,7 @@ class Customer extends MY_Controller
 
         echo json_encode($return);
 	}
-    
+
     public function ajax_get_next_bill_date()
     {
         $next_billing_date = "";
