@@ -60,7 +60,7 @@
 
                 </div>
                 <div class="" id="ledger-invoice-container" style="overflow: auto;">
-                    <table class="nsm-table" id="invoice-items-table" style="font-size: 12px !important; width:535px; overflow: auto;">
+                    <table class="nsm-table" id="invoice-items-table" style="font-size: 12px !important; overflow: auto;">
                         <thead>
                             <tr style="font-size: 12px !important;">
                                 <td class="table-icon text-center sorting_disabled"></td>
@@ -114,7 +114,16 @@
                                         <td><span class="nsm-badge <?= $badge ?>"><?php echo $invoice->INV_status ?></span></td>
                                         <td>$<?php echo ($invoice->grand_total); ?></td>
                                         <td class="text-end">
-                                            <a role="button" class="nsm-button btn-sm" href="<?= base_url('invoice/send/' . $invoice->id); ?>" target="_blank">Email Invoice</a>
+                                            <div class="dropdown table-management">
+                                                <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown">
+                                                    <i class='bx bx-fw bx-dots-vertical-rounded'></i>
+                                                </a>
+                                                <ul class="dropdown-menu dropdown-menu-end">
+                                                    <li><a class="dropdown-item" href="<?= base_url('invoice/send/' . $invoice->id); ?>" target="_blank">Email Invoice</a></li>
+                                                    <li><a class="dropdown-item btn-ledger-record-payment" href="javascript:void(0);" data-status="<?= $invoice->status; ?>" data-id="<?php echo $invoice->id ?>">Record Payment</a></li>
+                                                    <li><a class="dropdown-item btn-ledger-show-payments" href="avascript:void(0);" data-status="<?= $invoice->status; ?>" data-id="<?php echo $invoice->id ?>">View Payments</a></li>
+                                                </ul>
+                                            </div>
                                         </td>
                                     </tr>
                                 <?php
@@ -145,10 +154,232 @@
             </div>
         </div>
     </div>
+
+    <!-- Modal Record Payment -->
+    <div class="modal fade nsm-modal fade" id="modalRecordPaymentForm" tabindex="-1" aria-labelledby="modalRecordPaymentForm_label" aria-hidden="true">
+        <div class="modal-dialog modal-md modal-dialog-centered">                    
+            <div class="modal-content" style="width:580px;">
+                <div class="modal-header">
+                    <span class="modal-title content-title">Record Payment</span>
+                    <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
+                </div>
+                <div class="modal-body">
+                    <form id="frm-record-payment" method="POST">
+                        <input type="hidden" name="invoice_id" id="record_payment_invoice_id" value="" />
+                        <div id="record-payment-container"></div>
+                    </form>
+                </div>
+                <div class="modal-footer">                    
+                    <button type="button" class="nsm-button" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" id="btn-record-payment" class="nsm-button primary" form="frm-record-payment">Save</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Edit Payment -->
+    <div class="modal fade nsm-modal fade" id="modalEditPaymentForm" tabindex="-1" aria-labelledby="modalEditPaymentForm_label" aria-hidden="true">
+        <div class="modal-dialog modal-md modal-dialog-centered">
+            <form id="frm-update-payment" method="POST">
+                <input type="hidden" name="invoice_payment_id" id="invoice_payment_id" value="" />
+                <div class="modal-content" style="width:560px;">
+                    <div class="modal-header">
+                        <span class="modal-title content-title">Edit Payment</span>
+                        <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
+                    </div>
+                    <div class="modal-body" id="edit-invoice-payment-container"></div>
+                    <div class="modal-footer">                    
+                        <button type="button" class="nsm-button" data-bs-dismiss="modal">Cancel</button>
+                        <button type="submit" id="btn-update-invoice-payment" class="nsm-button primary">Save</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal View Payments -->
+    <div class="modal fade" id="modalViewPaymentForm" data-bs-backdrop="static" role="dialog">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <span class="modal-title content-title" style="font-size: 17px;">Invoice Payments</span>
+                    <button class="border-0 rounded mx-1" data-bs-dismiss="modal" style="cursor: pointer;"><i class="fas fa-times m-0 text-muted"></i></button>
+                </div>
+                <div class="modal-body">
+                    <form id="frm-record-payment" method="POST">       
+                        <input type="hidden" name="invoice_id" id="void_payment_invoice_id" value="" />          
+                        <div id="view-payments-container"></div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
 </div>
 <script>
 $(function(){
     customerLedger();
+
+    $(document).on('click touchstart', '.btn-ledger-show-payments', function(){
+        var invoice_id = $(this).attr('data-id');
+
+        $('#modalViewPaymentForm').modal('show');
+        showLoader($("#view-payments-container")); 
+        $('#void_payment_invoice_id').val(invoice_id);
+
+        $.ajax({
+            url: base_url + "invoice/_load_view_payments_form",
+            type: "POST",
+            data: {
+                invoice_id: invoice_id
+            },
+            success: function (response) {
+                $("#view-payments-container").html(response);
+            },
+        });
+    });
+
+    $(document).on('click', '.btn-edit-invoice-payment', function(){
+        let payment_id = $(this).attr('data-id');
+        $('#modalViewPaymentForm').modal('hide');
+        $('#modalEditPaymentForm').modal('show');
+        $('#invoice_payment_id').val(payment_id);
+
+        $.ajax({
+            type: "POST",
+            url: base_url + 'invoice/_edit_invoice_payment_form',
+            data: {payment_id:payment_id},
+            success: function(html)
+            {          
+                $("#edit-invoice-payment-container").html(html);
+            }
+        });
+    });
+
+    $(document).on('submit', '#frm-update-payment', function(e){
+        e.preventDefault();
+        var url  = base_url + 'invoice/_update_invoice_payment';
+
+        var formData = new FormData($('#frm-update-payment')[0]);
+        formData.append('attachment',$('#edit-payment-attachment').get(0).files[0]);
+
+        var form = $(this);
+        $.ajax({
+            type: "POST",
+            url: url,
+            dataType:'json',
+            data: formData, 
+            contentType: false,
+            cache: false,
+            processData: false,
+            success: function(data) {
+                if( data.is_success == 1 ){
+                    $('#modalEditPaymentForm').modal('hide');
+                    
+                    Swal.fire({
+                        text: 'Invoice payment was successfully updated',
+                        icon: 'success',
+                        showCancelButton: false,
+                        confirmButtonColor: '#6a4a86',
+                        cancelButtonColor: '#d33',
+                        confirmButtonText: 'Ok'
+                    }).then((result) => {
+                        //location.reload();
+                    });    
+                }else{
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error!',
+                        html: data.msg
+                    });
+                }
+                
+                $("#modalEditPaymentForm #btn-update-invoice-payment").html('Save');
+            }, beforeSend: function() {
+                $("#modalEditPaymentForm #btn-update-invoice-payment").html('<span class="bx bx-loader bx-spin"></span>');
+            }
+        });
+    });
+
+    $(document).on('click touchstart', '.btn-ledger-record-payment', function(){
+        var invoice_id = $(this).attr('data-id');
+        var invoice_status = $(this).attr('data-status');
+
+        if( invoice_status == 'Paid' ){
+            Swal.fire({
+                text: 'Invoice already paid. Cannot make any more payment.',
+                icon: 'warning',
+                showCancelButton: false,
+                confirmButtonColor: '#6a4a86',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Ok'
+            }).then((result) => {
+                //location.reload();
+            });   
+        }else{
+            $('#modalRecordPaymentForm').modal('show');
+            showLoader($("#modalRecordPaymentForm #record-payment-container")); 
+            $('#record_payment_invoice_id').val(invoice_id);
+
+            $.ajax({
+                url: base_url + "invoice/_load_record_payment_form",
+                type: "POST",
+                data: {
+                    invoice_id: invoice_id
+                },
+                success: function (response) {
+                    $("#modalRecordPaymentForm #record-payment-container").html(response);
+                },
+            });
+        }
+    });
+
+    $(document).on('submit', '#frm-record-payment', function(e){
+        e.preventDefault();
+        var url  = base_url + 'invoice/_create_payment';
+
+        var formData = new FormData($('#frm-record-payment')[0]);
+        formData.append('attachment',$('#payment-attachment').get(0).files[0]);
+
+        var form = $(this);
+        $.ajax({
+            type: "POST",
+            url: url,
+            dataType:'json',
+            data: formData, 
+            contentType: false,
+            cache: false,
+            processData: false,
+            success: function(data) {
+                if( data.is_success == 1 ){
+                    $('#modalRecordPaymentForm').modal('hide');
+                    
+                    Swal.fire({
+                        text: 'Invoice payment was successfully created',
+                        icon: 'success',
+                        showCancelButton: false,
+                        confirmButtonColor: '#6a4a86',
+                        cancelButtonColor: '#d33',
+                        confirmButtonText: 'Ok'
+                    }).then((result) => {
+                        location.reload();
+                    });    
+                }else{
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error!',
+                        html: data.msg
+                    });
+                }
+                
+                $("#modalRecordPaymentForm #btn-record-payment").html('Save');
+            }, beforeSend: function() {
+                $("#modalRecordPaymentForm #btn-record-payment").html('<span class="bx bx-loader bx-spin"></span>');
+            }
+        });
+    });
+
     function customerLedger(){
         var customer_id = "<?= $cus_id; ?>";
         $.ajax({
