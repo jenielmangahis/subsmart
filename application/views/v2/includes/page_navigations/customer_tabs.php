@@ -76,7 +76,7 @@
             </a>
         </li>
         <?php } ?>
-        <li class="<?php if($page->title == 'Sales Area' || $page->title == 'Lead Source' || $page->title == 'Lead Types' || $page->title == 'Rate Plans' || $page->title == 'Activation Fee' || $page->title == 'System Package Type' || $page->title == 'Headers' || $page->title == 'Financing Categories' || $page->title == 'Customer Status' || $page->title == 'Import Settings' || $page->title == 'Export Settings' || $page->title == 'Solar Lender Types' || $page->title == 'Solar System Size' || $page->title == 'Solar Proposed Modules' || $page->title == 'Form Settings' || $page->title == 'Creditors / Furnishers' || $page->title == 'Lost Reasons' || $page->title == 'Alarm Installer Codes' || $page->title == 'Alarm Site Types' || $page->title == 'Alarm Monitoring Companies' || $page->title == 'Service Packages'): echo 'active'; endif; ?>">
+        <li class="<?php if($page->title == 'Sales Area' || $page->title == 'Lead Source' || $page->title == 'Lead Types' || $page->title == 'Rate Plans' || $page->title == 'Activation Fee' || $page->title == 'System Package Type' || $page->title == 'Headers' || $page->title == 'Financing Categories' || $page->title == 'Customer Status' || $page->title == 'Import Settings' || $page->title == 'Export Settings' || $page->title == 'Solar Lender Types' || $page->title == 'Solar System Size' || $page->title == 'Solar Proposed Modules' || $page->title == 'Form Settings' || $page->title == 'Creditors / Furnishers' || $page->title == 'Lost Reasons' || $page->title == 'Alarm Installer Codes' || $page->title == 'Alarm Site Types' || $page->title == 'Alarm Monitoring Companies' || $page->title == 'Service Packages' || $page->title == 'Alarm Service Providers'): echo 'active'; endif; ?>">
             <div class="dropdown" id="test_dropdown">
                 <a class="nsm-page-link dropdown-toggle" role="button" href="javascript:void(0);">
                     <i class='bx bx-fw bx-cog'></i>
@@ -108,6 +108,7 @@
                         <li><a class="dropdown-item" href="<?php echo base_url('customer/settings_alarm_installer_codes') ?>">Alarm Installer Codes</a></li>
                         <li><a class="dropdown-item" href="<?php echo base_url('customer/settings_alarm_site_types') ?>">Alarm Site Types</a></li>
                         <li><a class="dropdown-item" href="<?php echo base_url('customer/settings_alarm_receiver_phone_numbers') ?>">Alarm Receiver Phone Numbers</a></li>
+                        <li><a class="dropdown-item" href="<?php echo base_url('customer/settings_alarm_service_providers') ?>">Alarm Service Providers</a></li>
                     <?php } ?>
                     <li><a class="dropdown-item" href="<?php echo base_url('customer/settings_headers') ?>">Header</a></li>
                     <li><a class="dropdown-item" href="<?= base_url('customer/settings_import') ?>">Import Settings</a></li>

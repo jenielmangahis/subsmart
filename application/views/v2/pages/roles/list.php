@@ -3,10 +3,7 @@
 
 <div class="row page-content g-0">
     <div class="col-12 mb-3">
-        <?php include viewPath('v2/includes/page_navigations/accounting/tabs/payroll'); ?>
-    </div>
-    <div class="col-12 mb-3">
-        <?php include viewPath('v2/includes/page_navigations/accounting/subtabs/employees_subtabs'); ?>
+        <?php include viewPath('v2/includes/page_navigations/employees_tabs'); ?>
     </div>
     <div class="col-12">
         <div class="nsm-page">

@@ -361,6 +361,7 @@
                     <option <?= $service_provider == 'AlarmNet' ? 'selected="selected"' : ''; ?> value="AlarmNet">AlarmNet</option>
                     <option <?= $service_provider == 'None' ? 'selected="selected"' : ''; ?> value="None">None</option>
                 </select>
+                <a href="javascript:void(0);" class="nsm-button btn-small" id="btn-quick-service-provider"><span class="fa fa-plus"></span> Add Service Provider</a>   
             </div>
         </div>
         <div class="row form_line" <?= isCustomerFieldEnabled($companyFormSetting, 'alarm-information', 'comm_type') == 0 ? 'style="display:none;"' : ''; ?>>

@@ -16539,4 +16539,189 @@ class Customer extends MY_Controller
         $this->page_data['page']->parent = 'Customers';
         $this->load->view('v2/pages/customer/settings_alarm_service_providers', $this->page_data);
     }
+
+    public function ajax_create_service_provider()
+    {
+        $this->load->model('AcsAlarmServiceProvider_model');
+
+        if(!checkRoleCanAccessModule('customer-settings', 'write')){
+			show403Error();
+			return false;
+		}
+
+        $is_success = 0;
+        $msg = 'Cannot save data';
+        $service_provider_id   = 0;
+        $service_provider_name = '';
+
+        $company_id = logged('company_id');
+        $post = $this->input->post();
+
+        $isExists = $this->AcsAlarmServiceProvider_model->getByNameAndCompanyId($post['service_provider'], $company_id);
+        if( $isExists ){
+            $msg = 'Service provider name ' . $post['service_provider'] . ' already exists.';
+        }elseif( $post['service_provider'] == '' ){
+            $msg = 'Please enter monitoring company name';
+        }else{
+            $data = [
+                'company_id' => $company_id,
+                'name' => $post['service_provider'],
+                'date_created' => date("Y-m-d H:i:s"),
+                'date_updated' => date("Y-m-d H:i:s")
+            ];
+
+            $service_provider_id = $this->AcsAlarmServiceProvider_model->create($data);
+            $service_provider_name = $post['service_provider'];
+
+            //Activity Logs
+            $activity_name = 'Service Providers : Created service provider ' . $post['service_provider']; 
+            createActivityLog($activity_name);
+
+            $is_success = 1;
+            $msg = '';
+        }
+
+        $return = ['is_success' => $is_success, 'msg' => $msg, 'service_provider_id' => $service_provider_id, 'service_provider_name' => $service_provider_name];
+        echo json_encode($return);
+    }
+
+    public function ajax_update_service_provider()
+    {
+        $this->load->model('AcsAlarmServiceProvider_model');
+
+        if(!checkRoleCanAccessModule('customer-settings', 'write')){
+			show403Error();
+			return false;
+		}
+
+        $is_success = 0;
+        $msg = 'Cannot find data';
+
+        $company_id = logged('company_id');
+        $post = $this->input->post();
+
+        $isExists = $this->AcsAlarmServiceProvider_model->getByNameAndCompanyId($post['service_provider'], $company_id);
+        if( $isExists && $post['service_provider_id'] != $isExists->id ){
+            $msg = 'Service provider name ' . $post['service_provider'] . ' already exists.';
+        }elseif( $post['service_provider'] == '' ){
+            $msg = 'Please enter service provider name';
+        }else{
+            $serviceProvider = $this->AcsAlarmServiceProvider_model->getByIdAndCompanyId($post['service_provider_id'], $company_id);
+            if( $serviceProvider ){
+                $data = [
+                    'name' => $post['service_provider'],
+                    'date_updated' => date("Y-m-d H:i:s")
+                ];
+
+                $this->AcsAlarmServiceProvider_model->update($serviceProvider->id, $data);
+
+                //Activity Logs
+                $activity_name = 'Service Providers : Updated service provider ' . $post['service_provider']; 
+                createActivityLog($activity_name);
+
+                $is_success = 1;
+                $msg = '';
+            }
+        }
+
+        $return = ['is_success' => $is_success, 'msg' => $msg];
+        echo json_encode($return);
+    }
+
+    public function ajax_delete_service_provider()
+	{
+		$this->load->model('AcsAlarmServiceProvider_model');
+
+		$is_success = 0;
+        $msg    = 'Please select data';
+
+        $company_id  = logged('company_id');
+        $post = $this->input->post();
+
+        $serviceProvider = $this->AcsAlarmServiceProvider_model->getByIdAndCompanyId($post['id'], $company_id);
+        if ($serviceProvider) {
+            $this->AcsAlarmServiceProvider_model->delete($serviceProvider->id);
+
+            //Activity Logs
+            $activity_name = 'Service Providers : Deleted service provider ' . $serviceProvider->name; 
+            createActivityLog($activity_name);
+
+            $is_success = 1;
+            $msg = '';
+        }
+
+        $return = [
+            'is_success' => $is_success,
+            'msg' => $msg,
+        ];
+
+        echo json_encode($return);
+	}
+
+    public function ajax_set_default_service_provider()
+    {
+        $this->load->model('AcsAlarmServiceProvider_model');
+
+        $is_success = 0;
+        $msg = 'Cannot find record';
+
+        $company_id = logged('company_id');
+        $post = $this->input->post();
+
+        $serviceProvider = $this->AcsAlarmServiceProvider_model->getByIdAndCompanyId($post['id'], $company_id);
+        if ($serviceProvider) {
+            $this->AcsAlarmServiceProvider_model->resetDefaultByCompanyId($company_id);
+            $this->AcsAlarmServiceProvider_model->update($serviceProvider->id, ['is_default' => 'Yes']);
+
+            //Activity Logs
+            $activity_name = 'Service Providers : Set default value to ' . $serviceProvider->name; 
+            createActivityLog($activity_name);
+
+            $is_success = 1;
+            $msg = '';
+        }
+
+        $json_data = [
+            'is_success' => $is_success,
+            'msg' => $msg,
+        ];
+
+        echo json_encode($json_data);
+    }
+
+    public function ajax_delete_selected_service_providers()
+	{
+		$this->load->model('AcsAlarmServiceProvider_model');
+
+		$is_success = 0;
+        $msg    = 'Please select data';
+
+        $company_id  = logged('company_id');
+        $post = $this->input->post();
+
+        if( $post['serviceProviders'] ){
+
+            $filters[] = ['field' => 'company_id', 'value' => $company_id];
+            $total_deleted = $this->AcsAlarmServiceProvider_model->bulkDelete($post['serviceProviders'], $filters);
+
+			//Activity Logs
+            if( $total_deleted > 1 ){
+                $activity_name = 'Service Providers : Deleted ' .$total_deleted. ' service providers'; 
+            }else{
+                $activity_name = 'Service Providers : Deleted ' .$total_deleted. ' service provider'; 
+            }
+			
+			createActivityLog($activity_name);
+
+            $is_success = 1;
+            $msg    = '';
+        }
+
+        $return = [
+            'is_success' => $is_success,
+            'msg' => $msg
+        ];
+
+        echo json_encode($return);
+	}
 }
