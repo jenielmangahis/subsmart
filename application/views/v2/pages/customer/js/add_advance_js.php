@@ -1403,6 +1403,40 @@
             });
         });
 
+        $('#quick-add-service-provider').on('submit', function(e){
+            e.preventDefault();
+            $.ajax({
+                type: "POST",
+                url: base_url + 'customers/_create_service_provider',
+                dataType: 'json',
+                data: $('#quick-add-service-provider').serialize(),
+                success: function(data) {    
+                    $('#btn-quick-add-service-provider').html('Save');                   
+                    if (data.is_success) {
+                        $('#quick_add_service_provider_modal').modal('hide');
+                        $('#service_provider').append($('<option>', {
+                            value: data.service_provider_name,
+                            text: data.service_provider_name,
+                        }));
+                        $('#service_provider').val(data.service_provider_name);
+                    }else{
+                        Swal.fire({
+                            title: 'Error',
+                            text: data.msg,
+                            icon: 'error',
+                            showCancelButton: false,
+                            confirmButtonText: 'Okay'
+                        }).then((result) => {
+                            
+                        });
+                    }
+                },
+                beforeSend: function() {
+                    $('#btn-quick-add-service-provider').html('<span class="bx bx-loader bx-spin"></span>');
+                }
+            });
+        });
+
         $('#btn-quick-panel-type').on('click', function(){
             $('#frm-add-panel-type')[0].reset();
             $('#modal-add-panel-type').modal('show');
@@ -1445,6 +1479,13 @@
         $('#btn-manage-service-package').on('click', function(){
             window.open(
                 base_url + 'customer/settings_system_package',
+                '_blank' 
+            );
+        });
+
+        $('#btn-manage-service-provider').on('click', function(){
+            window.open(
+                base_url + 'customer/settings_alarm_service_providers',
                 '_blank' 
             );
         });
@@ -1993,6 +2034,11 @@
         $('#btn-quick-receiver-phone-number').on('click', function(){
             $('#frm-quick-add-receiver-phone-number')[0].reset();
             $('#quick_add_receiver_phone_number_modal').modal('show');
+        });
+
+        $('#btn-quick-service-provider').on('click', function(){
+            $('#frm-quick-add-receiver-phone-number')[0].reset();
+            $('#quick_add_service_provider_modal').modal('show');
         });
 
         function load_account_cost(){

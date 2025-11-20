@@ -544,3 +544,32 @@
         </div>
     </div>
 </div>
+
+<div class="modal fade nsm-modal fade" id="quick_add_service_provider_modal" tabindex="-1" aria-labelledby="quick_add_service_provider_modal_label" aria-hidden="true">
+    <div class="modal-dialog modal-md modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <span class="modal-title content-title">Add Service Provider</span>
+                <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
+            </div>
+            <div class="modal-body">
+                <form method="POST" id="quick-add-service-provider">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <label class="mb-2">Service Provider</label>
+                        <div class="input-group mb-3">
+                            <input type="text" name="service_provider" id="quick_add_service_provider" value="" class="form-control" required="" autocomplete="off" />
+                        </div>
+                    </div>                 
+                </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="nsm-button" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="nsm-button btn-fixed-width" id="btn-manage-service-provider">Manage</button>
+                <button type="submit" class="nsm-button primary" id="btn-quick-add-service-provider" form="quick-add-service-provider">Save</button>
+            </div>
+            </form>                
+        </div>
+    </div>
+</div>

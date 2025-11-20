@@ -350,17 +350,23 @@
             <div class="col-md-6"><?= getCustomerFieldValue($companyFormSetting, 'alarm-information', 'service_provider'); ?></div>
             <div class="col-md-6">
                 <?php 
-                    $service_provider = "Alarm.com";
+                    $service_provider = '';
+                    if( $defaultServiceProvider ){
+                        $service_provider = $defaultServiceProvider->name;
+                    }
+
                     if( $alarm_info && $alarm_info->service_provider != '' ){
                         $service_provider = $alarm_info->service_provider;
-                    } 
+                    }
+
                 ?>
                 <select id="service_provider" name="service_provider" data-customer-source="dropdown" class="form-select input_select" >
                     <option value="" selected=""></option>
-                    <option <?= $service_provider == 'Alarm.com' ? 'selected="selected"' : ''; ?> value="Alarm.com">Alarm.com</option>
-                    <option <?= $service_provider == 'AlarmNet' ? 'selected="selected"' : ''; ?> value="AlarmNet">AlarmNet</option>
-                    <option <?= $service_provider == 'None' ? 'selected="selected"' : ''; ?> value="None">None</option>
+                    <?php foreach($serviceProviders as $sp){ ?>
+                        <option <?= $service_provider == $sp->name ? 'selected="selected"' : ''; ?> value="<?= $sp->name; ?>"><?= $sp->name; ?></option>
+                    <?php } ?>
                 </select>
+                <a href="javascript:void(0);" class="nsm-button btn-small" id="btn-quick-service-provider"><span class="fa fa-plus"></span> Add Service Provider</a>   
             </div>
         </div>
         <div class="row form_line" <?= isCustomerFieldEnabled($companyFormSetting, 'alarm-information', 'comm_type') == 0 ? 'style="display:none;"' : ''; ?>>

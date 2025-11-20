@@ -4474,9 +4474,12 @@ function statesList(){
 }
 
 function getUserType($id){
-    $types = userTypes();
-    if( isset($types[$id]) ){
-        $type = $types[$id];
+    $CI =& get_instance();
+    $CI->load->model('Users_model');
+    
+    $user_types = $CI->Users_model->userTypes();
+    if( $user_types[$id] ){
+        $type = $user_types[$id]['name'];
     }else{
         $type = 'Standard User';
     }

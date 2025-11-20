@@ -44,7 +44,7 @@
                 </ul>
             </div>
         </li>        
-        <li class="<?php if ($page->title == 'My Schedule' || $page->title == 'Notification' || $page->title == 'Attendance Logs' || $page->title == 'Time Schedule' || $page->title == 'Role Access Modules' || $page->title == 'Roles' || $page->title == 'Shift Schedule' || $page->title == 'Timesheet Settings'): echo 'active';
+        <li class="<?php if ($page->title == 'My Schedule' || $page->title == 'Notification' || $page->title == 'Attendance Logs' || $page->title == 'Time Schedule' || $page->title == 'Role Access Modules' || $page->title == 'Roles' || $page->title == 'Shift Schedule' || $page->title == 'Timesheet Settings' || $page->title == 'Job Titles'): echo 'active';
                     endif; ?>">
             <div class="dropdown" id="test_dropdown">
                 <a class="nsm-page-link dropdown-toggle" role="button" href="javascript:void(0);">
