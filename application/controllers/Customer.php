@@ -9020,7 +9020,7 @@ class Customer extends MY_Controller
                         AND customer_list_view.profile_business_name != '' 
                         AND customer_list_view.profile_business_name != 'Not Specified' 
                     THEN customer_list_view.profile_business_name
-                    ELSE customer_list_view.customer_name
+                    ELSE CONCAT(customer_list_view.profile_last_name, ', ', customer_list_view.profile_first_name)
                 END AS `name`,
                 customer_list_view.customer_group_name AS `customer_group`,
                 customer_list_view.profile_customer_group_id AS `customer_group_id`,
