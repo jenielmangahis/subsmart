@@ -23,6 +23,9 @@
     width: 100%;
     text-align: center;
 }
+.nsm-row-collapse td .row{
+    text-align:center !important;
+}
 </style>
 <div class="nsm-fab-container">
     <div class="nsm-fab nsm-fab-icon nsm-bxshadow">
@@ -105,19 +108,17 @@
                     <thead>
                         <tr>
                             <?php if(checkRoleCanAccessModule('users', 'write')){ ?>
-                            <td class="table-icon text-center sorting_disabled">
+                            <td data-name="Select All" class="table-icon text-center sorting_disabled">
                                 <input class="form-check-input select-all table-select" type="checkbox" name="id_selector" value="0" id="select-all">
                             </td>
                             <?php } ?>
                             <td class="table-icon"></td>
                             <td data-name="User">User</td>
                             <td data-name="Employee Number">Employee Number</td>
-                            <td data-name="Mobile">Mobile</td>
                             <?php if ($show_pass == 1) : ?>
                                 <td data-name="Password">Password</td>
                             <?php endif; ?>                            
                             <td data-name="User Type">User Type</td>
-                            <td data-name="Job Title">Job Title</td>
                             <td data-name="Last Login">Last Login</td>
                             <td data-name="Status" style="width:5%;">Status</td>
                             <td data-name="App Access" style="width:6%;">App Access</td>
@@ -149,28 +150,17 @@
                                         <div class="nsm-profile" style="background-image: url('<?php echo userProfileImage($row->id); ?>');" data-img="<?php echo $data_img; ?>"></div>
                                     </td>
                                     <td class="nsm-text-primary show">
-                                        <label class="d-block fw-bold"><?php echo ucwords(strtolower($row->FName)) . ' ' . ucwords(strtolower($row->LName)); ?></label>
+                                        <label class="d-block fw-bold"><?php echo ucwords(strtolower($row->FName)) . ' ' . ucwords(strtolower($row->LName)); ?></label>                                        
+                                        <label class="content-subtitle d-block"><i class='bx bx-envelope' style="position:relative;top:2px;"></i> <?php echo $row->email ?></label>
+                                        <label class="content-subtitle d-block" style="margin-top:3px;"><i class='bx bx-phone' style="position:relative;top:1px;"></i> <?php echo $row->mobile != '' ? formatPhoneNumber($row->mobile) : '---'; ?></label>
+                                        <label class="content-subtitle d-block" style="margin-top:3px;"><i class='bx bx-briefcase' style="position:relative;top:1px;"></i> <?= $row->job_title != '' ? $row->job_title : '---'; ?></label>
                                         
-                                        <label class="content-subtitle d-block"><i class='bx bx-envelope' style="position:relative;top:1px;"></i><?php echo $row->email ?></label>
-                                    </td>
-                                    <td>
-                                        <?php
-                                        if ($row->employee_number != '' && $row->employee_number != '-') {
-                                            $employee_number = $row->employee_number;
-                                        } else {
-                                            $employee_number = '---';
-                                        }
-                                        ?>
-                                        <?= $employee_number; ?>
                                     </td>
                                     <td><?php echo $row->mobile != '' ? formatPhoneNumber($row->mobile) : '---'; ?></td>
                                     <?php if ($show_pass == 1) : ?>
                                         <td><?php echo $row->password_plain ?></td>
                                     <?php endif; ?>                                    
                                     <td><?php echo getUserType($row->user_type); ?></td>
-                                    <td>
-                                        <?= $row->job_title != '' ? $row->job_title : '---'; ?>
-                                    </td>
                                     <td><?php echo date('m/d/Y', strtotime($row->last_login)); ?></td>
                                     <td>
                                         <?php
