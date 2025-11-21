@@ -1194,12 +1194,21 @@ tr {
                                                     <!-- <div id="companyrep"></div> -->
                                                 </div>
                                             <?php if($workorder->company_representative_signature != '') { ?>
-                                                <img src="<?php echo base_url($workorder->company_representative_signature); ?>" class="img1">
+                                                <?php 
+                                                    $is_signature_exist = false;   
+                                                    if (file_exists($workorder->company_representative_signature)) {
+                                                        $is_signature_exist = true;
+                                                    }                              
+                                                ?>                             
+                                                <?php if($is_signature_exist) { ?>        
+                                                    <br />            
+                                                    <img src="<?php echo base_url($workorder->company_representative_signature); ?>" class="img1">
+                                                <?php } ?>
                                             <?php } ?>
                                             <div id="companyrep"></div>
                                             <br>
 
-                                            <label for="comp_rep_approval">Printed Name</label>
+                                            <label for="comp_rep_approval" style="">Printed Name</label>
                                             <!-- <input type="text" class="form-control mb-3"
                                                 name="company_representative_printed_name"
                                                 id="comp_rep_approval" value="<?php //echo $workorder->company_representative_name; ?>" />-->
@@ -1226,7 +1235,16 @@ tr {
                                                     <span class="m-auto" style="color: #ffffff;">Click to add signature</span>
                                                 </div>
                                                 <?php if($workorder->primary_account_holder_signature != '') { ?>
-                                                    <img src="<?php echo base_url($workorder->primary_account_holder_signature); ?>" class="img2">
+                                                    <?php 
+                                                        $is_signature_exist2 = false;   
+                                                        if (file_exists($workorder->primary_account_holder_signature)) {
+                                                            $is_signature_exist2 = true;
+                                                        }                              
+                                                    ?>             
+                                                    <?php if($is_signature_exist2) { ?>   
+                                                        <br />                                      
+                                                        <img src="<?php echo base_url($workorder->primary_account_holder_signature); ?>" class="img2">
+                                                    <?php } ?>
                                                 <?php } ?>
                                                 <div id="primaryrep"></div>
                                                 <br>
@@ -1259,7 +1277,16 @@ tr {
                                                     <span class="m-auto" style="color: #ffffff;">Click to add signature</span>
                                                 </div>
                                                 <?php if($workorder->secondary_account_holder_signature != '') { ?>
-                                                    <img src="<?php echo base_url($workorder->secondary_account_holder_signature); ?>" class="img3">
+                                                    <?php 
+                                                        $is_signature_exist3 = false;   
+                                                        if (file_exists($workorder->secondary_account_holder_signature)) {
+                                                            $is_signature_exist3 = true;
+                                                        }                              
+                                                    ?>          
+                                                    <?php if($is_signature_exist3) { ?>        
+                                                        <br />                                  
+                                                        <img src="<?php echo base_url($workorder->secondary_account_holder_signature); ?>" class="img3">
+                                                    <?php } ?>
                                                 <?php } ?>
                                                 <div id="secondaryrep"></div>
                                                 <br>

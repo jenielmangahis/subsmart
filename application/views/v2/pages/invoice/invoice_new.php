@@ -374,8 +374,8 @@
             
             <!-- Modal Record Payment -->
             <div class="modal fade nsm-modal fade" id="modalRecordPaymentForm" tabindex="-1" aria-labelledby="modalRecordPaymentForm_label" aria-hidden="true">
-                <div class="modal-dialog modal-md modal-dialog-centered">                    
-                    <div class="modal-content" style="width:580px;">
+                <div class="modal-dialog modal-dialog-centered" style="max-width: 700px;">                    
+                    <div class="modal-content" style="">
                         <div class="modal-header">
                             <span class="modal-title content-title">Record Payment</span>
                             <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>

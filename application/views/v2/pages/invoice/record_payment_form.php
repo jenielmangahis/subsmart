@@ -6,6 +6,34 @@
 </style>
 <div class="nsm-card primary">
     <div class="nsm-card-content">
+    <div class="row">
+        <p>Choose a payment amount.</p>
+        <div class="col-4 current-inv-amount" id="current-inv-amount" data-amount="<?php echo $invoice->grand_total; ?>" style="cursor: pointer;">
+            <div class="card text-center">
+            <div class="card-body" style="min-height: 100px;">
+                <h5 class="card-title">$<?php echo number_format($invoice->grand_total, 2, '.', ','); ?></h5>
+                <p class="card-text">Current Balance as of <?php echo date('m/d/Y'); ?></p>
+            </div>
+            </div>            
+        </div>
+        <div class="col-4 new-inv-amount" id="new-inv-amount" data-amount="<?php echo $total_invoice_without_late_fee; ?>" style="cursor: pointer;">
+            <div class="card text-center">
+            <div class="card-body" style="min-height: 100px;">
+                <h5 class="card-title">$<?php echo number_format($total_invoice_without_late_fee, 2, '.', ','); ?></h5>
+                <p class="card-text">New Invoice for <?php echo date('m/d/Y', strtotime($invoice->due_date)); ?></p>
+            </div>
+            </div>            
+        </div>
+        <div class="col-4 other-inv-amount" id="other-inv-amount" data-amount="<?php echo 0; ?>" style="cursor: pointer;">
+            <div class="card text-center">
+            <div class="card-body" style="min-height: 100px;">
+                <h5 class="card-title">$0.00</h5>
+                <p class="card-text">Other Amount</p>
+            </div>
+            </div>            
+        </div>
+    </div>
+    <hr />
     <p style="margin-bottom:2px;">Record a full or partial payment for Invoice# <span><b><?php echo $invoice->invoice_number?></span></b></p>
     <?php if( $invoice->late_fee > 0 ){ ?>
     <p>Late fee amount is included in total due.</p>
@@ -46,7 +74,7 @@
                     <div class="input-group-prepend">
                         <span class="input-group-text">$</span>
                     </div>                        
-                    <input type="number" step="any" class="form-control" name="amount" placeholder="0.00" value="<?= $total_invoice_without_late_fee; ?>" aria-label="Amount (to the nearest dollar)">
+                    <input type="number" step="any" class="form-control record-payment-inv-amount" name="amount" id="record-payment-inv-amount" placeholder="0.00" value="<?= $total_invoice_without_late_fee; ?>" aria-label="Amount (to the nearest dollar)">
                 </div>
             </div>
 
@@ -143,6 +171,21 @@ $(function(){
         content: function() {
             return 'Will be added to Invoice Amount';
         }
+    });
+
+    $('#current-inv-amount').on('click', function () {
+        var selected_amount = $(this).attr('data-amount');
+        $("#record-payment-inv-amount").val(selected_amount);
+    });
+
+    $('#new-inv-amount').on('click', function () {
+        var selected_amount = $(this).attr('data-amount');
+        $("#record-payment-inv-amount").val(selected_amount);
+    });
+
+    $('#other-inv-amount').on('click', function () {
+        var selected_amount = $(this).attr('data-amount');
+        $("#record-payment-inv-amount").val(selected_amount);
     });
 });
 </script>
