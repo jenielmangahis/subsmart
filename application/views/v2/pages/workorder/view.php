@@ -254,10 +254,9 @@ defined('BASEPATH') or exit('No direct script access allowed');
                 </div>                
                 <div class="row mt-4">
                   <?php if($contacts) { ?>
-                  <div class="col-12 col-md-6">
+                  <div class="col-12 col-md-12">
                     <h6 class="title-border">ADDITIONAL CONTACTS:</h6>
                     <div class="">
-                      
                       <?php foreach($contacts as $cont){ ?>
                         <?php 
                           $contact_name = "---";
@@ -270,6 +269,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                         <h4 style="font-size:18px;"><i class='bx bx-user-circle'></i> <?= $contact_name; ?></h4>
                         <span class=""><i class="bx bx-phone"></i> <?= formatPhoneNumber($cont->phone); ?></span><br /><br />
                       <?php } ?>
+                    </div>
                   </div>
                   <?php } ?>
                   <div class="col-12 col-md-12">
@@ -622,26 +622,65 @@ defined('BASEPATH') or exit('No direct script access allowed');
                     <h6 class="title-border">AGREEMENT :</h6>
                   </div>
                   <div class="row">
-                    <div class="col-md-4 mt-5" style="text-align: center; min-height: 150px;">
+                    <div class="col-md-4 mt-5" style="text-align: center; min-height: 150px; position: relative;">
                         <?php if($workorder->company_representative_signature != "") { ?>
-                          <img src="<?php echo base_url('uploads/workorders/signatures/'.$workorder->company_id.'/'.$workorder->company_representative_signature); ?>" />
-                          <br />
+                          <?php 
+                            $is_signature_exist = false;
+                            $signatureFolderPathImgExist = $workorder->company_representative_signature;      
+                            if (file_exists($signatureFolderPathImgExist)) {
+                                $is_signature_exist = true;
+                            }                              
+                          ?>                          
+                          <?php if($is_signature_exist) { ?>
+                            <img src="<?php echo base_url($workorder->company_representative_signature); ?>" />
+                            <div class=""><?= $agreements->sales_re_name ? $agreements->sales_re_name : $company->company_representative_name; ?></div>
+                            <br />
+                          <?php } else { ?>
+                            <!-- <img src="<?php echo base_url('uploads/workorders/signatures/'.$workorder->company_id.'/'.$workorder->company_representative_signature); ?>" /> -->
+                            <div style="margin-top: 150px;"><?= $agreements->sales_re_name ? $agreements->sales_re_name : $company->company_representative_name; ?></div>
                           <?php } ?>
-                        <div><?= $agreements->sales_re_name ? $agreements->sales_re_name : $company->company_representative_name; ?></div>
+                        <?php } ?>
+                        
                     </div>
                     <div class="col-md-4 mt-5" style="text-align: center; min-height: 150px;">
                       <?php if($workorder->primary_account_holder_signature != "") { ?>
-                        <img src="<?php echo base_url('uploads/workorders/signatures/'.$workorder->company_id.'/'.$workorder->primary_account_holder_signature); ?>" />
-                        <br />
+                        <?php 
+                            $is_signature_exist2 = false;
+                            $signatureFolderPathImgExist2 = $workorder->primary_account_holder_signature;      
+                            if (file_exists($signatureFolderPathImgExist2)) {
+                                $is_signature_exist2 = true;
+                            }                              
+                        ?> 
+                        <?php if($is_signature_exist2) { ?>
+                          <img src="<?php echo base_url($workorder->primary_account_holder_signature); ?>" />
+                          <div><?= $customer->first_name . ' ' . $customer->last_name; ?></div>
+                          <br />
+                        <?php }else { ?>
+                          <!-- <img src="<?php echo base_url('uploads/workorders/signatures/'.$workorder->company_id.'/'.$workorder->primary_account_holder_signature); ?>" /> -->
+                          <div style="margin-top: 150px;"><?= $customer->first_name . ' ' . $customer->last_name; ?></div>
+                        <?php } ?>
                       <?php } ?>
-                      <div><?= $customer->first_name . ' ' . $customer->last_name; ?></div>
+                      
                     </div>
                     <div class="col-md-4 mt-5" style="text-align: center; min-height: 150px;">
                         <?php if($workorder->secondary_account_holder_signature != "") { ?>
-                          <img src="<?php echo base_url('uploads/workorders/signatures/'.$workorder->company_id.'/'.$workorder->secondary_account_holder_signature); ?>" />
-                          <br />
+                        <?php 
+                            $is_signature_exist3 = false;
+                            $signatureFolderPathImgExist3 = $workorder->secondary_account_holder_signature;      
+                            if (file_exists($signatureFolderPathImgExist3)) {
+                                $is_signature_exist3 = true;
+                            }                              
+                        ?> 
+                        <?php if($is_signature_exist3) { ?>
+                          <img src="<?php echo base_url($workorder->secondary_account_holder_signature); ?>" />
+                          <div><?= $company->first_name . ' ' . $company->last_name; ?></div>
+                        <?php } else { ?>
+                          <!-- <img src="<?php echo base_url('uploads/workorders/signatures/'.$workorder->company_id.'/'.$workorder->secondary_account_holder_signature); ?>" /> -->
+                          <div style="margin-top: 150px;"><?= $company->first_name . ' ' . $company->last_name; ?></div>
+                        <?php } ?>
+
                           <?php } ?>
-                        <div><?= $company->first_name . ' ' . $company->last_name; ?></div>
+                        
                     </div>
                   </div>
                 </div>                                    
